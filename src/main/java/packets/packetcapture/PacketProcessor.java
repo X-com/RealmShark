@@ -1,6 +1,8 @@
 package packets.packetcapture;
 
 import jpcap.packet.TCPPacket;
+import packets.Packet;
+import packets.buffer.PBuffer;
 import packets.packetcapture.encryption.RC4;
 import packets.packetcapture.encryption.RotMGRC4Keys;
 import packets.packetcapture.networktap.Sniffer;
@@ -8,8 +10,6 @@ import packets.packetcapture.networktap.WindowsSniffer;
 import packets.packetcapture.pconstructor.PConstructor;
 import packets.packetcapture.pconstructor.PacketConstructor;
 import packets.packetcapture.register.Register;
-import packets.buffer.PBuffer;
-import packets.Packet;
 import packets.packetcapture.type.PacketTypes;
 
 import java.io.IOException;
@@ -45,7 +45,7 @@ public class PacketProcessor {
 
     /**
      * Method to start the packet sniffer that will send packets back to receivedPackets.
-     *
+     * <p>
      * TODO: Add linux and mac support later
      */
     public void tapPackets() {

@@ -18,6 +18,7 @@ public class PacketTypes {
 
     /**
      * Retrieves the packet type from the PACKET_TYPE list.
+     *
      * @param type Index of the packet needing to be retrieved.
      * @return Returns the interface IPacket of the class being retrieved.
      */
@@ -27,6 +28,7 @@ public class PacketTypes {
 
     /**
      * Checks if packet type exists in the PACKET_TYPE list.
+     *
      * @param type Index of the packet.
      * @return Returns if the packet exists in the list of packets in PACKET_TYPE.
      */

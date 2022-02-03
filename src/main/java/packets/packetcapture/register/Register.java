@@ -15,6 +15,7 @@ public class Register {
 
     /**
      * Emitter for sending packets to any subscriber which matches the packets the subscriber have subbed too.
+     *
      * @param packet The packet being received and emitted.
      */
     public void emit(Packet packet) {
@@ -23,7 +24,7 @@ public class Register {
                 processor.process(packet);
         }
 
-        if(packetListeners.containsKey(Packet.class)) {
+        if (packetListeners.containsKey(Packet.class)) {
             for (IPacketListener<Packet> processor : packetListeners.get(Packet.class))
                 processor.process(packet);
         }
@@ -32,9 +33,9 @@ public class Register {
     /**
      * Register method to subscribe to packets that are being received from the network tap.
      *
-     * @param clazz The class type wanting to be subscribed too.
+     * @param clazz     The class type wanting to be subscribed too.
      * @param processor The lambda needed to trigger what event should happen if packet is received.
-     * @param <T> Class type.
+     * @param <T>       Class type.
      */
     public <T extends Class<? extends Packet>> void register(T clazz, IPacketListener<Packet> processor) {
         packetListeners.computeIfAbsent(clazz, (a) -> new ArrayList<>()).add(processor);

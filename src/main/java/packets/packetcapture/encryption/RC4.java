@@ -22,10 +22,10 @@ public class RC4 {
     /**
      * A RC4 object with specific internal states.
      *
-     * @param state The current state of the key.
+     * @param state     The current state of the key.
      * @param initState The initial state of the key.
-     * @param i The i index of the RC4 state.
-     * @param j The j index of the RC4 state.
+     * @param i         The i index of the RC4 state.
+     * @param j         The j index of the RC4 state.
      */
     private RC4(int[] state, int[] initState, int i, int j) {
         this.state = state;
@@ -77,7 +77,7 @@ public class RC4 {
      *
      * @param amount The amount needed to increment the cipher.
      * @return Returning this object for inlining.
-     *
+     * <p>
      * TODO: find a better solution for algorithmicly setting the state after n skips.
      */
     public RC4 skip(int amount) {
@@ -96,7 +96,7 @@ public class RC4 {
      * bytes back into the same array with same index.
      *
      * @param offset Offset from the start of the array needing to be decrypted.
-     * @param array Array with bytes needing decrypting.
+     * @param array  Array with bytes needing decrypting.
      */
     public void decrypt(int offset, byte[] array) {
         for (int b = offset; b < array.length; b++) {
@@ -119,7 +119,7 @@ public class RC4 {
      * out of the ByteBuffer object and mutating it (for speed purposes) the array decrypted
      * bytes back into the same array with same index. This will directly modify the ByteBuffer.
      *
-     * @param offset Offset from the start of the array needing to be decrypted.
+     * @param offset     Offset from the start of the array needing to be decrypted.
      * @param byteBuffer ByteBuffer with bytes needing decrypting.
      */
     public void decrypt(int offset, ByteBuffer byteBuffer) {

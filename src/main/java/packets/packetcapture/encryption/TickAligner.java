@@ -22,6 +22,7 @@ public class TickAligner {
 
     /**
      * Tick aligner constructor to a RC4 cipher.
+     *
      * @param r The cipher to align.
      */
     public TickAligner(RC4 r) {
@@ -36,8 +37,8 @@ public class TickAligner {
      * the cipher with two consecutive tick packets.
      *
      * @param encryptedData Data of the current receiving packet.
-     * @param size Size of the packet data.
-     * @param type Type of the packet
+     * @param size          Size of the packet data.
+     * @param type          Type of the packet
      * @return Returns the state of the cipher alignment being synced.
      */
     public boolean checkRC4Alignment(ByteBuffer encryptedData, int size, byte type) {
@@ -54,7 +55,7 @@ public class TickAligner {
                     TickA = null;
                 }
             }
-            if(synced) packetBytes += size - 5;
+            if (synced) packetBytes += size - 5;
         }
 
         if (!synced) {

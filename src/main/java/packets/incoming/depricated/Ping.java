@@ -1,7 +1,7 @@
 package packets.incoming.depricated;
 
-import packets.buffer.PBuffer;
 import packets.Packet;
+import packets.buffer.PBuffer;
 
 public class Ping extends Packet {
     public int serial;

@@ -19,6 +19,7 @@ public class Util {
 
     /**
      * Enable / disable log printouts.
+     *
      * @param logs boolean to enable logs.
      */
     public static void setShowLogs(boolean logs) {

@@ -30,8 +30,8 @@ public class ROMGPacketConstructor implements PConstructor {
      * specified size at the header of the data.
      *
      * @param packetSequenced TCP packet with the data inside.
-     *
-     * TODO: Fix larger packets throwing of the packet size.
+     *                        <p>
+     *                        TODO: Fix larger packets throwing of the packet size.
      */
     @Override
     public void build(TCPPacket packetSequenced) {

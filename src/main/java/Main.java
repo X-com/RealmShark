@@ -1,9 +1,7 @@
-import packets.packetcapture.PacketProcessor;
-import packets.packetcapture.register.Register;
 import packets.Packet;
 import packets.incoming.depricated.Ping;
-
-import java.io.File;
+import packets.packetcapture.PacketProcessor;
+import packets.packetcapture.register.Register;
 
 /**
  * This is an API used to unwrapped Realm of the Mad Gods packets. The

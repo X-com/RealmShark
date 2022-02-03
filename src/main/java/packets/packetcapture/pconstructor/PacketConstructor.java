@@ -2,8 +2,8 @@ package packets.packetcapture.pconstructor;
 
 import jpcap.packet.TCPPacket;
 import packets.packetcapture.PacketProcessor;
-import packets.packetcapture.encryption.TickAligner;
 import packets.packetcapture.encryption.RC4;
+import packets.packetcapture.encryption.TickAligner;
 
 import java.nio.ByteBuffer;
 
@@ -24,8 +24,9 @@ public class PacketConstructor implements PConstructor, PReset {
 
     /**
      * Packet constructor constructor with specific cipher.
+     *
      * @param pp Parrent class to send constructed packets back too.
-     * @param r The cipher used to decode packets.
+     * @param r  The cipher used to decode packets.
      */
     public PacketConstructor(PacketProcessor pp, RC4 r) {
         packetProcessor = pp;
@@ -64,7 +65,7 @@ public class PacketConstructor implements PConstructor, PReset {
                 rc4Cipher.decrypt(5, encryptedData);
                 packetProcessor.processPackets(type, encryptedData);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

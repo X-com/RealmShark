@@ -69,9 +69,9 @@ public class RC4Aligner {
      * a tick packet A with known bytes received between the two Tick packets.
      *
      * @param cipher A RC4 cipher with a given key and given index.
-     * @param A Tick packet A
-     * @param B Tick packet B
-     * @param delta Known packets between packet A and B
+     * @param A      Tick packet A
+     * @param B      Tick packet B
+     * @param delta  Known packets between packet A and B
      * @return returning the index of the RC4 ciphers index from initial condition
      * constructed by key.
      */
@@ -106,7 +106,7 @@ public class RC4Aligner {
      * A fast method to return an integer from the head of an array XORed with a given
      * cipher with a specific index.
      *
-     * @param bytes Byte array where integer is
+     * @param bytes  Byte array where integer is
      * @param cipher A RC4 cipher object with a specific index.
      * @return returning the resulting integer
      */
