@@ -22,8 +22,8 @@ public class HatchPetMessage extends Packet {
 
     @Override
     public void deserialize(PBuffer buffer) {
-        this.petName = buffer.readString();
-        this.petSkin = buffer.readInt();
-        this.petType = buffer.readInt();
+        petName = buffer.readString();
+        petSkin = buffer.readInt();
+        petType = buffer.readInt();
     }
 }

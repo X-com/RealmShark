@@ -1,6 +1,7 @@
 package packets.buffer.data;
 
 import packets.buffer.PBuffer;
+import packets.buffer.data.enums.StatType;
 
 public class StatData {
     /**

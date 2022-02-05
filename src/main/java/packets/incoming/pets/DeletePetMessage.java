@@ -16,4 +16,5 @@ public class DeletePetMessage extends Packet {
     public void deserialize(PBuffer buffer) {
         petId = buffer.readInt();
     }
+
 }

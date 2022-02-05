@@ -39,9 +39,8 @@ public class DamagePacket extends Packet {
     @Override
     public void deserialize(PBuffer buffer) {
         targetId = buffer.readInt();
-        int effectsLen = buffer.readUnsignedByte();
-        effects = new int[effectsLen];
-        for (int i = 0; i < effectsLen; i++) {
+        effects = new int[buffer.readUnsignedByte()];
+        for (int i = 0; i < effects.length; i++) {
             effects[i] = buffer.readUnsignedByte();
         }
         damageAmount = buffer.readUnsignedShort();

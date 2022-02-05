@@ -3,8 +3,6 @@ package packets.incoming;
 import packets.Packet;
 import packets.buffer.PBuffer;
 
-import java.security.PublicKey;
-
 /**
  * Received to instruct the client to connect to a new host
  */
@@ -30,13 +28,13 @@ public class ReconnectPacket extends Packet {
      */
     public int keyTime;
     /**
-     * Whether the new host is from the arena
-     */
-    public boolean isFromArena;
-    /**
      * The `key` to send in the next `HelloPacket`
      */
     public byte[] key;
+    /**
+     * Whether or not the new host is from the arena
+     */
+    public boolean isFromArena;
 
     @Override
     public void deserialize(PBuffer buffer) {

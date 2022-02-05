@@ -22,8 +22,8 @@ public class KeyInfoResponsePacket extends Packet {
 
     @Override
     public void deserialize(PBuffer buffer) {
-        this.name = buffer.readString();
-        this.description = buffer.readString();
-        this.creator = buffer.readString();
+        name = buffer.readString();
+        description = buffer.readString();
+        creator = buffer.readString();
     }
 }

@@ -18,7 +18,7 @@ public class PicPacket extends Packet {
     /**
      * The bitmap data of the image.
      */
-    byte[] bitmapData;
+    public byte[] bitmapData;
 
     @Override
     public void deserialize(PBuffer buffer) {

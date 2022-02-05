@@ -25,15 +25,13 @@ public class TradeStartPacket extends Packet {
 
     @Override
     public void deserialize(PBuffer buffer) {
-        short clientItemsLen = buffer.readShort();
-        clientItems = new TradeItem[clientItemsLen];
-        for (int i = 0; i < clientItemsLen; i++) {
+        clientItems = new TradeItem[buffer.readShort()];
+        for (int i = 0; i < clientItems.length; i++) {
             clientItems[i] = new TradeItem().deserialize(buffer);
         }
         partnerName = buffer.readString();
-        short partnerItemsLen = buffer.readShort();
-        partnerItems = new TradeItem[partnerItemsLen];
-        for (int i = 0; i < partnerItemsLen; i++) {
+        partnerItems = new TradeItem[buffer.readShort()];
+        for (int i = 0; i < partnerItems.length; i++) {
             partnerItems[i] = new TradeItem().deserialize(buffer);
         }
     }

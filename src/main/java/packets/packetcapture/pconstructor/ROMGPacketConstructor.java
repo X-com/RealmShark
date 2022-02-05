@@ -32,6 +32,8 @@ public class ROMGPacketConstructor implements PConstructor {
      * @param packetSequenced TCP packet with the data inside.
      *                        <p>
      *                        TODO: Fix larger packets throwing of the packet size.
+     *                        Only start listen after the next packet less than MTU(maximum
+     *                        trasmition unit packet) is received.
      */
     @Override
     public void build(TCPPacket packetSequenced) {

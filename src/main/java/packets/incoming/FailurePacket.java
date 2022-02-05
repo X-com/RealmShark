@@ -2,6 +2,7 @@ package packets.incoming;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
+import packets.buffer.data.enums.FailureCode;
 
 /**
  * Received when an error has occurred
@@ -10,7 +11,7 @@ public class FailurePacket extends Packet {
     /**
      * The error ID code of the failure
      */
-    public int errorId;
+    public FailureCode errorId;
     /**
      * A description of the error
      */
@@ -26,7 +27,7 @@ public class FailurePacket extends Packet {
 
     @Override
     public void deserialize(PBuffer buffer) {
-        errorId = buffer.readInt();
+        errorId = FailureCode.byOrdinal(buffer.readInt());
         errorDescription = buffer.readString();
         errorPlace = buffer.readString();
         errorConnectionId = buffer.readString();

@@ -1,29 +1,21 @@
 package packets.incoming.pets;
 
+
 import packets.Packet;
 import packets.buffer.PBuffer;
+import packets.buffer.data.enums.PetYardType;
 
 /**
- * Received to give the player information about a newly hatched pet
+ * Received when the pet yard is updated to a new type of yard
  */
 public class PetYardUpdate extends Packet {
     /**
-     * The name of the hatched pet
+     * The type of the new yard
      */
-    public String petName;
-    /**
-     * The skin id of the hatched pet
-     */
-    public int petSkin;
-    /**
-     * The object type of the pet
-     */
-    public int petType;
+    public PetYardType yardType;
 
     @Override
     public void deserialize(PBuffer buffer) {
-        this.petName = buffer.readString();
-        this.petSkin = buffer.readInt();
-        this.petType = buffer.readInt();
+        yardType = PetYardType.byOrdinal(buffer.readInt());
     }
 }

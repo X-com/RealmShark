@@ -2,8 +2,8 @@ package packets.outgoing.pets;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.PaymentType;
-import packets.buffer.data.PetUpgradeType;
+import packets.buffer.data.enums.PaymentType;
+import packets.buffer.data.enums.PetUpgradeType;
 import packets.buffer.data.SlotObjectData;
 
 /**

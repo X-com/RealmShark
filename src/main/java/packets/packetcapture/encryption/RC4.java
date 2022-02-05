@@ -40,19 +40,19 @@ public class RC4 {
      * @param key Key in the form of hex numbers in a byte array.
      */
     public RC4(byte[] key) {
-        this.i = 0;
-        this.j = 0;
+        i = 0;
+        j = 0;
 
         for (int i = 0; i < 256; i++) {
-            this.state[i] = i;
+            state[i] = i;
         }
 
         int j = 0;
         for (int i = 0; i < 256; i++) {
-            j = (j + this.state[i] + Byte.toUnsignedInt(key[i % key.length])) % 256;
-            int tmp = this.state[i];
-            this.state[i] = this.state[j];
-            this.state[j] = tmp;
+            j = (j + state[i] + Byte.toUnsignedInt(key[i % key.length])) % 256;
+            int tmp = state[i];
+            state[i] = state[j];
+            state[j] = tmp;
         }
         System.arraycopy(state, 0, initState, 0, state.length);
     }
@@ -64,12 +64,12 @@ public class RC4 {
      * @return The resulting byte after Xor:ing with the cipher.
      */
     public synchronized byte getXor() {
-        this.i = (this.i + 1) % 256;
-        this.j = (this.j + this.state[this.i]) % 256;
-        int tmp = this.state[this.i];
-        this.state[this.i] = this.state[this.j];
-        this.state[this.j] = tmp;
-        return (byte) this.state[(this.state[this.i] + this.state[this.j]) % 256];
+        i = (i + 1) % 256;
+        j = (j + state[i]) % 256;
+        int tmp = state[i];
+        state[i] = state[j];
+        state[j] = tmp;
+        return (byte) state[(state[i] + state[j]) % 256];
     }
 
     /**
@@ -81,12 +81,12 @@ public class RC4 {
      * TODO: find a better solution for algorithmicly setting the state after n skips.
      */
     public RC4 skip(int amount) {
-        for (int i = 0; i < amount; i++) {
-            this.i = (this.i + 1) % 256;
-            this.j = (this.j + this.state[this.i]) % 256;
-            int tmp = this.state[this.i];
-            this.state[this.i] = this.state[this.j];
-            this.state[this.j] = tmp;
+        for (int k = 0; k < amount; k++) {
+            i = (i + 1) % 256;
+            j = (j + state[i]) % 256;
+            int tmp = state[i];
+            state[i] = state[j];
+            state[j] = tmp;
         }
         return this;
     }
@@ -149,8 +149,8 @@ public class RC4 {
 
     public void reset() {
         System.arraycopy(initState, 0, state, 0, state.length);
-        this.i = 0;
-        this.j = 0;
+        i = 0;
+        j = 0;
     }
 
     public static int convertByteArrayToInt(byte[] bytes) {

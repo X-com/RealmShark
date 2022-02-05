@@ -18,7 +18,7 @@ public class GuildResultPacket extends Packet {
 
     @Override
     public void deserialize(PBuffer buffer) {
-        this.success = buffer.readBoolean();
-        this.lineBuilderJSON = buffer.readString();
+        success = buffer.readBoolean();
+        lineBuilderJSON = buffer.readString();
     }
 }

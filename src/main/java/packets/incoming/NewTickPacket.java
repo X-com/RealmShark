@@ -35,9 +35,8 @@ public class NewTickPacket extends Packet {
         tickTime = buffer.readInt();
         serverRealTimeMS = buffer.readUnsignedInt();
         serverLastTimeRTTMS = buffer.readUnsignedShort();
-        short statusesLen = buffer.readShort();
-        statuses = new ObjectStatusData[statusesLen];
-        for (int i = 0; i < statusesLen; i++) {
+        statuses = new ObjectStatusData[buffer.readShort()];
+        for (int i = 0; i < statuses.length; i++) {
             statuses[i] = new ObjectStatusData().deserialize(buffer);
         }
     }

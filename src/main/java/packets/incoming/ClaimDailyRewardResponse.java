@@ -12,7 +12,7 @@ public class ClaimDailyRewardResponse extends Packet {
      */
     public int itemId;
     /**
-     * The number of items received.
+     * The int of items received.
      */
     public int quantity;
     /**

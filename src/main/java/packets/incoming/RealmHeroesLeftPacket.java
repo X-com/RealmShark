@@ -8,7 +8,7 @@ import packets.buffer.PBuffer;
  */
 public class RealmHeroesLeftPacket extends Packet {
     /**
-     * The number of heroes remaining.
+     * The int of heroes remaining.
      */
     public int realmHeroesLeft;
 

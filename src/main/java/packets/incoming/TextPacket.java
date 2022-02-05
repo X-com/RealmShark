@@ -16,7 +16,7 @@ public class TextPacket extends Packet {
      */
     public int objectId;
     /**
-     * The number of stars of the sender
+     * The int of stars of the sender
      */
     public short numStars;
     /**

@@ -16,4 +16,5 @@ public class ActivePetPacket extends Packet {
     public void deserialize(PBuffer buffer) {
         instanceId = buffer.readInt();
     }
+
 }

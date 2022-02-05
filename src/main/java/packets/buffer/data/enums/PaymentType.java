@@ -1,4 +1,4 @@
-package packets.buffer.data;
+package packets.buffer.data.enums;
 
 public enum PaymentType {
     Invalid(-1),
@@ -7,7 +7,7 @@ public enum PaymentType {
     GuildFame(2),
     FortuneTokens(3);
 
-    private int index;
+    private final int index;
 
     PaymentType(int i) {
         index = i;

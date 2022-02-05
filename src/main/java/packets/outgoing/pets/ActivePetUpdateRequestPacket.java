@@ -2,7 +2,7 @@ package packets.outgoing.pets;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.ActivePetUpdateType;
+import packets.buffer.data.enums.ActivePetUpdateType;
 
 /**
  * Sent to make an update to the pet currently following the player

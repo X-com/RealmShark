@@ -23,6 +23,7 @@ public class AllyShootPacket extends Packet {
      * The angle at which the projectile was fired.
      */
     public float angle;
+
     /**
      * Whether or not the shot is affected by the 'Inspired' buff (presumably).
      */

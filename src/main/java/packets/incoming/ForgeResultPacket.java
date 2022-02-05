@@ -19,11 +19,10 @@ public class ForgeResultPacket extends Packet {
 
     @Override
     public void deserialize(PBuffer buffer) {
-        this.success = buffer.readBoolean();
+        success = buffer.readBoolean();
 
-        byte resultCount = buffer.readByte();
-        results = new SlotObjectData[resultCount];
-        for (int i = 0; i < resultCount; i++) {
+        results = new SlotObjectData[buffer.readByte()];
+        for (int i = 0; i < results.length; i++) {
             results[i] = new SlotObjectData().deserialize(buffer);
         }
     }

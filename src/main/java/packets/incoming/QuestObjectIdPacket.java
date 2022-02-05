@@ -14,6 +14,6 @@ public class QuestObjectIdPacket extends Packet {
 
     @Override
     public void deserialize(PBuffer buffer) {
-        this.objectId = buffer.readInt();
+        objectId = buffer.readInt();
     }
 }

@@ -48,7 +48,7 @@ public class MapInfoPacket extends Packet {
      */
     public boolean showDisplays;
     /**
-     * The number of players allowed in this map
+     * The int of players allowed in this map
      */
     public short maxPlayers;
     /**

@@ -15,9 +15,8 @@ public class ForgeUnlockedBlueprints extends Packet {
 
     @Override
     public void deserialize(PBuffer buffer) {
-        int count = buffer.readByte();
-        unlockedBlueprints = new int[count];
-        for (int i = 0; i < count; i++) {
+        unlockedBlueprints = new int[buffer.readByte()];
+        for (int i = 0; i < unlockedBlueprints.length; i++) {
             unlockedBlueprints[i] = new CompressedInt().deserialize(buffer);
         }
     }

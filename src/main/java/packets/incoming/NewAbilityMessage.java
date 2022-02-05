@@ -14,6 +14,6 @@ public class NewAbilityMessage extends Packet {
 
     @Override
     public void deserialize(PBuffer buffer) {
-        this.abilityType = buffer.readInt();
+        abilityType = buffer.readInt();
     }
 }

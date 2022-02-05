@@ -33,9 +33,9 @@ public class EnemyShootPacket extends Packet {
     /**
      * The damage which the projectile will cause.
      */
-    public int damage;
+    public short damage;
     /**
-     * The number of projeciles fired.
+     * The int of projeciles fired.
      */
     public int numShots;
     /**

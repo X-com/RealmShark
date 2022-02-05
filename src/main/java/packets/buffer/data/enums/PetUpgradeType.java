@@ -1,11 +1,11 @@
-package packets.buffer.data;
+package packets.buffer.data.enums;
 
 public enum PetUpgradeType {
     PetYard(1),
     FeedPet(2),
     FusePet(3);
 
-    private int index;
+    private final int index;
 
     PetUpgradeType(int i) {
         index = i;

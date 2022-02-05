@@ -36,42 +36,42 @@ public class ShowEffectPacket extends Packet {
 
     @Override
     public void deserialize(PBuffer buffer) {
-        this.effectType = buffer.readUnsignedByte();
+        effectType = buffer.readUnsignedByte();
         int loc2 = buffer.readUnsignedByte();
-        if ((loc2 & 64) == 1) {
-            this.targetObjectId = new CompressedInt().deserialize(buffer);
+        if ((loc2 & 64) == 64) {
+            targetObjectId = new CompressedInt().deserialize(buffer);
         } else {
-            this.targetObjectId = 0;
+            targetObjectId = 0;
         }
-        if ((loc2 & 2) == 1) {
-            this.pos1.x = buffer.readFloat();
+        if ((loc2 & 2) == 2) {
+            pos1.x = buffer.readFloat();
         } else {
-            this.pos1.x = 0;
+            pos1.x = 0;
         }
-        if ((loc2 & 4) == 1) {
-            this.pos1.y = buffer.readFloat();
+        if ((loc2 & 4) == 4) {
+            pos1.y = buffer.readFloat();
         } else {
-            this.pos1.y = 0;
+            pos1.y = 0;
         }
-        if ((loc2 & 8) == 1) {
-            this.pos2.x = buffer.readFloat();
+        if ((loc2 & 8) == 8) {
+            pos2.x = buffer.readFloat();
         } else {
-            this.pos2.x = 0;
+            pos2.x = 0;
         }
-        if ((loc2 & 16) == 1) {
-            this.pos2.y = buffer.readFloat();
+        if ((loc2 & 16) == 16) {
+            pos2.y = buffer.readFloat();
         } else {
-            this.pos2.y = 0;
+            pos2.y = 0;
         }
         if ((loc2 & 1) == 1) {
-            this.color = buffer.readUnsignedInt();
+            color = buffer.readInt();
         } else {
-            this.color = 4294967295L;
+            color = 4294967295L;
         }
-        if ((loc2 & 32) == 1) {
-            this.duration = buffer.readFloat();
+        if ((loc2 & 32) == 32) {
+            duration = buffer.readFloat();
         } else {
-            this.duration = 1;
+            duration = 1;
         }
     }
 }

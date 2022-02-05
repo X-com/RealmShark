@@ -1,4 +1,4 @@
-package packets.buffer.data;
+package packets.buffer.data.enums;
 
 /**
  * Ordinal of stats.
@@ -123,7 +123,7 @@ public enum StatType {
     POTION_BELT(119),
     FORGEFIRE(120);
 
-    private int index;
+    private final int index;
 
     StatType(int i) {
         index = i;

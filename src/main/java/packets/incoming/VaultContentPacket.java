@@ -3,6 +3,7 @@ package packets.incoming;
 import packets.Packet;
 import packets.buffer.PBuffer;
 import packets.buffer.data.CompressedInt;
+import packets.buffer.data.GroundTileData;
 
 /**
  * Received when the player enters or updates their vault
@@ -60,18 +61,18 @@ public class VaultContentPacket extends Packet {
         giftItemCount = new CompressedInt().deserialize(buffer);
         potionItemCount = new CompressedInt().deserialize(buffer);
 
-        int itemCount = new CompressedInt().deserialize(buffer);
-        for (int i = 0; i < itemCount; i++) {
+        vaultContents = new int[new CompressedInt().deserialize(buffer)];
+        for (int i = 0; i < vaultContents.length; i++) {
             vaultContents[i] = new CompressedInt().deserialize(buffer);
         }
 
-        int giftItemCount = new CompressedInt().deserialize(buffer);
-        for (int i = 0; i < giftItemCount; i++) {
+        giftContents = new int[new CompressedInt().deserialize(buffer)];
+        for (int i = 0; i < giftContents.length; i++) {
             giftContents[i] = new CompressedInt().deserialize(buffer);
         }
 
-        int potionCount = new CompressedInt().deserialize(buffer);
-        for (int i = 0; i < potionCount; i++) {
+        potionContents = new int[new CompressedInt().deserialize(buffer)];
+        for (int i = 0; i < potionContents.length; i++) {
             potionContents[i] = new CompressedInt().deserialize(buffer);
         }
 

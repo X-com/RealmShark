@@ -19,10 +19,9 @@ public class QuestFetchResponsePacket extends Packet {
 
     @Override
     public void deserialize(PBuffer buffer) {
-        short questsLen = buffer.readShort();
-        this.quests = new QuestData[questsLen];
-        for (int i = 0; i < questsLen; i++) {
-            this.quests[i] = new QuestData().deserialize(buffer);
+        quests = new QuestData[buffer.readShort()];
+        for (int i = 0; i < quests.length; i++) {
+            quests[i] = new QuestData().deserialize(buffer);
         }
         nextRefreshPrice = buffer.readShort();
     }

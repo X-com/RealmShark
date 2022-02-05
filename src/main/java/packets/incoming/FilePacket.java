@@ -12,7 +12,7 @@ public class FilePacket extends Packet {
      */
     public String fileName;
     /**
-     * The bytes of the file. Don't ask me why this is a string,
+     * The bytes of the file. Don't ask me why this is a String,
      * that's just how it is in the source code of the game.
      */
     public String file;

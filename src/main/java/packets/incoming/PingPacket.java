@@ -4,7 +4,7 @@ import packets.Packet;
 import packets.buffer.PBuffer;
 
 /**
- * Received in response to a `BuyPacket`.
+ * Received occasionally by the server to prompt a response from the client
  */
 public class PingPacket extends Packet {
     /**

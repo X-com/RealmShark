@@ -28,21 +28,18 @@ public class UpdatePacket extends Packet {
 
     @Override
     public void deserialize(PBuffer buffer) {
-        int groundTileDataLen = new CompressedInt().deserialize(buffer);
-        tiles = new GroundTileData[groundTileDataLen];
+        tiles = new GroundTileData[new CompressedInt().deserialize(buffer)];
         for (int i = 0; i < tiles.length; i++) {
             tiles[i] = new GroundTileData().deserialize(buffer);
         }
 
-        int newObjectsLen = new CompressedInt().deserialize(buffer);
-        newObjects = new ObjectData[newObjectsLen];
-        for (int i = 0; i < newObjectsLen; i++) {
+        newObjects = new ObjectData[new CompressedInt().deserialize(buffer)];
+        for (int i = 0; i < newObjects.length; i++) {
             newObjects[i] = new ObjectData().deserialize(buffer);
         }
 
-        int dropsLen = new CompressedInt().deserialize(buffer);
-        drops = new int[dropsLen];
-        for (int i = 0; i < dropsLen; i++) {
+        drops = new int[new CompressedInt().deserialize(buffer)];
+        for (int i = 0; i < drops.length; i++) {
             drops[i] = new CompressedInt().deserialize(buffer);
         }
     }

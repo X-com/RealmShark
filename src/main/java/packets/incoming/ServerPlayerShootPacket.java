@@ -31,7 +31,7 @@ public class ServerPlayerShootPacket extends Packet {
     /**
      * The damage which will be dealt by the projectile
      */
-    public int damage;
+    public short damage;
 
     @Override
     public void deserialize(PBuffer buffer) {

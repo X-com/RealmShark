@@ -25,14 +25,14 @@ public class ExaltationUpdatePacket extends Packet {
 
     @Override
     public void deserialize(PBuffer buffer) {
-        this.objType = buffer.readShort();
-        this.dexterityProgress = buffer.readByte();
-        this.speedProgress = buffer.readByte();
-        this.vitalityProgress = buffer.readByte();
-        this.wisdomProgress = buffer.readByte();
-        this.defenseProgress = buffer.readByte();
-        this.attackProgress = buffer.readByte();
-        this.manaProgress = buffer.readByte();
-        this.healthProgress = buffer.readByte();
+        objType = buffer.readShort();
+        dexterityProgress = buffer.readByte();
+        speedProgress = buffer.readByte();
+        vitalityProgress = buffer.readByte();
+        wisdomProgress = buffer.readByte();
+        defenseProgress = buffer.readByte();
+        attackProgress = buffer.readByte();
+        manaProgress = buffer.readByte();
+        healthProgress = buffer.readByte();
     }
 }

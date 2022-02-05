@@ -13,13 +13,12 @@ public class TradeChangedPacket extends Packet {
      * <p>
      * If a value is `true`, then the item is selected
      */
-    boolean[] offer;
+    public boolean[] offer;
 
     @Override
     public void deserialize(PBuffer buffer) {
-        short offerLen = buffer.readShort();
-        offer = new boolean[offerLen];
-        for (int i = 0; i < offerLen; i++) {
+        offer = new boolean[buffer.readShort()];
+        for (int i = 0; i < offer.length; i++) {
             offer[i] = buffer.readBoolean();
         }
     }

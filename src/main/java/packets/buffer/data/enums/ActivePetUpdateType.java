@@ -1,4 +1,4 @@
-package packets.buffer.data;
+package packets.buffer.data.enums;
 
 public enum ActivePetUpdateType {
     Follow(0),
@@ -6,7 +6,7 @@ public enum ActivePetUpdateType {
     Unfollow(2),
     Unknown(3);
 
-    private int index;
+    private final int index;
 
     ActivePetUpdateType(int i) {
         index = i;

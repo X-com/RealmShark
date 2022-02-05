@@ -24,9 +24,8 @@ public class AccountListPacket extends Packet {
     @Override
     public void deserialize(PBuffer buffer) {
         accountListId = buffer.readInt();
-        short len = buffer.readShort();
-        accountIds = new String[len];
-        for (int i = 0; i < len; i++) {
+        accountIds = new String[buffer.readShort()];
+        for (int i = 0; i < accountIds.length; i++) {
             accountIds[i] = buffer.readString();
         }
         lockAction = buffer.readInt();
