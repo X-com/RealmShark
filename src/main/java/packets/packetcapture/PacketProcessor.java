@@ -10,7 +10,7 @@ import packets.packetcapture.networktap.WindowsSniffer;
 import packets.packetcapture.pconstructor.PConstructor;
 import packets.packetcapture.pconstructor.PacketConstructor;
 import packets.packetcapture.register.Register;
-import packets.packetcapture.type.PacketTypes;
+import packets.PacketType;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -96,11 +96,11 @@ public class PacketProcessor {
      * @param data Constructed packet data.
      */
     public void processPackets(int type, ByteBuffer data) {
-        if (!PacketTypes.containsKey(type)) {
+        if (!PacketType.containsKey(type)) {
             System.err.println("Unknown packet type:" + type + " Data:" + Arrays.toString(data.array()));
             return;
         }
-        Packet packetType = PacketTypes.getPacket(type).factory();
+        Packet packetType = PacketType.getPacket(type).factory();
         PBuffer pData = new PBuffer(data);
         packetType.deserialize(pData);
         Register.INSTANCE.emit(packetType);

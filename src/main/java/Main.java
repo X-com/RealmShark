@@ -1,7 +1,6 @@
 import packets.Packet;
-import packets.incoming.depricated.Ping;
-import packets.packetcapture.PacketProcessor;
-import packets.packetcapture.register.Register;
+import util.AutoPacketFileFixer;
+import util.SimpleIndexToPacketType;
 
 /**
  * This is an API used to unwrapped Realm of the Mad Gods packets. The
@@ -25,9 +24,11 @@ public class Main {
 
             Example 2: Subscribing to ping packets:
          */
-        Register.INSTANCE.register(Ping.class, (ping) -> ping(ping));
+//        Register.INSTANCE.register(Ping.class, (ping) -> ping(ping));
 
-        new PacketProcessor().run();
+//        new PacketProcessor().run();
+
+        new AutoPacketFileFixer().run();
     }
 
     /**

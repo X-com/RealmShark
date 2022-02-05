@@ -1,4 +1,4 @@
-package packets.incoming;
+package packets.buffer.data;
 
 /**
  * Ordinal of stats.
@@ -131,5 +131,14 @@ public enum StatType {
 
     public int get() {
         return index;
+    }
+
+    public static StatType byOrdinal(int ord) {
+        for (StatType o : StatType.values()) {
+            if (o.index == ord) {
+                return o;
+            }
+        }
+        return null;
     }
 }

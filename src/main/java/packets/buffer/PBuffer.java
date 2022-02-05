@@ -1,6 +1,7 @@
 package packets.buffer;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 /**
  * Custom buffer class to deserialize the rotmg packets.
@@ -13,6 +14,52 @@ public class PBuffer {
     }
 
     /**
+     * Returns the buffer size.
+     *
+     * @return size of the buffer.
+     */
+    public int size() {
+        return buffer.capacity();
+    }
+
+    /**
+     * Internal index of the buffer.
+     *
+     * @return Returns the internal index the buffer is at.
+     */
+    public int getIndex() {
+        return buffer.position();
+    }
+
+    /**
+     * Deserialize a boolean.
+     *
+     * @return Returns a boolean that have been deserialized.
+     */
+    public boolean readBoolean() {
+        return buffer.get() != 0;
+    }
+
+    /**
+     * Deserialize a byte.
+     *
+     * @return Returns the byte that have been deserialized.
+     */
+    public byte readByte() {
+        return buffer.get();
+    }
+
+    /**
+     * Deserialize an unsigned byte.
+     *
+     * @return Returns an integer containing an unsigned byte that have
+     * been deserialized.
+     */
+    public int readUnsignedByte() {
+        return Byte.toUnsignedInt(buffer.get());
+    }
+
+    /**
      * Deserialize a short.
      *
      * @return Returns the short that have been deserialized.
@@ -22,12 +69,41 @@ public class PBuffer {
     }
 
     /**
+     * Deserialize an unsigned short.
+     *
+     * @return Returns an integer containing an unsigned short that have
+     * been deserialized.
+     */
+    public int readUnsignedShort() {
+        return Short.toUnsignedInt(buffer.getShort());
+    }
+
+    /**
      * Deserialize an integer.
      *
      * @return Returns the integer that have been deserialized.
      */
     public int readInt() {
         return buffer.getInt();
+    }
+
+    /**
+     * Deserialize an unsigned integer.
+     *
+     * @return Returns an integer containing an unsigned integer that have
+     * been deserialized.
+     */
+    public long readUnsignedInt() {
+        return Integer.toUnsignedLong(buffer.getInt());
+    }
+
+    /**
+     * Deserialize a float.
+     *
+     * @return Returns the float that have been deserialized.
+     */
+    public float readFloat() {
+        return buffer.getFloat();
     }
 
     /**
@@ -56,22 +132,15 @@ public class PBuffer {
     }
 
     /**
-     * Deserialize an unsigned byte.
-     *
-     * @return Returns an integer containing an unsigned byte that have
-     * been deserialized.
+     * Deserialize a byte array
      */
-    public int readUByte() {
-        return Byte.toUnsignedInt(buffer.get());
-    }
-
-    /**
-     * Deserialize a boolean.
-     *
-     * @return Returns a boolean that have been deserialized.
-     */
-    public boolean readBool() {
-        return buffer.get() != 0;
+    public byte[] readByteArray() {
+        short arraylen = readShort();
+        byte[] out = new byte[arraylen];
+        for (int i = 0; i < arraylen; i++) {
+            out[i] = readByte();
+        }
+        return out;
     }
 
     /**
@@ -89,28 +158,18 @@ public class PBuffer {
     }
 
     /**
-     * Deserialize an unsigned short.
-     *
-     * @return Returns an integer containing an unsigned short that have
-     * been deserialized.
-     */
-    public int readUShort() {
-        return Short.toUnsignedInt(buffer.getShort());
-    }
-
-    /**
      * Rotmg deserializer of a compressed long.
      *
      * @return Returns a long that have been deserialized.
      */
     public long readCompressedInt() {
-        int uByte = readUByte();
+        int uByte = readUnsignedByte();
         boolean isNegative = (uByte & 64) != 0;
         int shift = 6;
         long value = uByte & 63;
 
         while ((uByte & 128) != 0) {
-            uByte = readUByte();
+            uByte = readUnsignedByte();
             value = value | ((long) (uByte & 127)) << shift;
             shift += 7;
         }
@@ -122,20 +181,11 @@ public class PBuffer {
     }
 
     /**
-     * Deserialize a float.
+     * Debug print command to print the buffer byte data.
      *
-     * @return Returns the float that have been deserialized.
+     * @return String representation of buffer data in a byte array format.
      */
-    public float readFloat() {
-        return buffer.getFloat();
-    }
-
-    /**
-     * Deserialize a byte.
-     *
-     * @return Returns the byte that have been deserialized.
-     */
-    public byte readByte() {
-        return buffer.get();
+    public String printBufferArray() {
+        return Arrays.toString(buffer.array());
     }
 }
