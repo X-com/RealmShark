@@ -42,7 +42,7 @@ public class ReconnectPacket extends Packet {
         host = buffer.readString();
         port = buffer.readInt();
         gameId = buffer.readInt();
-        keyTime = buffer.readInt();
+        keyTime = buffer.readByte();
         isFromArena = buffer.readBoolean();
         key = buffer.readByteArray();
     }

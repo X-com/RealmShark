@@ -5,7 +5,7 @@ package util;
  */
 public class Util {
 
-    private static boolean showLogs = false;
+    public static boolean showLogs = false;
 
     /**
      * Fast method to get an integer out of the first 4 bytes of an array.

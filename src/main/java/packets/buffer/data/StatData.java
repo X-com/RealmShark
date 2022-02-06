@@ -2,6 +2,7 @@ package packets.buffer.data;
 
 import packets.buffer.PBuffer;
 import packets.buffer.data.enums.StatType;
+import util.Util;
 
 public class StatData {
     /**
@@ -26,10 +27,12 @@ public class StatData {
      *
      * @param buffer Data that needs deserializing.
      * @return Returns this object after deserializing.
+     *
+     * TODO: buggy needs fixed
      */
     public StatData deserialize(PBuffer buffer) {
         statType = StatType.byOrdinal(buffer.readUnsignedByte());
-        if (statType == null) System.err.println("StatType enum error in deserializer");
+        if (statType == null) Util.print("StatType enum error in deserializer");
 
         if (isStringStat()) {
             stringStatValue = buffer.readString();

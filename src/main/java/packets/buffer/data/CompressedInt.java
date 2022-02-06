@@ -19,7 +19,7 @@ public class CompressedInt {
         int shift = 6;
         int value = uByte & 63;
 
-        while ((uByte & 128) == 1) {
+        while ((uByte & 128) == 128) {
             uByte = buffer.readUnsignedByte();
             value = value | (uByte & 127) << shift;
             shift += 7;

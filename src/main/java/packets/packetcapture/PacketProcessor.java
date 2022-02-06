@@ -11,6 +11,8 @@ import packets.packetcapture.pconstructor.PConstructor;
 import packets.packetcapture.pconstructor.PacketConstructor;
 import packets.packetcapture.register.Register;
 import packets.PacketType;
+import util.PBufferDebugger;
+import util.Util;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -102,7 +104,34 @@ public class PacketProcessor {
         }
         Packet packetType = PacketType.getPacket(type).factory();
         PBuffer pData = new PBuffer(data);
-        packetType.deserialize(pData);
+
+        try {
+            packetType.deserialize(pData);
+            if (tempFindMaxSize < data.capacity()) {
+                tempFindMaxSize = data.capacity();
+                Util.print("new MAX size " + PacketType.byOrdinal(type) + ": " + tempFindMaxSize);
+            }
+        } catch (Exception e) {
+            if(Util.showLogs) debugPackets(type, data);
+            return;
+        }
         Register.INSTANCE.emit(packetType);
+    }
+
+    private int tempFindMaxSize = 1000; // temp packet max size finder
+
+    private void debugPackets(int type, ByteBuffer data) {
+        if(type == PacketType.NEWTICK.getIndex()) return;
+        Packet packetType = PacketType.getPacket(type).factory();
+        PBufferDebugger pDebug = new PBufferDebugger(data);
+        try {
+            Util.print("Debugging packet: " + PacketType.byOrdinal(type));
+            for (int i = 0; i < data.array().length; i++) {
+                System.out.printf("%3d %3d %3s\n", i, data.array()[i], data.array()[i]==10?"\\n":(char)data.array()[i]);
+            }
+            packetType.deserialize(pDebug);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -26,21 +26,22 @@ public class UpdatePacket extends Packet {
      */
     public int[] drops;
 
+    // TODO: currently bugged, fix this
     @Override
     public void deserialize(PBuffer buffer) {
-        tiles = new GroundTileData[new CompressedInt().deserialize(buffer)];
-        for (int i = 0; i < tiles.length; i++) {
-            tiles[i] = new GroundTileData().deserialize(buffer);
-        }
-
-        newObjects = new ObjectData[new CompressedInt().deserialize(buffer)];
-        for (int i = 0; i < newObjects.length; i++) {
-            newObjects[i] = new ObjectData().deserialize(buffer);
-        }
-
-        drops = new int[new CompressedInt().deserialize(buffer)];
-        for (int i = 0; i < drops.length; i++) {
-            drops[i] = new CompressedInt().deserialize(buffer);
-        }
+//        tiles = new GroundTileData[new CompressedInt().deserialize(buffer)];
+//        for (int i = 0; i < tiles.length; i++) {
+//            tiles[i] = new GroundTileData().deserialize(buffer);
+//        }
+//
+//        newObjects = new ObjectData[new CompressedInt().deserialize(buffer)];
+//        for (int i = 0; i < newObjects.length; i++) {
+//            newObjects[i] = new ObjectData().deserialize(buffer);
+//        }
+//
+//        drops = new int[new CompressedInt().deserialize(buffer)];
+//        for (int i = 0; i < drops.length; i++) {
+//            drops[i] = new CompressedInt().deserialize(buffer);
+//        }
     }
 }

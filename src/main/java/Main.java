@@ -1,6 +1,8 @@
 import packets.Packet;
-import util.AutoPacketFileFixer;
-import util.SimpleIndexToPacketType;
+import packets.PacketType;
+import packets.incoming.TextPacket;
+import packets.packetcapture.PacketProcessor;
+import packets.packetcapture.register.Register;
 
 /**
  * This is an API used to unwrapped Realm of the Mad Gods packets. The
@@ -24,19 +26,19 @@ public class Main {
 
             Example 2: Subscribing to ping packets:
          */
-//        Register.INSTANCE.register(Ping.class, (ping) -> ping(ping));
+        Register.INSTANCE.register(PacketType.TEXT.getPacketClass(), (packet) -> text(packet));
 
-//        new PacketProcessor().run();
-
-        new AutoPacketFileFixer().run();
+        new PacketProcessor().run();
     }
 
     /**
-     * Example method called when ping packets are received.
+     * Example method called when text packets are received.
      *
-     * @param ping The ping packet.
+     * @param packet The text packet.
      */
-    static void ping(Packet ping) {
-        System.out.println("hello ping");
+    static void text(Packet packet) {
+        if (!(packet instanceof TextPacket)) return;
+        TextPacket tPacket = (TextPacket) packet;
+        System.out.printf("[%s]: %s\n", tPacket.name, tPacket.text);
     }
 }

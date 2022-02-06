@@ -13,11 +13,12 @@ public class ForgeUnlockedBlueprints extends Packet {
      */
     public int[] unlockedBlueprints;
 
+    // TODO: currently bugged, fix this
     @Override
     public void deserialize(PBuffer buffer) {
-        unlockedBlueprints = new int[buffer.readByte()];
-        for (int i = 0; i < unlockedBlueprints.length; i++) {
-            unlockedBlueprints[i] = new CompressedInt().deserialize(buffer);
-        }
+//        unlockedBlueprints = new int[buffer.readByte()];
+//        for (int i = 0; i < unlockedBlueprints.length; i++) {
+//            unlockedBlueprints[i] = new CompressedInt().deserialize(buffer);
+//        }
     }
 }

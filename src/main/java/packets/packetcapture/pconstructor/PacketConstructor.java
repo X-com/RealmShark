@@ -56,8 +56,8 @@ public class PacketConstructor implements PConstructor, PReset {
      */
     public void packetReceived(ByteBuffer encryptedData) {
         try {
-            int size = encryptedData.getInt(0);
-            byte type = encryptedData.get(4);
+            int size = encryptedData.getInt();
+            byte type = encryptedData.get();
 
             boolean sync = tickAligner.checkRC4Alignment(encryptedData, size, type);
 

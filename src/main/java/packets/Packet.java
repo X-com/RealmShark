@@ -18,5 +18,5 @@ public abstract class Packet {
      *
      * @param buffer The data of the packet in a rotmg buffer format.
      */
-    public abstract void deserialize(PBuffer buffer);
+    public abstract void deserialize(PBuffer buffer) throws Exception;
 }

@@ -34,8 +34,11 @@ public class ShowEffectPacket extends Packet {
      */
     public float duration;
 
+    // TODO: currently bugged, fix this
     @Override
     public void deserialize(PBuffer buffer) {
+        pos1 = new WorldPosData();
+        pos2 = new WorldPosData();
         effectType = buffer.readUnsignedByte();
         int loc2 = buffer.readUnsignedByte();
         if ((loc2 & 64) == 64) {
