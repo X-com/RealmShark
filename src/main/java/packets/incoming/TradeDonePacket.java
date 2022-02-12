@@ -19,7 +19,7 @@ public class TradeDonePacket extends Packet {
     public String description;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         code = TradeResult.byOrdinal(buffer.readInt());
         description = buffer.readString();
     }

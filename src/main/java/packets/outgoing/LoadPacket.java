@@ -21,7 +21,7 @@ public class LoadPacket extends Packet {
     public boolean isChallenger;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         charId = buffer.readInt();
         isFromArena = buffer.readBoolean();
         isChallenger = buffer.readBoolean();

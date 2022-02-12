@@ -21,7 +21,7 @@ public class EvolvedPetMessage extends Packet {
     public int finalSkin;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         petId = buffer.readInt();
         initialSkin = buffer.readInt();
         finalSkin = buffer.readInt();

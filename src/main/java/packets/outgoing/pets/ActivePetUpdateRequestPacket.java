@@ -18,7 +18,7 @@ public class ActivePetUpdateRequestPacket extends Packet {
     public int instanceId;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         commandType = ActivePetUpdateType.byOrdinal(buffer.readByte());
         instanceId = buffer.readInt();
     }

@@ -13,7 +13,7 @@ public class ModeratorActionMessage extends Packet {
     public String message;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         message = buffer.readString();
     }
 }

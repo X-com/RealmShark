@@ -62,7 +62,7 @@ public class HelloPacket extends Packet {
     public String clientToken;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         buildVersion = buffer.readString();
         gameId = buffer.readInt();
         accessToken = buffer.readString();

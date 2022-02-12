@@ -2,8 +2,6 @@ package packets.incoming;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.CompressedInt;
-import packets.buffer.data.GroundTileData;
 
 /**
  * Received when the player enters or updates their vault
@@ -55,25 +53,25 @@ public class VaultContentPacket extends Packet {
     public short nextPotionMax;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         unknownBool = buffer.readBoolean();
-        vaultItemCount = new CompressedInt().deserialize(buffer);
-        giftItemCount = new CompressedInt().deserialize(buffer);
-        potionItemCount = new CompressedInt().deserialize(buffer);
+        vaultItemCount = buffer.readCompressedInt();
+        giftItemCount = buffer.readCompressedInt();
+        potionItemCount = buffer.readCompressedInt();
 
-        vaultContents = new int[new CompressedInt().deserialize(buffer)];
+        vaultContents = new int[buffer.readCompressedInt()];
         for (int i = 0; i < vaultContents.length; i++) {
-            vaultContents[i] = new CompressedInt().deserialize(buffer);
+            vaultContents[i] = buffer.readCompressedInt();
         }
 
-        giftContents = new int[new CompressedInt().deserialize(buffer)];
+        giftContents = new int[buffer.readCompressedInt()];
         for (int i = 0; i < giftContents.length; i++) {
-            giftContents[i] = new CompressedInt().deserialize(buffer);
+            giftContents[i] = buffer.readCompressedInt();
         }
 
-        potionContents = new int[new CompressedInt().deserialize(buffer)];
+        potionContents = new int[buffer.readCompressedInt()];
         for (int i = 0; i < potionContents.length; i++) {
-            potionContents[i] = new CompressedInt().deserialize(buffer);
+            potionContents[i] = buffer.readCompressedInt();
         }
 
         vaultUpgradeCost = buffer.readShort();

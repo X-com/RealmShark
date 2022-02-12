@@ -34,7 +34,7 @@ public class MapInfoPacket extends Packet {
     /**
      * The seed value for the client's PRNG
      */
-    public long fp;
+    public long seed;
     /**
      * > Unknown
      */
@@ -55,20 +55,30 @@ public class MapInfoPacket extends Packet {
      * The time the connection to the game was started
      */
     public long gameOpenedTime;
+    /**
+     * Build version
+     */
+    public String buildVersion;
+    /**
+     * unknown
+     */
+    public String unknownString;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         width = buffer.readInt();
         height = buffer.readInt();
         name = buffer.readString();
         displayName = buffer.readString();
         realmName = buffer.readString();
-        fp = buffer.readUnsignedInt();
+        seed = buffer.readUnsignedInt();
         background = buffer.readInt();
         difficulty = buffer.readInt();
         allowPlayerTeleport = buffer.readBoolean();
         showDisplays = buffer.readBoolean();
         maxPlayers = buffer.readShort();
         gameOpenedTime = buffer.readUnsignedInt();
+        buildVersion = buffer.readString();
+        unknownString = buffer.readStringUTF32();
     }
 }

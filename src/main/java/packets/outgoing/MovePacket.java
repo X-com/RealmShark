@@ -34,7 +34,7 @@ public class MovePacket extends Packet {
     public MoveRecord[] records;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         tickId = buffer.readInt();
         time = buffer.readInt();
         newPosition = new WorldPosData().deserialize(buffer);

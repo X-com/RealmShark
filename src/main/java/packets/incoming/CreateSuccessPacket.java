@@ -17,7 +17,7 @@ public class CreateSuccessPacket extends Packet {
     public int charId;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         objectId = buffer.readInt();
         charId = buffer.readInt();
     }

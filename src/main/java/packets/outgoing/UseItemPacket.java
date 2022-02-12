@@ -27,7 +27,7 @@ public class UseItemPacket extends Packet {
     public byte useType;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         time = buffer.readInt();
         slotObject = new SlotObjectData().deserialize(buffer);
         itemUsePos = new WorldPosData().deserialize(buffer);

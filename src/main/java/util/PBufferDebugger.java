@@ -199,9 +199,9 @@ public class PBufferDebugger extends PBuffer {
      *
      * @return Returns a long that have been deserialized.
      */
-    public long readCompressedInt() {
+    public int readCompressedInt() {
         printDebugStart("readCompressedInt");
-        long i = super.readCompressedInt();
+        int i = super.readCompressedInt();
         printDebugEnd(i+"");
         return i;
     }

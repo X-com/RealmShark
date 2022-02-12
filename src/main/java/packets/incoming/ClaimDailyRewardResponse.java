@@ -21,7 +21,7 @@ public class ClaimDailyRewardResponse extends Packet {
     public int gold;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         itemId = buffer.readInt();
         quantity = buffer.readInt();
         gold = buffer.readInt();

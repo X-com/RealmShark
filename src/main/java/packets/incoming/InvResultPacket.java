@@ -13,7 +13,7 @@ public class InvResultPacket extends Packet {
     public int result;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         result = buffer.readInt();
     }
 }

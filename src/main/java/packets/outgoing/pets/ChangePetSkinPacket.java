@@ -22,7 +22,7 @@ public class ChangePetSkinPacket extends Packet {
     public PaymentType currency;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         petId = buffer.readInt();
         skinType = buffer.readInt();
         currency = PaymentType.byOrdinal(buffer.readInt());

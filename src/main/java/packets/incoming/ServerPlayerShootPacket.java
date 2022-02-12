@@ -32,14 +32,40 @@ public class ServerPlayerShootPacket extends Packet {
      * The damage which will be dealt by the projectile
      */
     public short damage;
+    /**
+     * Unknown
+     */
+    public int unknownInt;
+    /**
+     *
+     */
+
 
     @Override
-    public void deserialize(PBuffer buffer) {
-        bulletId = buffer.readUnsignedByte();
+    public void deserialize(PBuffer buffer) throws Exception {
+        bulletId = buffer.readUnsignedShort();
         ownerId = buffer.readInt();
         containerType = buffer.readInt();
         startingPos = new WorldPosData().deserialize(buffer);
         angle = buffer.readFloat();
         damage = buffer.readShort();
+        unknownInt = buffer.readInt();
+
+        switch ()
+
+//        public short GELANIFLOON; // 0x10
+//        public int BHBLILNECJL; // 0x14
+//        public int IPDJPBMBAOC; // 0x18
+//        public float NJCBCFBLAAB; // 0x1C
+//        public short BKEILPIFPMB; // 0x20
+//        public OHPIBKLOFIN CBLBGAHHEHF; // 0x28
+//        public int KKIKDIHKKPE; // 0x30
+//        public byte BPLFFFJLNFF; // 0x34
+//        public byte OKLLNCONDHI; // 0x35
+//        public float IICAHAHELEF; // 0x38
+    }
+
+    public String toString(){
+        return String.format("%d %d %d %s %f %d\n", bulletId, ownerId, containerType, startingPos, angle, damage);
     }
 }

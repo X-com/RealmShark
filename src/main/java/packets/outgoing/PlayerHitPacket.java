@@ -17,7 +17,7 @@ public class PlayerHitPacket extends Packet {
     public int objectId;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         bulletId = buffer.readUnsignedByte();
         objectId = buffer.readInt();
     }

@@ -24,7 +24,7 @@ public class ExaltationUpdatePacket extends Packet {
     public byte manaProgress;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         objType = buffer.readShort();
         dexterityProgress = buffer.readByte();
         speedProgress = buffer.readByte();

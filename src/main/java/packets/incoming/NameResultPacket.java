@@ -17,7 +17,7 @@ public class NameResultPacket extends Packet {
     public String errorText;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         success = buffer.readBoolean();
         errorText = buffer.readString();
     }

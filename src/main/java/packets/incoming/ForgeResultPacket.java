@@ -18,7 +18,7 @@ public class ForgeResultPacket extends Packet {
     public SlotObjectData[] results;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         success = buffer.readBoolean();
 
         results = new SlotObjectData[buffer.readByte()];

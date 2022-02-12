@@ -21,7 +21,7 @@ public class KeyInfoResponsePacket extends Packet {
     public String creator;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         name = buffer.readString();
         description = buffer.readString();
         creator = buffer.readString();

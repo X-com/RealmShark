@@ -121,7 +121,9 @@ public enum StatType {
     POTION_TWO_TYPE(117),
     POTION_THREE_TYPE(118),
     POTION_BELT(119),
-    FORGEFIRE(120);
+    FORGEFIRE(120),
+    UNKNOWN121(121),
+    UNKNOWN123(123);
 
     private final int index;
 

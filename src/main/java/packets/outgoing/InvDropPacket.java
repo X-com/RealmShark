@@ -14,7 +14,7 @@ public class InvDropPacket extends Packet {
     public SlotObjectData slotObject;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         slotObject = new SlotObjectData().deserialize(buffer);
     }
 }

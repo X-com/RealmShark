@@ -45,7 +45,7 @@ public class AoePacket extends Packet {
     public boolean armorPiercing;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         pos = new WorldPosData().deserialize(buffer);
         radius = buffer.readFloat();
         damage = buffer.readUnsignedShort();

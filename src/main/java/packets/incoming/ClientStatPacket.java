@@ -17,7 +17,7 @@ public class ClientStatPacket extends Packet {
     public int value;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         name = buffer.readString();
         value = buffer.readInt();
     }

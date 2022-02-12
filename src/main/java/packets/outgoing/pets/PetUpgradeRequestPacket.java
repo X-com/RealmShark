@@ -36,7 +36,7 @@ public class PetUpgradeRequestPacket extends Packet {
     public PaymentType paymentType;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         petTransType = PetUpgradeType.byOrdinal(buffer.readByte());
         pIdOne = buffer.readInt();
         pIdTwo = buffer.readInt();

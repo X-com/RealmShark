@@ -15,7 +15,7 @@ public class PetYardUpdate extends Packet {
     public PetYardType yardType;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         yardType = PetYardType.byOrdinal(buffer.readInt());
     }
 }

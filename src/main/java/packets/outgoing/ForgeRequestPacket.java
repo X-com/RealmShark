@@ -18,7 +18,7 @@ public class ForgeRequestPacket extends Packet {
     public SlotObjectData slotsUsed;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         objectId = buffer.readInt();
         slotsUsed = new SlotObjectData().deserialize(buffer);
     }

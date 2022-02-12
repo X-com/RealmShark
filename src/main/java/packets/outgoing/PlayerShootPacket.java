@@ -46,7 +46,7 @@ public class PlayerShootPacket extends Packet {
     public boolean isBurst;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         time = buffer.readInt();
         bulletId = buffer.readByte();
         unknownByte = buffer.readByte();

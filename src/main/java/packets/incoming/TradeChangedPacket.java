@@ -16,7 +16,7 @@ public class TradeChangedPacket extends Packet {
     public boolean[] offer;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         offer = new boolean[buffer.readShort()];
         for (int i = 0; i < offer.length; i++) {
             offer[i] = buffer.readBoolean();

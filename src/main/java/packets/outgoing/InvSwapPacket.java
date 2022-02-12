@@ -27,7 +27,7 @@ public class InvSwapPacket extends Packet {
     public SlotObjectData slotObject2;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         time = buffer.readInt();
         position = new WorldPosData().deserialize(buffer);
         slotObject1 = new SlotObjectData().deserialize(buffer);

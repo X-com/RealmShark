@@ -17,7 +17,7 @@ public class InvitedToGuildPacket extends Packet {
     public String guildName;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         name = buffer.readString();
         guildName = buffer.readString();
     }

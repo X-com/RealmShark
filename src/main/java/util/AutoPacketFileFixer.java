@@ -148,7 +148,7 @@ public class AutoPacketFileFixer {
                     write = true;
                     sb.append("    @Override");
                     sb.append("\n");
-                    sb.append("    public void deserialize(PBuffer buffer) {");
+                    sb.append("    public void deserialize(PBuffer buffer) throws Exception {");
                     sb.append("\n");
                 }
             }

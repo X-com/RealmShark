@@ -13,7 +13,7 @@ public class NewAbilityMessage extends Packet {
     public int abilityType;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         abilityType = buffer.readInt();
     }
 }

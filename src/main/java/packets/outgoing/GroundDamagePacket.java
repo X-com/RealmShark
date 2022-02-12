@@ -18,7 +18,7 @@ public class GroundDamagePacket extends Packet {
     public WorldPosData position;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         time = buffer.readInt();
         position = new WorldPosData().deserialize(buffer);
     }

@@ -13,7 +13,7 @@ public class PlayerTextPacket extends Packet {
     public String text;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         text = buffer.readString();
     }
 }

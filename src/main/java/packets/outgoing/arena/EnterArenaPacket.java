@@ -13,7 +13,7 @@ public class EnterArenaPacket extends Packet {
     public int currency;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         currency = buffer.readInt();
     }
 }

@@ -42,21 +42,27 @@ public class WindowsSniffer implements Sniffer {
         NetworkInterface[] list = JpcapCaptor.getDeviceList();
         JpcapCaptor[] captors = new JpcapCaptor[list.length];
         sniffers = new boolean[list.length];
-        for (final int[] number = {0}; number[0] < list.length; number[0]++) {
-            captors[number[0]] = JpcapCaptor.openDevice(list[number[0]], 2000, false, 20);
+        for (int number = 0; number < list.length; number++) {
+            captors[number] = JpcapCaptor.openDevice(list[number], 2000, false, 20);
             try {
-                captors[number[0]].setFilter(filter, true);
+                captors[number].setFilter(filter, true);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if (captors[number[0]] != null) {
+            if (captors[number] != null) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                }
+                int finalNumber = number;
                 new Thread(new Runnable() {
-                    int num = number[0];
+                    int num = finalNumber;
 
                     @Override
                     public void run() {
                         captors[num].loopPacket(-1, (packet) -> {
                             if (packet instanceof TCPPacket) {
+                                sniffers[num] = true;
                                 processor.receivedPackets((TCPPacket) packet);
                             }
                         });

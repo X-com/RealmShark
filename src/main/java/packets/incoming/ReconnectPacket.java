@@ -37,7 +37,7 @@ public class ReconnectPacket extends Packet {
     public boolean isFromArena;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         name = buffer.readString();
         host = buffer.readString();
         port = buffer.readInt();

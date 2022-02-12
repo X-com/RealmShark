@@ -13,7 +13,7 @@ public class ActivePetPacket extends Packet {
     public int instanceId;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         instanceId = buffer.readInt();
     }
 

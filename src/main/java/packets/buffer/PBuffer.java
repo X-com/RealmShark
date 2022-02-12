@@ -1,5 +1,11 @@
 package packets.buffer;
 
+import packets.Packet;
+import packets.PacketType;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -135,11 +141,8 @@ public class PBuffer {
      * Deserialize a byte array
      */
     public byte[] readByteArray() {
-        short arraylen = readShort();
-        byte[] out = new byte[arraylen];
-        for (int i = 0; i < arraylen; i++) {
-            out[i] = readByte();
-        }
+        byte[] out = new byte[readShort()];
+        buffer.get(out);
         return out;
     }
 
@@ -150,10 +153,8 @@ public class PBuffer {
      * @return Returns a byte array that have been deserialized.
      */
     public byte[] readBytes(int bytes) {
-        byte[] out = new byte[bytes];
-        for (int i = 0; i < bytes; i++) {
-            out[i] = buffer.get();
-        }
+        byte[] out = new byte[readShort()];
+        buffer.get(out);
         return out;
     }
 
@@ -162,15 +163,15 @@ public class PBuffer {
      *
      * @return Returns a long that have been deserialized.
      */
-    public long readCompressedInt() {
+    public int readCompressedInt() {
         int uByte = readUnsignedByte();
         boolean isNegative = (uByte & 64) != 0;
         int shift = 6;
-        long value = uByte & 63;
+        int value = uByte & 63;
 
         while ((uByte & 128) != 0) {
             uByte = readUnsignedByte();
-            value = value | ((long) (uByte & 127)) << shift;
+            value |= (uByte & 127) << shift;
             shift += 7;
         }
 
@@ -187,5 +188,73 @@ public class PBuffer {
      */
     public String printBufferArray() {
         return Arrays.toString(buffer.array());
+    }
+
+    /**
+     * Returns the remaining bytes in the buffer from the current index.
+     *
+     * @return Returns the remaining bytes.
+     */
+    public byte[] giveRemainingArray() {
+        return Arrays.copyOfRange(buffer.array(), getIndex(), size());
+    }
+
+    /**
+     * Error check if buffer is not finished.
+     *
+     * @param packetType
+     * @param type
+     */
+    static FileOutputStream outputStream;
+
+    static {
+        try {
+            outputStream = new FileOutputStream("bitData");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void errorCheck(PacketType packetType, Packet type) {
+        if (buffer.capacity() != buffer.position()) {
+            System.out.println("Buffer not finished " + packetType + " : " + buffer.position() + " " + buffer.capacity());
+            System.out.println(type);
+
+            StringBuilder sb = new StringBuilder();
+            StringBuilder sb2 = new StringBuilder();
+            for (int i = 0; i < buffer.array().length; i++) {
+                int b = Byte.toUnsignedInt(buffer.array()[i]);
+                sb.append("," + b);
+                sb2.append("," + Integer.toHexString(b));
+//                try {
+//                    outputStream.write(0);
+//                    outputStream.write(0);
+//                    outputStream.write(0);
+//                    outputStream.write(0);
+//                    outputStream.write(0);
+//                    outputStream.write(0);
+//                    outputStream.write(0);
+//                    outputStream.write(0);
+//                    outputStream.write(0);
+//                    outputStream.write(0);
+//                    outputStream.write(buffer.array());
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+            }
+            System.out.println(sb);
+            System.out.println(sb2);
+        }
+    }
+
+    public String getArray() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < buffer.array().length; i++) {
+            if(i!=0)sb.append(",");
+            sb.append(Byte.toUnsignedInt(buffer.array()[i]));
+        }
+        return sb.toString();
     }
 }

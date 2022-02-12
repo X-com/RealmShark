@@ -45,7 +45,7 @@ public class TextPacket extends Packet {
     public int starBackground;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         name = buffer.readString();
         objectId = buffer.readInt();
         numStars = buffer.readShort();

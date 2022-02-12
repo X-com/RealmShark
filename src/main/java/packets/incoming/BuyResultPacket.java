@@ -17,7 +17,7 @@ public class BuyResultPacket extends Packet {
     public String resultString;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         result = buffer.readInt();
         resultString = buffer.readString();
     }

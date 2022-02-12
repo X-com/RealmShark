@@ -22,7 +22,7 @@ public class ReskinPetPacket extends Packet {
     public SlotObjectData item;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         instanceId = buffer.readInt();
         newPetType = buffer.readInt();
         item = new SlotObjectData().deserialize(buffer);

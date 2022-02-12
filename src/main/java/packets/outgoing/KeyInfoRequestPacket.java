@@ -13,7 +13,7 @@ public class KeyInfoRequestPacket extends Packet {
     public int itemType;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         itemType = buffer.readInt();
     }
 }

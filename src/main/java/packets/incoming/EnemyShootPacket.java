@@ -44,7 +44,7 @@ public class EnemyShootPacket extends Packet {
     public float angleInc;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         bulletId = buffer.readUnsignedByte();
         ownerId = buffer.readInt();
         bulletType = buffer.readUnsignedByte();

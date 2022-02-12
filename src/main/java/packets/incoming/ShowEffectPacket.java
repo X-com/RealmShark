@@ -2,7 +2,6 @@ package packets.incoming;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.CompressedInt;
 import packets.buffer.data.WorldPosData;
 
 /**
@@ -28,53 +27,66 @@ public class ShowEffectPacket extends Packet {
     /**
      * The color of the effect
      */
-    public long color;
+    public int color;
     /**
      * The duration of the effect
      */
     public float duration;
 
+    /**
+     * unknown
+     */
+    public byte unknown;
+
     // TODO: currently bugged, fix this
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         pos1 = new WorldPosData();
         pos2 = new WorldPosData();
         effectType = buffer.readUnsignedByte();
-        int loc2 = buffer.readUnsignedByte();
-        if ((loc2 & 64) == 64) {
-            targetObjectId = new CompressedInt().deserialize(buffer);
+        int ignore = buffer.readUnsignedByte();
+//        System.out.println("show effect: " + buffer.getArray());
+//        System.out.println(ignore + " " + Integer.toBinaryString(ignore));
+        if ((ignore & 64) == 64) {
+            targetObjectId = buffer.readCompressedInt();
         } else {
             targetObjectId = 0;
         }
-        if ((loc2 & 2) == 2) {
+        if ((ignore & 2) == 2) {
             pos1.x = buffer.readFloat();
         } else {
             pos1.x = 0;
         }
-        if ((loc2 & 4) == 4) {
+        if ((ignore & 4) == 4) {
             pos1.y = buffer.readFloat();
         } else {
             pos1.y = 0;
         }
-        if ((loc2 & 8) == 8) {
+        if ((ignore & 8) == 8) {
             pos2.x = buffer.readFloat();
         } else {
             pos2.x = 0;
         }
-        if ((loc2 & 16) == 16) {
+        if ((ignore & 16) == 16) {
             pos2.y = buffer.readFloat();
         } else {
             pos2.y = 0;
         }
-        if ((loc2 & 1) == 1) {
+        if ((ignore & 1) == 1) {
             color = buffer.readInt();
         } else {
-            color = 4294967295L;
+            color = 0;
         }
-        if ((loc2 & 32) == 32) {
+        if ((ignore & 32) == 32) {
             duration = buffer.readFloat();
         } else {
-            duration = 1;
+            duration = 0;
         }
+        if(effectType == 15){
+            unknown = buffer.readByte();
+        }
+//        String s = String.format("%06X",color);
+//        System.out.println("targetObjectId:" + targetObjectId + " (" + pos1.x + "," + pos1.y +") (" + pos2.x + "," + pos2.y +") " + " color:" + s + " duration:" + duration);
+//        buffer.readByte(); // TODO: This is not a fix. Just to stop the screaming.
     }
 }

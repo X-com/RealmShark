@@ -25,7 +25,7 @@ public class OtherHitPacket extends Packet {
     public int targetId;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         time = buffer.readInt();
         bulletId = buffer.readUnsignedByte();
         objectId = buffer.readInt();

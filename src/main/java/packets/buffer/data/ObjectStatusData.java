@@ -23,11 +23,11 @@ public class ObjectStatusData {
      * @return Returns this object after deserializing.
      */
     public ObjectStatusData deserialize(PBuffer buffer) {
-        objectId = new CompressedInt().deserialize(buffer);
+        objectId = buffer.readCompressedInt();
         pos = new WorldPosData().deserialize(buffer);
-        int statLen = new CompressedInt().deserialize(buffer);
-        stats = new StatData[statLen];
-        for (int i = 0; i < statLen; i++) {
+
+        stats = new StatData[buffer.readCompressedInt()];
+        for (int i = 0; i < stats.length; i++) {
             stats[i] = new StatData().deserialize(buffer);
         }
 

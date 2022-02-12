@@ -13,7 +13,7 @@ public class DeletePetMessage extends Packet {
     public int petId;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         petId = buffer.readInt();
     }
 

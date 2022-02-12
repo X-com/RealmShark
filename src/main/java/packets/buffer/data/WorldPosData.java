@@ -22,9 +22,13 @@ public class WorldPosData {
      * @return Returns this object after deserializing.
      */
     public WorldPosData deserialize(PBuffer buffer) {
-        this.x = buffer.readFloat();
-        this.y = buffer.readFloat();
+        x = buffer.readFloat();
+        y = buffer.readFloat();
 
         return this;
+    }
+
+    public String toString() {
+        return String.format("(%f,%f)", x, y);
     }
 }
