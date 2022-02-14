@@ -58,8 +58,6 @@ public class StreamConstructor implements PConstructor {
         }
     }
 
-    int size = 500;
-
     /**
      * Reset method if a reset packet is retrieved.
      */

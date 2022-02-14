@@ -16,11 +16,15 @@ public class GotoPacket extends Packet {
      * The new position of the entity.
      */
     public WorldPosData position;
+    /**
+     * Unknown int
+     */
+    public int unknownInt;
 
     @Override
     public void deserialize(PBuffer buffer) throws Exception {
         objectId = buffer.readInt();
         position = new WorldPosData().deserialize(buffer);
-        int unknown = buffer.readInt();
+        unknownInt = buffer.readInt();
     }
 }

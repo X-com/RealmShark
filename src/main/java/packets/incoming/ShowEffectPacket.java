@@ -85,9 +85,5 @@ public class ShowEffectPacket extends Packet {
         } else {
             unknown = 100;
         }
-
-//        String s = String.format("%06X",color);
-//        System.out.println("targetObjectId:" + targetObjectId + " (" + pos1.x + "," + pos1.y +") (" + pos2.x + "," + pos2.y +") " + " color:" + s + " duration:" + duration);
-//        buffer.readByte(); // TODO: This is not a fix. Just to stop the screaming.
     }
 }
