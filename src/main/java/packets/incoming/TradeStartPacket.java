@@ -10,7 +10,7 @@ import data.TradeItem;
 public class TradeStartPacket extends Packet {
     /**
      * A description of the player's inventory. Items 0-3 are the hotbar items,
-     * and 4-12 are the 8 inventory slots
+     * and 4-19 are the 8 inventory slots and 8 backpack slots
      */
     public TradeItem[] clientItems;
     /**
@@ -19,9 +19,13 @@ public class TradeStartPacket extends Packet {
     public String partnerName;
     /**
      * A description of the trade partner's inventory. Items 0-3 are the
-     * hotbar items, and 4-12 are the 8 inventory slots
+     * hotbar items, and 4-19 are the 8 inventory slots and 8 backpack slots
      */
     public TradeItem[] partnerItems;
+    /**
+     * Unknown int
+     */
+    public int unknownInt;
 
     @Override
     public void deserialize(PBuffer buffer) throws Exception {
@@ -34,5 +38,6 @@ public class TradeStartPacket extends Packet {
         for (int i = 0; i < partnerItems.length; i++) {
             partnerItems[i] = new TradeItem().deserialize(buffer);
         }
+        unknownInt = buffer.readInt();
     }
 }

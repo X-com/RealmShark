@@ -43,11 +43,19 @@ public class NotificationPacket extends Packet {
     /**
      * unknown
      */
-    public int unknown1;
+    public int unknownInt1;
     /**
      * unknown
      */
-    public int unknown2;
+    public short unknownShort1;
+    /**
+     * unknown
+     */
+    public int unknownInt2;
+    /**
+     * unknown
+     */
+    public int unknownInt3;
 
     @Override
     public void deserialize(PBuffer buffer) throws Exception {
@@ -78,9 +86,13 @@ public class NotificationPacket extends Packet {
                 pictureType = buffer.readInt();
                 return;
             case 10:
-                unknown1 = buffer.readInt();
-                unknown2 = buffer.readByte();
+            case 11:
+                unknownInt1 = buffer.readInt();
+                unknownShort1 = buffer.readShort();
                 return;
+            case 12:
+                unknownInt2 = buffer.readInt();
+                unknownInt3 = buffer.readInt();
             default:
         }
     }

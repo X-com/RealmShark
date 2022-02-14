@@ -11,7 +11,7 @@ public class EnemyShootPacket extends Packet {
     /**
      * The id of the bullet which was fired.
      */
-    public int bulletId;
+    public short bulletId;
     /**
      * The object id of the enemy which fired the projectile.
      */
@@ -45,7 +45,7 @@ public class EnemyShootPacket extends Packet {
 
     @Override
     public void deserialize(PBuffer buffer) throws Exception {
-        bulletId = buffer.readUnsignedByte();
+        bulletId = buffer.readShort();
         ownerId = buffer.readInt();
         bulletType = buffer.readUnsignedByte();
         startingPos = new WorldPosData().deserialize(buffer);

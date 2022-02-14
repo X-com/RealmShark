@@ -8,13 +8,14 @@ public class SlotObjectData {
      */
     public int objectId;
     /**
-     * The index of the slot - e.g. the 4th inventory slot has the slot id 3
+     * The index of the slot - weapon=0, ability=1, armor=2, ring=3
+     * and inventory going from 4 to 11, backpack from 12 to 19
      */
     public int slotId;
     /**
      * The item id of the item in the slot, or -1 if it is empty
      */
-    public long objectType;
+    public int objectType;
 
     /**
      * Deserializer method to extract data from the buffer.
@@ -25,7 +26,7 @@ public class SlotObjectData {
     public SlotObjectData deserialize(PBuffer buffer) {
         objectId = buffer.readInt();
         slotId = buffer.readInt();
-        objectType = buffer.readUnsignedInt();
+        objectType = buffer.readInt();
 
         return this;
     }

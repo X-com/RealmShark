@@ -10,7 +10,14 @@ public enum NotificationEffectType {
     ObjectText(6),
     Death(7),
     DungeonOpened(8),
-    DungeonCall(10);
+    TeleportationError(9),
+    DungeonCall(10),
+    ProgressBar(11),
+    Behavior(12),
+    BlueprintUnlock(20),
+    WithIcon(21),
+    FameBonus(22),
+    ForgeFire(23);
 
     private final int index;
 

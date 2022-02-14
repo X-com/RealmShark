@@ -43,6 +43,10 @@ public class QuestData {
      * The category of this quest
      */
     public int category;
+    /**
+     * Unknown
+     */
+    public int unknownInt;
 
     /**
      * Deserializer method to extract data from the buffer.
@@ -56,17 +60,17 @@ public class QuestData {
         description = buffer.readString();
         expiration = buffer.readString();
         category = buffer.readInt();
-        short requirementsLen = buffer.readShort();
-        requirements = new int[requirementsLen];
-        for (int i = 0; i < requirementsLen; i++) {
+        unknownInt = buffer.readInt();
+
+        requirements = new int[buffer.readShort()];
+        for (int i = 0; i < requirements.length; i++) {
             requirements[i] = buffer.readInt();
         }
-
-        short rewardsLen = buffer.readShort();
-        rewards = new int[rewardsLen];
-        for (int i = 0; i < rewardsLen; i++) {
+        rewards = new int[buffer.readShort()];
+        for (int i = 0; i < rewards.length; i++) {
             rewards[i] = buffer.readInt();
         }
+
         completed = buffer.readBoolean();
         itemOfChoice = buffer.readBoolean();
         repeatable = buffer.readBoolean();

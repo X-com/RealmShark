@@ -3,6 +3,8 @@ package packets.incoming;
 import packets.Packet;
 import packets.buffer.PBuffer;
 
+import java.util.Arrays;
+
 /**
  * Received in response to the `HelloPacket`
  */
@@ -68,9 +70,9 @@ public class MapInfoPacket extends Packet {
      */
     public int unknownInt;
     /**
-     * unknown
+     * String of all modifiers the dungeon has.
      */
-    public String unknownString;
+    public String[] dungeonModifiers;
 
     @Override
     public void deserialize(PBuffer buffer) throws Exception {
@@ -89,16 +91,11 @@ public class MapInfoPacket extends Packet {
         gameOpenedTime = buffer.readUnsignedInt();
         buildVersion = buffer.readString();
         unknownInt = buffer.readInt();
-        unknownString = buffer.readString();
-        System.out.print(unknownString.equals("") ? "" : "\n"+unknownString);
-//        public string[] BEJAFOJGEJJ; // 0x58
+        String dungeonMods = buffer.readString();
+        dungeonModifiers = dungeonMods.split(";");
     }
 
-    int d = 0;
-    public void print() {
-        System.out.println(d++);
-    }
     public String toString() {
-        return String.format("%d %d %s %s %s %d %d %f %b %b %b %d %d %s %d %s\n", width, height, name, displayName, realmName, seed, background, difficulty, allowPlayerTeleport, showDisplays, unknownBoolean, maxPlayers, gameOpenedTime, buildVersion, unknownInt, unknownString);
+        return String.format("%d %d %s %s %s %d %d %f %b %b %b %d %d %s %d %s\n", width, height, name, displayName, realmName, seed, background, difficulty, allowPlayerTeleport, showDisplays, unknownBoolean, maxPlayers, gameOpenedTime, buildVersion, unknownInt, dungeonModifiers);
     }
 }
