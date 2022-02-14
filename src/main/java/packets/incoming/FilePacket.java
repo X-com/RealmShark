@@ -18,7 +18,7 @@ public class FilePacket extends Packet {
     public String file;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         fileName = buffer.readString();
         file = buffer.readStringUTF32();
     }

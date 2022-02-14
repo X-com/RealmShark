@@ -17,7 +17,7 @@ public class ClaimDailyRewardMessage extends Packet {
     public String claimType;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         claimKey = buffer.readString();
         claimType = buffer.readString();
     }

@@ -13,7 +13,7 @@ public class ShootAckPacket extends Packet {
     public int time;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         time = buffer.readInt();
     }
 }

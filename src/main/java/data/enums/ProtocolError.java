@@ -1,4 +1,4 @@
-package packets.buffer.data.enums;
+package data.enums;
 
 /**
  * Most possible protocol error codes and their meaning

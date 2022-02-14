@@ -22,7 +22,7 @@ public class CreatePacket extends Packet {
     public boolean isChallenger;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         classType = buffer.readShort();
         skinType = buffer.readShort();
         isChallenger = buffer.readBoolean();

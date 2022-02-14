@@ -2,8 +2,6 @@ package packets.incoming;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.CompressedInt;
-import packets.buffer.data.GroundTileData;
 
 /**
  * Received when the player enters or updates their vault
@@ -53,32 +51,43 @@ public class VaultContentPacket extends Packet {
      * The size of the player's potion vault after they purchase the current upgrade
      */
     public short nextPotionMax;
+    /**
+     * Strings of all vault item texts. Always empty
+     */
+    public String vaultItemString;
+    /**
+     * Strings of all gift item texts. Always empty
+     */
+    public String giftItemString;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         unknownBool = buffer.readBoolean();
-        vaultItemCount = new CompressedInt().deserialize(buffer);
-        giftItemCount = new CompressedInt().deserialize(buffer);
-        potionItemCount = new CompressedInt().deserialize(buffer);
+        vaultItemCount = buffer.readCompressedInt();
+        giftItemCount = buffer.readCompressedInt();
+        potionItemCount = buffer.readCompressedInt();
 
-        vaultContents = new int[new CompressedInt().deserialize(buffer)];
+        vaultContents = new int[buffer.readCompressedInt()];
         for (int i = 0; i < vaultContents.length; i++) {
-            vaultContents[i] = new CompressedInt().deserialize(buffer);
+            vaultContents[i] = buffer.readCompressedInt();
         }
 
-        giftContents = new int[new CompressedInt().deserialize(buffer)];
+        giftContents = new int[buffer.readCompressedInt()];
         for (int i = 0; i < giftContents.length; i++) {
-            giftContents[i] = new CompressedInt().deserialize(buffer);
+            giftContents[i] = buffer.readCompressedInt();
         }
 
-        potionContents = new int[new CompressedInt().deserialize(buffer)];
+        potionContents = new int[buffer.readCompressedInt()];
         for (int i = 0; i < potionContents.length; i++) {
-            potionContents[i] = new CompressedInt().deserialize(buffer);
+            potionContents[i] = buffer.readCompressedInt();
         }
 
         vaultUpgradeCost = buffer.readShort();
         potionUpgradeCost = buffer.readShort();
         currentPotionMax = buffer.readShort();
         nextPotionMax = buffer.readShort();
+
+        vaultItemString = buffer.readString();
+        giftItemString = buffer.readString();
     }
 }

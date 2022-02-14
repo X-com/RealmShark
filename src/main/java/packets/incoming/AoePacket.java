@@ -2,7 +2,7 @@ package packets.incoming;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.WorldPosData;
+import data.WorldPosData;
 
 /**
  * Received when an AoE grenade has hit the ground.
@@ -45,7 +45,7 @@ public class AoePacket extends Packet {
     public boolean armorPiercing;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         pos = new WorldPosData().deserialize(buffer);
         radius = buffer.readFloat();
         damage = buffer.readUnsignedShort();

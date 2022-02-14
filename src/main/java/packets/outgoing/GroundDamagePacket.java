@@ -2,7 +2,7 @@ package packets.outgoing;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.WorldPosData;
+import data.WorldPosData;
 
 /**
  * Sent when the client takes damage from a ground source, such as lava.
@@ -18,7 +18,7 @@ public class GroundDamagePacket extends Packet {
     public WorldPosData position;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         time = buffer.readInt();
         position = new WorldPosData().deserialize(buffer);
     }

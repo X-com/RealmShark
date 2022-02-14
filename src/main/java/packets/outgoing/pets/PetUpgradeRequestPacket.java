@@ -2,9 +2,9 @@ package packets.outgoing.pets;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.enums.PaymentType;
-import packets.buffer.data.enums.PetUpgradeType;
-import packets.buffer.data.SlotObjectData;
+import data.enums.PaymentType;
+import data.enums.PetUpgradeType;
+import data.SlotObjectData;
 
 /**
  * Sent when you are feeding and fusing pets or upgrading your pet yard
@@ -36,7 +36,7 @@ public class PetUpgradeRequestPacket extends Packet {
     public PaymentType paymentType;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         petTransType = PetUpgradeType.byOrdinal(buffer.readByte());
         pIdOne = buffer.readInt();
         pIdTwo = buffer.readInt();

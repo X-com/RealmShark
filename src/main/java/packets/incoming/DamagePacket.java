@@ -37,7 +37,7 @@ public class DamagePacket extends Packet {
     public int objectId;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         targetId = buffer.readInt();
         effects = new int[buffer.readUnsignedByte()];
         for (int i = 0; i < effects.length; i++) {

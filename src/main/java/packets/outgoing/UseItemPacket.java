@@ -2,8 +2,8 @@ package packets.outgoing;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.SlotObjectData;
-import packets.buffer.data.WorldPosData;
+import data.SlotObjectData;
+import data.WorldPosData;
 
 /**
  * Sent to use an item, such as an ability or consumable.
@@ -27,7 +27,7 @@ public class UseItemPacket extends Packet {
     public byte useType;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         time = buffer.readInt();
         slotObject = new SlotObjectData().deserialize(buffer);
         itemUsePos = new WorldPosData().deserialize(buffer);

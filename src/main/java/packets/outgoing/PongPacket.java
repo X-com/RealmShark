@@ -17,7 +17,7 @@ public class PongPacket extends Packet {
     public int time;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         serial = buffer.readInt();
         time = buffer.readInt();
     }

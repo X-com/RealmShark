@@ -1,6 +1,7 @@
 package packets.packetcapture.pconstructor;
 
 import jpcap.packet.TCPPacket;
+import util.Util;
 
 import java.util.HashMap;
 
@@ -49,6 +50,10 @@ public class StreamConstructor implements PConstructor {
         while (packetMap.containsKey(ident)) {
             TCPPacket packetSeqed = packetMap.remove(ident);
             ident++;
+            if (Util.firstNonLargePacket) { // start listening after a non-max packet
+                if(packet.data.length < 1460) Util.firstNonLargePacket = false;
+                continue;
+            }
             packetConstructor.build(packetSeqed);
         }
     }

@@ -22,7 +22,7 @@ public class AccountListPacket extends Packet {
     public int lockAction;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         accountListId = buffer.readInt();
         accountIds = new String[buffer.readShort()];
         for (int i = 0; i < accountIds.length; i++) {

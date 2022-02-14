@@ -25,7 +25,7 @@ public class EnemyHitPacket extends Packet {
     public boolean kill;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         time = buffer.readInt();
         bulletId = buffer.readUnsignedByte();
         targetId = buffer.readInt();

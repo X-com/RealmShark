@@ -18,7 +18,7 @@ public class QueueInfoPacket extends Packet {
     public int maxPosition;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         currentPosition = buffer.readUnsignedShort();
         maxPosition = buffer.readUnsignedShort();
     }

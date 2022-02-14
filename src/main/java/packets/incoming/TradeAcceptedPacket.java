@@ -23,7 +23,7 @@ public class TradeAcceptedPacket extends Packet {
     public boolean[] partnerOffer;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         clientOffer = new boolean[buffer.readShort()];
         for (int i = 0; i < clientOffer.length; i++) {
             clientOffer[i] = buffer.readBoolean();

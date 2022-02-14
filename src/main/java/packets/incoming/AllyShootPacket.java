@@ -30,7 +30,7 @@ public class AllyShootPacket extends Packet {
     public boolean bard;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         bulletId = buffer.readUnsignedByte();
         ownerId = buffer.readInt();
         containerType = buffer.readShort();

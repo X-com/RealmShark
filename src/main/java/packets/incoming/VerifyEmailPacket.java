@@ -8,6 +8,6 @@ import packets.buffer.PBuffer;
  */
 public class VerifyEmailPacket extends Packet {
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
     }
 }

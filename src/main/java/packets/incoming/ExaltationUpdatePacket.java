@@ -14,25 +14,25 @@ public class ExaltationUpdatePacket extends Packet {
     /**
      * The amount of stats to increase
      */
-    public byte attackProgress;
-    public byte defenseProgress;
-    public byte speedProgress;
-    public byte dexterityProgress;
-    public byte vitalityProgress;
-    public byte wisdomProgress;
-    public byte healthProgress;
-    public byte manaProgress;
+    public int attackProgress;
+    public int defenseProgress;
+    public int speedProgress;
+    public int dexterityProgress;
+    public int vitalityProgress;
+    public int wisdomProgress;
+    public int healthProgress;
+    public int manaProgress;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         objType = buffer.readShort();
-        dexterityProgress = buffer.readByte();
-        speedProgress = buffer.readByte();
-        vitalityProgress = buffer.readByte();
-        wisdomProgress = buffer.readByte();
-        defenseProgress = buffer.readByte();
-        attackProgress = buffer.readByte();
-        manaProgress = buffer.readByte();
-        healthProgress = buffer.readByte();
+        dexterityProgress = buffer.readCompressedInt();
+        speedProgress = buffer.readCompressedInt();
+        vitalityProgress = buffer.readCompressedInt();
+        wisdomProgress = buffer.readCompressedInt();
+        defenseProgress = buffer.readCompressedInt();
+        attackProgress = buffer.readCompressedInt();
+        manaProgress = buffer.readCompressedInt();
+        healthProgress = buffer.readCompressedInt();
     }
 }

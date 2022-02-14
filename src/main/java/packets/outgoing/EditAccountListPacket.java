@@ -21,7 +21,7 @@ public class EditAccountListPacket extends Packet {
     public int objectId;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         accountListId = buffer.readInt();
         add = buffer.readBoolean();
         objectId = buffer.readInt();

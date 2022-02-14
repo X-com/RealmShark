@@ -2,7 +2,7 @@ package packets.incoming;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.WorldPosData;
+import data.WorldPosData;
 
 /**
  * Received when a visible enemy shoots a projectile.
@@ -44,7 +44,7 @@ public class EnemyShootPacket extends Packet {
     public float angleInc;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         bulletId = buffer.readUnsignedByte();
         ownerId = buffer.readInt();
         bulletType = buffer.readUnsignedByte();

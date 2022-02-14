@@ -21,7 +21,7 @@ public class PicPacket extends Packet {
     public byte[] bitmapData;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         width = buffer.readInt();
         height = buffer.readInt();
         bitmapData = buffer.readBytes(width * height * 4);

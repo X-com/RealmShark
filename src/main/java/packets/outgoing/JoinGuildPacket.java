@@ -13,7 +13,7 @@ public class JoinGuildPacket extends Packet {
     public String guildName;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         guildName = buffer.readString();
     }
 }

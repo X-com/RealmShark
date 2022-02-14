@@ -2,7 +2,7 @@ package packets.incoming;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.TradeItem;
+import data.TradeItem;
 
 /**
  * Received when a new active trade has been initiated
@@ -24,7 +24,7 @@ public class TradeStartPacket extends Packet {
     public TradeItem[] partnerItems;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         clientItems = new TradeItem[buffer.readShort()];
         for (int i = 0; i < clientItems.length; i++) {
             clientItems[i] = new TradeItem().deserialize(buffer);

@@ -17,7 +17,7 @@ public class SetConditionPacket extends Packet {
     public float conditionDuration;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         conditionEffect = buffer.readByte();
         conditionDuration = buffer.readFloat();
     }

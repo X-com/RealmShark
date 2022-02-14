@@ -13,7 +13,7 @@ public class PingPacket extends Packet {
     public int serial;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         serial = buffer.readInt();
     }
 }

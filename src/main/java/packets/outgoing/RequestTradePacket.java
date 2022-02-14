@@ -14,7 +14,7 @@ public class RequestTradePacket extends Packet {
     public String name;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         name = buffer.readString();
     }
 }

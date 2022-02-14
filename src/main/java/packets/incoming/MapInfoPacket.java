@@ -30,11 +30,11 @@ public class MapInfoPacket extends Packet {
     /**
      * The difficulty rating of the map
      */
-    public int difficulty;
+    public float difficulty;
     /**
      * The seed value for the client's PRNG
      */
-    public long fp;
+    public long seed;
     /**
      * > Unknown
      */
@@ -48,6 +48,10 @@ public class MapInfoPacket extends Packet {
      */
     public boolean showDisplays;
     /**
+     * unknown
+     */
+    public boolean unknownBoolean;
+    /**
      * The int of players allowed in this map
      */
     public short maxPlayers;
@@ -55,20 +59,46 @@ public class MapInfoPacket extends Packet {
      * The time the connection to the game was started
      */
     public long gameOpenedTime;
+    /**
+     * Build version
+     */
+    public String buildVersion;
+    /**
+     * unknown
+     */
+    public int unknownInt;
+    /**
+     * unknown
+     */
+    public String unknownString;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         width = buffer.readInt();
         height = buffer.readInt();
         name = buffer.readString();
         displayName = buffer.readString();
         realmName = buffer.readString();
-        fp = buffer.readUnsignedInt();
+        seed = buffer.readUnsignedInt();
         background = buffer.readInt();
-        difficulty = buffer.readInt();
+        difficulty = buffer.readFloat();
         allowPlayerTeleport = buffer.readBoolean();
         showDisplays = buffer.readBoolean();
+        unknownBoolean = buffer.readBoolean();
         maxPlayers = buffer.readShort();
         gameOpenedTime = buffer.readUnsignedInt();
+        buildVersion = buffer.readString();
+        unknownInt = buffer.readInt();
+        unknownString = buffer.readString();
+        System.out.print(unknownString.equals("") ? "" : "\n"+unknownString);
+//        public string[] BEJAFOJGEJJ; // 0x58
+    }
+
+    int d = 0;
+    public void print() {
+        System.out.println(d++);
+    }
+    public String toString() {
+        return String.format("%d %d %s %s %s %d %d %f %b %b %b %d %d %s %d %s\n", width, height, name, displayName, realmName, seed, background, difficulty, allowPlayerTeleport, showDisplays, unknownBoolean, maxPlayers, gameOpenedTime, buildVersion, unknownInt, unknownString);
     }
 }

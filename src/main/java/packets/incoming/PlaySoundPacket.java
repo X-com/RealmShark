@@ -17,7 +17,7 @@ public class PlaySoundPacket extends Packet {
     public int soundId;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         ownerId = buffer.readInt();
         soundId = buffer.readUnsignedByte();
     }

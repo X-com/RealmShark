@@ -13,7 +13,7 @@ public class ArenaDeathPacket extends Packet {
     public int cost;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         cost = buffer.readInt();
     }
 }

@@ -8,7 +8,7 @@ import packets.buffer.PBuffer;
  */
 public class QueueCancelPacket extends Packet {
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         // TODO: add this proper
         System.out.println(buffer.printBufferArray());
     }

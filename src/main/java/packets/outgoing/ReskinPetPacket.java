@@ -2,7 +2,7 @@ package packets.outgoing;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.SlotObjectData;
+import data.SlotObjectData;
 
 /**
  * Sent to make an update to the pet currently following the player
@@ -22,7 +22,7 @@ public class ReskinPetPacket extends Packet {
     public SlotObjectData item;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         instanceId = buffer.readInt();
         newPetType = buffer.readInt();
         item = new SlotObjectData().deserialize(buffer);

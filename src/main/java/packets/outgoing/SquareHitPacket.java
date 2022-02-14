@@ -21,7 +21,7 @@ public class SquareHitPacket extends Packet {
     public int objectId;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         time = buffer.readInt();
         bulletId = buffer.readByte();
         objectId = buffer.readInt();

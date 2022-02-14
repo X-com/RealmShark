@@ -11,9 +11,14 @@ public class ReskinUnlockPacket extends Packet {
      * The id of the skin that was unlocked
      */
     public int skinId;
+    /**
+     * The id of the pet skin that was unlocked
+     */
+    public int isPetSkin;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         skinId = buffer.readInt();
+        isPetSkin = buffer.readInt();
     }
 }

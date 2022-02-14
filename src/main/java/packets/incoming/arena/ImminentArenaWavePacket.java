@@ -13,7 +13,7 @@ public class ImminentArenaWavePacket extends Packet {
     public int currentRuntime;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         currentRuntime = buffer.readInt();
     }
 }

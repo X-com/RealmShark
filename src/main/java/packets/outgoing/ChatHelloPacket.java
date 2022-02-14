@@ -17,7 +17,7 @@ public class ChatHelloPacket extends Packet {
     public String token;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         accountId = buffer.readString();
         token = buffer.readString();
     }

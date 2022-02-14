@@ -33,19 +33,14 @@ public class DeathPacket extends Packet {
      * This is a derived property, and is the result of `zombieId !== -1`
      */
     public boolean isZombie;
-    /**
-     * Unknown exalt stat type
-     */
-    public int unknown;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         accountId = buffer.readString();
         charId = buffer.readInt();
         killedBy = buffer.readString();
         zombieType = buffer.readInt();
         zombieId = buffer.readInt();
-        unknown = buffer.readInt();
         isZombie = zombieId != -1;
     }
 }

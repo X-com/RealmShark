@@ -17,7 +17,7 @@ public class GlobalNotificationPacket extends Packet {
     public String text;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         notificationType = buffer.readInt();
         text = buffer.readString();
     }

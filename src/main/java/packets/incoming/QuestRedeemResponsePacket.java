@@ -17,7 +17,7 @@ public class QuestRedeemResponsePacket extends Packet {
     public String message;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         ok = buffer.readBoolean();
         message = buffer.readString();
     }

@@ -13,7 +13,7 @@ public class RealmHeroesLeftPacket extends Packet {
     public int realmHeroesLeft;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         realmHeroesLeft = buffer.readInt();
     }
 }

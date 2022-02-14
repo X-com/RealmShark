@@ -13,7 +13,7 @@ public class ReskinPacket extends Packet {
     public int skinId;
 
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
         skinId = buffer.readInt();
     }
 }

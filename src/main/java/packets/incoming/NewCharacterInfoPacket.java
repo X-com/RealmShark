@@ -7,7 +7,13 @@ import packets.buffer.PBuffer;
  * > Unknown
  */
 public class NewCharacterInfoPacket extends Packet {
+    /**
+     * Unknown
+     */
+    String charXML;
+
     @Override
-    public void deserialize(PBuffer buffer) {
+    public void deserialize(PBuffer buffer) throws Exception {
+        charXML = buffer.readString();
     }
 }
