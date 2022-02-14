@@ -4,6 +4,7 @@ import packets.buffer.PBuffer;
 import packets.incoming.TextPacket;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.register.Register;
+import util.Util;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;

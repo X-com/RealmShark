@@ -3,7 +3,6 @@ package packets.packetcapture;
 import jpcap.packet.TCPPacket;
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.PBufferDebugOne;
 import packets.packetcapture.encryption.RC4;
 import packets.packetcapture.encryption.RotMGRC4Keys;
 import packets.packetcapture.networktap.Sniffer;
@@ -14,8 +13,6 @@ import packets.packetcapture.register.Register;
 import packets.PacketType;
 import util.Util;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -110,10 +107,9 @@ public class PacketProcessor {
 
         try {
             packetType.deserialize(pData);
-            if (Util.showLogs) pData.errorCheck(PacketType.byOrdinal(type), packetType);
+            pData.bufferFullyParsed(PacketType.byOrdinal(type), packetType);
         } catch (Exception e) {
-            System.out.println(pData.getRemainingBytes() + " " + pData.getIndex() + " " + pData.size());
-            if (Util.showLogs) debugPackets(type, data);
+            debugPackets(type, data);
             return;
         }
         Register.INSTANCE.emit(packetType);
@@ -128,10 +124,10 @@ public class PacketProcessor {
             Util.print("Debugging packet: " + PacketType.byOrdinal(type));
             data.position(5);
             PBuffer pDebug = new PBuffer(data);
-            pDebug.errorPrint(PacketType.byOrdinal(type), packetType);
+            pDebug.printError(PacketType.byOrdinal(type), packetType);
             packetType.deserialize(pDebug);
         } catch (Exception e) {
-            e.printStackTrace();
+            Util.print(Arrays.toString(e.getStackTrace()).replaceAll(", ", "\n"));
         }
     }
 }

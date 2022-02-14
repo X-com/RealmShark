@@ -1,6 +1,7 @@
 package packets.packetcapture.pconstructor;
 
 import jpcap.packet.TCPPacket;
+import util.HackyPacketLoggerForABug;
 import util.Util;
 
 import java.nio.ByteBuffer;
@@ -37,6 +38,7 @@ public class ROMGPacketConstructor implements PConstructor {
      */
     @Override
     public void build(TCPPacket packetSequenced) {
+        HackyPacketLoggerForABug.logTCPPacket(packetSequenced); // TEMP logger to find a bug
         for (byte b : packetSequenced.data) {
             bytes[index++] = b;
             if (index >= 4) {

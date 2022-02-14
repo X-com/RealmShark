@@ -2,10 +2,8 @@ package packets.buffer;
 
 import packets.Packet;
 import packets.PacketType;
+import util.Util;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -214,54 +212,39 @@ public class PBuffer {
      * @param packetType
      * @param type
      */
-    static FileOutputStream outputStream;
 
-    ///// -------------- packet error checking -------------
-    static {
-        try {
-            outputStream = new FileOutputStream("bitData");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+    // -------------- packet error checking -------------
 
-    public void errorCheck(PacketType packetType, Packet type) {
+    /**
+     * Checks if the buffer have finished reading all bytes.
+     *
+     * @param packetType Packet type.
+     * @param type       Packet itself.
+     */
+    public void bufferFullyParsed(PacketType packetType, Packet type) {
         if (buffer.capacity() != buffer.position()) {
-            errorPrint(packetType, type);
+            printError(packetType, type);
         }
     }
 
-    public void errorPrint(PacketType packetType, Packet type) {
-        System.out.println("Buffer not finished " + packetType + " : " + buffer.position() + " " + buffer.capacity());
-        System.out.println(type);
+    /**
+     * Prints an error log and the data in the buffer.
+     *
+     * @param packetType Packet type.
+     * @param type       Packet itself.
+     */
+    public void printError(PacketType packetType, Packet type) {
+        Util.print("Buffer not finished " + packetType + " : " + buffer.position() + " " + buffer.capacity());
 
         StringBuilder sb = new StringBuilder();
         StringBuilder sb2 = new StringBuilder();
         StringBuilder sb3 = new StringBuilder();
         for (int i = 0; i < buffer.array().length; i++) {
             int b = Byte.toUnsignedInt(buffer.array()[i]);
-            sb.append("," + String.format("%4d", b));
-            sb2.append("," + String.format("%4s", Integer.toHexString(b)));
-            sb3.append("," + String.format("%4s", (char)b));
-//            try {
-//                outputStream.write(buffer.array());
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+            sb.append("," + String.format("%d", b));
         }
-        System.out.println(sb);
-        System.out.println(sb2);
-        System.out.println(sb3);
-    }
-
-    public String getArray() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < buffer.array().length; i++) {
-            if (i != 0) sb.append(",");
-            sb.append(Byte.toUnsignedInt(buffer.array()[i]));
-        }
-        return sb.toString();
+        Util.print(sb.toString());
+        Util.print(sb2.toString());
+        Util.print(sb3.toString());
     }
 }
