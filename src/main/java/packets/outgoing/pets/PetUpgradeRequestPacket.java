@@ -2,9 +2,9 @@ package packets.outgoing.pets;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.enums.PaymentType;
-import packets.buffer.data.enums.PetUpgradeType;
-import packets.buffer.data.SlotObjectData;
+import data.enums.PaymentType;
+import data.enums.PetUpgradeType;
+import data.SlotObjectData;
 
 /**
  * Sent when you are feeding and fusing pets or upgrading your pet yard

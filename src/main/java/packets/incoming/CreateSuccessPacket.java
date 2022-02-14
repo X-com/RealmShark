@@ -15,10 +15,15 @@ public class CreateSuccessPacket extends Packet {
      * The character id of the player's character
      */
     public int charId;
+    /**
+     * Unknown
+     */
+    public String str;
 
     @Override
     public void deserialize(PBuffer buffer) throws Exception {
         objectId = buffer.readInt();
         charId = buffer.readInt();
+        str = buffer.readString();
     }
 }

@@ -1,4 +1,4 @@
-package packets.buffer.data.enums;
+package data.enums;
 
 public enum PaymentType {
     Invalid(-1),

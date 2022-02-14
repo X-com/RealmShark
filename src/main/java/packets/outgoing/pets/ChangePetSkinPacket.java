@@ -2,7 +2,7 @@ package packets.outgoing.pets;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.enums.PaymentType;
+import data.enums.PaymentType;
 
 /**
  * Sent to change skin of a pet

@@ -2,7 +2,7 @@ package packets.incoming;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.ObjectStatusData;
+import data.ObjectStatusData;
 
 /**
  * Received to notify the player of a new game tick

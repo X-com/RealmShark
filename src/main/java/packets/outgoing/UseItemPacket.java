@@ -2,8 +2,8 @@ package packets.outgoing;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.SlotObjectData;
-import packets.buffer.data.WorldPosData;
+import data.SlotObjectData;
+import data.WorldPosData;
 
 /**
  * Sent to use an item, such as an ability or consumable.

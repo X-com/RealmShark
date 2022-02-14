@@ -51,6 +51,14 @@ public class VaultContentPacket extends Packet {
      * The size of the player's potion vault after they purchase the current upgrade
      */
     public short nextPotionMax;
+    /**
+     * Strings of all vault item texts. Always empty
+     */
+    public String vaultItemString;
+    /**
+     * Strings of all gift item texts. Always empty
+     */
+    public String giftItemString;
 
     @Override
     public void deserialize(PBuffer buffer) throws Exception {
@@ -78,5 +86,8 @@ public class VaultContentPacket extends Packet {
         potionUpgradeCost = buffer.readShort();
         currentPotionMax = buffer.readShort();
         nextPotionMax = buffer.readShort();
+
+        vaultItemString = buffer.readString();
+        giftItemString = buffer.readString();
     }
 }

@@ -2,7 +2,7 @@ package packets.incoming;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.WorldPosData;
+import data.WorldPosData;
 
 /**
  * Received when a visible enemy shoots a projectile.

@@ -38,6 +38,15 @@ public class PBuffer {
     }
 
     /**
+     * Gets the remaining bytes from current index.
+     *
+     * @return number of bytes remaining from current index.
+     */
+    public int getRemainingBytes() {
+        return buffer.capacity() - buffer.position();
+    }
+
+    /**
      * Deserialize a boolean.
      *
      * @return Returns a boolean that have been deserialized.
@@ -207,6 +216,7 @@ public class PBuffer {
      */
     static FileOutputStream outputStream;
 
+    ///// -------------- packet error checking -------------
     static {
         try {
             outputStream = new FileOutputStream("bitData");
@@ -217,42 +227,39 @@ public class PBuffer {
 
     public void errorCheck(PacketType packetType, Packet type) {
         if (buffer.capacity() != buffer.position()) {
-            System.out.println("Buffer not finished " + packetType + " : " + buffer.position() + " " + buffer.capacity());
-            System.out.println(type);
-
-            StringBuilder sb = new StringBuilder();
-            StringBuilder sb2 = new StringBuilder();
-            for (int i = 0; i < buffer.array().length; i++) {
-                int b = Byte.toUnsignedInt(buffer.array()[i]);
-                sb.append("," + b);
-                sb2.append("," + Integer.toHexString(b));
-//                try {
-//                    outputStream.write(0);
-//                    outputStream.write(0);
-//                    outputStream.write(0);
-//                    outputStream.write(0);
-//                    outputStream.write(0);
-//                    outputStream.write(0);
-//                    outputStream.write(0);
-//                    outputStream.write(0);
-//                    outputStream.write(0);
-//                    outputStream.write(0);
-//                    outputStream.write(buffer.array());
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-            }
-            System.out.println(sb);
-            System.out.println(sb2);
+            errorPrint(packetType, type);
         }
+    }
+
+    public void errorPrint(PacketType packetType, Packet type) {
+        System.out.println("Buffer not finished " + packetType + " : " + buffer.position() + " " + buffer.capacity());
+        System.out.println(type);
+
+        StringBuilder sb = new StringBuilder();
+        StringBuilder sb2 = new StringBuilder();
+        StringBuilder sb3 = new StringBuilder();
+        for (int i = 0; i < buffer.array().length; i++) {
+            int b = Byte.toUnsignedInt(buffer.array()[i]);
+            sb.append("," + String.format("%4d", b));
+            sb2.append("," + String.format("%4s", Integer.toHexString(b)));
+            sb3.append("," + String.format("%4s", (char)b));
+//            try {
+//                outputStream.write(buffer.array());
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+        }
+        System.out.println(sb);
+        System.out.println(sb2);
+        System.out.println(sb3);
     }
 
     public String getArray() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < buffer.array().length; i++) {
-            if(i!=0)sb.append(",");
+            if (i != 0) sb.append(",");
             sb.append(Byte.toUnsignedInt(buffer.array()[i]));
         }
         return sb.toString();

@@ -12,7 +12,6 @@ import packets.packetcapture.pconstructor.PConstructor;
 import packets.packetcapture.pconstructor.PacketConstructor;
 import packets.packetcapture.register.Register;
 import packets.PacketType;
-import util.PBufferDebugger;
 import util.Util;
 
 import java.io.FileNotFoundException;
@@ -54,6 +53,7 @@ public class PacketProcessor {
      * TODO: Add linux and mac support later
      */
     public void tapPackets() {
+        Util.firstNonLargePacket = true; // Set flag true to only start listening after non-max packets
         try {
             windowsSniffer.startSniffer();
         } catch (IOException e) {
@@ -108,42 +108,30 @@ public class PacketProcessor {
         Packet packetType = PacketType.getPacket(type).factory();
         PBuffer pData = new PBuffer(data);
 
-        if(type != PacketType.SERVERPLAYERSHOOT.getIndex()) return;
-        System.out.println("packet");
         try {
             packetType.deserialize(pData);
-            if (tempFindMaxSize < data.capacity()) {
-                tempFindMaxSize = data.capacity();
-                Util.print("new MAX size " + PacketType.byOrdinal(type) + ": " + tempFindMaxSize);
-            }
             if (Util.showLogs) pData.errorCheck(PacketType.byOrdinal(type), packetType);
         } catch (Exception e) {
+            System.out.println(pData.getRemainingBytes() + " " + pData.getIndex() + " " + pData.size());
             if (Util.showLogs) debugPackets(type, data);
             return;
         }
-//        Register.INSTANCE.emit(packetType);
+        Register.INSTANCE.emit(packetType);
     }
 
-    private int tempFindMaxSize = 1000; // temp packet max size finder
-
+    /**
+     * Helper for debugging packets
+     */
     private void debugPackets(int type, ByteBuffer data) {
         Packet packetType = PacketType.getPacket(type).factory();
-//        PBuffer pDebug = new PBufferDebugOne(data);
-//        PBufferDebugger pDebug = new PBufferDebugger(data);
         try {
             Util.print("Debugging packet: " + PacketType.byOrdinal(type));
-//            StringBuilder sb = new StringBuilder();
-//            for (int i = 0; i < data.array().length; i++) {
-//                String s = data.array()[i] == 10 ? "\\n" : (char) data.array()[i] + "";
-//                sb.append(s);
-//                System.out.printf("%3d %3d %3s\n", i, data.array()[i], s);
-//            }
-//            System.out.println(sb);
             data.position(5);
             PBuffer pDebug = new PBuffer(data);
+            pDebug.errorPrint(PacketType.byOrdinal(type), packetType);
             packetType.deserialize(pDebug);
         } catch (Exception e) {
-            e.getCause();
+            e.printStackTrace();
         }
     }
 }

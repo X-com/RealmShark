@@ -2,7 +2,7 @@ package packets.incoming;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.TradeItem;
+import data.TradeItem;
 
 /**
  * Received when a new active trade has been initiated

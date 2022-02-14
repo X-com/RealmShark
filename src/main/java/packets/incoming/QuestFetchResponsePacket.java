@@ -2,7 +2,7 @@ package packets.incoming;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.QuestData;
+import data.QuestData;
 
 /**
  * Received to tell the player about new quests

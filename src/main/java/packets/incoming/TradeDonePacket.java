@@ -2,7 +2,7 @@ package packets.incoming;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.enums.TradeResult;
+import data.enums.TradeResult;
 
 /**
  * Received when the active trade has completed, regardless of whether

@@ -2,7 +2,7 @@ package packets.incoming;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.enums.NotificationEffectType;
+import data.enums.NotificationEffectType;
 
 /**
  * Received when a notification is received by the player

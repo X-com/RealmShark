@@ -2,7 +2,7 @@ package packets.outgoing;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.WorldPosData;
+import data.WorldPosData;
 
 /**
  * Sent when the client takes damage from a ground source, such as lava.

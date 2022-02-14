@@ -2,7 +2,7 @@ package packets.incoming;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.SlotObjectData;
+import data.SlotObjectData;
 
 /**
  * Received when the player uses the item forge

@@ -2,7 +2,7 @@ package packets.outgoing.arena;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.SlotObjectData;
+import data.SlotObjectData;
 
 /**
  * > Unknown.

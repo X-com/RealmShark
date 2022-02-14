@@ -1,4 +1,4 @@
-package packets.buffer.data;
+package data;
 
 import packets.buffer.PBuffer;
 

@@ -2,7 +2,7 @@ package packets.incoming;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.enums.FailureCode;
+import data.enums.FailureCode;
 
 /**
  * Received when an error has occurred

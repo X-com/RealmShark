@@ -2,7 +2,7 @@ package packets.outgoing;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.SlotObjectData;
+import data.SlotObjectData;
 
 /**
  * Sent to drop an item from the client's inventory.

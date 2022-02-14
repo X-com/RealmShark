@@ -2,8 +2,8 @@ package packets.outgoing;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.MoveRecord;
-import packets.buffer.data.WorldPosData;
+import data.MoveRecord;
+import data.WorldPosData;
 
 /**
  * Sent to acknowledge a `NewTickPacket`, and to notify the

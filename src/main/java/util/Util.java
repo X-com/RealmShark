@@ -6,6 +6,7 @@ package util;
 public class Util {
 
     public static boolean showLogs = true;
+    public static boolean firstNonLargePacket = false;
 
     /**
      * Fast method to get an integer out of the first 4 bytes of an array.

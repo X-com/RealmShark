@@ -2,9 +2,9 @@ package packets.incoming;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.GroundTileData;
-import packets.buffer.data.ObjectData;
-import packets.buffer.data.WorldPosData;
+import data.GroundTileData;
+import data.ObjectData;
+import data.WorldPosData;
 
 /**
  * Received when an update even occurs. Some events include

@@ -2,7 +2,7 @@ package packets.incoming;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.WorldPosData;
+import data.WorldPosData;
 
 /**
  * Received when an AoE grenade has hit the ground.

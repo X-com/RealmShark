@@ -2,7 +2,7 @@ package packets.incoming;
 
 import packets.Packet;
 import packets.buffer.PBuffer;
-import packets.buffer.data.WorldPosData;
+import data.WorldPosData;
 
 /**
  * Received when another player shoots
@@ -33,13 +33,25 @@ public class ServerPlayerShootPacket extends Packet {
      */
     public short damage;
     /**
-     * Unknown
+     * Unknown int
      */
     public int unknownInt;
     /**
-     *
+     * Unkown byte 1
      */
-
+    public byte unknownByte1;
+    /**
+     * Extra bytes sent to add unknownByte2 & unknownFloat
+     */
+    public boolean extraData = false;
+    /**
+     * Unkown byte 1
+     */
+    public byte unknownByte2;
+    /**
+     * Unkown byte 1
+     */
+    public float unknownFloat;
 
     @Override
     public void deserialize(PBuffer buffer) throws Exception {
@@ -50,22 +62,18 @@ public class ServerPlayerShootPacket extends Packet {
         angle = buffer.readFloat();
         damage = buffer.readShort();
         unknownInt = buffer.readInt();
-
-        switch ()
-
-//        public short GELANIFLOON; // 0x10
-//        public int BHBLILNECJL; // 0x14
-//        public int IPDJPBMBAOC; // 0x18
-//        public float NJCBCFBLAAB; // 0x1C
-//        public short BKEILPIFPMB; // 0x20
-//        public OHPIBKLOFIN CBLBGAHHEHF; // 0x28
-//        public int KKIKDIHKKPE; // 0x30
-//        public byte BPLFFFJLNFF; // 0x34
-//        public byte OKLLNCONDHI; // 0x35
-//        public float IICAHAHELEF; // 0x38
+        unknownByte1 = buffer.readByte();
+        if(buffer.getRemainingBytes() > 4) {
+            extraData = true;
+            unknownByte2 = buffer.readByte();
+            unknownFloat = buffer.readFloat();
+        } else {
+            unknownByte2 = 0;
+            unknownFloat = 372.0f;
+        }
     }
 
     public String toString(){
-        return String.format("%d %d %d %s %f %d\n", bulletId, ownerId, containerType, startingPos, angle, damage);
+        return String.format("%d %d %d %s %f %d (%d %d %d %f)\n", bulletId, ownerId, containerType, startingPos, angle, damage, unknownInt, unknownByte1, unknownByte2, unknownFloat);
     }
 }
