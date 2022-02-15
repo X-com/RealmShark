@@ -13,9 +13,11 @@ import java.io.IOException;
  * aka if proxies are used.
  */
 public class WindowsSniffer implements Sniffer {
-    PacketProcessor processor;
-
-    String filter = "tcp port 2050";
+    private String filter = "tcp port 2050";
+    private static JpcapCaptor[] captors;
+    private PacketProcessor processor;
+    private boolean[] sniffers;
+    private boolean stop;
 
     /**
      * Constructor of a Windows sniffer.
@@ -25,8 +27,6 @@ public class WindowsSniffer implements Sniffer {
     public WindowsSniffer(Object p) {
         processor = (PacketProcessor) p;
     }
-
-    private boolean[] sniffers;
 
     /**
      * Main sniffer method to listen on the network tap for any packets filtered by port
@@ -39,8 +39,9 @@ public class WindowsSniffer implements Sniffer {
      * @throws IOException IO exceptions thrown if unexpected issues are found.
      */
     public void startSniffer() throws IOException {
+        stop = false;
         NetworkInterface[] list = JpcapCaptor.getDeviceList();
-        JpcapCaptor[] captors = new JpcapCaptor[list.length];
+        captors = new JpcapCaptor[list.length];
         sniffers = new boolean[list.length];
         for (int number = 0; number < list.length; number++) {
             captors[number] = JpcapCaptor.openDevice(list[number], 2000, false, 20);
@@ -76,7 +77,9 @@ public class WindowsSniffer implements Sniffer {
         }
         while (true) {
             for (int s = 0; s < sniffers.length; s++) {
-                if (sniffers[s]) {
+                if (stop) {
+                    return;
+                } else if (sniffers[s]) {
                     for (int c = 0; c < sniffers.length; c++) {
                         if (s != c) {
                             captors[c].close();
@@ -88,6 +91,18 @@ public class WindowsSniffer implements Sniffer {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
+            }
+        }
+    }
+
+    /**
+     * Close all network interfaces sniffing the wire.
+     */
+    public void closeSniffers() {
+        stop = true;
+        for (JpcapCaptor c : captors) {
+            if (c != null) {
+                c.close();
             }
         }
     }

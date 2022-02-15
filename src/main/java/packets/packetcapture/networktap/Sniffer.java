@@ -12,4 +12,9 @@ public interface Sniffer {
      * @throws IOException Exception thrown by unexpected IO errors.
      */
     void startSniffer() throws IOException;
+
+    /**
+     * Close all network interfaces sniffing the wire.
+     */
+    void closeSniffers();
 }

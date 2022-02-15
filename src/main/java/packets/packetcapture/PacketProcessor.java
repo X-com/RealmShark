@@ -23,16 +23,17 @@ import java.util.Arrays;
  * streamConstructor and rotmgConstructor class. After the packets are constructed the RC4 cipher is used
  * decrypt the data. The data is then matched with target classes and emitted through the registry.
  */
-public class PacketProcessor {
+public class PacketProcessor extends Thread {
     PConstructor incomingPacketConstructor;
     PConstructor outgoingPacketConstructor;
-    Sniffer windowsSniffer;
+    Sniffer sniffer;
 
     /**
      * Basic constructor of packetProcessor
+     * TODO: Add linux and mac support later
      */
     public PacketProcessor() {
-        windowsSniffer = new WindowsSniffer(this);
+        sniffer = new WindowsSniffer(this);
         incomingPacketConstructor = new PacketConstructor(this, new RC4(RotMGRC4Keys.INCOMING_STRING));
         outgoingPacketConstructor = new PacketConstructor(this, new RC4(RotMGRC4Keys.OUTGOING_STRING));
     }
@@ -45,15 +46,20 @@ public class PacketProcessor {
     }
 
     /**
+     * Stop method for PacketProcessor.
+     */
+    public void stopSniffer() {
+        sniffer.closeSniffers();
+    }
+
+    /**
      * Method to start the packet sniffer that will send packets back to receivedPackets.
-     * <p>
-     * TODO: Add linux and mac support later
      */
     public void tapPackets() {
         incomingPacketConstructor.startResets();
         outgoingPacketConstructor.startResets();
         try {
-            windowsSniffer.startSniffer();
+            sniffer.startSniffer();
         } catch (IOException e) {
             e.printStackTrace();
         }
