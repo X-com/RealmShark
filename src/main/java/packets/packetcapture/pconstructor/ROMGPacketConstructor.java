@@ -60,9 +60,9 @@ public class ROMGPacketConstructor implements PConstructor {
                 if (pSize == 0) pSize = Util.decodeInt(bytes);
 
                 if (index == pSize) {
-                    pSize = 0;
                     index = 0;
                     byte[] data = Arrays.copyOfRange(bytes, 0, pSize);
+                    pSize = 0;
                     ByteBuffer packetData = ByteBuffer.wrap(data).order(ByteOrder.BIG_ENDIAN);
                     packetConstructor.packetReceived(packetData);
                 }
