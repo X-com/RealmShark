@@ -13,4 +13,9 @@ public interface PConstructor {
      * @param packet Raw TCP packet needed to be constructed into a readable packet.
      */
     void build(TCPPacket packet);
+
+    /**
+     * Start resets when starting the packet reading.
+     */
+    void startResets();
 }

@@ -11,8 +11,10 @@ import java.util.HashMap;
  */
 public class StreamConstructor implements PConstructor {
 
-    PReset packetReset;
+    HashMap<Integer, TCPPacket> packetMap = new HashMap();
     PConstructor packetConstructor;
+    PReset packetReset;
+    public int ident;
 
     /**
      * Constructor of StreamConstructor which needs a reset class to reset if reset
@@ -26,8 +28,12 @@ public class StreamConstructor implements PConstructor {
         packetConstructor = pc;
     }
 
-    HashMap<Integer, TCPPacket> packetMap = new HashMap();
-    public int ident;
+    /**
+     * No start resets are needed.
+     */
+    @Override
+    public void startResets() {
+    }
 
     /**
      * Build method for ordering packets according to index used by TCP.
@@ -50,10 +56,6 @@ public class StreamConstructor implements PConstructor {
         while (packetMap.containsKey(ident)) {
             TCPPacket packetSeqed = packetMap.remove(ident);
             ident++;
-            if (Util.firstNonLargePacket) { // start listening after a non-max packet
-                if(packet.data.length < 1460) Util.firstNonLargePacket = false;
-                continue;
-            }
             packetConstructor.build(packetSeqed);
         }
     }

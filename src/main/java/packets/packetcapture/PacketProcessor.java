@@ -50,7 +50,8 @@ public class PacketProcessor {
      * TODO: Add linux and mac support later
      */
     public void tapPackets() {
-        Util.firstNonLargePacket = true; // Set flag true to only start listening after non-max packets
+        incomingPacketConstructor.startResets();
+        outgoingPacketConstructor.startResets();
         try {
             windowsSniffer.startSniffer();
         } catch (IOException e) {

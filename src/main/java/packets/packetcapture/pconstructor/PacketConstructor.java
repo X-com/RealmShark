@@ -77,4 +77,11 @@ public class PacketConstructor implements PConstructor, PReset {
         rc4Cipher.reset();
         tickAligner.reset();
     }
+
+    /**
+     * Resets needed for starting the sniffer.
+     */
+    public void startResets() {
+        romgpConst.startResets();
+    }
 }

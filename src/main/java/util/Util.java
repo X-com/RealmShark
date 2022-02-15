@@ -10,7 +10,6 @@ import java.time.format.DateTimeFormatter;
 public class Util {
 
     public static boolean showLogs = false;
-    public static boolean firstNonLargePacket = false;
     private static PrintWriter printWriter;
 
     /**
