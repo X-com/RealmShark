@@ -11,13 +11,13 @@ public class HackyPacketLoggerForABug {
     public static void logTCPPacket(TCPPacket tcp) {
         logList[index] = tcp;
         index++;
-        if (index > 200) index = 0;
+        if (index >= 200) index = 0;
     }
 
     public static void dumpData() {
         Util.print("Packet sync error. Dumping packets.");
         for (int i = index; i <= (index + 200); i++) {
-            if (i > 200) i = 0;
+            if (i >= 200) i = 0;
             if (logList[i] != null) {
                 Util.print(logList[i].toString());
                 Util.print(Arrays.toString(logList[i].data));
