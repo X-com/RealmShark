@@ -34,7 +34,6 @@ public class UpdatePacket extends Packet {
      */
     public int[] drops;
 
-    // TODO: currently bugged, fix this
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
         levelType = buffer.readByte();

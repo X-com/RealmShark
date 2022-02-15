@@ -53,6 +53,7 @@ public class RC4 {
             int tmp = state[i];
             state[i] = state[j];
             state[j] = tmp;
+            // state[i] ^= state[j] ^= state[i] ^= state[j];
         }
         System.arraycopy(state, 0, initState, 0, state.length);
     }
@@ -77,8 +78,6 @@ public class RC4 {
      *
      * @param amount The amount needed to increment the cipher.
      * @return Returning this object for inlining.
-     * <p>
-     * TODO: find a better solution for algorithmicly setting the state after n skips.
      */
     public RC4 skip(int amount) {
         for (int k = 0; k < amount; k++) {
