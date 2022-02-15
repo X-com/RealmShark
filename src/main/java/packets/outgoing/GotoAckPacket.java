@@ -1,7 +1,7 @@
 package packets.outgoing;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Sent to acknowledge a `GotoPacket`.
@@ -13,7 +13,7 @@ public class GotoAckPacket extends Packet {
     public int time;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         time = buffer.readInt();
     }
 }

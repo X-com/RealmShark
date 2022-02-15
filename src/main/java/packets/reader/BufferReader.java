@@ -1,4 +1,4 @@
-package packets.buffer;
+package packets.reader;
 
 import packets.Packet;
 import packets.PacketType;
@@ -10,10 +10,10 @@ import java.util.Arrays;
 /**
  * Custom buffer class to deserialize the rotmg packets.
  */
-public class PBuffer {
+public class BufferReader {
     ByteBuffer buffer;
 
-    public PBuffer(ByteBuffer data) {
+    public BufferReader(ByteBuffer data) {
         buffer = data;
     }
 

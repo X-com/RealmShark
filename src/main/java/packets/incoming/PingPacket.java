@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received occasionally by the server to prompt a response from the client
@@ -13,7 +13,7 @@ public class PingPacket extends Packet {
     public int serial;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         serial = buffer.readInt();
     }
 }

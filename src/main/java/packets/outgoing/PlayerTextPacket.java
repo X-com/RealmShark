@@ -1,7 +1,7 @@
 package packets.outgoing;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Sent when the client sends a chat message.
@@ -13,7 +13,7 @@ public class PlayerTextPacket extends Packet {
     public String text;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         text = buffer.readString();
     }
 }

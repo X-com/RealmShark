@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received when the player enters the nexus
@@ -14,7 +14,7 @@ public class ForgeUnlockedBlueprints extends Packet {
 
     // TODO: currently bugged, fix this
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         unlockedBlueprints = new int[buffer.readCompressedInt()];
         for (int i = 0; i < unlockedBlueprints.length; i++) {
             unlockedBlueprints[i] = buffer.readCompressedInt();

@@ -1,6 +1,6 @@
 package packets;
 
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Abstract packet class for all incoming or outgoing packets.
@@ -18,5 +18,5 @@ public abstract class Packet {
      *
      * @param buffer The data of the packet in a rotmg buffer format.
      */
-    public abstract void deserialize(PBuffer buffer) throws Exception;
+    public abstract void deserialize(BufferReader buffer) throws Exception;
 }

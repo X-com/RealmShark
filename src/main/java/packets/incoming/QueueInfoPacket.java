@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received when the client connects to a server with a queue.
@@ -18,7 +18,7 @@ public class QueueInfoPacket extends Packet {
     public int maxPosition;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         currentPosition = buffer.readUnsignedShort();
         maxPosition = buffer.readUnsignedShort();
     }

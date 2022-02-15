@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received when a player dies
@@ -35,7 +35,7 @@ public class DeathPacket extends Packet {
     public boolean isZombie;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         accountId = buffer.readString();
         charId = buffer.readInt();
         killedBy = buffer.readString();

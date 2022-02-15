@@ -1,7 +1,7 @@
 package packets.incoming.pets;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received to give the player information about a newly hatched pet
@@ -21,7 +21,7 @@ public class HatchPetMessage extends Packet {
     public int petType;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         petName = buffer.readString();
         petSkin = buffer.readInt();
         petType = buffer.readInt();

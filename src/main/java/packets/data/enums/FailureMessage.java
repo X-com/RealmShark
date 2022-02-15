@@ -1,4 +1,4 @@
-package data.enums;
+package packets.data.enums;
 
 /**
  * Common failure packet messages for when the error code is 0

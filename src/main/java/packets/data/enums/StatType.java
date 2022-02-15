@@ -1,4 +1,4 @@
-package data.enums;
+package packets.data.enums;
 
 /**
  * Ordinal of stats.

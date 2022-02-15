@@ -1,7 +1,7 @@
 package packets.outgoing;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Sent to edit an account id list.
@@ -21,7 +21,7 @@ public class EditAccountListPacket extends Packet {
     public int objectId;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         accountListId = buffer.readInt();
         add = buffer.readBoolean();
         objectId = buffer.readInt();

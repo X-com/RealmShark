@@ -2,8 +2,8 @@ package packets.incoming.pets;
 
 
 import packets.Packet;
-import packets.buffer.PBuffer;
-import data.enums.PetYardType;
+import packets.reader.BufferReader;
+import packets.data.enums.PetYardType;
 
 /**
  * Received when the pet yard is updated to a new type of yard
@@ -15,7 +15,7 @@ public class PetYardUpdate extends Packet {
     public PetYardType yardType;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         yardType = PetYardType.byOrdinal(buffer.readInt());
     }
 }

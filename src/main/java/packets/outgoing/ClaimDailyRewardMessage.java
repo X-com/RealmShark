@@ -1,7 +1,7 @@
 package packets.outgoing;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Sent to claim rewards from the login calendar.
@@ -17,7 +17,7 @@ public class ClaimDailyRewardMessage extends Packet {
     public String claimType;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         claimKey = buffer.readString();
         claimType = buffer.readString();
     }

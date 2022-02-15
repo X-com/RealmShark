@@ -1,7 +1,7 @@
 package packets.incoming.pets;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received to notify the player of a new pet.
@@ -13,7 +13,7 @@ public class ActivePetPacket extends Packet {
     public int instanceId;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         instanceId = buffer.readInt();
     }
 

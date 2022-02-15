@@ -1,7 +1,7 @@
 package packets.outgoing;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Sent to create a new character.
@@ -22,7 +22,7 @@ public class GetPlayersListPacket extends Packet {
     public boolean isChallenger;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         classType = buffer.readShort();
         skinType = buffer.readShort();
         isChallenger = buffer.readBoolean();

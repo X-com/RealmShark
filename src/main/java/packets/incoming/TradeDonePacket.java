@@ -1,8 +1,8 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
-import data.enums.TradeResult;
+import packets.reader.BufferReader;
+import packets.data.enums.TradeResult;
 
 /**
  * Received when the active trade has completed, regardless of whether
@@ -19,7 +19,7 @@ public class TradeDonePacket extends Packet {
     public String description;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         code = TradeResult.byOrdinal(buffer.readInt());
         description = buffer.readString();
     }

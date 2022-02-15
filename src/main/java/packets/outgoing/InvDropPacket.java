@@ -1,8 +1,8 @@
 package packets.outgoing;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
-import data.SlotObjectData;
+import packets.reader.BufferReader;
+import packets.data.SlotObjectData;
 
 /**
  * Sent to drop an item from the client's inventory.
@@ -14,7 +14,7 @@ public class InvDropPacket extends Packet {
     public SlotObjectData slotObject;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         slotObject = new SlotObjectData().deserialize(buffer);
     }
 }

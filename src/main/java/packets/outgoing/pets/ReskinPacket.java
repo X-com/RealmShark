@@ -1,7 +1,7 @@
 package packets.outgoing.pets;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Sent to activate a new skin for the current character.
@@ -13,7 +13,7 @@ public class ReskinPacket extends Packet {
     public int skinId;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         skinId = buffer.readInt();
     }
 }

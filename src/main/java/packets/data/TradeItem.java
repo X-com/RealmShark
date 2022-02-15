@@ -1,6 +1,6 @@
-package data;
+package packets.data;
 
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 public class TradeItem {
     /**
@@ -26,7 +26,7 @@ public class TradeItem {
      * @param buffer Data that needs deserializing.
      * @return Returns this object after deserializing.
      */
-    public TradeItem deserialize(PBuffer buffer) {
+    public TradeItem deserialize(BufferReader buffer) {
         item = buffer.readInt();
         slotType = buffer.readInt();
         tradeable = buffer.readBoolean();

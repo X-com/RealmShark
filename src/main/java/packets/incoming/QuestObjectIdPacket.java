@@ -1,8 +1,7 @@
 package packets.incoming;
 
-import data.GroundTileData;
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received to tell the player the object id of their current quest
@@ -18,7 +17,7 @@ public class QuestObjectIdPacket extends Packet {
     public int[] list;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         objectId = buffer.readInt();
         list = new int[buffer.readCompressedInt()];
         for (int i = 0; i < list.length; i++) {

@@ -1,8 +1,8 @@
 package packets.outgoing.arena;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
-import data.SlotObjectData;
+import packets.reader.BufferReader;
+import packets.data.SlotObjectData;
 
 /**
  * > Unknown.
@@ -18,7 +18,7 @@ public class QuestRedeemPacket extends Packet {
     public SlotObjectData[] slots;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         questId = buffer.readString();
         slots = new SlotObjectData[buffer.readShort()];
         for (int i = 0; i < slots.length; i++) {

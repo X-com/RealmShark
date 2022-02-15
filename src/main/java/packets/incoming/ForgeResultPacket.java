@@ -1,8 +1,8 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
-import data.SlotObjectData;
+import packets.reader.BufferReader;
+import packets.data.SlotObjectData;
 
 /**
  * Received when the player uses the item forge
@@ -18,7 +18,7 @@ public class ForgeResultPacket extends Packet {
     public SlotObjectData[] results;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         success = buffer.readBoolean();
 
         results = new SlotObjectData[buffer.readByte()];

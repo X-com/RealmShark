@@ -1,6 +1,6 @@
-package data;
+package packets.data;
 
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 public class ObjectStatusData {
     /**
@@ -22,7 +22,7 @@ public class ObjectStatusData {
      * @param buffer Data that needs deserializing.
      * @return Returns this object after deserializing.
      */
-    public ObjectStatusData deserialize(PBuffer buffer) {
+    public ObjectStatusData deserialize(BufferReader buffer) {
         objectId = buffer.readCompressedInt();
         pos = new WorldPosData().deserialize(buffer);
 

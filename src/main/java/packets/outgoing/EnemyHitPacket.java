@@ -1,7 +1,7 @@
 package packets.outgoing;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Sent when an enemy has been hit by the player.
@@ -25,7 +25,7 @@ public class EnemyHitPacket extends Packet {
     public boolean kill;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         time = buffer.readInt();
         bulletId = buffer.readUnsignedByte();
         targetId = buffer.readInt();

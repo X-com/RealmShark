@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received to notify the player that a new skin has been unlocked
@@ -17,7 +17,7 @@ public class ReskinUnlockPacket extends Packet {
     public int isPetSkin;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         skinId = buffer.readInt();
         isPetSkin = buffer.readInt();
     }

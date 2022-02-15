@@ -1,4 +1,4 @@
-package data.enums;
+package packets.data.enums;
 
 /**
  * The error codes of messages which can be received in the FailurePacket

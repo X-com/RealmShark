@@ -1,6 +1,6 @@
-package data;
+package packets.data;
 
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 public class SlotObjectData {
     /**
@@ -23,7 +23,7 @@ public class SlotObjectData {
      * @param buffer Data that needs deserializing.
      * @return Returns this object after deserializing.
      */
-    public SlotObjectData deserialize(PBuffer buffer) {
+    public SlotObjectData deserialize(BufferReader buffer) {
         objectId = buffer.readInt();
         slotId = buffer.readInt();
         objectType = buffer.readInt();

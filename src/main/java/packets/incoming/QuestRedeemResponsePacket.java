@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * > Unknown
@@ -17,7 +17,7 @@ public class QuestRedeemResponsePacket extends Packet {
     public String message;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         ok = buffer.readBoolean();
         message = buffer.readString();
     }

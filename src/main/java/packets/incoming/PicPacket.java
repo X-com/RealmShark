@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * A packet which contains a bitmap image
@@ -21,7 +21,7 @@ public class PicPacket extends Packet {
     public byte[] bitmapData;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         width = buffer.readInt();
         height = buffer.readInt();
         bitmapData = buffer.readBytes(width * height * 4);

@@ -1,7 +1,7 @@
 package packets.incoming.arena;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received when a new arena wave is about to begin.
@@ -13,7 +13,7 @@ public class ImminentArenaWavePacket extends Packet {
     public int currentRuntime;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         currentRuntime = buffer.readInt();
     }
 }

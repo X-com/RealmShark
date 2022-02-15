@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received in response to a `ClaimDailyRewardMessage`.
@@ -21,7 +21,7 @@ public class ClaimDailyRewardResponse extends Packet {
     public int gold;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         itemId = buffer.readInt();
         quantity = buffer.readInt();
         gold = buffer.readInt();

@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received when another player shoots a projectile.
@@ -30,7 +30,7 @@ public class AllyShootPacket extends Packet {
     public boolean bard;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         bulletId = buffer.readUnsignedByte();
         ownerId = buffer.readInt();
         containerType = buffer.readShort();

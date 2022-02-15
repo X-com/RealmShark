@@ -1,7 +1,7 @@
 package packets.outgoing;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Sent to teleport to another player.
@@ -13,7 +13,7 @@ public class TeleportPacket extends Packet {
     public int objectId;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         objectId = buffer.readInt();
     }
 }

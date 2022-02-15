@@ -1,9 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
-
-import java.util.Arrays;
+import packets.reader.BufferReader;
 
 /**
  * Received in response to the `HelloPacket`
@@ -75,7 +73,7 @@ public class MapInfoPacket extends Packet {
     public String[] dungeonModifiers;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         width = buffer.readInt();
         height = buffer.readInt();
         name = buffer.readString();

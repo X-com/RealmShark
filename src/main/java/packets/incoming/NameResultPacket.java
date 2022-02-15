@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received in response to a `ChooseNamePacket`
@@ -17,7 +17,7 @@ public class NameResultPacket extends Packet {
     public String errorText;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         success = buffer.readBoolean();
         errorText = buffer.readString();
     }

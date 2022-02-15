@@ -1,7 +1,7 @@
 package packets.outgoing;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Sent when the player inflicts a condition effect.
@@ -17,7 +17,7 @@ public class SetConditionPacket extends Packet {
     public float conditionDuration;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         conditionEffect = buffer.readByte();
         conditionDuration = buffer.readFloat();
     }

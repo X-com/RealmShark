@@ -1,7 +1,7 @@
 package packets.outgoing;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Sent in response to a `MapInfoPacket` to load a character into the map.
@@ -21,7 +21,7 @@ public class LoadPacket extends Packet {
     public boolean isChallenger;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         charId = buffer.readInt();
         isFromArena = buffer.readBoolean();
         isChallenger = buffer.readBoolean();

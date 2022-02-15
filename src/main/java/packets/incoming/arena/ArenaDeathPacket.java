@@ -1,7 +1,7 @@
 package packets.incoming.arena;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received when the player has been killed in the arena.
@@ -13,7 +13,7 @@ public class ArenaDeathPacket extends Packet {
     public int cost;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         cost = buffer.readInt();
     }
 }

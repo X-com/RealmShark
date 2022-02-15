@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received in response to a `CreatePacket`
@@ -21,7 +21,7 @@ public class CreateSuccessPacket extends Packet {
     public String str;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         objectId = buffer.readInt();
         charId = buffer.readInt();
         str = buffer.readString();

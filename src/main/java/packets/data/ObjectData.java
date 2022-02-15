@@ -1,6 +1,6 @@
-package data;
+package packets.data;
 
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 public class ObjectData {
     /**
@@ -18,7 +18,7 @@ public class ObjectData {
      * @param buffer Data that needs deserializing.
      * @return Returns this object after deserializing.
      */
-    public ObjectData deserialize(PBuffer buffer) {
+    public ObjectData deserialize(BufferReader buffer) {
         objectType = buffer.readUnsignedShort();
         status = new ObjectStatusData().deserialize(buffer);
 

@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received to give the player information about their stats.
@@ -17,7 +17,7 @@ public class ClientStatPacket extends Packet {
     public int value;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         name = buffer.readString();
         value = buffer.readInt();
     }

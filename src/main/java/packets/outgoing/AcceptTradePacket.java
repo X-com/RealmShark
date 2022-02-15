@@ -1,7 +1,7 @@
 package packets.outgoing;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Sent to accept the current active trade.
@@ -23,7 +23,7 @@ public class AcceptTradePacket extends Packet {
     public boolean[] partnerOffer;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         clientOffer = new boolean[buffer.readShort()];
         for (int i = 0; i < clientOffer.length; i++) {
             clientOffer[i] = buffer.readBoolean();

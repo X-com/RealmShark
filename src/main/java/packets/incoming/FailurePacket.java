@@ -1,8 +1,8 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
-import data.enums.FailureCode;
+import packets.reader.BufferReader;
+import packets.data.enums.FailureCode;
 
 /**
  * Received when an error has occurred
@@ -18,7 +18,7 @@ public class FailurePacket extends Packet {
     public String errorDescription;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         errorId = FailureCode.byOrdinal(buffer.readInt());
         errorDescription = buffer.readString();
     }

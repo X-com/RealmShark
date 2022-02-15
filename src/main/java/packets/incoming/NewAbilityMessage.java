@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received when a new ability has been unlocked by the player.
@@ -13,7 +13,7 @@ public class NewAbilityMessage extends Packet {
     public int abilityType;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         abilityType = buffer.readInt();
     }
 }

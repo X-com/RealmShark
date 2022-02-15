@@ -1,6 +1,6 @@
-package data;
+package packets.data;
 
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Coordinate data of world objects.
@@ -21,7 +21,7 @@ public class WorldPosData {
      * @param buffer Data that needs deserializing.
      * @return Returns this object after deserializing.
      */
-    public WorldPosData deserialize(PBuffer buffer) {
+    public WorldPosData deserialize(BufferReader buffer) {
         x = buffer.readFloat();
         y = buffer.readFloat();
 

@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received to tell the player about damage done to other players and enemies.
@@ -37,7 +37,7 @@ public class DamagePacket extends Packet {
     public int objectId;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         targetId = buffer.readInt();
         effects = new int[buffer.readUnsignedByte()];
         for (int i = 0; i < effects.length; i++) {

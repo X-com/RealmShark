@@ -1,8 +1,8 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
-import data.QuestData;
+import packets.reader.BufferReader;
+import packets.data.QuestData;
 
 /**
  * Received to tell the player about new quests
@@ -18,7 +18,7 @@ public class QuestFetchResponsePacket extends Packet {
     public short nextRefreshPrice;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         quests = new QuestData[buffer.readShort()];
         for (int i = 0; i < quests.length; i++) {
             quests[i] = new QuestData().deserialize(buffer);

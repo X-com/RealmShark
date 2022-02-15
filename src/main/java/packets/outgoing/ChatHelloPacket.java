@@ -1,7 +1,7 @@
 package packets.outgoing;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Sent to initiate the chat stream (unnused)
@@ -17,7 +17,7 @@ public class ChatHelloPacket extends Packet {
     public String token;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         accountId = buffer.readString();
         token = buffer.readString();
     }

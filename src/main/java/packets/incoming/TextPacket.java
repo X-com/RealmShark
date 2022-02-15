@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received when a chat message is sent by another player or NPC
@@ -45,7 +45,7 @@ public class TextPacket extends Packet {
     public int starBackground;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         name = buffer.readString();
         objectId = buffer.readInt();
         numStars = buffer.readShort();

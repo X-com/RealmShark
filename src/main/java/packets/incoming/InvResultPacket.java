@@ -1,10 +1,8 @@
 package packets.incoming;
 
-import data.SlotObjectData;
+import packets.data.SlotObjectData;
 import packets.Packet;
-import packets.buffer.PBuffer;
-
-import java.util.Arrays;
+import packets.reader.BufferReader;
 
 /**
  * > Unknown.
@@ -36,7 +34,7 @@ public class InvResultPacket extends Packet {
     public int unknownInt2;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         unknownBool = buffer.readBoolean();
         unknownByte = buffer.readByte();
         slotFrom = new SlotObjectData().deserialize(buffer);

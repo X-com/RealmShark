@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received when a global notification is sent out to all players.
@@ -17,7 +17,7 @@ public class GlobalNotificationPacket extends Packet {
     public String text;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         notificationType = buffer.readInt();
         text = buffer.readString();
     }

@@ -1,7 +1,7 @@
 package packets.outgoing;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Sent to prompt the server to send a `ReconnectPacket` which
@@ -14,7 +14,7 @@ public class UsePortalPacket extends Packet {
     public int objectId;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         objectId = buffer.readInt();
     }
 }

@@ -1,7 +1,7 @@
 package packets.outgoing.arena;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Sent to enter the arena.
@@ -13,7 +13,7 @@ public class EnterArenaPacket extends Packet {
     public int currency;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         currency = buffer.readInt();
     }
 }

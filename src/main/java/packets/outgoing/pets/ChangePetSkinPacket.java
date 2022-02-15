@@ -1,8 +1,8 @@
 package packets.outgoing.pets;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
-import data.enums.PaymentType;
+import packets.reader.BufferReader;
+import packets.data.enums.PaymentType;
 
 /**
  * Sent to change skin of a pet
@@ -22,7 +22,7 @@ public class ChangePetSkinPacket extends Packet {
     public PaymentType currency;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         petId = buffer.readInt();
         skinType = buffer.readInt();
         currency = PaymentType.byOrdinal(buffer.readInt());

@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * A packet which contains a file.
@@ -18,7 +18,7 @@ public class FilePacket extends Packet {
     public String file;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         fileName = buffer.readString();
         file = buffer.readStringUTF32();
     }

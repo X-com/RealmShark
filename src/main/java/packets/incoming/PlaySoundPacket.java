@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received to tell the client to play a sound
@@ -17,7 +17,7 @@ public class PlaySoundPacket extends Packet {
     public int soundId;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         ownerId = buffer.readInt();
         soundId = buffer.readUnsignedByte();
     }

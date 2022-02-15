@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received to tell the client how many heroes are left in the current realm
@@ -13,7 +13,7 @@ public class RealmHeroesLeftPacket extends Packet {
     public int realmHeroesLeft;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         realmHeroesLeft = buffer.readInt();
     }
 }

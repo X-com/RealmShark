@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received in response to a `BuyPacket`.
@@ -17,7 +17,7 @@ public class BuyResultPacket extends Packet {
     public String resultString;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         result = buffer.readInt();
         resultString = buffer.readString();
     }

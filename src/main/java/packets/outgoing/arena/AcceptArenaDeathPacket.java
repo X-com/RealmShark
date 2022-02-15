@@ -1,13 +1,13 @@
 package packets.outgoing.arena;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Sent to accept a death in the arena.
  */
 public class AcceptArenaDeathPacket extends Packet {
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
     }
 }

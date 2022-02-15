@@ -1,8 +1,8 @@
 package packets.outgoing;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
-import data.SlotObjectData;
+import packets.reader.BufferReader;
+import packets.data.SlotObjectData;
 
 /**
  * Forge packet sent when forging.
@@ -18,7 +18,7 @@ public class ForgeRequestPacket extends Packet {
     public SlotObjectData slotsUsed;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         objectId = buffer.readInt();
         slotsUsed = new SlotObjectData().deserialize(buffer);
     }

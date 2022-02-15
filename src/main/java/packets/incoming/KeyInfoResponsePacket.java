@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * > Unknown.
@@ -21,7 +21,7 @@ public class KeyInfoResponsePacket extends Packet {
     public String creator;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         name = buffer.readString();
         description = buffer.readString();
         creator = buffer.readString();

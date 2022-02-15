@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received when the active trade is changed
@@ -16,7 +16,7 @@ public class TradeChangedPacket extends Packet {
     public boolean[] offer;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         offer = new boolean[buffer.readShort()];
         for (int i = 0; i < offer.length; i++) {
             offer[i] = buffer.readBoolean();

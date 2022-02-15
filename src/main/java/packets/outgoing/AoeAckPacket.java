@@ -1,8 +1,8 @@
 package packets.outgoing;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
-import data.WorldPosData;
+import packets.reader.BufferReader;
+import packets.data.WorldPosData;
 
 /**
  * Sent to acknowledge an `AoePacket`.
@@ -18,7 +18,7 @@ public class AoeAckPacket extends Packet {
     public WorldPosData position;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         time = buffer.readInt();
         position = new WorldPosData().deserialize(buffer);
     }

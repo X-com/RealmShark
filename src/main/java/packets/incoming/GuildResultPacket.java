@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * > Unknown.
@@ -17,7 +17,7 @@ public class GuildResultPacket extends Packet {
     public String lineBuilderJSON;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         success = buffer.readBoolean();
         lineBuilderJSON = buffer.readString();
     }

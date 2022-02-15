@@ -50,10 +50,10 @@ public class WindowsSniffer implements Sniffer {
                 e.printStackTrace();
             }
             if (captors[number] != null) {
-//                try {
-//                    Thread.sleep(100);
-//                } catch (InterruptedException e) {
-//                }
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                }
                 int finalNumber = number;
                 new Thread(new Runnable() {
                     int num = finalNumber;
@@ -69,6 +69,10 @@ public class WindowsSniffer implements Sniffer {
                     }
                 }).start();
             }
+        }
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
         }
         while (true) {
             for (int s = 0; s < sniffers.length; s++) {

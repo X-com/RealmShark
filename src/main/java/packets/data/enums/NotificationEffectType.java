@@ -1,4 +1,4 @@
-package data.enums;
+package packets.data.enums;
 
 public enum NotificationEffectType {
     StatIncrease(0),

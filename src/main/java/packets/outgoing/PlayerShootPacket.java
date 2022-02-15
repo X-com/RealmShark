@@ -1,8 +1,8 @@
 package packets.outgoing;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
-import data.WorldPosData;
+import packets.reader.BufferReader;
+import packets.data.WorldPosData;
 
 /**
  * Sent when the player shoots a projectile.
@@ -46,7 +46,7 @@ public class PlayerShootPacket extends Packet {
     public boolean isBurst;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         time = buffer.readInt();
         bulletId = buffer.readByte();
         unknownByte = buffer.readByte();

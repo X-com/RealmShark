@@ -1,8 +1,8 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
-import data.WorldPosData;
+import packets.reader.BufferReader;
+import packets.data.WorldPosData;
 
 /**
  * Received to tell the player to display an effect such as an AOE grenade
@@ -39,7 +39,7 @@ public class ShowEffectPacket extends Packet {
     public byte unknown;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         pos1 = new WorldPosData();
         pos2 = new WorldPosData();
         effectType = buffer.readUnsignedByte();

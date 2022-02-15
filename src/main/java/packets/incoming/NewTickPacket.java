@@ -1,8 +1,8 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
-import data.ObjectStatusData;
+import packets.reader.BufferReader;
+import packets.data.ObjectStatusData;
 
 /**
  * Received to notify the player of a new game tick
@@ -30,7 +30,7 @@ public class NewTickPacket extends Packet {
     public ObjectStatusData[] status;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         tickId = buffer.readInt();
         tickTime = buffer.readInt();
         serverRealTimeMS = buffer.readUnsignedInt();

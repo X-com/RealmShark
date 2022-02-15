@@ -1,4 +1,4 @@
-package data.enums;
+package packets.data.enums;
 
 public enum TradeResult {
     Successful(0),

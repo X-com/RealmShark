@@ -1,10 +1,10 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
-import data.GroundTileData;
-import data.ObjectData;
-import data.WorldPosData;
+import packets.reader.BufferReader;
+import packets.data.GroundTileData;
+import packets.data.ObjectData;
+import packets.data.WorldPosData;
 
 /**
  * Received when an update even occurs. Some events include
@@ -36,7 +36,7 @@ public class UpdatePacket extends Packet {
 
     // TODO: currently bugged, fix this
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         levelType = buffer.readByte();
         pos = new WorldPosData().deserialize(buffer);
 

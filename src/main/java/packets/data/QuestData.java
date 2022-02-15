@@ -1,6 +1,6 @@
-package data;
+package packets.data;
 
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 public class QuestData {
     /**
@@ -54,7 +54,7 @@ public class QuestData {
      * @param buffer Data that needs deserializing.
      * @return Returns this object after deserializing.
      */
-    public QuestData deserialize(PBuffer buffer) {
+    public QuestData deserialize(BufferReader buffer) {
         id = buffer.readString();
         name = buffer.readString();
         description = buffer.readString();

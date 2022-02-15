@@ -1,7 +1,7 @@
 package packets.outgoing;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Sent to accept a pending guild invite.
@@ -13,7 +13,7 @@ public class JoinGuildPacket extends Packet {
     public String guildName;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         guildName = buffer.readString();
     }
 }

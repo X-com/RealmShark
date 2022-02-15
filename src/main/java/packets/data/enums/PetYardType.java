@@ -1,4 +1,4 @@
-package data.enums;
+package packets.data.enums;
 
 public enum PetYardType {
     Common(1),

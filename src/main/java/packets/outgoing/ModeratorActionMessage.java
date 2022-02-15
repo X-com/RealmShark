@@ -1,7 +1,7 @@
 package packets.outgoing;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Presumably received when the player needs moderation.
@@ -13,7 +13,7 @@ public class ModeratorActionMessage extends Packet {
     public String message;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         message = buffer.readString();
     }
 }

@@ -1,7 +1,7 @@
 package packets.incoming.pets;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received to give the player information about a newly evolved pet.
@@ -21,7 +21,7 @@ public class EvolvedPetMessage extends Packet {
     public int finalSkin;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         petId = buffer.readInt();
         initialSkin = buffer.readInt();
         finalSkin = buffer.readInt();

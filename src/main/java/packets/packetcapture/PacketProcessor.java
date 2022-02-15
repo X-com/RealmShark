@@ -2,7 +2,7 @@ package packets.packetcapture;
 
 import jpcap.packet.TCPPacket;
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 import packets.packetcapture.encryption.RC4;
 import packets.packetcapture.encryption.RotMGRC4Keys;
 import packets.packetcapture.networktap.Sniffer;
@@ -103,7 +103,7 @@ public class PacketProcessor {
             return;
         }
         Packet packetType = PacketType.getPacket(type).factory();
-        PBuffer pData = new PBuffer(data);
+        BufferReader pData = new BufferReader(data);
 
         try {
             packetType.deserialize(pData);
@@ -123,7 +123,7 @@ public class PacketProcessor {
         try {
             Util.print("Debugging packet: " + PacketType.byOrdinal(type));
             data.position(5);
-            PBuffer pDebug = new PBuffer(data);
+            BufferReader pDebug = new BufferReader(data);
             pDebug.printError(PacketType.byOrdinal(type), packetType);
             packetType.deserialize(pDebug);
         } catch (Exception e) {

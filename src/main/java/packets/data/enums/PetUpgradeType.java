@@ -1,4 +1,4 @@
-package data.enums;
+package packets.data.enums;
 
 public enum PetUpgradeType {
     PetYard(1),

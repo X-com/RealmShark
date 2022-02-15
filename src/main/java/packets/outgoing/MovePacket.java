@@ -1,9 +1,9 @@
 package packets.outgoing;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
-import data.MoveRecord;
-import data.WorldPosData;
+import packets.reader.BufferReader;
+import packets.data.MoveRecord;
+import packets.data.WorldPosData;
 
 /**
  * Sent to acknowledge a `NewTickPacket`, and to notify the
@@ -34,7 +34,7 @@ public class MovePacket extends Packet {
     public MoveRecord[] records;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         tickId = buffer.readInt();
         time = buffer.readInt();
         newPosition = new WorldPosData().deserialize(buffer);

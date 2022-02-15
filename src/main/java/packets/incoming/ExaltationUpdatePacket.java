@@ -1,7 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Received when the players exaltation stats update
@@ -24,7 +24,7 @@ public class ExaltationUpdatePacket extends Packet {
     public int manaProgress;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         objType = buffer.readShort();
         dexterityProgress = buffer.readCompressedInt();
         speedProgress = buffer.readCompressedInt();

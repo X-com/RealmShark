@@ -1,7 +1,7 @@
-package data;
+package packets.data;
 
-import data.enums.StatType;
-import packets.buffer.PBuffer;
+import packets.data.enums.StatType;
+import packets.reader.BufferReader;
 
 public class StatData {
     /**
@@ -30,7 +30,7 @@ public class StatData {
      *
      * TODO: full stat types list is not available
      */
-    public StatData deserialize(PBuffer buffer) {
+    public StatData deserialize(BufferReader buffer) {
         statType = buffer.readUnsignedByte();
 //        statType = StatType.byOrdinal(buffer.readUnsignedByte());
 //        if (statType == null) Util.print("StatType enum error in deserializer");

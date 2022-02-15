@@ -1,6 +1,6 @@
-package data;
+package packets.data;
 
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Tile data class storing tile coordinates (x and y) and type of each tile.
@@ -25,7 +25,7 @@ public class GroundTileData {
      * @param buffer Data that needs deserializing.
      * @return Returns this object after deserializing.
      */
-    public GroundTileData deserialize(PBuffer buffer) {
+    public GroundTileData deserialize(BufferReader buffer) {
         x = buffer.readShort();
         y = buffer.readShort();
         type = buffer.readUnsignedShort();

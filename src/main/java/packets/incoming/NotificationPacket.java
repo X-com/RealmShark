@@ -1,8 +1,8 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
-import data.enums.NotificationEffectType;
+import packets.reader.BufferReader;
+import packets.data.enums.NotificationEffectType;
 
 /**
  * Received when a notification is received by the player
@@ -58,7 +58,7 @@ public class NotificationPacket extends Packet {
     public int unknownInt3;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         effect = NotificationEffectType.byOrdinal(buffer.readByte());
         extra = buffer.readByte();
         message = buffer.readString();

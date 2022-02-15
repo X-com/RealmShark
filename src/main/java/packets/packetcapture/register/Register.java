@@ -1,6 +1,7 @@
 package packets.packetcapture.register;
 
 import packets.Packet;
+import packets.PacketType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,11 +34,11 @@ public class Register {
     /**
      * Register method to subscribe to packets that are being received from the network tap.
      *
-     * @param clazz     The class type wanting to be subscribed too.
+     * @param type      The type of class wanting to be subscribed too.
      * @param processor The lambda needed to trigger what event should happen if packet is received.
      * @param <T>       Class type.
      */
-    public <T extends Class<? extends Packet>> void register(T clazz, IPacketListener<Packet> processor) {
-        packetListeners.computeIfAbsent(clazz, (a) -> new ArrayList<>()).add(processor);
+    public <T extends Class<? extends Packet>> void register(PacketType type, IPacketListener<Packet> processor) {
+        packetListeners.computeIfAbsent(type.getPacketClass(), (a) -> new ArrayList<>()).add(processor);
     }
 }

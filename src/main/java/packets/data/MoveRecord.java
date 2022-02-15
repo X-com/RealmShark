@@ -1,6 +1,6 @@
-package data;
+package packets.data;
 
-import packets.buffer.PBuffer;
+import packets.reader.BufferReader;
 
 /**
  * Movement data of entity moving to point x and y with delta time.
@@ -25,7 +25,7 @@ public class MoveRecord {
      * @param buffer Data that needs deserializing.
      * @return Returns this object after deserializing.
      */
-    public MoveRecord deserialize(PBuffer buffer) {
+    public MoveRecord deserialize(BufferReader buffer) {
         time = buffer.readInt();
         x = buffer.readFloat();
         y = buffer.readFloat();

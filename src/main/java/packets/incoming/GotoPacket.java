@@ -1,8 +1,8 @@
 package packets.incoming;
 
 import packets.Packet;
-import packets.buffer.PBuffer;
-import data.WorldPosData;
+import packets.reader.BufferReader;
+import packets.data.WorldPosData;
 
 /**
  * Received when an entity has moved to a new position.
@@ -22,7 +22,7 @@ public class GotoPacket extends Packet {
     public int unknownInt;
 
     @Override
-    public void deserialize(PBuffer buffer) throws Exception {
+    public void deserialize(BufferReader buffer) throws Exception {
         objectId = buffer.readInt();
         position = new WorldPosData().deserialize(buffer);
         unknownInt = buffer.readInt();

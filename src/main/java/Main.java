@@ -1,15 +1,8 @@
 import packets.Packet;
 import packets.PacketType;
-import packets.buffer.PBuffer;
 import packets.incoming.TextPacket;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.register.Register;
-import util.Util;
-
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.Arrays;
 
 /**
  * This is an API used to unwrapped Realm of the Mad Gods packets. The
@@ -33,7 +26,7 @@ public class Main {
 
             Example 2: Subscribing to ping packets:
          */
-        Register.INSTANCE.register(PacketType.TEXT.getPacketClass(), (packet) -> text(packet));
+        Register.INSTANCE.register(PacketType.TEXT, (packet) -> text(packet));
 
         new PacketProcessor().run();
     }
