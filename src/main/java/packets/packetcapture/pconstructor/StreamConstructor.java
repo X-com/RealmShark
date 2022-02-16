@@ -1,7 +1,6 @@
 package packets.packetcapture.pconstructor;
 
 import jpcap.packet.TCPPacket;
-import util.Util;
 
 import java.util.HashMap;
 
