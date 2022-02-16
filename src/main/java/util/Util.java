@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
  */
 public class Util {
 
-    public static String version = "1.0";
     public static boolean showLogs = false;
     private static PrintWriter printWriter;
 

@@ -7,6 +7,8 @@ import packets.incoming.TextPacket;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.register.Register;
 
+import java.io.File;
+
 /**
  * This is an API used to unwrapped Realm of the Mad Gods packets. The
  * Packets are grabbed directly from the network tap using a sniffer.
@@ -20,6 +22,8 @@ import packets.packetcapture.register.Register;
  */
 public class TomatoExample {
     private static PacketProcessor packetProcessor;
+    public static String version = "1.0";
+    public static String tomatoIconURL = "icon/tomatoIcon.png";
 
     public static void main(String[] args) {
         TomatoExample.example();
@@ -29,6 +33,7 @@ public class TomatoExample {
      * Example mod main method.
      */
     public static void example() {
+        System.out.println(System.getProperty("java.library.path").replaceAll(";", "\n"));
         /*
             Subscribe for any packet wanting to be monitored. Use a lambda in
             the second argument for the action when registered packet is received.
@@ -41,6 +46,8 @@ public class TomatoExample {
         Register.INSTANCE.register(PacketType.TEXT, (packet) -> text(packet));
 
         new TomatoGUI().create();
+//        File f = new File(tomatoIconURL);
+//        System.out.println(f.getAbsolutePath());
     }
 
     /**

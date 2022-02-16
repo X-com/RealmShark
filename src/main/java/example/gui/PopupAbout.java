@@ -1,6 +1,7 @@
 package example.gui;
 
 
+import example.TomatoExample;
 import util.Util;
 
 import javax.swing.*;
@@ -13,7 +14,6 @@ import java.awt.event.FocusListener;
  * Removes itself when removing focus.
  */
 class PopupAbout extends JFrame implements FocusListener {
-    private String imageURL = "tomatoIcon.png";
     private String aboutTitle = " Tomato ";
     private String aboutTextLine1 = "Packet API for";
     private String aboutTextLine2 = "Realm of the Mad God";
@@ -46,7 +46,7 @@ class PopupAbout extends JFrame implements FocusListener {
         textLabelLine1 = new JLabel(aboutTextLine1);
         textLabelLine2 = new JLabel(aboutTextLine2);
         textLabelLine3 = new JLabel(aboutTextLine3);
-        textLabelVersion = new JLabel(Util.version);
+        textLabelVersion = new JLabel(TomatoExample.version);
         textLabelTitle.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
         textLabelTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         textLabelLine1.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -66,7 +66,7 @@ class PopupAbout extends JFrame implements FocusListener {
         textLabelCredits.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 10));
         textLabelCredits.setAlignmentX(Component.LEFT_ALIGNMENT);
         listCredit.add(textLabelCredits);
-        icon = new ImageIcon(imageURL);
+        icon = new ImageIcon(TomatoExample.tomatoIconURL);
         icon = new ImageIcon(icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
         iconLabel = new JLabel();
         iconLabel.setIcon(icon);

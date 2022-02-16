@@ -2,7 +2,7 @@
   <configuration default="false" name="TomatoExample" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="example.TomatoExample" />
     <module name="Tomato" />
-    <option name="VM_PARAMETERS" value="-Djava.library.path=lib" />
+    <option name="VM_PARAMETERS" value="-Djava.library.path=src\main\resources\libs" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

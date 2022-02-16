@@ -1,8 +1,6 @@
 plugins {
     id 'java'
-    id 'java-library'
     id 'application'
-    id 'groovy'
 }
 
 version '1.0'
@@ -12,18 +10,19 @@ repositories {
 }
 
 dependencies {
-    compileOnly fileTree(dir: 'libs', include: '*.*')
+    implementation fileTree(dir: '$projectDir/src/main/resources/libs', include: '*.*')
 }
 
 mainClassName = 'example.TomatoExample'
+
+run {
+    systemProperty "java.library.path", "$projectDir/src/main/resources/libs"
+}
 
 jar {
     manifest {
         attributes(
                 'Main-Class': mainClassName
         )
-    }
-    into('libs') {
-        from 'libs'
     }
 }

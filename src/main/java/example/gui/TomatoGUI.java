@@ -1,5 +1,7 @@
 package example.gui;
 
+import example.TomatoExample;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -29,7 +31,7 @@ public class TomatoGUI {
         textArea = new JTextArea();
 
         center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
-        icon = Toolkit.getDefaultToolkit().getImage("tomatoIcon.png");
+        icon = Toolkit.getDefaultToolkit().getImage(TomatoExample.tomatoIconURL);
         menuBar = new example.gui.MenuBar();
         jMenuBar = menuBar.make();
 
