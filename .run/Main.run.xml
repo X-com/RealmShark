@@ -1,8 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="TomatoExample" type="Application" factoryName="Application" nameIsGenerated="true">
-    <option name="MAIN_CLASS_NAME" value="example.TomatoExample" />
+  <configuration default="false" name="ExampleModTomato" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="example.ExampleModTomato" />
     <module name="Tomato" />
-    <option name="VM_PARAMETERS" value="-Djava.library.path=src\main\resources\libs" />
+    <option name="VM_PARAMETERS" value="-Djava.library.path=libs" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
