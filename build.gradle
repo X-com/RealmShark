@@ -5,19 +5,20 @@ plugins {
 
 version '1.0'
 
+run {
+    systemProperty "java.library.path", "libs/"
+}
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation fileTree(dir: '$projectDir/src/main/resources/libs', include: '*.*')
+    implementation files('libs/jpcap.jar')
+    implementation files('libs/Jpcap.dll')
 }
 
-mainClassName = 'example.TomatoExample'
-
-run {
-    systemProperty "java.library.path", "$projectDir/src/main/resources/libs"
-}
+mainClassName = 'example.ExampleModTomato'
 
 jar {
     manifest {
