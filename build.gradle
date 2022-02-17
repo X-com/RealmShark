@@ -2,20 +2,17 @@ plugins {
     id 'java'
     id 'application'
 }
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 version '1.0'
-
-run {
-    systemProperty "java.library.path", "libs/"
-}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation files('libs/jpcap.jar')
-    implementation files('libs/Jpcap.dll')
+    implementation 'org.pcap4j:pcap4j-core:2.0.0-alpha.6'
 }
 
 mainClassName = 'example.ExampleModTomato'
@@ -23,6 +20,7 @@ mainClassName = 'example.ExampleModTomato'
 jar {
     manifest {
         attributes(
+//                'Class-Path': configurations.runtimeClasspath.files.collect { "$it.name" }.join(' '),
                 'Main-Class': mainClassName
         )
     }

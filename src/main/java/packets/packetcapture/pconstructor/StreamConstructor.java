@@ -1,6 +1,6 @@
 package packets.packetcapture.pconstructor;
 
-import jpcap.packet.TCPPacket;
+import org.pcap4j.packet.TcpPacket;
 
 import java.util.HashMap;
 
@@ -10,7 +10,7 @@ import java.util.HashMap;
  */
 public class StreamConstructor implements PConstructor {
 
-    HashMap<Integer, TCPPacket> packetMap = new HashMap();
+    HashMap<Integer, TcpPacket> packetMap = new HashMap();
     PConstructor packetConstructor;
     PReset packetReset;
     public int ident;
@@ -40,20 +40,20 @@ public class StreamConstructor implements PConstructor {
      * @param packet TCP packets needing to be ordered.
      */
     @Override
-    public void build(TCPPacket packet) {
-        if (packet.ident == 0) {
-            if (packet.data.length != 0) {
+    public void build(TcpPacket packet) {
+        if (packet.getHeader().getSequenceNumber() == 0) {
+            if (packet.getRawData().length != 0) {
                 throw new IllegalStateException();
             }
             reset();
             return;
         }
         if (ident == 0) {
-            ident = packet.ident;
+            ident = packet.getHeader().getSequenceNumber();
         }
-        packetMap.put(packet.ident, packet);
+        packetMap.put(packet.getHeader().getSequenceNumber(), packet);
         while (packetMap.containsKey(ident)) {
-            TCPPacket packetSeqed = packetMap.remove(ident);
+            TcpPacket packetSeqed = packetMap.remove(ident);
             ident++;
             packetConstructor.build(packetSeqed);
         }

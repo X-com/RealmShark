@@ -1,6 +1,6 @@
 package packets.packetcapture.pconstructor;
 
-import jpcap.packet.TCPPacket;
+import org.pcap4j.packet.TcpPacket;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.encryption.RC4;
 import packets.packetcapture.encryption.TickAligner;
@@ -18,21 +18,21 @@ public class PacketConstructor implements PConstructor, PReset {
 
     RC4 rc4Cipher;
     PacketProcessor packetProcessor;
-    ROMGPacketConstructor romgpConst;
+    ROTMGPacketConstructor rotmgConst;
     StreamConstructor streamConst;
     TickAligner tickAligner;
 
     /**
-     * Packet constructor constructor with specific cipher.
+     * Packet constructor with specific cipher.
      *
-     * @param pp Parrent class to send constructed packets back too.
+     * @param pp Parent class to send constructed packets back too.
      * @param r  The cipher used to decode packets.
      */
     public PacketConstructor(PacketProcessor pp, RC4 r) {
         packetProcessor = pp;
         rc4Cipher = r;
-        romgpConst = new ROMGPacketConstructor(this);
-        streamConst = new StreamConstructor(this, romgpConst);
+        rotmgConst = new ROTMGPacketConstructor(this);
+        streamConst = new StreamConstructor(this, rotmgConst);
         tickAligner = new TickAligner(rc4Cipher);
     }
 
@@ -42,7 +42,7 @@ public class PacketConstructor implements PConstructor, PReset {
      * @param packet Raw TCP packets incoming from the net tap.
      */
     @Override
-    public void build(TCPPacket packet) {
+    public void build(TcpPacket packet) {
         streamConst.build(packet);
     }
 
@@ -82,6 +82,6 @@ public class PacketConstructor implements PConstructor, PReset {
      * Resets needed for starting the sniffer.
      */
     public void startResets() {
-        romgpConst.startResets();
+        rotmgConst.startResets();
     }
 }

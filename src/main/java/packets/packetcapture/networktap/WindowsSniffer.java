@@ -1,11 +1,13 @@
 package packets.packetcapture.networktap;
 
-import jpcap.JpcapCaptor;
-import jpcap.NetworkInterface;
-import jpcap.packet.TCPPacket;
+import org.pcap4j.core.*;
+import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
+import org.pcap4j.packet.IllegalRawDataException;
+import org.pcap4j.packet.Packet;
 import packets.packetcapture.PacketProcessor;
+import org.pcap4j.packet.TcpPacket;
 
-import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * A sniffer used to tap packets out of the Windows OS network layer. Before sniffing
@@ -14,7 +16,7 @@ import java.io.IOException;
  */
 public class WindowsSniffer implements Sniffer {
     private String filter = "tcp port 2050";
-    private static JpcapCaptor[] captors;
+    private PcapHandle[] handlers;
     private PacketProcessor processor;
     private boolean[] sniffers;
     private boolean stop;
@@ -36,21 +38,20 @@ public class WindowsSniffer implements Sniffer {
      * 2050 of type TCP) is found. The all other channels are halted and only the correct
      * interface is listened on.
      *
-     * @throws IOException IO exceptions thrown if unexpected issues are found.
+     * @throws PcapNativeException or NotOpenException are thrown if unexpected issues are found.
      */
-    public void startSniffer() throws IOException {
+    public void startSniffer() throws PcapNativeException, NotOpenException {
         stop = false;
-        NetworkInterface[] list = JpcapCaptor.getDeviceList();
-        captors = new JpcapCaptor[list.length];
+        PcapNetworkInterface[] list = Pcaps.findAllDevs().toArray(new PcapNetworkInterface[0]);
+        handlers = new PcapHandle[list.length];
         sniffers = new boolean[list.length];
         for (int number = 0; number < list.length; number++) {
-            captors[number] = JpcapCaptor.openDevice(list[number], 2000, false, 20);
-            try {
-                captors[number].setFilter(filter, true);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (captors[number] != null) {
+            int snapshotLength = 65536; // in bytes
+            int readTimeout = 50; // in milliseconds
+            handlers[number] = list[number].openLive(snapshotLength, PromiscuousMode.PROMISCUOUS, readTimeout);
+            handlers[number].setFilter(filter, BpfProgram.BpfCompileMode.OPTIMIZE);
+
+            if (handlers[number] != null) {
                 try {
                     Thread.sleep(1);
                 } catch (InterruptedException e) {
@@ -61,12 +62,29 @@ public class WindowsSniffer implements Sniffer {
 
                     @Override
                     public void run() {
-                        captors[num].loopPacket(-1, (packet) -> {
-                            if (packet instanceof TCPPacket) {
-                                sniffers[num] = true;
-                                processor.receivedPackets((TCPPacket) packet);
+                        PacketListener listener = packet -> {
+                            Packet p = packet.getPacket();
+                            byte[] b = p.getRawData();
+                            System.out.println("packets " + Arrays.toString(p.getRawData()));
+                            try {
+                                System.out.println(TcpPacket.newPacket(b, 1, b.length).getPayload());
+                            } catch (IllegalRawDataException e) {
+                                e.printStackTrace();
                             }
-                        });
+                            if (p instanceof TcpPacket) {
+                                sniffers[num] = true;
+                                processor.receivedPackets((TcpPacket) p);
+                            }
+                        };
+                        try {
+                            handlers[num].loop(-1, listener);
+                        } catch (PcapNativeException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (NotOpenException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }).start();
             }
@@ -82,7 +100,7 @@ public class WindowsSniffer implements Sniffer {
                 } else if (sniffers[s]) {
                     for (int c = 0; c < sniffers.length; c++) {
                         if (s != c) {
-                            captors[c].close();
+                            handlers[c].close();
                         }
                     }
                     return;
@@ -100,7 +118,7 @@ public class WindowsSniffer implements Sniffer {
      */
     public void closeSniffers() {
         stop = true;
-        for (JpcapCaptor c : captors) {
+        for (PcapHandle c : handlers) {
             if (c != null) {
                 c.close();
             }

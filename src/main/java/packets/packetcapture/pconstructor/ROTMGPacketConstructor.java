@@ -1,6 +1,6 @@
 package packets.packetcapture.pconstructor;
 
-import jpcap.packet.TCPPacket;
+import org.pcap4j.packet.TcpPacket;
 import util.HackyPacketLoggerForABug;
 import util.Util;
 
@@ -11,11 +11,11 @@ import java.util.Arrays;
 /**
  * Rotmg packet constructor appending bytes into a packet based on the size at the header of each sequence.
  */
-public class ROMGPacketConstructor implements PConstructor {
+public class ROTMGPacketConstructor implements PConstructor {
 
     private boolean firstNonLargePacket;
     PacketConstructor packetConstructor;
-    byte[] bytes = new byte[10000000];
+    byte[] bytes = new byte[1000000];
     int index;
 
     /**
@@ -23,7 +23,7 @@ public class ROMGPacketConstructor implements PConstructor {
      *
      * @param pc PacketConstructor class needed to send correctly stitched packets.
      */
-    public ROMGPacketConstructor(PacketConstructor pc) {
+    public ROTMGPacketConstructor(PacketConstructor pc) {
         packetConstructor = pc;
     }
 
@@ -46,15 +46,15 @@ public class ROMGPacketConstructor implements PConstructor {
      * @param packetSequenced TCP packet with the data inside.
      */
     @Override
-    public void build(TCPPacket packetSequenced) {
+    public void build(TcpPacket packetSequenced) {
         if (firstNonLargePacket) { // start listening after a non-max packet
             // prevents errors in pSize.
-            if (packetSequenced.data.length < 1460) firstNonLargePacket = false;
+            if (packetSequenced.getRawData().length < 1460) firstNonLargePacket = false;
             return;
         }
         HackyPacketLoggerForABug.logTCPPacket(packetSequenced); // TEMP logger to find a bug
         int pSize = 0;
-        for (byte b : packetSequenced.data) {
+        for (byte b : packetSequenced.getRawData()) {
             bytes[index++] = b;
             if (index >= 4) {
                 if (pSize == 0) pSize = Util.decodeInt(bytes);

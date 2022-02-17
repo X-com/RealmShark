@@ -1,6 +1,8 @@
 package packets.packetcapture;
 
-import jpcap.packet.TCPPacket;
+import org.pcap4j.core.NotOpenException;
+import org.pcap4j.core.PcapNativeException;
+import org.pcap4j.packet.TcpPacket;
 import packets.Packet;
 import packets.reader.BufferReader;
 import packets.packetcapture.encryption.RC4;
@@ -13,7 +15,6 @@ import packets.packetcapture.register.Register;
 import packets.PacketType;
 import util.Util;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -60,7 +61,9 @@ public class PacketProcessor extends Thread {
         outgoingPacketConstructor.startResets();
         try {
             sniffer.startSniffer();
-        } catch (IOException e) {
+        } catch (PcapNativeException e) {
+            e.printStackTrace();
+        } catch (NotOpenException e) {
             e.printStackTrace();
         }
     }
@@ -70,12 +73,14 @@ public class PacketProcessor extends Thread {
      *
      * @param packet The TCP packets retrieved from the network tap.
      */
-    public void receivedPackets(TCPPacket packet) {
+    public void receivedPackets(TcpPacket packet) {
         // 2050 is default rotmg server port. Incoming packets have 2050 source port.
-        if (packet.src_port == 2050) {
+        if (packet.getHeader().getSrcPort().value() == 2050) {
             constIncomingPackets(packet);
-        } else { // Outgoing packets have destination port set to 2050.
-            constOutgoingPackets(packet);
+
+            // Outgoing packets have destination port set to 2050.
+        } else if (packet.getHeader().getDstPort().value() == 2050) {
+//            constOutgoingPackets(packet); // removed given it is not implemented properly
         }
     }
 
@@ -84,7 +89,7 @@ public class PacketProcessor extends Thread {
      *
      * @param packet Incoming TCP packet
      */
-    private void constIncomingPackets(TCPPacket packet) {
+    private void constIncomingPackets(TcpPacket packet) {
         incomingPacketConstructor.build(packet);
     }
 
@@ -93,7 +98,7 @@ public class PacketProcessor extends Thread {
      *
      * @param packet Outgoing TCP packet
      */
-    private void constOutgoingPackets(TCPPacket packet) {
+    private void constOutgoingPackets(TcpPacket packet) {
         outgoingPacketConstructor.build(packet);
     }
 
@@ -112,6 +117,7 @@ public class PacketProcessor extends Thread {
         Packet packetType = PacketType.getPacket(type).factory();
         BufferReader pData = new BufferReader(data);
 
+        System.out.println("packets " + type);
         try {
             packetType.deserialize(pData);
             pData.bufferFullyParsed(PacketType.byOrdinal(type), packetType);

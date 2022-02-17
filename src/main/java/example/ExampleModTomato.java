@@ -7,6 +7,7 @@ import packets.incoming.TextPacket;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.register.Register;
 import util.LibExtractor;
+import org.pcap4j.*;
 
 import java.net.URL;
 
@@ -28,7 +29,7 @@ public class ExampleModTomato {
     public static String version = "v1.0";
 
     public static void main(String[] args) {
-        LibExtractor.libraryExtractor(); // This is needed to extract the libs files into root dir.
+//        LibExtractor.libraryExtractor(); // This is needed to extract the libs files into root dir.
         ExampleModTomato.example();
     }
 
@@ -45,9 +46,10 @@ public class ExampleModTomato {
 
             Example 2: Subscribing to TEXT packets
          */
-        Register.INSTANCE.register(PacketType.TEXT, (packet) -> text(packet));
-
-        new TomatoGUI().create();
+//        Register.INSTANCE.register(PacketType.TEXT, (packet) -> text(packet));
+//
+//        new TomatoGUI().create();
+        startPacketSniffer();
     }
 
     /**
