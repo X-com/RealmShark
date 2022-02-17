@@ -1,6 +1,6 @@
 package example.gui;
 
-import example.TomatoExample;
+import example.ExampleModTomato;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,10 +11,10 @@ import java.awt.*;
 public class TomatoGUI {
     private static JTextArea textArea;
     private static JLabel statusLabel;
+    private static JFrame frame;
     private JMenuBar jMenuBar;
     private JPanel mainPanel;
     private MenuBar menuBar;
-    private JFrame frame;
     private Point center;
     private Image icon;
 
@@ -31,7 +31,6 @@ public class TomatoGUI {
         textArea = new JTextArea();
 
         center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
-        icon = Toolkit.getDefaultToolkit().getImage(TomatoExample.tomatoIconURL);
         menuBar = new example.gui.MenuBar();
         jMenuBar = menuBar.make();
 
@@ -42,6 +41,7 @@ public class TomatoGUI {
         textArea.setEditable(false);
         mainPanel.add(statusLabel, BorderLayout.SOUTH);
 
+        icon = Toolkit.getDefaultToolkit().getImage(ExampleModTomato.imagePath);
         makeFrame();
         frame.setVisible(true);
     }
@@ -67,6 +67,7 @@ public class TomatoGUI {
      * @param s The text to be added at the end of text area.
      */
     public static void appendTextAreaText(String s) {
+        System.out.println(s);
         textArea.append(s);
     }
 

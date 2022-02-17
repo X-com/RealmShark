@@ -1,8 +1,7 @@
 package example.gui;
 
 
-import example.TomatoExample;
-import util.Util;
+import example.ExampleModTomato;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,14 +14,15 @@ import java.awt.event.FocusListener;
  */
 class PopupAbout extends JFrame implements FocusListener {
     private String aboutTitle = " Tomato ";
-    private String aboutTextLine1 = "Packet API for";
-    private String aboutTextLine2 = "Realm of the Mad God";
-    private String aboutTextLine3 = "MIT licence";
+    private String aboutTextLine1 = "Built on";
+    private String aboutTextLine2 = "Packet API RealmShark";
+    private String aboutTextLine3 = "for Realm of the Mad God";
+    private String aboutTextLine4 = "MIT licence";
     private String aboutTextCredits = "Made by Anon";
     private PopupAbout popupAbout;
     private JPanel listPane, listCredit;
     private JLabel textLabelTitle, textLabelLine1, textLabelLine2,
-            textLabelLine3, textLabelVersion, iconLabel,
+            textLabelLine3, textLabelLine4, textLabelVersion, iconLabel,
             textLabelCredits;
     private ImageIcon icon;
 
@@ -46,17 +46,20 @@ class PopupAbout extends JFrame implements FocusListener {
         textLabelLine1 = new JLabel(aboutTextLine1);
         textLabelLine2 = new JLabel(aboutTextLine2);
         textLabelLine3 = new JLabel(aboutTextLine3);
-        textLabelVersion = new JLabel(TomatoExample.version);
+        textLabelLine4 = new JLabel(aboutTextLine4);
+        textLabelVersion = new JLabel(ExampleModTomato.version);
         textLabelTitle.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
         textLabelTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         textLabelLine1.setAlignmentX(Component.CENTER_ALIGNMENT);
         textLabelLine2.setAlignmentX(Component.CENTER_ALIGNMENT);
         textLabelLine3.setAlignmentX(Component.CENTER_ALIGNMENT);
+        textLabelLine4.setAlignmentX(Component.CENTER_ALIGNMENT);
         textLabelVersion.setAlignmentX(Component.CENTER_ALIGNMENT);
         listPane.add(textLabelTitle);
         listPane.add(textLabelLine1);
         listPane.add(textLabelLine2);
         listPane.add(textLabelLine3);
+        listPane.add(textLabelLine4);
         listPane.add(textLabelVersion);
 
         listCredit = new JPanel();
@@ -66,7 +69,7 @@ class PopupAbout extends JFrame implements FocusListener {
         textLabelCredits.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 10));
         textLabelCredits.setAlignmentX(Component.LEFT_ALIGNMENT);
         listCredit.add(textLabelCredits);
-        icon = new ImageIcon(TomatoExample.tomatoIconURL);
+        icon = new ImageIcon(ExampleModTomato.imagePath);
         icon = new ImageIcon(icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
         iconLabel = new JLabel();
         iconLabel.setIcon(icon);

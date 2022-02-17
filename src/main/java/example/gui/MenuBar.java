@@ -1,6 +1,6 @@
 package example.gui;
 
-import example.TomatoExample;
+import example.ExampleModTomato;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,11 +73,11 @@ class MenuBar implements ActionListener {
             try {
                 if (sniffer.getText().contains("Start")) {
                     sniffer.setText("Stop Sniffer");
-                    TomatoExample.startPacketSniffer();
+                    ExampleModTomato.startPacketSniffer();
                     TomatoGUI.setStateOfSniffer(true);
                 } else {
                     sniffer.setText("Start Sniffer");
-                    TomatoExample.stopPacketSniffer();
+                    ExampleModTomato.stopPacketSniffer();
                     TomatoGUI.setStateOfSniffer(false);
                 }
             } catch (Exception f) {

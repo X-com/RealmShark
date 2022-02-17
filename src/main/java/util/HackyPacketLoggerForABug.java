@@ -4,6 +4,9 @@ import jpcap.packet.TCPPacket;
 
 import java.util.Arrays;
 
+/**
+ * Temp class to sniff out a bug. Ignore all this.
+ */
 public class HackyPacketLoggerForABug {
     private static int index = 0;
     private static TCPPacket[] logList = new TCPPacket[200];
