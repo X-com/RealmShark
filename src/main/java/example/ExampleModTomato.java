@@ -6,13 +6,15 @@ import packets.PacketType;
 import packets.incoming.TextPacket;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.register.Register;
+import util.LibExtractor;
 
-import java.io.File;
+import java.net.URL;
 
 /**
- * This is an API used to unwrapped Realm of the Mad Gods packets. The
- * Packets are grabbed directly from the network tap using a sniffer.
- * It is not possible to modify, block or create packets to be sent.
+ * Tomato is an EXAMPLE MOD built on top of RealmShark, an API used to
+ * unwrapped Realm of the Mad Gods packets. The Packets are grabbed
+ * directly from the network tap using a sniffer. It is not possible
+ * to modify, block or create packets to be sent, similar to WireShark.
  * <p>
  * The register should be used to sign up for packets. If said packet is
  * received then the lambda function passed in as the second argument can
@@ -20,20 +22,20 @@ import java.io.File;
  * <p>
  * TODO: Add linux and mac support later in PacketProcessor
  */
-public class TomatoExample {
+public class ExampleModTomato {
+    public static URL imagePath = ExampleModTomato.class.getResource("/icon/tomatoIcon.png");
     private static PacketProcessor packetProcessor;
-    public static String version = "1.0";
-    public static String tomatoIconURL = "icon/tomatoIcon.png";
+    public static String version = "v1.0";
 
     public static void main(String[] args) {
-        TomatoExample.example();
+        LibExtractor.libraryExtractor(); // This is needed to extract the libs files into root dir.
+        ExampleModTomato.example();
     }
 
     /**
      * Example mod main method.
      */
     public static void example() {
-        System.out.println(System.getProperty("java.library.path").replaceAll(";", "\n"));
         /*
             Subscribe for any packet wanting to be monitored. Use a lambda in
             the second argument for the action when registered packet is received.
@@ -46,8 +48,6 @@ public class TomatoExample {
         Register.INSTANCE.register(PacketType.TEXT, (packet) -> text(packet));
 
         new TomatoGUI().create();
-//        File f = new File(tomatoIconURL);
-//        System.out.println(f.getAbsolutePath());
     }
 
     /**
