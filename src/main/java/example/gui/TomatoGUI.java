@@ -68,7 +68,7 @@ public class TomatoGUI {
      */
     public static void appendTextAreaText(String s) {
         System.out.println(s);
-        textArea.append(s);
+//        textArea.append(s);
     }
 
     /**

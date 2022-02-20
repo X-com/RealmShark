@@ -1,6 +1,6 @@
 package packets.packetcapture.pconstructor;
 
-import org.pcap4j.packet.TcpPacket;
+import packets.packetcapture.networktap.TCPCustomPacket;
 import util.HackyPacketLoggerForABug;
 import util.Util;
 
@@ -14,9 +14,10 @@ import java.util.Arrays;
 public class ROTMGPacketConstructor implements PConstructor {
 
     private boolean firstNonLargePacket;
-    PacketConstructor packetConstructor;
-    byte[] bytes = new byte[1000000];
-    int index;
+    private PacketConstructor packetConstructor;
+    private byte[] bytes = new byte[200000];
+    private int index;
+    private int pSize = 0;
 
     /**
      * ROMGPacketConstructor needing the PacketConstructor class to send correctly stitched packets.
@@ -46,18 +47,24 @@ public class ROTMGPacketConstructor implements PConstructor {
      * @param packetSequenced TCP packet with the data inside.
      */
     @Override
-    public void build(TcpPacket packetSequenced) {
+    public void build(TCPCustomPacket packetSequenced) {
         if (firstNonLargePacket) { // start listening after a non-max packet
             // prevents errors in pSize.
-            if (packetSequenced.getRawData().length < 1460) firstNonLargePacket = false;
+            if (packetSequenced.length() < 1460) firstNonLargePacket = false;
             return;
         }
         HackyPacketLoggerForABug.logTCPPacket(packetSequenced); // TEMP logger to find a bug
-        int pSize = 0;
-        for (byte b : packetSequenced.getRawData()) {
+        for (byte b : packetSequenced.tcpData()) {
             bytes[index++] = b;
             if (index >= 4) {
-                if (pSize == 0) pSize = Util.decodeInt(bytes);
+                if (pSize == 0) {
+                    pSize = Util.decodeInt(bytes);
+                    if (pSize > 200000) {
+                        Util.print("Oversize packet construction.");
+                        pSize = 0;
+                        return;
+                    }
+                }
 
                 if (index == pSize) {
                     index = 0;

@@ -2,17 +2,16 @@ package packets.packetcapture;
 
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapNativeException;
-import org.pcap4j.packet.TcpPacket;
 import packets.Packet;
-import packets.reader.BufferReader;
+import packets.PacketType;
 import packets.packetcapture.encryption.RC4;
 import packets.packetcapture.encryption.RotMGRC4Keys;
 import packets.packetcapture.networktap.Sniffer;
-import packets.packetcapture.networktap.WindowsSniffer;
+import packets.packetcapture.networktap.TCPCustomPacket;
 import packets.packetcapture.pconstructor.PConstructor;
 import packets.packetcapture.pconstructor.PacketConstructor;
 import packets.packetcapture.register.Register;
-import packets.PacketType;
+import packets.reader.BufferReader;
 import util.Util;
 
 import java.nio.ByteBuffer;
@@ -25,16 +24,16 @@ import java.util.Arrays;
  * decrypt the data. The data is then matched with target classes and emitted through the registry.
  */
 public class PacketProcessor extends Thread {
-    PConstructor incomingPacketConstructor;
-    PConstructor outgoingPacketConstructor;
-    Sniffer sniffer;
+    private PConstructor incomingPacketConstructor;
+    private PConstructor outgoingPacketConstructor;
+    private Sniffer sniffer;
 
     /**
      * Basic constructor of packetProcessor
      * TODO: Add linux and mac support later
      */
     public PacketProcessor() {
-        sniffer = new WindowsSniffer(this);
+        sniffer = new Sniffer(this);
         incomingPacketConstructor = new PacketConstructor(this, new RC4(RotMGRC4Keys.INCOMING_STRING));
         outgoingPacketConstructor = new PacketConstructor(this, new RC4(RotMGRC4Keys.OUTGOING_STRING));
     }
@@ -73,13 +72,13 @@ public class PacketProcessor extends Thread {
      *
      * @param packet The TCP packets retrieved from the network tap.
      */
-    public void receivedPackets(TcpPacket packet) {
+    public void receivedPackets(TCPCustomPacket packet) {
         // 2050 is default rotmg server port. Incoming packets have 2050 source port.
-        if (packet.getHeader().getSrcPort().value() == 2050) {
+        if (packet.getPortSrc() == 2050) {
             constIncomingPackets(packet);
 
             // Outgoing packets have destination port set to 2050.
-        } else if (packet.getHeader().getDstPort().value() == 2050) {
+        } else if (packet.getPortDst() == 2050) {
 //            constOutgoingPackets(packet); // removed given it is not implemented properly
         }
     }
@@ -89,7 +88,7 @@ public class PacketProcessor extends Thread {
      *
      * @param packet Incoming TCP packet
      */
-    private void constIncomingPackets(TcpPacket packet) {
+    private void constIncomingPackets(TCPCustomPacket packet) {
         incomingPacketConstructor.build(packet);
     }
 
@@ -98,7 +97,7 @@ public class PacketProcessor extends Thread {
      *
      * @param packet Outgoing TCP packet
      */
-    private void constOutgoingPackets(TcpPacket packet) {
+    private void constOutgoingPackets(TCPCustomPacket packet) {
         outgoingPacketConstructor.build(packet);
     }
 
@@ -117,7 +116,6 @@ public class PacketProcessor extends Thread {
         Packet packetType = PacketType.getPacket(type).factory();
         BufferReader pData = new BufferReader(data);
 
-        System.out.println("packets " + type);
         try {
             packetType.deserialize(pData);
             pData.bufferFullyParsed(PacketType.byOrdinal(type), packetType);

@@ -1,6 +1,6 @@
 package packets.packetcapture.pconstructor;
 
-import org.pcap4j.packet.TcpPacket;
+import packets.packetcapture.networktap.TCPCustomPacket;
 
 import java.util.HashMap;
 
@@ -10,10 +10,10 @@ import java.util.HashMap;
  */
 public class StreamConstructor implements PConstructor {
 
-    HashMap<Integer, TcpPacket> packetMap = new HashMap();
+    HashMap<Integer, TCPCustomPacket> packetMap = new HashMap();
     PConstructor packetConstructor;
     PReset packetReset;
-    public int ident;
+    public int identifier;
 
     /**
      * Constructor of StreamConstructor which needs a reset class to reset if reset
@@ -40,21 +40,25 @@ public class StreamConstructor implements PConstructor {
      * @param packet TCP packets needing to be ordered.
      */
     @Override
-    public void build(TcpPacket packet) {
-        if (packet.getHeader().getSequenceNumber() == 0) {
-            if (packet.getRawData().length != 0) {
+    public void build(TCPCustomPacket packet) {
+        int packetIdentifier = packet.getIdentifier();
+        if (packetIdentifier == 0) {
+            if (packet.length() != 0) {
                 throw new IllegalStateException();
             }
             reset();
             return;
         }
-        if (ident == 0) {
-            ident = packet.getHeader().getSequenceNumber();
+        if (identifier == 0) {
+            identifier = packetIdentifier;
+        } else if (identifier == 65536) {
+            identifier = 0;
         }
-        packetMap.put(packet.getHeader().getSequenceNumber(), packet);
-        while (packetMap.containsKey(ident)) {
-            TcpPacket packetSeqed = packetMap.remove(ident);
-            ident++;
+
+        packetMap.put(packetIdentifier, packet);
+        while (packetMap.containsKey(identifier)) {
+            TCPCustomPacket packetSeqed = packetMap.remove(identifier);
+            identifier++;
             packetConstructor.build(packetSeqed);
         }
     }
@@ -65,6 +69,6 @@ public class StreamConstructor implements PConstructor {
     public void reset() {
         packetReset.reset();
         packetMap.clear();
-        ident = 0;
+        identifier = 0;
     }
 }

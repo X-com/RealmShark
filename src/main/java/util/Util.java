@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class Util {
 
-    public static boolean showLogs = false;
+    public static boolean showLogs = true;
     private static PrintWriter printWriter;
 
     /**
@@ -59,5 +59,18 @@ public class Util {
             printWriter.print("\n" + s);
             printWriter.flush();
         }
+    }
+
+    public static String byteArrayPrint(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        boolean first = true;
+        for (byte b : bytes) {
+            if (!first) sb.append("|");
+            first = false;
+            sb.append(String.format("%01x", b));
+        }
+        sb.append("]");
+        return sb.toString();
     }
 }

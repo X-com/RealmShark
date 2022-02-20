@@ -1,9 +1,9 @@
 package packets.packetcapture.pconstructor;
 
-import org.pcap4j.packet.TcpPacket;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.encryption.RC4;
 import packets.packetcapture.encryption.TickAligner;
+import packets.packetcapture.networktap.TCPCustomPacket;
 
 import java.nio.ByteBuffer;
 
@@ -42,7 +42,7 @@ public class PacketConstructor implements PConstructor, PReset {
      * @param packet Raw TCP packets incoming from the net tap.
      */
     @Override
-    public void build(TcpPacket packet) {
+    public void build(TCPCustomPacket packet) {
         streamConst.build(packet);
     }
 

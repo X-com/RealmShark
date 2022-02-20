@@ -46,7 +46,7 @@ public class ExampleModTomato {
 
             Example 2: Subscribing to TEXT packets
          */
-//        Register.INSTANCE.register(PacketType.TEXT, (packet) -> text(packet));
+        Register.INSTANCE.register(PacketType.TEXT, (packet) -> text(packet));
 //
 //        new TomatoGUI().create();
         startPacketSniffer();

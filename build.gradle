@@ -2,8 +2,6 @@ plugins {
     id 'java'
     id 'application'
 }
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 version '1.0'
 
@@ -11,8 +9,13 @@ repositories {
     mavenCentral()
 }
 
+run {
+    systemProperty "java.library.path", "$projectDir\\libs"
+}
+
 dependencies {
     implementation 'org.pcap4j:pcap4j-core:2.0.0-alpha.6'
+    implementation 'org.slf4j:slf4j-simple:1.6.1'
 }
 
 mainClassName = 'example.ExampleModTomato'
@@ -20,7 +23,6 @@ mainClassName = 'example.ExampleModTomato'
 jar {
     manifest {
         attributes(
-//                'Class-Path': configurations.runtimeClasspath.files.collect { "$it.name" }.join(' '),
                 'Main-Class': mainClassName
         )
     }

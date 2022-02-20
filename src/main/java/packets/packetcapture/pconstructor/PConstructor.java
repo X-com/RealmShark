@@ -1,6 +1,6 @@
 package packets.packetcapture.pconstructor;
 
-import org.pcap4j.packet.TcpPacket;
+import packets.packetcapture.networktap.TCPCustomPacket;
 
 /**
  * Packet constructor interface used in constructing raw TCP packets.
@@ -12,7 +12,7 @@ public interface PConstructor {
      *
      * @param packet Raw TCP packet needed to be constructed into a readable packet.
      */
-    void build(TcpPacket packet);
+    void build(TCPCustomPacket packet);
 
     /**
      * Start resets when starting the packet reading.
