@@ -12,6 +12,7 @@ public class TomatoGUI {
     private static JTextArea textArea;
     private static JLabel statusLabel;
     private static JFrame frame;
+    private JScrollPane scroll;
     private JMenuBar jMenuBar;
     private JPanel mainPanel;
     private MenuBar menuBar;
@@ -28,7 +29,16 @@ public class TomatoGUI {
             e.printStackTrace();
         }
         mainPanel = new JPanel();
+
         textArea = new JTextArea();
+        textArea.setEnabled(true);
+        textArea.setEditable(false);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        scroll = new JScrollPane(textArea);
+        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scroll.setAutoscrolls(true);
+        new SmartScroller(scroll);
 
         center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
         menuBar = new example.gui.MenuBar();
@@ -36,9 +46,7 @@ public class TomatoGUI {
 
         statusLabel = new JLabel(" Network Tap: OFF");
         mainPanel.setLayout(new BorderLayout());
-        mainPanel.add(textArea, BorderLayout.CENTER);
-        textArea.setEnabled(true);
-        textArea.setEditable(false);
+        mainPanel.add(scroll, BorderLayout.CENTER);
         mainPanel.add(statusLabel, BorderLayout.SOUTH);
 
         icon = Toolkit.getDefaultToolkit().getImage(ExampleModTomato.imagePath);
