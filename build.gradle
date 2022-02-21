@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    implementation files('libs/jpcap.jar')
+    implementation files('libs/jpcap-x64.jar')
     implementation files('libs/Jpcap.dll')
 }
 

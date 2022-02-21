@@ -20,9 +20,9 @@ public class LibExtractor {
             extracted = true;
             extract("Jpcap.dll");
         }
-        if (!new File("jpcap.jar").exists()) {
+        if (!new File("jpcap-x64.jar").exists()) {
             extracted = true;
-            extract("jpcap.jar");
+            extract("jpcap-x64.jar");
         }
         if (extracted) {
             JOptionPane.showMessageDialog(new JFrame(""), "Library files was extracted, RESTART.");
