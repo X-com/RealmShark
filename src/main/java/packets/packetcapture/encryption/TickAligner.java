@@ -65,14 +65,14 @@ public class TickAligner {
                 byte[] tick = Arrays.copyOfRange(encryptedData.array(), 5, 5 + 4);
                 if (TickA != null) {
                     rc4.reset();
-                    Util.print("Packets between ticks: " + packetBytes);
+                    System.out.println("Packets between ticks: " + packetBytes);
                     int i = RC4Aligner.syncCipher(rc4, TickA, tick, packetBytes);
                     if (i != -1) {
                         synced = true;
                         rc4.skip(packetBytes).decrypt(tick);
                         rc4.skip(size - 5 - 4);
                         CURRENT_TICK = Util.decodeInt(tick);
-                        Util.print("Synced. offset: " + i + " tick: " + CURRENT_TICK);
+                        System.out.println("Synced. offset: " + i + " tick: " + CURRENT_TICK);
                     } else {
                         Util.print("Time Sync Failed");
                     }
