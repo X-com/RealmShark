@@ -1,7 +1,6 @@
 package util;
 
 import org.pcap4j.packet.TcpPacket;
-import packets.packetcapture.networktap.TCPCustomPacket;
 
 import java.util.Arrays;
 
@@ -10,9 +9,9 @@ import java.util.Arrays;
  */
 public class HackyPacketLoggerForABug {
     private static int index = 0;
-    private static TCPCustomPacket[] logList = new TCPCustomPacket[200];
+    private static TcpPacket[] logList = new TcpPacket[200];
 
-    public static void logTCPPacket(TCPCustomPacket tcp) {
+    public static void logTCPPacket(TcpPacket tcp) {
         logList[index] = tcp;
         index++;
         if (index >= 200) index = 0;

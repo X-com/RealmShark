@@ -1,20 +1,9 @@
 package packets.packetcapture.networktap;
 
-//import jpcap.JpcapCaptor;
-//import jpcap.NetworkInterface;
-//import jpcap.packet.TCPPacket;
-
 import org.pcap4j.core.*;
 import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
-import org.pcap4j.packet.EthernetPacket;
-import org.pcap4j.packet.IllegalRawDataException;
 import org.pcap4j.packet.TcpPacket;
 import packets.packetcapture.PacketProcessor;
-import util.Util;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.Arrays;
 
 /**
  * A sniffer used to tap packets out of the Windows OS network layer. Before sniffing
@@ -55,7 +44,7 @@ public class Sniffer {
 
         for (int number = 0; number < list.length; number++) {
             int snapshotLength = 65536; // in bytes
-            int readTimeout = 50; // in milliseconds
+            int readTimeout = 4000000; // in milliseconds, set to hour long to never ignore packets
             handlers[number] = list[number].openLive(snapshotLength, PromiscuousMode.PROMISCUOUS, readTimeout);
             handlers[number].setFilter(filter, BpfProgram.BpfCompileMode.OPTIMIZE);
 
@@ -65,42 +54,7 @@ public class Sniffer {
             }
         }
 
-//        NetworkInterface ni = JpcapCaptor.getDeviceList()[3];
-//        try {
-//            JpcapCaptor cap = JpcapCaptor.openDevice(ni, 2000, false, 20);
-//            cap.setFilter(filter, true);
-//            cap.loopPacket(-1, (packet) -> {
-//                if (packet instanceof TCPPacket) {
-//                    System.out.println((TCPPacket) packet + " " + packet.data.length+ " " + packet.data.hashCode());
-//                }
-//            });
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
         closeUnusedSniffers();
-    }
-
-    /**
-     * Close threads of sniffer channels not being used.
-     */
-    private void closeUnusedSniffers() {
-        pause(100);
-        while (true) {
-            for (int s = 0; s < sniffers.length; s++) {
-                if (stop) {
-                    return;
-                } else if (sniffers[s]) {
-                    for (int c = 0; c < sniffers.length; c++) {
-                        if (s != c) {
-                            handlers[c].close();
-                        }
-                    }
-                    return;
-                }
-            }
-            pause(100);
-        }
     }
 
     /**
@@ -128,7 +82,10 @@ public class Sniffer {
             @Override
             public void run() {
                 PacketListener listener = packet -> {
-                    processRawPacket(packet, num);
+                    TcpPacket tcpPacket = packet.get(TcpPacket.class);
+                    if (tcpPacket != null && computeChecksum(packet.getRawData())) {
+                        processor.receivedPackets(tcpPacket);
+                    }
                 };
                 try {
                     handlers[num].loop(-1, listener);
@@ -140,83 +97,56 @@ public class Sniffer {
     }
 
     /**
-     * Raw packet processor to TCP packets.
+     * Verify checksum of TCP packets. This does however not checksum the Ip4Header
+     * given only the data of the TCP packet is vital. Not the header daita.
      *
-     * @param packet Raw packet
-     * @param num    Index of network interface
+     * @param bytes Raw bytes of the packet being received.
+     * @return true if the checksum is similar to the TCP checksum sent in the packet.
      */
-    public void processRawPacket(PcapPacket packet, int num) {
-        ByteBuffer packetData = ByteBuffer.wrap(packet.getRawData()).order(ByteOrder.BIG_ENDIAN);
-        if (packet.getRawData().length > 53) {
-            int ethernetType = packetData.getShort(12);
-            if (ethernetType == 2048) {
-                int protocal = packetData.get(23);
-                if (protocal == 6) {
-                    createTCPpacket(packet, packetData, num);
+    private static boolean computeChecksum(byte[] bytes) {
+        long sum = 0;
+        long checksumTCP = (Byte.toUnsignedInt(bytes[51]) + (Byte.toUnsignedInt(bytes[50]) << 8));
+        int tcpLen = (Byte.toUnsignedInt(bytes[17]) + (Byte.toUnsignedInt(bytes[16]) << 8)) - ((bytes[14] & 15) * 4);
+        for (int i = 26; i < 34; i += 2) {
+            sum += (Byte.toUnsignedInt(bytes[i + 1]) + (Byte.toUnsignedInt(bytes[i]) << 8));
+        }
+        sum += 6;
+        sum += tcpLen;
+        for (int i = 34; i < tcpLen + 33; i += 2) {
+            if (i == 50) continue;
+            sum += (Byte.toUnsignedInt(bytes[i + 1]) + (Byte.toUnsignedInt(bytes[i]) << 8));
+        }
+        if ((tcpLen & 1) == 1) {
+            sum += (Byte.toUnsignedInt(bytes[bytes.length - 1]) << 8) & 0xFF00;
+        }
+        while ((sum >> 16) != 0) {
+            sum = (sum & 0xffff) + (sum >> 16);
+        }
+        sum = ~sum;
+        sum = sum & 0xFFFF;
+        return checksumTCP == sum;
+    }
+
+    /**
+     * Close threads of sniffer channels not being used.
+     */
+    private void closeUnusedSniffers() {
+        pause(100);
+        while (true) {
+            for (int s = 0; s < sniffers.length; s++) {
+                if (stop) {
+                    return;
+                } else if (sniffers[s]) {
+                    for (int c = 0; c < sniffers.length; c++) {
+                        if (s != c) {
+                            handlers[c].close();
+                        }
+                    }
+                    return;
                 }
             }
+            pause(100);
         }
-    }
-
-    private void createTCPpacket(PcapPacket packet, ByteBuffer packetData, int num) {
-        int portSrc = Short.toUnsignedInt(packetData.getShort(34));
-        int portDst = Short.toUnsignedInt(packetData.getShort(36));
-        int identifier = (0xFFFF & packetData.getShort(18));
-        long sequenceNum = Integer.toUnsignedLong(packetData.getInt(38));
-        long ackNum = Integer.toUnsignedLong(packetData.getInt(42));
-        short codeBits = packetData.getShort(46);
-        boolean psh = (codeBits & 0x8) != 0;
-        byte[] rawBytes = packet.getRawData();
-        int size = rawBytes.length;
-        if (portSrc == 2050) { // Ignore all but incoming packets from rotmg servers. Outgoing not implemented.
-            byte[] tcpBytes = new byte[0];
-            if (size != 60 && (psh || size == 1514)) tcpBytes = Arrays.copyOfRange(packet.getRawData(), 54, size);
-            TCPCustomPacket tcpPacket = new TCPCustomPacket(identifier, portSrc, portDst, rawBytes, tcpBytes);
-
-            try {
-                EthernetPacket ep = EthernetPacket.newPacket(tcpPacket.getRawData(), 0, tcpPacket.getRawData().length);
-                IpV4PacketCustom ip = IpV4PacketCustom.newPacket(ep.getPayload().getRawData(), 0, ep.getPayload().length());
-                TcpPacket tcp = TcpPacket.newPacket(ip.getPayload().getRawData(), 0, ip.getPayload().length());
-                byte[] pcap4j = (tcp.getPayload() != null ? tcp.getPayload().getRawData() : new byte[0]);
-                byte[] medata = tcpPacket.tcpData();
-                if (!arrayMatches(pcap4j, medata)) {
-                    System.out.println("Missmatch");
-                    System.out.println(Util.byteArrayPrint(tcp.getPayload().getRawData()));
-                    System.out.println(Util.byteArrayPrint(tcpPacket.tcpData()));
-                    System.out.println();
-                }
-            } catch (IllegalRawDataException e) {
-                e.printStackTrace();
-            }
-
-            processor.receivedPackets(tcpPacket);
-            sniffers[num] = true;
-        }
-    }
-
-    private void testBytes(TCPCustomPacket tcpPacket) {
-        try {
-            EthernetPacket ep = EthernetPacket.newPacket(tcpPacket.getRawData(), 0, tcpPacket.getRawData().length);
-            IpV4PacketCustom ip = IpV4PacketCustom.newPacket(ep.getPayload().getRawData(), 0, ep.getPayload().length());
-            TcpPacket tcp = TcpPacket.newPacket(ip.getPayload().getRawData(), 0, ip.getPayload().length());
-            byte[] pcap4j = (tcp.getPayload() != null ? tcp.getPayload().getRawData() : new byte[0]);
-            byte[] medata = tcpPacket.tcpData();
-            if (!arrayMatches(pcap4j, medata)) {
-                System.out.println("Missmatch");
-                System.out.println(Util.byteArrayPrint(tcp.getPayload().getRawData()));
-                System.out.println(Util.byteArrayPrint(tcpPacket.tcpData()));
-            }
-        } catch (IllegalRawDataException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private boolean arrayMatches(byte[] pcap4j, byte[] medata) {
-        if (pcap4j.length != medata.length) return false;
-        for (int i = 0; i < pcap4j.length; i++) {
-            if (pcap4j[i] != medata[i]) return false;
-        }
-        return true;
     }
 
     /**
@@ -226,6 +156,10 @@ public class Sniffer {
         stop = true;
         for (PcapHandle c : handlers) {
             if (c != null) {
+                try {
+                    if (c.isOpen()) c.breakLoop();
+                } catch (NotOpenException e) {
+                }
                 c.close();
             }
         }

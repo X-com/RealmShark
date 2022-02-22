@@ -1,6 +1,6 @@
 package packets.packetcapture.pconstructor;
 
-import packets.packetcapture.networktap.TCPCustomPacket;
+import org.pcap4j.packet.TcpPacket;
 import util.HackyPacketLoggerForABug;
 import util.Util;
 
@@ -47,14 +47,14 @@ public class ROTMGPacketConstructor implements PConstructor {
      * @param packetSequenced TCP packet with the data inside.
      */
     @Override
-    public void build(TCPCustomPacket packetSequenced) {
+    public void build(TcpPacket packetSequenced) {
         if (firstNonLargePacket) { // start listening after a non-max packet
             // prevents errors in pSize.
             if (packetSequenced.length() < 1460) firstNonLargePacket = false;
             return;
         }
         HackyPacketLoggerForABug.logTCPPacket(packetSequenced); // TEMP logger to find a bug
-        for (byte b : packetSequenced.tcpData()) {
+        for (byte b : packetSequenced.getPayload().getRawData()) {
             bytes[index++] = b;
             if (index >= 4) {
                 if (pSize == 0) {
@@ -75,5 +75,13 @@ public class ROTMGPacketConstructor implements PConstructor {
                 }
             }
         }
+    }
+
+    /**
+     * Resets the byte index and the packet size.
+     */
+    public void reset() {
+        index = 0;
+        pSize = 0;
     }
 }

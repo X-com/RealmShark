@@ -2,12 +2,12 @@ package packets.packetcapture;
 
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapNativeException;
+import org.pcap4j.packet.TcpPacket;
 import packets.Packet;
 import packets.PacketType;
 import packets.packetcapture.encryption.RC4;
 import packets.packetcapture.encryption.RotMGRC4Keys;
 import packets.packetcapture.networktap.Sniffer;
-import packets.packetcapture.networktap.TCPCustomPacket;
 import packets.packetcapture.pconstructor.PConstructor;
 import packets.packetcapture.pconstructor.PacketConstructor;
 import packets.packetcapture.register.Register;
@@ -72,13 +72,13 @@ public class PacketProcessor extends Thread {
      *
      * @param packet The TCP packets retrieved from the network tap.
      */
-    public void receivedPackets(TCPCustomPacket packet) {
+    public void receivedPackets(TcpPacket packet) {
         // 2050 is default rotmg server port. Incoming packets have 2050 source port.
-        if (packet.getPortSrc() == 2050) {
+        if (packet.getHeader().getSrcPort().value() == 2050) {
             constIncomingPackets(packet);
 
             // Outgoing packets have destination port set to 2050.
-        } else if (packet.getPortDst() == 2050) {
+        } else if (packet.getHeader().getDstPort().value() == 2050) {
 //            constOutgoingPackets(packet); // removed given it is not implemented properly
         }
     }
@@ -88,7 +88,7 @@ public class PacketProcessor extends Thread {
      *
      * @param packet Incoming TCP packet
      */
-    private void constIncomingPackets(TCPCustomPacket packet) {
+    private void constIncomingPackets(TcpPacket packet) {
         incomingPacketConstructor.build(packet);
     }
 
@@ -97,7 +97,7 @@ public class PacketProcessor extends Thread {
      *
      * @param packet Outgoing TCP packet
      */
-    private void constOutgoingPackets(TCPCustomPacket packet) {
+    private void constOutgoingPackets(TcpPacket packet) {
         outgoingPacketConstructor.build(packet);
     }
 

@@ -1,6 +1,7 @@
 package packets.packetcapture.pconstructor;
 
-import packets.packetcapture.networktap.TCPCustomPacket;
+import org.pcap4j.packet.TcpPacket;
+import util.Util;
 
 import java.util.HashMap;
 
@@ -10,10 +11,10 @@ import java.util.HashMap;
  */
 public class StreamConstructor implements PConstructor {
 
-    HashMap<Integer, TCPCustomPacket> packetMap = new HashMap();
+    HashMap<Integer, TcpPacket> packetMap = new HashMap();
     PConstructor packetConstructor;
     PReset packetReset;
-    public int identifier;
+    public int sequenseNumber;
 
     /**
      * Constructor of StreamConstructor which needs a reset class to reset if reset
@@ -40,25 +41,25 @@ public class StreamConstructor implements PConstructor {
      * @param packet TCP packets needing to be ordered.
      */
     @Override
-    public void build(TCPCustomPacket packet) {
-        int packetIdentifier = packet.getIdentifier();
-        if (packetIdentifier == 0) {
-            if (packet.length() != 0) {
-                throw new IllegalStateException();
-            }
+    public void build(TcpPacket packet) {
+        if (packet.getHeader().getSyn()) {
             reset();
             return;
         }
-        if (identifier == 0) {
-            identifier = packetIdentifier;
-        } else if (identifier == 65536) {
-            identifier = 0;
+        if (packet.getPayload() == null)
+            return;
+        if (sequenseNumber == 0) {
+            sequenseNumber = packet.getHeader().getSequenceNumber();
         }
-
-        packetMap.put(packetIdentifier, packet);
-        while (packetMap.containsKey(identifier)) {
-            TCPCustomPacket packetSeqed = packetMap.remove(identifier);
-            identifier++;
+        packetMap.put(packet.getHeader().getSequenceNumber(), packet);
+        if (packetMap.size() > 500) {
+            Util.print("Packet map over 500, reseting.");
+            reset();
+            return;
+        }
+        while (packetMap.containsKey(sequenseNumber)) {
+            TcpPacket packetSeqed = packetMap.remove(sequenseNumber);
+            sequenseNumber += packetSeqed.getPayload().length();
             packetConstructor.build(packetSeqed);
         }
     }
@@ -69,6 +70,6 @@ public class StreamConstructor implements PConstructor {
     public void reset() {
         packetReset.reset();
         packetMap.clear();
-        identifier = 0;
+        sequenseNumber = 0;
     }
 }
