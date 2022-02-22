@@ -14,8 +14,8 @@ run {
 }
 
 dependencies {
+    implementation 'org.pcap4j:pcap4j-packetfactory-static:2.0.0-alpha.6'
     implementation 'org.pcap4j:pcap4j-core:2.0.0-alpha.6'
-    implementation 'org.slf4j:slf4j-simple:1.6.1'
 }
 
 mainClassName = 'example.ExampleModTomato'
