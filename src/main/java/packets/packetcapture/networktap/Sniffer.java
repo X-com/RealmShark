@@ -90,7 +90,6 @@ public class Sniffer {
                 try {
                     handlers[num].loop(-1, listener);
                 } catch (PcapNativeException | InterruptedException | NotOpenException e) {
-                    e.printStackTrace();
                 }
             }
         }).start();

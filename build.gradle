@@ -12,13 +12,8 @@ repositories {
 }
 
 dependencies {
-<<<<<<< HEAD
-    implementation files('libs/jpcap-x64.jar')
-    implementation files('libs/Jpcap.dll')
-=======
     implementation 'org.pcap4j:pcap4j-packetfactory-static:2.0.0-alpha.6'
     implementation 'org.pcap4j:pcap4j-core:2.0.0-alpha.6'
->>>>>>> lib_change
 }
 
 mainClassName = 'example.ExampleModTomato'
