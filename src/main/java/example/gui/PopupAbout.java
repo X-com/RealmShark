@@ -2,6 +2,7 @@ package example.gui;
 
 
 import example.ExampleModTomato;
+import example.version.Version;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +48,7 @@ class PopupAbout extends JFrame implements FocusListener {
         textLabelLine2 = new JLabel(aboutTextLine2);
         textLabelLine3 = new JLabel(aboutTextLine3);
         textLabelLine4 = new JLabel(aboutTextLine4);
-        textLabelVersion = new JLabel(ExampleModTomato.version);
+        textLabelVersion = new JLabel(Version.VERSION);
         textLabelTitle.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
         textLabelTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         textLabelLine1.setAlignmentX(Component.CENTER_ALIGNMENT);

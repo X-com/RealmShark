@@ -24,7 +24,6 @@ import java.net.URL;
 public class ExampleModTomato {
     public static URL imagePath = ExampleModTomato.class.getResource("/icon/tomatoIcon.png");
     private static PacketProcessor packetProcessor;
-    public static String version = "v1.1";
 
     public static void main(String[] args) {
         ExampleModTomato.example();
