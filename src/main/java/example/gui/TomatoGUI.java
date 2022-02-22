@@ -75,7 +75,7 @@ public class TomatoGUI {
      * @param s The text to be added at the end of text area.
      */
     public static void appendTextAreaText(String s) {
-        System.out.println(s);
+        System.out.print(s);
         textArea.append(s);
     }
 

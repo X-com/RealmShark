@@ -1,6 +1,7 @@
 package packets.packetcapture.pconstructor;
 
-import jpcap.packet.TCPPacket;
+import org.pcap4j.packet.TcpPacket;
+import util.Util;
 
 import java.util.HashMap;
 
@@ -10,10 +11,10 @@ import java.util.HashMap;
  */
 public class StreamConstructor implements PConstructor {
 
-    HashMap<Integer, TCPPacket> packetMap = new HashMap();
+    HashMap<Integer, TcpPacket> packetMap = new HashMap();
     PConstructor packetConstructor;
     PReset packetReset;
-    public int ident;
+    public int sequenseNumber;
 
     /**
      * Constructor of StreamConstructor which needs a reset class to reset if reset
@@ -40,21 +41,25 @@ public class StreamConstructor implements PConstructor {
      * @param packet TCP packets needing to be ordered.
      */
     @Override
-    public void build(TCPPacket packet) {
-        if (packet.ident == 0) {
-            if (packet.data.length != 0) {
-                throw new IllegalStateException();
-            }
+    public void build(TcpPacket packet) {
+        if (packet.getHeader().getSyn()) {
             reset();
             return;
         }
-        if (ident == 0) {
-            ident = packet.ident;
+        if (packet.getPayload() == null)
+            return;
+        if (sequenseNumber == 0) {
+            sequenseNumber = packet.getHeader().getSequenceNumber();
         }
-        packetMap.put(packet.ident, packet);
-        while (packetMap.containsKey(ident)) {
-            TCPPacket packetSeqed = packetMap.remove(ident);
-            ident++;
+        packetMap.put(packet.getHeader().getSequenceNumber(), packet);
+        if (packetMap.size() > 500) {
+            Util.print("Packet map over 500, reseting.");
+            reset();
+            return;
+        }
+        while (packetMap.containsKey(sequenseNumber)) {
+            TcpPacket packetSeqed = packetMap.remove(sequenseNumber);
+            sequenseNumber += packetSeqed.getPayload().length();
             packetConstructor.build(packetSeqed);
         }
     }
@@ -65,6 +70,6 @@ public class StreamConstructor implements PConstructor {
     public void reset() {
         packetReset.reset();
         packetMap.clear();
-        ident = 0;
+        sequenseNumber = 0;
     }
 }

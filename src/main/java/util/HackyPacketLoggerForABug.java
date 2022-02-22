@@ -1,6 +1,6 @@
 package util;
 
-import jpcap.packet.TCPPacket;
+import org.pcap4j.packet.TcpPacket;
 
 import java.util.Arrays;
 
@@ -9,9 +9,9 @@ import java.util.Arrays;
  */
 public class HackyPacketLoggerForABug {
     private static int index = 0;
-    private static TCPPacket[] logList = new TCPPacket[200];
+    private static TcpPacket[] logList = new TcpPacket[200];
 
-    public static void logTCPPacket(TCPPacket tcp) {
+    public static void logTCPPacket(TcpPacket tcp) {
         logList[index] = tcp;
         index++;
         if (index >= 200) index = 0;
@@ -23,7 +23,7 @@ public class HackyPacketLoggerForABug {
             if (i >= 200) i = 0;
             if (logList[i] != null) {
                 Util.print(logList[i].toString());
-                Util.print(Arrays.toString(logList[i].data));
+                Util.print(Arrays.toString(logList[i].getRawData()));
             }
         }
     }

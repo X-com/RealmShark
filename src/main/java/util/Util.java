@@ -1,6 +1,9 @@
 package util;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -9,7 +12,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class Util {
 
-    public static boolean showLogs = false;
+    public static boolean showLogs = true;
     private static PrintWriter printWriter;
 
     /**
@@ -59,5 +62,27 @@ public class Util {
             printWriter.print("\n" + s);
             printWriter.flush();
         }
+    }
+
+    public static String byteArrayPrint(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        boolean first = true;
+        for (byte b : bytes) {
+            if (!first) sb.append("|");
+            first = false;
+            sb.append(String.format("%01x", b));
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
+    public static byte[] hexStringToByteArray(String hex) {
+        int l = hex.length();
+        byte[] data = new byte[l / 2];
+        for (int i = 0; i < l; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4) + Character.digit(hex.charAt(i + 1), 16));
+        }
+        return data;
     }
 }

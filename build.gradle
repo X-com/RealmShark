@@ -1,24 +1,28 @@
 plugins {
     id 'java'
     id 'application'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
-version '1.0'
-
-run {
-    systemProperty "java.library.path", "libs/"
-}
+project.version = 'v1.1'
+applicationName = 'Tomato'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+<<<<<<< HEAD
     implementation files('libs/jpcap-x64.jar')
     implementation files('libs/Jpcap.dll')
+=======
+    implementation 'org.pcap4j:pcap4j-packetfactory-static:2.0.0-alpha.6'
+    implementation 'org.pcap4j:pcap4j-core:2.0.0-alpha.6'
+>>>>>>> lib_change
 }
 
 mainClassName = 'example.ExampleModTomato'
+
 
 jar {
     manifest {
@@ -27,3 +31,31 @@ jar {
         )
     }
 }
+
+// Ugly solution to get version into source.
+task generateSources {
+    doFirst {
+        def srcFile = new File(file("$buildDir/../src/main/java/example/version"), "Version.java")
+        srcFile.parentFile.mkdirs()
+        srcFile.write("""package example.version;
+/**
+ * Don't edit this class. It's a gradle class to grab version from the build.gradle
+ */
+public class Version {
+    public static final String VERSION = "$project.version";
+}
+
+""")
+    }
+}
+compileJava.dependsOn generateSources
+compileJava.source generateSources.outputs.files, sourceSets.main.java
+
+shadowJar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+    archiveFileName = "${applicationName}-${project.version}.jar"
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
