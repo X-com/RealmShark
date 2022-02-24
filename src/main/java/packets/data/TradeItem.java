@@ -34,4 +34,8 @@ public class TradeItem {
 
         return this;
     }
+
+    public String toString() {
+        return String.format("ItemID:%d SlotType:%d Tradeable:%b Being-traded:%b", item, slotType, tradeable, included);
+    }
 }

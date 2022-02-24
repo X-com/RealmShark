@@ -29,6 +29,6 @@ public class WorldPosData {
     }
 
     public String toString() {
-        return String.format("(%f,%f)", x, y);
+        return String.format("Pos(%f,%f)", x, y);
     }
 }

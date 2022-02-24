@@ -1,6 +1,7 @@
 package packets.data;
 
 import packets.reader.BufferReader;
+import util.Util;
 
 public class ObjectStatusData {
     /**
@@ -32,5 +33,9 @@ public class ObjectStatusData {
         }
 
         return this;
+    }
+
+    public String toString() {
+        return String.format("ObjectID:%d %s %s", objectId, pos, Util.showAll(stats));
     }
 }

@@ -8,6 +8,7 @@ public class StatData {
     /**
      * The type of stat
      */
+    public int statTypeNum;
     public StatType statType;
     /**
      * The number value of this stat, if this is not a string stat
@@ -27,36 +28,38 @@ public class StatData {
      *
      * @param buffer Data that needs deserializing.
      * @return Returns this object after deserializing.
-     * <p>
-     * TODO: full stat types list is not available
      */
     public StatData deserialize(BufferReader buffer) {
-        int type = buffer.readUnsignedByte();
-        statType = StatType.byOrdinal(type);
-        if (statType == null) Util.print("StatType enum error in deserializer: " + type);
+        statTypeNum = buffer.readUnsignedByte();
+        statType = StatType.byOrdinal(statTypeNum);
 
         if (isStringStat()) {
             stringStatValue = buffer.readString();
         } else {
             statValue = buffer.readCompressedInt();
         }
-        statValueTwo = buffer.readByte();
+        statValueTwo = buffer.readCompressedInt();
 
         return this;
     }
 
     private boolean isStringStat() {
-        if (StatType.NAME_STAT == statType // 31
-                || StatType.GUILD_NAME_STAT == statType // 62
-                || StatType.PET_NAME_STAT == statType // 82
-                || StatType.ACCOUNT_ID_STAT == statType // 38
-                || StatType.OWNER_ACCOUNT_ID_STAT == statType // 54
-                || StatType.GRAVE_ACCOUNT_ID == statType // 115
-                || StatType.TEXTURE_STAT == statType // 80
-                || StatType.UNKNOWN121 == statType // 121
-                || StatType.UNKNOWN123 == statType) { // 123
+        if (StatType.EXP_STAT.get() == statTypeNum // 6
+            || StatType.NAME_STAT.get() == statTypeNum // 31
+            || StatType.ACCOUNT_ID_STAT.get() == statTypeNum // 38
+            || StatType.OWNER_ACCOUNT_ID_STAT.get() == statTypeNum // 54
+            || StatType.GUILD_NAME_STAT.get() == statTypeNum // 62
+            || StatType.TEXTURE_STAT.get() == statTypeNum // 80
+            || StatType.PET_NAME_STAT.get() == statTypeNum // 82
+            || StatType.GRAVE_ACCOUNT_ID.get() == statTypeNum // 115
+            || StatType.UNKNOWN121.get() == statTypeNum // 121
+        ) {
             return true;
         }
         return false;
+    }
+
+    public String toString() {
+        return String.format("Stat:%s Value:%s SecValue:%d", (statType != null ? statType : statTypeNum), (stringStatValue != null ? stringStatValue : Integer.toString(statValue)), statValueTwo);
     }
 }

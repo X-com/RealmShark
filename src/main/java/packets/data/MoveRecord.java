@@ -11,13 +11,9 @@ public class MoveRecord {
      */
     public int time;
     /**
-     * The X coordinate of this move record.
+     * The position where the entity is moving to.
      */
-    public float x;
-    /**
-     * The Y coordinate of this move record.
-     */
-    public float y;
+    public WorldPosData pos;
 
     /**
      * Deserializer method to extract data from the buffer.
@@ -27,9 +23,13 @@ public class MoveRecord {
      */
     public MoveRecord deserialize(BufferReader buffer) {
         time = buffer.readInt();
-        x = buffer.readFloat();
-        y = buffer.readFloat();
+
+        pos = new WorldPosData().deserialize(buffer);
 
         return this;
+    }
+
+    public String toString() {
+        return String.format("Time:%d %s", time, pos);
     }
 }

@@ -2,6 +2,8 @@ package packets.data;
 
 import packets.reader.BufferReader;
 
+import java.util.Arrays;
+
 public class QuestData {
     /**
      * The id of this quest
@@ -76,5 +78,9 @@ public class QuestData {
         repeatable = buffer.readBoolean();
 
         return this;
+    }
+
+    public String toString() {
+        return String.format("Quest ID:%d Name:%d Description:%d Expiration:%b Item-Reqs:%s Item-Rew:%s %Completed:%b Item-Choise:%b Repeatable:%b Category:%d Unknown:%d", id, name, description, expiration, Arrays.toString(requirements), Arrays.toString(rewards), completed, itemOfChoice, repeatable, category, unknownInt);
     }
 }

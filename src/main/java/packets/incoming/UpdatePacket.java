@@ -5,6 +5,7 @@ import packets.reader.BufferReader;
 import packets.data.GroundTileData;
 import packets.data.ObjectData;
 import packets.data.WorldPosData;
+import util.Util;
 
 /**
  * Received when an update even occurs. Some events include
@@ -14,7 +15,7 @@ import packets.data.WorldPosData;
  */
 public class UpdatePacket extends Packet {
     /**
-     * Unkown level byte
+     * Unknown level byte
      */
     public byte levelType;
     /**
@@ -36,8 +37,8 @@ public class UpdatePacket extends Packet {
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
-        levelType = buffer.readByte();
         pos = new WorldPosData().deserialize(buffer);
+        levelType = buffer.readByte();
 
         tiles = new GroundTileData[buffer.readCompressedInt()];
         for (int i = 0; i < tiles.length; i++) {
@@ -53,5 +54,9 @@ public class UpdatePacket extends Packet {
         for (int i = 0; i < drops.length; i++) {
             drops[i] = buffer.readCompressedInt();
         }
+    }
+
+    public String toString() {
+        return String.format("Unknown%s UnknownType:%d\n-GroundTileData-%s\n-ObjectData-%s\n-RemoveObjects-%s", pos, levelType, Util.showAll(tiles), Util.showAll(newObjects), Util.showAll(drops));
     }
 }

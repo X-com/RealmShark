@@ -24,4 +24,8 @@ public class ObjectData {
 
         return this;
     }
+
+    public String toString() {
+        return String.format("ObjectType:%d\n-ObjectStatusData-\n%s", objectType, status);
+    }
 }

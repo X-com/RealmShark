@@ -31,4 +31,8 @@ public class GroundTileData {
         type = buffer.readUnsignedShort();
         return this;
     }
+
+    public String toString() {
+        return String.format("TileID:%d TilePos:(%d,%d)", type, x, y);
+    }
 }
