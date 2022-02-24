@@ -41,4 +41,14 @@ public class Register {
     public <T extends Class<? extends Packet>> void register(PacketType type, IPacketListener<Packet> processor) {
         packetListeners.computeIfAbsent(type.getPacketClass(), (a) -> new ArrayList<>()).add(processor);
     }
+
+    /**
+     * Register method to subscribe to all packets that are being received from the network tap.
+     *
+     * @param processor The lambda needed to trigger what event should happen if packet is received.
+     * @param <T>       Class type.
+     */
+    public <T extends Class<? extends Packet>> void registerAll(IPacketListener<Packet> processor) {
+        packetListeners.computeIfAbsent(Packet.class, (a) -> new ArrayList<>()).add(processor);
+    }
 }
