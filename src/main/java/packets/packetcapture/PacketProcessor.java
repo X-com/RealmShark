@@ -118,7 +118,8 @@ public class PacketProcessor extends Thread {
 
         try {
             packetType.deserialize(pData);
-            pData.bufferFullyParsed(PacketType.byOrdinal(type), packetType);
+            if (!pData.isBufferFullyParsed())
+                pData.printError(packetType);
         } catch (Exception e) {
             debugPackets(type, data);
             return;
@@ -132,10 +133,10 @@ public class PacketProcessor extends Thread {
     private void debugPackets(int type, ByteBuffer data) {
         Packet packetType = PacketType.getPacket(type).factory();
         try {
-            Util.print("Debugging packet: " + PacketType.byOrdinal(type));
+            Util.print("Buffer exploded: " + PacketType.byOrdinal(type));
             data.position(5);
             BufferReader pDebug = new BufferReader(data);
-            pDebug.printError(PacketType.byOrdinal(type), packetType);
+            pDebug.printError(packetType);
             packetType.deserialize(pDebug);
         } catch (Exception e) {
             Util.print(Arrays.toString(e.getStackTrace()).replaceAll(", ", "\n"));

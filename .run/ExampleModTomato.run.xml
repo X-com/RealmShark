@@ -3,8 +3,7 @@
     <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="example.ExampleModTomato" />
-    <module name="Tomato" />
-    <option name="VM_PARAMETERS" value="-Djava.library.path=libs" />
+    <module name="RealmShark.main" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

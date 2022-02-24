@@ -18,8 +18,6 @@ import java.net.URL;
  * The register should be used to sign up for packets. If said packet is
  * received then the lambda function passed in as the second argument can
  * be used to trigger any functions listening to registered packets.
- * <p>
- * TODO: Add linux and mac support later in PacketProcessor
  */
 public class ExampleModTomato {
     public static URL imagePath = ExampleModTomato.class.getResource("/icon/tomatoIcon.png");
@@ -38,7 +36,7 @@ public class ExampleModTomato {
             the second argument for the action when registered packet is received.
 
             Example for subscribing for all packet types:
-            Register.INSTANCE.register(Packet.class, System.out::println);
+            Register.INSTANCE.registerAll(System.out::println);
 
             Example 2: Subscribing to TEXT packets
          */
@@ -78,8 +76,9 @@ public class ExampleModTomato {
      * @param packet The text packet.
      */
     private static void text(Packet packet) {
-        if (!(packet instanceof TextPacket)) return;
-        TextPacket tPacket = (TextPacket) packet;
-        TomatoGUI.appendTextAreaText(String.format("[%s]: %s\n", tPacket.name, tPacket.text));
+        if (packet instanceof TextPacket) {
+            TextPacket tPacket = (TextPacket) packet;
+            TomatoGUI.appendTextAreaText(String.format("[%s]: %s\n", tPacket.name, tPacket.text));
+        }
     }
 }

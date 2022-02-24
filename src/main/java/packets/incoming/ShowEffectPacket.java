@@ -36,7 +36,7 @@ public class ShowEffectPacket extends Packet {
     /**
      * unknown
      */
-    public byte unknown;
+    public byte unknownByte;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
@@ -81,9 +81,9 @@ public class ShowEffectPacket extends Packet {
             duration = 1.0f;
         }
         if (ignore >= 0) {
-            unknown = 100;
+            unknownByte = 100;
         } else {
-            unknown = buffer.readByte();
+            unknownByte = buffer.readByte();
         }
     }
 }

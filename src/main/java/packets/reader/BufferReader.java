@@ -217,34 +217,22 @@ public class BufferReader {
 
     /**
      * Checks if the buffer have finished reading all bytes.
-     *
-     * @param packetType Packet type.
-     * @param type       Packet itself.
      */
-    public void bufferFullyParsed(PacketType packetType, Packet type) {
+    public boolean isBufferFullyParsed() {
         if (buffer.capacity() != buffer.position()) {
-            printError(packetType, type);
+            Util.print("Buffer not finished");
+            return false;
         }
+        return true;
     }
 
     /**
      * Prints an error log and the data in the buffer.
      *
-     * @param packetType Packet type.
-     * @param type       Packet itself.
+     * @param packet Packet type.
      */
-    public void printError(PacketType packetType, Packet type) {
-        Util.print("Buffer not finished " + packetType + " : " + buffer.position() + " " + buffer.capacity());
-
-        StringBuilder sb = new StringBuilder();
-        StringBuilder sb2 = new StringBuilder();
-        StringBuilder sb3 = new StringBuilder();
-        for (int i = 0; i < buffer.array().length; i++) {
-            int b = Byte.toUnsignedInt(buffer.array()[i]);
-            sb.append("," + String.format("%d", b));
-        }
-        Util.print(sb.toString());
-        Util.print(sb2.toString());
-        Util.print(sb3.toString());
+    public void printError(Packet packet) {
+        Util.print(PacketType.byClass(packet) + " : " + buffer.position() + " " + buffer.capacity());
+        Util.print(Arrays.toString(buffer.array()));
     }
 }
