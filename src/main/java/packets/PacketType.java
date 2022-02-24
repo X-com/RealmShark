@@ -134,10 +134,10 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
           EXALTATION_BONUS_CHANGED(114, Incoming, ExaltationUpdatePacket::new),
           REDEEM_EXALTATION_REWARD(115, null, null),
                         // Missing
-                      VAULT_UPDATE(117, Incoming, VaultContentPacket::new), // TODO: test this packet
+                      VAULT_UPDATE(117, Incoming, VaultContentPacket::new),
                      FORGE_REQUEST(118, Outgoing, ForgeRequestPacket::new),
                       FORGE_RESULT(119, Incoming, ForgeResultPacket::new),
-         FORGE_UNLOCKED_BLUEPRINTS(120, Incoming, ForgeUnlockedBlueprints::new), // TODO: test this packet
+         FORGE_UNLOCKED_BLUEPRINTS(120, Incoming, ForgeUnlockedBlueprints::new),
                   CHANGE_ALLYSHOOT(121, Outgoing, ChangeAllyShootPacket::new);
 
     private static final HashMap<Integer, IPacket> PACKET_TYPE = new HashMap<>();
@@ -176,6 +176,21 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
     public static PacketType byOrdinal(int index) {
         for (PacketType o : PacketType.values()) {
             if (o.index == index) {
+                return o;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get the enum type by class.
+     *
+     * @param clazz The packet to be returned the type of.
+     * @return Returns the enum type.
+     */
+    public static PacketType byClass(Packet clazz) {
+        for (PacketType o : PacketType.values()) {
+            if (o.packet.factory().getClass() == clazz.getClass()) {
                 return o;
             }
         }
