@@ -64,6 +64,12 @@ public class Util {
         }
     }
 
+    /**
+     * Hex with lines printer.
+     *
+     * @param bytes Byte array to be printed with pare of hex numbers separated with a line
+     * @return
+     */
     public static String byteArrayPrint(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
@@ -77,6 +83,12 @@ public class Util {
         return sb.toString();
     }
 
+    /**
+     * Method to turn byte array from a hex string.
+     *
+     * @param hex String of hex data with a pair of numbers represents a byte.
+     * @return Returns a byte array translated from the hex string.
+     */
     public static byte[] hexStringToByteArray(String hex) {
         int l = hex.length();
         byte[] data = new byte[l / 2];
@@ -84,5 +96,33 @@ public class Util {
             data[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4) + Character.digit(hex.charAt(i + 1), 16));
         }
         return data;
+    }
+
+    /**
+     * String output of all objects in the list.
+     *
+     * @param list List all objects to be printed.
+     * @return String output of the list.
+     */
+    public static String showAll(Object[] list) {
+        StringBuilder sb = new StringBuilder();
+        for (Object o : list) {
+            sb.append("\n" + o);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * String output of all integers in the list.
+     *
+     * @param list List of integers to be printed.
+     * @return String output of the list.
+     */
+    public static Object showAll(int[] list) {
+        StringBuilder sb = new StringBuilder();
+        for (int i : list) {
+            sb.append("\n" + i);
+        }
+        return sb.toString();
     }
 }
