@@ -20,11 +20,11 @@ public class EnemyHitPacket extends Packet {
      */
     public int targetId;
     /**
-     * Id of the shooter hitting the target.
+     * ID of the shooter hitting the target.
      */
-    public int shootherID;
+    public int shooterID;
     /**
-     * Whether or not the projectile will kill the enemy.
+     * Whether the projectile will kill the enemy.
      */
     public boolean kill;
     /**
@@ -36,13 +36,13 @@ public class EnemyHitPacket extends Packet {
     public void deserialize(BufferReader buffer) throws Exception {
         time = buffer.readInt();
         bulletId = buffer.readShort();
-        shootherID = buffer.readInt();
+        shooterID = buffer.readInt();
         targetId = buffer.readInt();
         kill = buffer.readBoolean();
         mainID = buffer.readInt();
     }
 
     public String toString() {
-        return String.format("Time:%d BulletId:%d ShootherID:%d TargetID:%d Kill:%b MainID:%d", time, bulletId, shootherID, targetId, kill, mainID);
+        return String.format("Time:%d BulletId:%d ShooterID:%d TargetID:%d Kill:%b MainID:%d", time, bulletId, shooterID, targetId, kill, mainID);
     }
 }

@@ -17,7 +17,7 @@ public class CreatePacket extends Packet {
      */
     public short skinType;
     /**
-     * Whether or not the character is in challenger mode.
+     * Whether the character is in challenger mode.
      */
     public boolean isChallenger;
 

@@ -33,14 +33,6 @@ public class PlayerShootPacket extends Packet {
      */
     public float angle;
     /**
-     * The speed multiplier for the projectile.
-     */
-    public int speedMult;
-    /**
-     * The lifetime MS multiplier for the projectile.
-     */
-    public int lifeMult;
-    /**
      * If the projectile is related to a burst weapon projectile.
      */
     public boolean isBurst;
