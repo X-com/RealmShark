@@ -32,6 +32,6 @@ public class SlotObjectData {
     }
 
     public String toString() {
-        return String.format("PlayerID:%d Slot:%d ItemID:%d Being-traded:%b", objectId, slotId, objectType);
+        return String.format("ObjectId:%d SlotId:%d ObjectType:%d", objectId, slotId, objectType);
     }
 }
