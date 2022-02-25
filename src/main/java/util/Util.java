@@ -68,7 +68,7 @@ public class Util {
      * Hex with lines printer.
      *
      * @param bytes Byte array to be printed with pare of hex numbers separated with a line
-     * @return
+     * @return Printed hex values with separated lines.
      */
     public static String byteArrayPrint(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
@@ -119,6 +119,20 @@ public class Util {
      * @return String output of the list.
      */
     public static Object showAll(int[] list) {
+        StringBuilder sb = new StringBuilder();
+        for (int i : list) {
+            sb.append("\n" + i);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * String output of all bytes in the list.
+     *
+     * @param list List of bytes to be printed.
+     * @return String output of the list.
+     */
+    public static Object showAll(byte[] list) {
         StringBuilder sb = new StringBuilder();
         for (int i : list) {
             sb.append("\n" + i);
