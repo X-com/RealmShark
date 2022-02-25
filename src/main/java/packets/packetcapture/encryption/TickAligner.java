@@ -1,5 +1,6 @@
 package packets.packetcapture.encryption;
 
+import packets.PacketType;
 import util.HackyPacketLoggerForABug;
 import util.Util;
 
@@ -44,7 +45,7 @@ public class TickAligner {
      */
     public boolean checkRC4Alignment(ByteBuffer encryptedData, int size, byte type) {
         if (synced) {
-            if (type == 9) { // Packet type 9 is Tick packets.
+            if (type == PacketType.NEWTICK.getIndex() || type == PacketType.MOVE.getIndex()) {
                 byte[] duplicate = Arrays.copyOfRange(encryptedData.array(), 5, encryptedData.capacity());
                 rc4.fork().decrypt(duplicate);
                 CURRENT_TICK++;
@@ -61,7 +62,7 @@ public class TickAligner {
         }
 
         if (!synced) {
-            if (type == 9) {
+            if (type == PacketType.NEWTICK.getIndex() || type == PacketType.MOVE.getIndex()) {
                 byte[] tick = Arrays.copyOfRange(encryptedData.array(), 5, 5 + 4);
                 if (TickA != null) {
                     rc4.reset();
