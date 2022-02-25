@@ -14,21 +14,35 @@ public class EnemyHitPacket extends Packet {
     /**
      * The id of the bullet which hit the enemy.
      */
-    public int bulletId;
+    public short bulletId;
     /**
      * The object id of the enemy which was hit.
      */
     public int targetId;
     /**
+     * Id of the shooter hitting the target.
+     */
+    public int shootherID;
+    /**
      * Whether or not the projectile will kill the enemy.
      */
     public boolean kill;
+    /**
+     * Id of the main player hitting the target.
+     */
+    public int mainID;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
         time = buffer.readInt();
-        bulletId = buffer.readUnsignedByte();
+        bulletId = buffer.readShort();
+        shootherID = buffer.readInt();
         targetId = buffer.readInt();
         kill = buffer.readBoolean();
+        mainID = buffer.readInt();
+    }
+
+    public String toString() {
+        return String.format("Time:%d BulletId:%d ShootherID:%d TargetID:%d Kill:%b MainID:%d", time, bulletId, shootherID, targetId, kill, mainID);
     }
 }

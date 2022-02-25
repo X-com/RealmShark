@@ -20,17 +20,17 @@ public class InvSwapPacket extends Packet {
     /**
      * The slot to swap from.
      */
-    public SlotObjectData slotObject1;
+    public SlotObjectData slotFrom;
     /**
      * The slot to swap to.
      */
-    public SlotObjectData slotObject2;
+    public SlotObjectData slotTo;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
         time = buffer.readInt();
         position = new WorldPosData().deserialize(buffer);
-        slotObject1 = new SlotObjectData().deserialize(buffer);
-        slotObject2 = new SlotObjectData().deserialize(buffer);
+        slotFrom = new SlotObjectData().deserialize(buffer);
+        slotTo  = new SlotObjectData().deserialize(buffer);
     }
 }

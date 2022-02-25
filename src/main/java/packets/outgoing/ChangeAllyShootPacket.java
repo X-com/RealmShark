@@ -4,21 +4,26 @@ import packets.Packet;
 import packets.reader.BufferReader;
 
 /**
- * Sent to change the guild rank of a member in the player's guild.
+ * Sent to tell the server if you would like to receive ally (other player) projectiles.
  */
 public class ChangeAllyShootPacket extends Packet {
     /**
-     * The name of the player whose rank will change.
+     * Whether the server will send ally projectiles.
+     * 0 = disable, 1 = enable.
      */
-    public String name;
+    public int toggle;
     /**
-     * The new rank of the player.
+     * Unknown
      */
-    public int guildRank;
+    public short unknownShort;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
-        name = buffer.readString();
-        guildRank = buffer.readInt();
+        toggle = buffer.readInt();
+        unknownShort = buffer.readShort();
+    }
+
+    public String toString() {
+        return String.format("%d %d", toggle, unknownShort);
     }
 }

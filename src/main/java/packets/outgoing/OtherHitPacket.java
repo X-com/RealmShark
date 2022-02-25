@@ -23,6 +23,10 @@ public class OtherHitPacket extends Packet {
      * The object id of the object which was hit.
      */
     public int targetId;
+    /**
+     * Unknown byte
+     */
+    public byte unknownByte;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
@@ -30,5 +34,6 @@ public class OtherHitPacket extends Packet {
         bulletId = buffer.readUnsignedByte();
         objectId = buffer.readInt();
         targetId = buffer.readInt();
+        unknownByte = buffer.readByte();
     }
 }

@@ -10,7 +10,7 @@ public class PlayerHitPacket extends Packet {
     /**
      * The id of the bullet which hit the player.
      */
-    public int bulletId;
+    public short bulletId;
     /**
      * The object id of the enemy that hit the player.
      */
@@ -18,7 +18,7 @@ public class PlayerHitPacket extends Packet {
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
-        bulletId = buffer.readUnsignedByte();
+        bulletId = buffer.readShort();
         objectId = buffer.readInt();
     }
 }

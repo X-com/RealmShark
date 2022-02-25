@@ -2,6 +2,9 @@ package packets.outgoing;
 
 import packets.Packet;
 import packets.reader.BufferReader;
+import util.Util;
+
+import java.util.Arrays;
 
 /**
  * Sent to prompt the server to accept the connection of an account
@@ -29,21 +32,9 @@ public class HelloPacket extends Packet {
      */
     public byte[] key;
     /**
-     * > Unknown.
+     * The platform the user is using
      */
-    public String mapJSON;
-    /**
-     * > Unknown.
-     */
-    public String entryTag;
-    /**
-     * The platform the game is played on
-     */
-    public String gameNet;
-    /**
-     * > Unknown.
-     */
-    public String gameNetUserId;
+    public String userPlatform;
     /**
      * The platform the game is played on
      */
@@ -68,14 +59,14 @@ public class HelloPacket extends Packet {
         accessToken = buffer.readString();
         keyTime = buffer.readInt();
         key = buffer.readByteArray();
-        mapJSON = buffer.readStringUTF32();
-        entryTag = buffer.readString();
-        gameNet = buffer.readString();
-        gameNetUserId = buffer.readString();
+        userPlatform = buffer.readString();
         playPlatform = buffer.readString();
         platformToken = buffer.readString();
         userToken = buffer.readString();
         clientToken = buffer.readString();
     }
 
+    public String toString() {
+        return String.format("BuildVersion:%s GameId:%d AccessToken:%s\nKeyTime:%d Key:%s\nPlayPlatform:%s PlatformToken:%s UserToken:%s ClientToken:%s", buildVersion, gameId, accessToken, keyTime, Arrays.toString(key), playPlatform, platformToken, userToken, clientToken);
+    }
 }

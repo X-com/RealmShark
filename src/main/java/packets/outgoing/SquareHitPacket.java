@@ -4,7 +4,7 @@ import packets.Packet;
 import packets.reader.BufferReader;
 
 /**
- * > Unknown.
+ * Type of packet sent when some type of hostiles fire.
  */
 public class SquareHitPacket extends Packet {
     /**
@@ -12,18 +12,22 @@ public class SquareHitPacket extends Packet {
      */
     public int time;
     /**
-     * > Unknown.
+     * The id of the bullet which hit the object.
      */
-    public byte bulletId;
+    public short bulletId;
     /**
-     * > Unknown.
+     * The id of the object shooting.
      */
     public int objectId;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
         time = buffer.readInt();
-        bulletId = buffer.readByte();
+        bulletId = buffer.readShort();
         objectId = buffer.readInt();
+    }
+
+    public String toString() {
+        return String.format("Time:%d BulletId:%d ObjectId:%d", time, bulletId, objectId);
     }
 }

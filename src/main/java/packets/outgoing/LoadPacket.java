@@ -12,18 +12,14 @@ public class LoadPacket extends Packet {
      */
     public int charId;
     /**
-     * Whether or not the `MapInfoPacket` being responded to is from the arena.
+     * Unknown boolean
      */
-    public boolean isFromArena;
-    /**
-     * Whether or not the character is in challenger mode.
-     */
-    public boolean isChallenger;
+    public boolean unknownBoolean;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
         charId = buffer.readInt();
-        isFromArena = buffer.readBoolean();
-        isChallenger = buffer.readBoolean();
+        unknownBoolean = buffer.readBoolean();
+
     }
 }
