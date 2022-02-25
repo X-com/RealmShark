@@ -12,9 +12,18 @@ public class InvDropPacket extends Packet {
      * The slot to drop the item from.
      */
     public SlotObjectData slotObject;
+    /**
+     * Unknown
+     */
+    public static boolean unknownBoolean;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
         slotObject = new SlotObjectData().deserialize(buffer);
+        unknownBoolean = buffer.readBoolean();
+    }
+
+    public String toString() {
+        return String.format("SlotObject:%s Unknown:%b", slotObject, unknownBoolean);
     }
 }
