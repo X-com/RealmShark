@@ -126,25 +126,36 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
                               FILE(106, Incoming, FilePacket::new),
                      RESKIN_UNLOCK(107, Incoming, ReskinUnlockPacket::new),
          NEW_CHARACTER_INFORMATION(108, Incoming, NewCharacterInfoPacket::new),
-                UNLOCK_INFORMATION(109, null, null),
+//                UNLOCK_INFORMATION(109, null, null),
                         // Missing
                         // Missing
                  QUEUE_INFORMATION(112, Incoming, QueueInfoPacket::new),
                       QUEUE_CANCEL(113, Outgoing, QueueCancelPacket::new),
           EXALTATION_BONUS_CHANGED(114, Incoming, ExaltationUpdatePacket::new),
-          REDEEM_EXALTATION_REWARD(115, null, null),
+//          REDEEM_EXALTATION_REWARD(115, null, null),
                         // Missing
                       VAULT_UPDATE(117, Incoming, VaultContentPacket::new),
                      FORGE_REQUEST(118, Outgoing, ForgeRequestPacket::new),
                       FORGE_RESULT(119, Incoming, ForgeResultPacket::new),
          FORGE_UNLOCKED_BLUEPRINTS(120, Incoming, ForgeUnlockedBlueprints::new),
-                  CHANGE_ALLYSHOOT(121, Outgoing, ChangeAllyShootPacket::new);
+                  CHANGE_ALLYSHOOT(121, Outgoing, ChangeAllyShootPacket::new),
+                 SHOOT_ACK_COUNTER(122, Outgoing, ShootAckCounterPacket::new),
+//          GET_PLAYERS_LIST_MESSAGE(123, Outgoing, null),
+          MODERATOR_ACTION_MESSAGE(124, Outgoing, ModeratorActionMessagePacket::new),
+//                         CREEP_HIT(125, Incoming, null),
+                CREEP_MOVE_MESSAGE(126, Outgoing, CreepMoveMessagePacket::new);
 
     private static final HashMap<Integer, IPacket> PACKET_TYPE = new HashMap<>();
+    private static final HashMap<Class, PacketType> PACKET_CLASS = new HashMap<>();
 
     static {
-        for (PacketType o : PacketType.values()) {
-            PACKET_TYPE.put(o.index, o.packet);
+        try {
+            for (PacketType o : PacketType.values()) {
+                PACKET_TYPE.put(o.index, o.packet);
+                PACKET_CLASS.put(o.packet.factory().getClass(), o);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -161,7 +172,7 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
     /**
      * Get the index of the packet
      *
-     * @return The index of the enum.
+     * @return Index of the enum.
      */
     public int getIndex() {
         return index;
@@ -171,7 +182,7 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
      * Get the enum by index.
      *
      * @param index The index.
-     * @return Returns the enum by index.
+     * @return Enum by index.
      */
     public static PacketType byOrdinal(int index) {
         for (PacketType o : PacketType.values()) {
@@ -185,23 +196,18 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
     /**
      * Get the enum type by class.
      *
-     * @param clazz The packet to be returned the type of.
-     * @return Returns the enum type.
+     * @param packet The packet to be returned the type of.
+     * @return Enum type.
      */
-    public static PacketType byClass(Packet clazz) {
-        for (PacketType o : PacketType.values()) {
-            if (o.packet.factory().getClass() == clazz.getClass()) {
-                return o;
-            }
-        }
-        return null;
+    public static PacketType byClass(Packet packet) {
+        return PACKET_CLASS.get(packet.getClass());
     }
 
     /**
      * Retrieves the packet type from the PACKET_TYPE list.
      *
      * @param type Index of the packet needing to be retrieved.
-     * @return Returns the interface IPacket of the class being retrieved.
+     * @return Interface IPacket of the class being retrieved.
      */
     public static IPacket getPacket(int type) {
         return PACKET_TYPE.get(type);
@@ -211,7 +217,7 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
      * Checks if packet type exists in the PACKET_TYPE list.
      *
      * @param type Index of the packet.
-     * @return Returns if the packet exists in the list of packets in PACKET_TYPE.
+     * @return True if the packet exists in the list of packets in PACKET_TYPE.
      */
     public static boolean containsKey(int type) {
         return PACKET_TYPE.containsKey(type);
@@ -220,14 +226,13 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
     /**
      * Returns the class of the enum.
      *
-     * @return Returns the class of the enum.
+     * @return Class of the enum.
      */
     public Class<? extends Packet> getPacketClass() {
         return packet.factory().getClass();
     }
 
     public enum Direction {
-        Incoming,
-        Outgoing
+        Incoming, Outgoing
     }
 }
