@@ -11,7 +11,7 @@ public class ServerPlayerShootPacket extends Packet {
     /**
      * The id of the bullet that was produced
      */
-    public int bulletId;
+    public short bulletId;
     /**
      * The object id of the player who fired the projectile
      */
@@ -55,7 +55,7 @@ public class ServerPlayerShootPacket extends Packet {
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
-        bulletId = buffer.readUnsignedShort();
+        bulletId = buffer.readShort();
         ownerId = buffer.readInt();
         containerType = buffer.readInt();
         startingPos = new WorldPosData().deserialize(buffer);
