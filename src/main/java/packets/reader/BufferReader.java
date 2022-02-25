@@ -220,7 +220,7 @@ public class BufferReader {
      */
     public boolean isBufferFullyParsed() {
         if (buffer.capacity() != buffer.position()) {
-            Util.print("Buffer not finished");
+            Util.print("Buffer not finished " + buffer.position() + "/" + buffer.capacity());
             return false;
         }
         return true;
@@ -232,7 +232,7 @@ public class BufferReader {
      * @param packet Packet type.
      */
     public void printError(Packet packet) {
-        Util.print(PacketType.byClass(packet) + " : " + buffer.position() + " " + buffer.capacity());
+        Util.print(PacketType.byClass(packet) + " : " + buffer.position() + "/" + buffer.capacity());
         Util.print(Arrays.toString(buffer.array()));
     }
 }

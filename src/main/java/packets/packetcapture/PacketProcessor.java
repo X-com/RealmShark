@@ -75,11 +75,11 @@ public class PacketProcessor extends Thread {
     public void receivedPackets(TcpPacket packet) {
         // 2050 is default rotmg server port. Incoming packets have 2050 source port.
         if (packet.getHeader().getSrcPort().value() == 2050) {
-            constIncomingPackets(packet);
+//            constIncomingPackets(packet);
 
             // Outgoing packets have destination port set to 2050.
         } else if (packet.getHeader().getDstPort().value() == 2050) {
-//            constOutgoingPackets(packet); // removed given it is not implemented properly
+            constOutgoingPackets(packet); // removed given it is not implemented properly
         }
     }
 
@@ -121,6 +121,7 @@ public class PacketProcessor extends Thread {
             if (!pData.isBufferFullyParsed())
                 pData.printError(packetType);
         } catch (Exception e) {
+            Util.print("Buffer exploded: " + pData.getIndex() + "/" + pData.size());
             debugPackets(type, data);
             return;
         }
@@ -133,13 +134,14 @@ public class PacketProcessor extends Thread {
     private void debugPackets(int type, ByteBuffer data) {
         Packet packetType = PacketType.getPacket(type).factory();
         try {
-            Util.print("Buffer exploded: " + PacketType.byOrdinal(type));
+            Util.print(PacketType.byOrdinal(type) + "");
             data.position(5);
             BufferReader pDebug = new BufferReader(data);
             pDebug.printError(packetType);
             packetType.deserialize(pDebug);
         } catch (Exception e) {
-            Util.print(Arrays.toString(e.getStackTrace()).replaceAll(", ", "\n"));
+//            Util.print(Arrays.toString(e.getStackTrace()).replaceAll(", ", "\n"));
+            e.printStackTrace();
         }
     }
 }
