@@ -4,15 +4,15 @@ import packets.Packet;
 import packets.reader.BufferReader;
 
 /**
- * Received when the players exaltation stats update
+ * Received when the player's exaltation stats are updated.
  */
 public class ExaltationUpdatePacket extends Packet {
     /**
-     * The object type of the player's class
+     * The object type of the player's class.
      */
     public short objType;
     /**
-     * The amount of stats to increase
+     * The amount of stats to increase.
      */
     public int attackProgress;
     public int defenseProgress;
