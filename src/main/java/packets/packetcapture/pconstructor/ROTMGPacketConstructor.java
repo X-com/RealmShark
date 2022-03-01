@@ -1,7 +1,6 @@
 package packets.packetcapture.pconstructor;
 
 import org.pcap4j.packet.TcpPacket;
-import util.HackyPacketLoggerForABug;
 import util.Util;
 
 import java.nio.ByteBuffer;
@@ -53,7 +52,7 @@ public class ROTMGPacketConstructor implements PConstructor {
             if (packetSequenced.length() < 1460) firstNonLargePacket = false;
             return;
         }
-        HackyPacketLoggerForABug.logTCPPacket(packetSequenced); // TEMP logger to find a bug
+
         for (byte b : packetSequenced.getPayload().getRawData()) {
             bytes[index++] = b;
             if (index >= 4) {

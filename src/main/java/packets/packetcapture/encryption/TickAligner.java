@@ -52,7 +52,6 @@ public class TickAligner {
                 int tick = Util.decodeInt(duplicate);
                 if (CURRENT_TICK != tick) {
                     Util.print("Timeline synchronization critical failure, got: " + tick + " expected: " + CURRENT_TICK);
-                    HackyPacketLoggerForABug.dumpData();
                     rc4.reset();
                     synced = false;
                     TickA = null;

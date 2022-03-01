@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class Util {
 
-    public static boolean showLogs = true;
+    public static boolean saveLogs = true;
     private static PrintWriter printWriter;
 
     /**
@@ -30,8 +30,8 @@ public class Util {
      *
      * @param logs boolean to enable logs.
      */
-    public static void setShowLogs(boolean logs) {
-        showLogs = logs;
+    public static void setSaveLogs(boolean logs) {
+        saveLogs = logs;
     }
 
     /**
@@ -40,7 +40,7 @@ public class Util {
      * @param s String of the log.
      */
     public static void print(String s) {
-        if (showLogs) {
+        if (!saveLogs) {
             System.out.println(s);
         } else {
             System.out.println(s);

@@ -75,7 +75,7 @@ public class PacketProcessor extends Thread {
     public void receivedPackets(TcpPacket packet) {
         // 2050 is default rotmg server port. Incoming packets have 2050 source port.
         if (packet.getHeader().getSrcPort().value() == 2050) {
-//            constIncomingPackets(packet);
+            constIncomingPackets(packet);
 
             // Outgoing packets have destination port set to 2050.
         } else if (packet.getHeader().getDstPort().value() == 2050) {
@@ -108,7 +108,7 @@ public class PacketProcessor extends Thread {
      * @param type Constructed packet type.
      * @param data Constructed packet data.
      */
-    public void processPackets(int type, ByteBuffer data) {
+    public void processPackets(byte type, ByteBuffer data) {
         if (!PacketType.containsKey(type)) {
             System.err.println("Unknown packet type:" + type + " Data:" + Arrays.toString(data.array()));
             return;

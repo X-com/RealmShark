@@ -16,11 +16,11 @@ import java.nio.ByteBuffer;
  */
 public class PacketConstructor implements PConstructor, PReset {
 
-    RC4 rc4Cipher;
-    PacketProcessor packetProcessor;
-    ROTMGPacketConstructor rotmgConst;
-    StreamConstructor streamConst;
-    TickAligner tickAligner;
+    private final RC4 rc4Cipher;
+    private final PacketProcessor packetProcessor;
+    private final ROTMGPacketConstructor rotmgConst;
+    private final StreamConstructor streamConst;
+    private final TickAligner tickAligner;
 
     /**
      * Packet constructor with specific cipher.
