@@ -11,6 +11,7 @@ import packets.packetcapture.PacketProcessor;
  * aka if proxies are used.
  */
 public class Sniffer {
+    private static boolean disableChecksum = true;
     private String filter = "tcp port 2050";
     private PcapHandle[] handlers;
     private PacketProcessor processor;
@@ -83,6 +84,7 @@ public class Sniffer {
             public void run() {
                 PacketListener listener = packet -> {
                     TcpPacket tcpPacket = packet.get(TcpPacket.class);
+
                     if (tcpPacket != null && computeChecksum(packet.getRawData())) {
                         processor.receivedPackets(tcpPacket);
                     }
@@ -97,32 +99,40 @@ public class Sniffer {
 
     /**
      * Verify checksum of TCP packets. This does however not checksum the Ip4Header
-     * given only the data of the TCP packet is vital. Not the header daita.
+     * given only the data of the TCP packet is vital. Not the header data.
+     *
+     * WARNING! Don't use this checksum given the router handles checksums. Filtering packets
+     * with checksum results in packets being lost. Even if the checksum fails the packets
+     * pass the RC4 cipher meaning the packets are fine, even if the checksum miss matches.
      *
      * @param bytes Raw bytes of the packet being received.
      * @return true if the checksum is similar to the TCP checksum sent in the packet.
+     *
+     * TODO: fix checksum not messing with the system.
      */
     private static boolean computeChecksum(byte[] bytes) {
-        long sum = 0;
-        long checksumTCP = (Byte.toUnsignedInt(bytes[51]) + (Byte.toUnsignedInt(bytes[50]) << 8));
+        if(disableChecksum) return true;
         int tcpLen = (Byte.toUnsignedInt(bytes[17]) + (Byte.toUnsignedInt(bytes[16]) << 8)) - ((bytes[14] & 15) * 4);
-        for (int i = 26; i < 34; i += 2) {
+        int sum = 6 + tcpLen; // add tcp num + length of tcp
+
+        for (int i = 26; i < tcpLen + 33; i += 2) { // compute all byte pairs starting from ip dest/src to end of tcp payload
+            if (i == 50) continue; // skip the TCP checksum values at address 50 & 51
             sum += (Byte.toUnsignedInt(bytes[i + 1]) + (Byte.toUnsignedInt(bytes[i]) << 8));
         }
-        sum += 6;
-        sum += tcpLen;
-        for (int i = 34; i < tcpLen + 33; i += 2) {
-            if (i == 50) continue;
-            sum += (Byte.toUnsignedInt(bytes[i + 1]) + (Byte.toUnsignedInt(bytes[i]) << 8));
-        }
-        if ((tcpLen & 1) == 1) {
-            sum += (Byte.toUnsignedInt(bytes[bytes.length - 1]) << 8) & 0xFF00;
-        }
-        while ((sum >> 16) != 0) {
-            sum = (sum & 0xffff) + (sum >> 16);
-        }
-        sum = ~sum;
-        sum = sum & 0xFFFF;
+
+        if ((tcpLen & 1) == 1) // add the last odd pair as if the whole packet had a zero byte added to the end
+            sum += (Byte.toUnsignedInt(bytes[bytes.length - 1]) << 8);
+
+        while ((sum >> 16) != 0) // one compliment
+            sum = (sum & 0xFFFF) + (sum >> 16);
+
+        sum = ~sum; // invert bits
+        sum = sum & 0xFFFF; // remove upper bits
+
+        int checksumTCP = (Byte.toUnsignedInt(bytes[51]) + (Byte.toUnsignedInt(bytes[50]) << 8));
+        if (checksumTCP == 0xFFFF) checksumTCP = 0; // get checksum from tcp packet and set to 0 if value is FFFF,
+        //                                                                              FFFF is impossible to have.
+
         return checksumTCP == sum;
     }
 
