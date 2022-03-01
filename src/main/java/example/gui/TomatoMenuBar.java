@@ -10,11 +10,12 @@ import java.awt.event.ActionListener;
 /**
  * Menu bar builder class
  */
-class MenuBar implements ActionListener {
-    private JMenuItem about, borders, sniffer;
+public class TomatoMenuBar implements ActionListener {
+    private JMenuItem about, borders;
     private JMenu file, edit, help;
     private JMenuBar jMenuBar;
     private JFrame frame;
+    private static JMenuItem sniffer;
 
     /**
      * Main builder for menus for the Tomato GUI.
@@ -64,7 +65,7 @@ class MenuBar implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == about) { // About window opening
-            new PopupAbout().addPopup(frame);
+            new TomatoPopupAbout().addPopup(frame);
         } else if (e.getSource() == borders) { // Removes the boarder of the window
             frame.dispose();
             frame.setUndecorated(!frame.isUndecorated());
@@ -76,13 +77,20 @@ class MenuBar implements ActionListener {
                     ExampleModTomato.startPacketSniffer();
                     TomatoGUI.setStateOfSniffer(true);
                 } else {
-                    sniffer.setText("Start Sniffer");
-                    ExampleModTomato.stopPacketSniffer();
-                    TomatoGUI.setStateOfSniffer(false);
+                    stopPacketSniffer();
                 }
             } catch (Exception f) {
                 f.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Stops sniffer and changes GUI settings. TODO: temporary till better stream constructor solution is found.
+     */
+    public static void stopPacketSniffer() {
+        sniffer.setText("Start Sniffer");
+        ExampleModTomato.stopPacketSniffer();
+        TomatoGUI.setStateOfSniffer(false);
     }
 }

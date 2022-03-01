@@ -13,14 +13,14 @@ import java.awt.event.FocusListener;
  * About window to display simple info about Tomato.
  * Removes itself when removing focus.
  */
-class PopupAbout extends JFrame implements FocusListener {
+class TomatoPopupAbout extends JFrame implements FocusListener {
     private String aboutTitle = " Tomato ";
     private String aboutTextLine1 = "Built on";
     private String aboutTextLine2 = "Packet API RealmShark";
     private String aboutTextLine3 = "for Realm of the Mad God";
     private String aboutTextLine4 = "MIT licence";
     private String aboutTextCredits = "Made by Anon";
-    private PopupAbout popupAbout;
+    private TomatoPopupAbout popupAbout;
     private JPanel listPane, listCredit;
     private JLabel textLabelTitle, textLabelLine1, textLabelLine2,
             textLabelLine3, textLabelLine4, textLabelVersion, iconLabel,
@@ -33,8 +33,8 @@ class PopupAbout extends JFrame implements FocusListener {
      * @param frame Main frame of the TomatoGUI class.
      * @return returns this object PopupAbout when finished building.
      */
-    public PopupAbout addPopup(JFrame frame) {
-        popupAbout = new PopupAbout();
+    public TomatoPopupAbout addPopup(JFrame frame) {
+        popupAbout = new TomatoPopupAbout();
         popupAbout.setSize(200, 150);
 
         listPane = new JPanel();

@@ -15,7 +15,7 @@ public class TomatoGUI {
     private JScrollPane scroll;
     private JMenuBar jMenuBar;
     private JPanel mainPanel;
-    private MenuBar menuBar;
+    private TomatoMenuBar menuBar;
     private Point center;
     private Image icon;
 
@@ -41,7 +41,7 @@ public class TomatoGUI {
         new SmartScroller(scroll);
 
         center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
-        menuBar = new example.gui.MenuBar();
+        menuBar = new TomatoMenuBar();
         jMenuBar = menuBar.make();
 
         statusLabel = new JLabel(" Network Tap: OFF");
