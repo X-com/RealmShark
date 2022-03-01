@@ -1,5 +1,7 @@
 package packets.packetcapture.pconstructor;
 
+import example.gui.TomatoGUI;
+import example.gui.TomatoMenuBar;
 import org.pcap4j.packet.TcpPacket;
 import util.Util;
 
@@ -46,21 +48,26 @@ public class StreamConstructor implements PConstructor {
             reset();
             return;
         }
-        if (packet.getPayload() == null)
-            return;
         if (sequenseNumber == 0) {
             sequenseNumber = packet.getHeader().getSequenceNumber();
         }
+
         packetMap.put(packet.getHeader().getSequenceNumber(), packet);
-        if (packetMap.size() > 500) {
-            Util.print("Packet map over 500, reseting.");
+
+        if (packetMap.size() > 50) { // Temp hacky solution until better solution is found. TODO: fix this
+            String errorMsg = "Error! Stream Constructor reached 50 packets. Shutting down.";
+            Util.print(errorMsg);
+            TomatoGUI.appendTextAreaText(errorMsg);
+            TomatoMenuBar.stopPacketSniffer();
             reset();
-            return;
         }
+
         while (packetMap.containsKey(sequenseNumber)) {
             TcpPacket packetSeqed = packetMap.remove(sequenseNumber);
-            sequenseNumber += packetSeqed.getPayload().length();
-            packetConstructor.build(packetSeqed);
+            if (packet.getPayload() != null) {
+                sequenseNumber += packetSeqed.getPayload().length();
+                packetConstructor.build(packetSeqed);
+            }
         }
     }
 
