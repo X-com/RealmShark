@@ -11,8 +11,8 @@ import java.awt.event.ActionListener;
  * Menu bar builder class
  */
 public class TomatoMenuBar implements ActionListener {
-    private JMenuItem about, borders;
-    private JMenu file, edit, help;
+    private JMenuItem about, borders, bandwidth;
+    private JMenu file, edit, info;
     private JMenuBar jMenuBar;
     private JFrame frame;
     private static JMenuItem sniffer;
@@ -42,9 +42,13 @@ public class TomatoMenuBar implements ActionListener {
         about = new JMenuItem("About");
         about.addActionListener(this);
         about.setMargin(new Insets(2, -20, 2, 2));
-        help = new JMenu("Help");
-        help.add(about);
-        jMenuBar.add(help);
+        bandwidth = new JMenuItem("Bandwidth");
+        bandwidth.addActionListener(this);
+        bandwidth.setMargin(new Insets(2, -20, 2, 2));
+        info = new JMenu("Info");
+        info.add(about);
+        info.add(bandwidth);
+        jMenuBar.add(info);
         return jMenuBar;
     }
 
@@ -64,24 +68,22 @@ public class TomatoMenuBar implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == about) { // About window opening
+        if (e.getSource() == about) { // Opens about window
             new TomatoPopupAbout().addPopup(frame);
         } else if (e.getSource() == borders) { // Removes the boarder of the window
             frame.dispose();
             frame.setUndecorated(!frame.isUndecorated());
             frame.setVisible(true);
         } else if (e.getSource() == sniffer) { // Starts and stops the sniffer
-            try {
-                if (sniffer.getText().contains("Start")) {
-                    sniffer.setText("Stop Sniffer");
-                    ExampleModTomato.startPacketSniffer();
-                    TomatoGUI.setStateOfSniffer(true);
-                } else {
-                    stopPacketSniffer();
-                }
-            } catch (Exception f) {
-                f.printStackTrace();
+            if (sniffer.getText().contains("Start")) {
+                sniffer.setText("Stop Sniffer");
+                ExampleModTomato.startPacketSniffer();
+                TomatoGUI.setStateOfSniffer(true);
+            } else {
+                stopPacketSniffer();
             }
+        } else if (e.getSource() == bandwidth) { // Opens bandwidth window
+            new TomatoBandwidth().make(frame);
         }
     }
 

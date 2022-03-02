@@ -63,7 +63,7 @@ public class PacketConstructor implements PConstructor, PReset {
 
             if (sync) {
                 rc4Cipher.decrypt(5, encryptedData);
-                packetProcessor.processPackets(type, encryptedData);
+                packetProcessor.processPackets(type, size, encryptedData);
             }
         } catch (Exception e) {
             e.printStackTrace();

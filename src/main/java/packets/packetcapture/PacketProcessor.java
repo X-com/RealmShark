@@ -1,5 +1,6 @@
 package packets.packetcapture;
 
+import example.gui.TomatoBandwidth;
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapNativeException;
 import org.pcap4j.packet.TcpPacket;
@@ -7,6 +8,7 @@ import packets.Packet;
 import packets.PacketType;
 import packets.packetcapture.encryption.RC4;
 import packets.packetcapture.encryption.RotMGRC4Keys;
+import packets.packetcapture.logger.PacketLogger;
 import packets.packetcapture.networktap.Sniffer;
 import packets.packetcapture.pconstructor.PConstructor;
 import packets.packetcapture.pconstructor.PacketConstructor;
@@ -27,6 +29,7 @@ public class PacketProcessor extends Thread {
     private PConstructor incomingPacketConstructor;
     private PConstructor outgoingPacketConstructor;
     private Sniffer sniffer;
+    private PacketLogger logger;
 
     /**
      * Basic constructor of packetProcessor
@@ -36,6 +39,7 @@ public class PacketProcessor extends Thread {
         sniffer = new Sniffer(this);
         incomingPacketConstructor = new PacketConstructor(this, new RC4(RotMGRC4Keys.INCOMING_STRING));
         outgoingPacketConstructor = new PacketConstructor(this, new RC4(RotMGRC4Keys.OUTGOING_STRING));
+        logger = new PacketLogger();
     }
 
     /**
@@ -58,6 +62,7 @@ public class PacketProcessor extends Thread {
     public void tapPackets() {
         incomingPacketConstructor.startResets();
         outgoingPacketConstructor.startResets();
+        logger.startLogger();
         try {
             sniffer.startSniffer();
         } catch (PcapNativeException e) {
@@ -81,6 +86,7 @@ public class PacketProcessor extends Thread {
         } else if (packet.getHeader().getDstPort().value() == 2050) {
             constOutgoingPackets(packet); // removed given it is not implemented properly
         }
+        TomatoBandwidth.setInfo(logger.toString()); // update info GUI if open // TODO: remove this bad garbage asap
     }
 
     /**
@@ -89,6 +95,7 @@ public class PacketProcessor extends Thread {
      * @param packet Incoming TCP packet
      */
     private void constIncomingPackets(TcpPacket packet) {
+        logger.addIncoming(packet.getRawData().length);
         incomingPacketConstructor.build(packet);
     }
 
@@ -98,6 +105,7 @@ public class PacketProcessor extends Thread {
      * @param packet Outgoing TCP packet
      */
     private void constOutgoingPackets(TcpPacket packet) {
+        logger.addOutgoing(packet.getRawData().length);
         outgoingPacketConstructor.build(packet);
     }
 
@@ -106,13 +114,15 @@ public class PacketProcessor extends Thread {
      * Decoded by the cipher and sent back to the processor to be emitted to subscribed users.
      *
      * @param type Constructed packet type.
+     * @param size
      * @param data Constructed packet data.
      */
-    public void processPackets(byte type, ByteBuffer data) {
+    public void processPackets(byte type, int size, ByteBuffer data) {
         if (!PacketType.containsKey(type)) {
             System.err.println("Unknown packet type:" + type + " Data:" + Arrays.toString(data.array()));
             return;
         }
+        logger.addPacket(type, size);
         Packet packetType = PacketType.getPacket(type).factory();
         BufferReader pData = new BufferReader(data);
 
@@ -140,8 +150,7 @@ public class PacketProcessor extends Thread {
             pDebug.printError(packetType);
             packetType.deserialize(pDebug);
         } catch (Exception e) {
-//            Util.print(Arrays.toString(e.getStackTrace()).replaceAll(", ", "\n"));
-            e.printStackTrace();
+            Util.print(Arrays.toString(e.getStackTrace()).replaceAll(", ", "\n"));
         }
     }
 }
