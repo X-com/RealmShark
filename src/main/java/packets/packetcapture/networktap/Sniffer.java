@@ -87,6 +87,7 @@ public class Sniffer {
 
                     if (tcpPacket != null && computeChecksum(packet.getRawData())) {
                         processor.receivedPackets(tcpPacket);
+                        sniffers[num] = true;
                     }
                 };
                 try {
@@ -100,18 +101,18 @@ public class Sniffer {
     /**
      * Verify checksum of TCP packets. This does however not checksum the Ip4Header
      * given only the data of the TCP packet is vital. Not the header data.
-     *
+     * <p>
      * WARNING! Don't use this checksum given the router handles checksums. Filtering packets
      * with checksum results in packets being lost. Even if the checksum fails the packets
      * pass the RC4 cipher meaning the packets are fine, even if the checksum miss matches.
      *
      * @param bytes Raw bytes of the packet being received.
      * @return true if the checksum is similar to the TCP checksum sent in the packet.
-     *
+     * <p>
      * TODO: fix checksum not messing with the system.
      */
     private static boolean computeChecksum(byte[] bytes) {
-        if(disableChecksum) return true;
+        if (disableChecksum) return true;
         int tcpLen = (Byte.toUnsignedInt(bytes[17]) + (Byte.toUnsignedInt(bytes[16]) << 8)) - ((bytes[14] & 15) * 4);
         int sum = 6 + tcpLen; // add tcp num + length of tcp
 

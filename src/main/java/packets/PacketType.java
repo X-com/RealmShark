@@ -146,13 +146,15 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
                 CREEP_MOVE_MESSAGE(126, Outgoing, CreepMoveMessagePacket::new),
                        UNKNOWN134(-122, Outgoing, UnknownPacket134::new);
 
-    private static final HashMap<Integer, IPacket> PACKET_TYPE = new HashMap<>();
+    private static final HashMap<Integer, PacketType> PACKET_TYPE = new HashMap<>();
+    private static final HashMap<Integer, IPacket> PACKET_TYPE_FACTORY = new HashMap<>();
     private static final HashMap<Class, PacketType> PACKET_CLASS = new HashMap<>();
 
     static {
         try {
             for (PacketType o : PacketType.values()) {
-                PACKET_TYPE.put(o.index, o.packet);
+                PACKET_TYPE.put(o.index, o);
+                PACKET_TYPE_FACTORY.put(o.index, o.packet);
                 PACKET_CLASS.put(o.packet.factory().getClass(), o);
             }
         } catch (Exception e) {
@@ -186,12 +188,7 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
      * @return Enum by index.
      */
     public static PacketType byOrdinal(int index) {
-        for (PacketType o : PacketType.values()) {
-            if (o.index == index) {
-                return o;
-            }
-        }
-        return null;
+        return PACKET_TYPE.get(index);
     }
 
     /**
@@ -211,7 +208,7 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
      * @return Interface IPacket of the class being retrieved.
      */
     public static IPacket getPacket(int type) {
-        return PACKET_TYPE.get(type);
+        return PACKET_TYPE_FACTORY.get(type);
     }
 
     /**
@@ -221,7 +218,7 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
      * @return True if the packet exists in the list of packets in PACKET_TYPE.
      */
     public static boolean containsKey(int type) {
-        return PACKET_TYPE.containsKey(type);
+        return PACKET_TYPE_FACTORY.containsKey(type);
     }
 
     /**
