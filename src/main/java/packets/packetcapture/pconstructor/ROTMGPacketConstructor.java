@@ -1,6 +1,6 @@
 package packets.packetcapture.pconstructor;
 
-import org.pcap4j.packet.TcpPacket;
+import packets.packetcapture.networktap.pcap4j.TcpPacket;
 import util.Util;
 
 import java.nio.ByteBuffer;

@@ -2,7 +2,7 @@ package packets.packetcapture.pconstructor;
 
 import example.gui.TomatoGUI;
 import example.gui.TomatoMenuBar;
-import org.pcap4j.packet.TcpPacket;
+import packets.packetcapture.networktap.pcap4j.TcpPacket;
 import util.Util;
 
 import java.util.HashMap;

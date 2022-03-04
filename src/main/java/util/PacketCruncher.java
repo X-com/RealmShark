@@ -46,7 +46,7 @@ public class PacketCruncher {
         System.out.println(br);
     }
 
-    public byte[] getByteArray(String byteString) {
+    public static byte[] getByteArray(String byteString) {
         String[] list;
         boolean hex = false;
         if (byteString.contains("Hex stream")) {

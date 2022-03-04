@@ -1,15 +1,16 @@
 package packets.packetcapture;
 
 import example.gui.TomatoBandwidth;
-import org.pcap4j.core.NotOpenException;
-import org.pcap4j.core.PcapNativeException;
-import org.pcap4j.packet.TcpPacket;
+//import org.pcap4j.core.NotOpenException;
+//import org.pcap4j.core.PcapNativeException;
+//import org.pcap4j.packet.TcpPacket;
 import packets.Packet;
 import packets.PacketType;
 import packets.packetcapture.encryption.RC4;
 import packets.packetcapture.encryption.RotMGRC4Keys;
 import packets.packetcapture.logger.PacketLogger;
 import packets.packetcapture.networktap.Sniffer;
+import packets.packetcapture.networktap.pcap4j.TcpPacket;
 import packets.packetcapture.pconstructor.PConstructor;
 import packets.packetcapture.pconstructor.PacketConstructor;
 import packets.packetcapture.register.Register;
@@ -65,9 +66,7 @@ public class PacketProcessor extends Thread {
         logger.startLogger();
         try {
             sniffer.startSniffer();
-        } catch (PcapNativeException e) {
-            e.printStackTrace();
-        } catch (NotOpenException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

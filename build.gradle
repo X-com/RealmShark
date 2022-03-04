@@ -12,8 +12,14 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.pcap4j:pcap4j-packetfactory-static:2.0.0-alpha.6'
-    implementation 'org.pcap4j:pcap4j-core:2.0.0-alpha.6'
+//    implementation 'org.pcap4j:pcap4j-packetfactory-static:2.0.0-alpha.6'
+//    implementation 'org.pcap4j:pcap4j-core:2.0.0-alpha.6'
+    implementation 'com.ardikars.pcap:pcap-spi:1.4.1'
+//    implementation 'com.ardikars.pcap:pcap-common:1.4.1'
+//    implementation 'com.ardikars.pcap:pcap-codec:1.4.1'
+    implementation 'com.ardikars.pcap:pcap-jdk7:1.4.1'
+//    implementation 'com.ardikars.pcap:pcap-tests:1.4.1'
+//    implementation 'org.slf4j:slf4j-api:1.7.25'
 }
 
 mainClassName = 'example.ExampleModTomato'

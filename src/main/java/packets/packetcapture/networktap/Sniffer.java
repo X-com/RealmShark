@@ -1,9 +1,16 @@
 package packets.packetcapture.networktap;
 
-import org.pcap4j.core.*;
-import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
-import org.pcap4j.packet.TcpPacket;
+//import org.pcap4j.core.*;
+//import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
+//import org.pcap4j.packet.EthernetPacket;
+//import org.pcap4j.packet.Packet;
+//import org.pcap4j.packet.TcpPacket;
 import packets.packetcapture.PacketProcessor;
+
+import java.util.Arrays;
+import java.util.Iterator;
+
+import static util.PacketCruncher.getByteArray;
 
 /**
  * A sniffer used to tap packets out of the Windows OS network layer. Before sniffing
@@ -12,8 +19,9 @@ import packets.packetcapture.PacketProcessor;
  */
 public class Sniffer {
     private static boolean disableChecksum = true;
-    private String filter = "tcp port 2050";
-    private PcapHandle[] handlers;
+    //    private String filter = "tcp port 2050";
+    private String filter = "tcp";
+//    private PcapHandle[] handlers;
     private PacketProcessor processor;
     private boolean[] sniffers;
     private boolean stop;
@@ -23,8 +31,8 @@ public class Sniffer {
      *
      * @param p Object of parent class calling the sniffer.
      */
-    public Sniffer(Object p) {
-        processor = (PacketProcessor) p;
+    public Sniffer(PacketProcessor p) {
+        processor = p;
     }
 
     /**
@@ -37,23 +45,23 @@ public class Sniffer {
      *
      * @throws PcapNativeException or NotOpenException are thrown if unexpected issues are found.
      */
-    public void startSniffer() throws PcapNativeException, NotOpenException {
-        stop = false;
-        PcapNetworkInterface[] list = Pcaps.findAllDevs().toArray(new PcapNetworkInterface[0]);
-        handlers = new PcapHandle[list.length];
-        sniffers = new boolean[list.length];
-
-        for (int number = 0; number < list.length; number++) {
-            int snapshotLength = 65536; // in bytes
-            int readTimeout = 4000000; // in milliseconds, set to hour long to never ignore packets
-            handlers[number] = list[number].openLive(snapshotLength, PromiscuousMode.PROMISCUOUS, readTimeout);
-            handlers[number].setFilter(filter, BpfProgram.BpfCompileMode.OPTIMIZE);
-
-            if (handlers[number] != null) {
-                pause(1);
-                startPacketSniffer(number);
-            }
-        }
+    public void startSniffer() {
+//        stop = false;
+//        PcapNetworkInterface[] list = Pcaps.findAllDevs().toArray(new PcapNetworkInterface[0]);
+//        handlers = new PcapHandle[list.length];
+//        sniffers = new boolean[list.length];
+//
+//        for (int number = 0; number < list.length; number++) {
+//            int snapshotLength = 65536; // in bytes
+//            int readTimeout = 4000000; // in milliseconds, set to hour long to never ignore packets
+//            handlers[number] = list[number].openLive(snapshotLength, PromiscuousMode.PROMISCUOUS, readTimeout);
+//            handlers[number].setFilter(filter, BpfProgram.BpfCompileMode.OPTIMIZE);
+//
+//            if (handlers[number] != null) {
+//                pause(1);
+//                startPacketSniffer(number);
+//            }
+//        }
 
         closeUnusedSniffers();
     }
@@ -82,18 +90,20 @@ public class Sniffer {
 
             @Override
             public void run() {
-                PacketListener listener = packet -> {
-                    TcpPacket tcpPacket = packet.get(TcpPacket.class);
-
-                    if (tcpPacket != null && computeChecksum(packet.getRawData())) {
-                        processor.receivedPackets(tcpPacket);
-                        sniffers[num] = true;
-                    }
-                };
-                try {
-                    handlers[num].loop(-1, listener);
-                } catch (PcapNativeException | InterruptedException | NotOpenException e) {
-                }
+//                PacketListener listener = packet -> {
+//                    Packet tcpPacket = packet.getLowerLayerOf(TcpPacket.class);
+////                    System.out.println(Arrays.toString(packet.getRawData()));
+//                    System.out.println(tcpPacket);
+////
+////                    if (tcpPacket != null && computeChecksum(packet.getRawData())) {
+//////                        processor.receivedPackets(tcpPacket);
+////                        sniffers[num] = true;
+////                    }
+//                };
+//                try {
+//                    handlers[num].loop(1, listener);
+//                } catch (PcapNativeException | InterruptedException | NotOpenException e) {
+//                }
             }
         }).start();
     }
@@ -141,37 +151,61 @@ public class Sniffer {
      * Close threads of sniffer channels not being used.
      */
     private void closeUnusedSniffers() {
-        pause(100);
-        while (true) {
-            for (int s = 0; s < sniffers.length; s++) {
-                if (stop) {
-                    return;
-                } else if (sniffers[s]) {
-                    for (int c = 0; c < sniffers.length; c++) {
-                        if (s != c) {
-                            handlers[c].close();
-                        }
-                    }
-                    return;
-                }
-            }
-            pause(100);
-        }
+//        pause(100);
+//        while (true) {
+//            for (int s = 0; s < sniffers.length; s++) {
+//                if (stop) {
+//                    return;
+//                } else if (sniffers[s]) {
+//                    for (int c = 0; c < sniffers.length; c++) {
+//                        if (s != c) {
+//                            handlers[c].close();
+//                        }
+//                    }
+//                    return;
+//                }
+//            }
+//            pause(100);
+//        }
     }
 
     /**
      * Close all network interfaces sniffing the wire.
      */
     public void closeSniffers() {
-        stop = true;
-        for (PcapHandle c : handlers) {
-            if (c != null) {
-                try {
-                    if (c.isOpen()) c.breakLoop();
-                } catch (NotOpenException e) {
-                }
-                c.close();
-            }
+//        stop = true;
+//        for (PcapHandle c : handlers) {
+//            if (c != null) {
+//                try {
+//                    if (c.isOpen()) c.breakLoop();
+//                } catch (NotOpenException e) {
+//                }
+//                c.close();
+//            }
+//        }
+    }
+
+    public static void main(String[] args) {
+//        System.out.println("clearconsole");
+
+        try {
+//            new Sniffer(null).startSniffer();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+//        String s = "56, 44, 74, 116, 11, -119, 4, -110, 38, -59, -15, -116, 8, 0, 69, 0, 0, 61, 52, -93, 64, 0, -9, 6, 106, -110, 54, -21, -21, -116, -64, -88, 1, 101, 8, 2, -28, -94, -83, 5, 36, -126, -114, 109, 81, 99, 80, 24, 1, -26, 61, 3, 0, 0, 0, 0, 0, 21, 9, 20, 123, -116, -27, 83, -110, -9, -89, 86, 84, 102, 10, -17, 31, -98, -53";
+//        byte[] data = getByteArray(s);
+//        try {
+//            EthernetPacket packet = EthernetPacket.newPacket(data, 0, data.length);
+//            for (Iterator<Packet> it = packet.iterator(); it.hasNext(); ) {
+//                Packet p = (Packet) it.next();
+//                System.out.println(it.next().getClass());
+//            }
+//            TcpPacket tcp = packet.get(TcpPacket.class);
+//            System.out.println(tcp);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 }

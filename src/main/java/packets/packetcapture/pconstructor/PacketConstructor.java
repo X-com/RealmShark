@@ -1,9 +1,9 @@
 package packets.packetcapture.pconstructor;
 
-import org.pcap4j.packet.TcpPacket;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.encryption.RC4;
 import packets.packetcapture.encryption.TickAligner;
+import packets.packetcapture.networktap.pcap4j.TcpPacket;
 
 import java.nio.ByteBuffer;
 
