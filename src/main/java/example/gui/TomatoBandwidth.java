@@ -22,6 +22,7 @@ public class TomatoBandwidth extends JFrame {
         if(exists) return;
         exists = true;
         bandwidth = new TomatoBandwidth();
+        bandwidth.setTitle("Net Traffic");
         bandwidth.setSize(350, 450);
         bandwidth.setLocation(frame.getX() + frame.getWidth() / 2 - bandwidth.getWidth() / 2,
                 frame.getY() + frame.getHeight() / 2 - bandwidth.getHeight() / 2);
