@@ -78,11 +78,11 @@ public class PacketProcessor extends Thread {
      */
     public void receivedPackets(TcpPacket packet) {
         // 2050 is default rotmg server port. Incoming packets have 2050 source port.
-        if (packet.getHeader().getSrcPort().value() == 2050) {
+        if (packet.getHeader().getSrcPort() == 2050) {
             constIncomingPackets(packet);
 
             // Outgoing packets have destination port set to 2050.
-        } else if (packet.getHeader().getDstPort().value() == 2050) {
+        } else if (packet.getHeader().getDstPort() == 2050) {
             constOutgoingPackets(packet); // removed given it is not implemented properly
         }
         TomatoBandwidth.setInfo(logger.toString()); // update info GUI if open // TODO: remove this bad garbage asap
