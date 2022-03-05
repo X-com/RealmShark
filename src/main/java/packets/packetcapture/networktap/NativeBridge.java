@@ -1,7 +1,6 @@
 package packets.packetcapture.networktap;
 
 import com.sun.jna.Pointer;
-import packets.Packet;
 import packets.packetcapture.networktap.pcap4j.*;
 import pcap.spi.Interface;
 import pcap.spi.Pcap;
@@ -10,10 +9,7 @@ import pcap.spi.option.DefaultLiveOptions;
 
 import java.lang.reflect.Field;
 import java.time.Instant;
-import java.util.Iterator;
 import java.util.concurrent.Executor;
-
-import static util.PacketCruncher.getByteArray;
 
 public class NativeBridge {
 
@@ -32,7 +28,7 @@ public class NativeBridge {
 //            e.printStackTrace();
 //        }
 //        if (true) return;
-
+        System.out.println("start");
         PacketListener listener = packet -> {
 
             try {
@@ -40,6 +36,10 @@ public class NativeBridge {
 //                System.out.println(packet);
                 TcpPacket tcpPacket = packet.get(TcpPacket.class);
                 System.out.println(tcpPacket);
+                if(tcpPacket == null) {
+                    System.out.println("--------------------------");
+                    return;
+                }
 //                System.out.println(Arrays.toString(data));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -49,7 +49,7 @@ public class NativeBridge {
 //            }
         };
         try {
-            loop(1000, listener);
+            loop(-1, listener);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -62,7 +62,10 @@ public class NativeBridge {
     private static void startLoop(int packetCount, PacketListener listener, Executor executor) {
         try {
             Service service = Service.Creator.create("PcapService");
-            Interface i = service.interfaces().next().next().next();
+            Interface i = service.interfaces();
+            for(Interface j : service.interfaces()) {
+                System.out.println(j);
+            }
             Pcap pcap = service.live(i, new DefaultLiveOptions());
 //            pcap.setFilter("tcp port 2050", true);
             pcap.setFilter("tcp", true);
@@ -70,7 +73,7 @@ public class NativeBridge {
             Field field = pcap.getClass().getDeclaredField("pointer");
             field.setAccessible(true);
 
-            NativeMappings.pcap_loop((Pointer) field.get(pcap), packetCount, new GotPacketFuncExecutor(listener, DataLinkType.EN10MB, executor), null);
+            NativeMappings.pcap_loop((Pointer) field.get(pcap), packetCount, new GotPacketFuncExecutor(listener, executor), null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -93,15 +96,17 @@ public class NativeBridge {
         }
     }
 
+    public interface PacketListener {
+        public void gotPacket(EthernetPacket packet);
+    }
+
     private static final class GotPacketFuncExecutor implements NativeMappings.pcap_handler {
 
-        private final DataLinkType dlt;
         private final PacketListener listener;
         private final Executor executor;
         private final int timestampPrecision = 1;
 
-        public GotPacketFuncExecutor(PacketListener listener, DataLinkType dlt, Executor executor) {
-            this.dlt = dlt;
+        public GotPacketFuncExecutor(PacketListener listener, Executor executor) {
             this.listener = listener;
             this.executor = executor;
         }
@@ -114,7 +119,8 @@ public class NativeBridge {
 
             try {
                 executor.execute(() -> {
-                    listener.gotPacket(new PcapPacket(ba, dlt, ts, len));
+//                    new PcapPacket(ba, dlt, ts, len);
+                    listener.gotPacket(EthernetPacket.newPacket(ba, 0, len, ts));
                 });
             } catch (Throwable e) {
             }
