@@ -25,7 +25,6 @@ public final class TcpPacket extends Packet {
 
     private final TcpHeader header;
     private Packet payload;
-
     /**
      * A static factory method. This method validates the arguments by {link
      * ByteArrays#validateBounds(byte[], int, int)}, which may throw exceptions undocumented here.
@@ -34,7 +33,6 @@ public final class TcpPacket extends Packet {
      * @param offset  offset
      * @param length  length
      * @return a new TcpPacket object.
-     * @throws IllegalRawDataException if parsing the raw data fails.
      */
     public static TcpPacket newPacket(byte[] rawData, int offset, int length) {
         ByteArrays.validateBounds(rawData, offset, length);
@@ -45,7 +43,9 @@ public final class TcpPacket extends Packet {
         this.header = new TcpHeader(rawData, offset, length);
 
         int payloadLength = length - header.length();
-        if (payloadLength == 0) {
+        if (payloadLength > 0) {
+            this.payload = SimplePacket.tcpPayload(rawData, offset + header.length(), payloadLength, header.getSrcPort(), header.getDstPort());
+        } else {
             this.payload = null;
         }
     }
@@ -81,8 +81,7 @@ public final class TcpPacket extends Packet {
         }
 
         byte[] payloadData = payload != null ? payload.getRawData() : new byte[0];
-        short calculatedChecksum =
-                header.calcChecksum(srcAddr, dstAddr, header.getRawData(), payloadData);
+        short calculatedChecksum = header.calcChecksum(srcAddr, dstAddr, header.getRawData(), payloadData);
         if (calculatedChecksum == 0) {
             return true;
         }
@@ -158,10 +157,6 @@ public final class TcpPacket extends Packet {
          */
 
 //    private static final Logger logger = LoggerFactory.getLogger(TcpHeader.class);
-        /**
-         *
-         */
-        private static final long serialVersionUID = -795185420055823677L;
 
         private static final int SRC_PORT_OFFSET = 0;
         private static final int SRC_PORT_SIZE = SHORT_SIZE_IN_BYTES;
@@ -169,15 +164,11 @@ public final class TcpPacket extends Packet {
         private static final int DST_PORT_SIZE = SHORT_SIZE_IN_BYTES;
         private static final int SEQUENCE_NUMBER_OFFSET = DST_PORT_OFFSET + DST_PORT_SIZE;
         private static final int SEQUENCE_NUMBER_SIZE = INT_SIZE_IN_BYTES;
-        private static final int ACKNOWLEDGMENT_NUMBER_OFFSET =
-                SEQUENCE_NUMBER_OFFSET + SEQUENCE_NUMBER_SIZE;
+        private static final int ACKNOWLEDGMENT_NUMBER_OFFSET = SEQUENCE_NUMBER_OFFSET + SEQUENCE_NUMBER_SIZE;
         private static final int ACKNOWLEDGMENT_NUMBER_SIZE = INT_SIZE_IN_BYTES;
-        private static final int DATA_OFFSET_AND_RESERVED_AND_CONTROL_BITS_OFFSET =
-                ACKNOWLEDGMENT_NUMBER_OFFSET + ACKNOWLEDGMENT_NUMBER_SIZE;
+        private static final int DATA_OFFSET_AND_RESERVED_AND_CONTROL_BITS_OFFSET = ACKNOWLEDGMENT_NUMBER_OFFSET + ACKNOWLEDGMENT_NUMBER_SIZE;
         private static final int DATA_OFFSET_AND_RESERVED_AND_CONTROL_BITS_SIZE = SHORT_SIZE_IN_BYTES;
-        private static final int WINDOW_OFFSET =
-                DATA_OFFSET_AND_RESERVED_AND_CONTROL_BITS_OFFSET
-                        + DATA_OFFSET_AND_RESERVED_AND_CONTROL_BITS_SIZE;
+        private static final int WINDOW_OFFSET = DATA_OFFSET_AND_RESERVED_AND_CONTROL_BITS_OFFSET + DATA_OFFSET_AND_RESERVED_AND_CONTROL_BITS_SIZE;
         private static final int WINDOW_SIZE = SHORT_SIZE_IN_BYTES;
         private static final int CHECKSUM_OFFSET = WINDOW_OFFSET + WINDOW_SIZE;
         private static final int CHECKSUM_SIZE = SHORT_SIZE_IN_BYTES;
@@ -211,14 +202,7 @@ public final class TcpPacket extends Packet {
         private TcpHeader(byte[] rawData, int offset, int length) {
             if (length < MIN_TCP_HEADER_SIZE) {
                 StringBuilder sb = new StringBuilder(80);
-                sb.append("The data is too short to build this header(")
-                        .append(MIN_TCP_HEADER_SIZE)
-                        .append(" bytes). data: ")
-                        .append(ByteArrays.toHexString(rawData, " "))
-                        .append(", offset: ")
-                        .append(offset)
-                        .append(", length: ")
-                        .append(length);
+                sb.append("The data is too short to build this header(").append(MIN_TCP_HEADER_SIZE).append(" bytes). data: ").append(ByteArrays.toHexString(rawData, " ")).append(", offset: ").append(offset).append(", length: ").append(length);
                 throw new RuntimeException(sb.toString());
             }
 
@@ -227,8 +211,7 @@ public final class TcpPacket extends Packet {
             this.sequenceNumber = ByteArrays.getInt(rawData, SEQUENCE_NUMBER_OFFSET + offset);
             this.acknowledgmentNumber = ByteArrays.getInt(rawData, ACKNOWLEDGMENT_NUMBER_OFFSET + offset);
 
-            short dataOffsetAndReservedAndControlBits =
-                    ByteArrays.getShort(rawData, DATA_OFFSET_AND_RESERVED_AND_CONTROL_BITS_OFFSET + offset);
+            short dataOffsetAndReservedAndControlBits = ByteArrays.getShort(rawData, DATA_OFFSET_AND_RESERVED_AND_CONTROL_BITS_OFFSET + offset);
 
             this.dataOffset = (byte) ((dataOffsetAndReservedAndControlBits & 0xF000) >> 12);
             this.reserved = (byte) ((dataOffsetAndReservedAndControlBits & 0x0FC0) >> 6);
@@ -246,22 +229,12 @@ public final class TcpPacket extends Packet {
             int headerLength = getDataOffsetAsInt() * 4;
             if (length < headerLength) {
                 StringBuilder sb = new StringBuilder(110);
-                sb.append("The data is too short to build this header(")
-                        .append(headerLength)
-                        .append(" bytes). data: ")
-                        .append(ByteArrays.toHexString(rawData, " "))
-                        .append(", offset: ")
-                        .append(offset)
-                        .append(", length: ")
-                        .append(length);
+                sb.append("The data is too short to build this header(").append(headerLength).append(" bytes). data: ").append(ByteArrays.toHexString(rawData, " ")).append(", offset: ").append(offset).append(", length: ").append(length);
                 throw new RuntimeException(sb.toString());
             }
             if (headerLength < OPTIONS_OFFSET) {
                 StringBuilder sb = new StringBuilder(100);
-                sb.append("The data offset must be equal or more than ")
-                        .append(OPTIONS_OFFSET / 4)
-                        .append(", but it is: ")
-                        .append(getDataOffsetAsInt());
+                sb.append("The data offset must be equal or more than ").append(OPTIONS_OFFSET / 4).append(", but it is: ").append(getDataOffsetAsInt());
                 throw new RuntimeException(sb.toString());
             }
 
@@ -270,8 +243,7 @@ public final class TcpPacket extends Packet {
 
             int paddingLength = headerLength - currentOffsetInHeader;
             if (paddingLength != 0) { // paddingLength is positive.
-                this.padding =
-                        ByteArrays.getSubArray(rawData, currentOffsetInHeader + offset, paddingLength);
+                this.padding = ByteArrays.getSubArray(rawData, currentOffsetInHeader + offset, paddingLength);
             } else {
                 this.padding = new byte[0];
             }
@@ -496,12 +468,7 @@ public final class TcpPacket extends Packet {
             sb.append("  Destination port: ").append(getDstPort()).append(ls);
             sb.append("  Sequence Number: ").append(getSequenceNumberAsLong()).append(ls);
             sb.append("  Acknowledgment Number: ").append(getAcknowledgmentNumberAsLong()).append(ls);
-            sb.append("  Data Offset: ")
-                    .append(dataOffset)
-                    .append(" (")
-                    .append(dataOffset * 4)
-                    .append(" [bytes])")
-                    .append(ls);
+            sb.append("  Data Offset: ").append(dataOffset).append(" (").append(dataOffset * 4).append(" [bytes])").append(ls);
             sb.append("  Reserved: ").append(reserved).append(ls);
             sb.append("  URG: ").append(urg).append(ls);
             sb.append("  ACK: ").append(ack).append(ls);
@@ -532,23 +499,7 @@ public final class TcpPacket extends Packet {
             }
 
             TcpHeader other = (TcpHeader) obj;
-            return checksum == other.checksum
-                    && sequenceNumber == other.sequenceNumber
-                    && acknowledgmentNumber == other.acknowledgmentNumber
-                    && dataOffset == other.dataOffset
-                    && srcPort == other.srcPort
-                    && dstPort == other.dstPort
-                    && urg == other.urg
-                    && ack == other.ack
-                    && psh == other.psh
-                    && rst == other.rst
-                    && syn == other.syn
-                    && fin == other.fin
-                    && window == other.window
-                    && urgentPointer == other.urgentPointer
-                    && reserved == other.reserved
-                    && options.equals(other.options)
-                    && Arrays.equals(padding, other.padding);
+            return checksum == other.checksum && sequenceNumber == other.sequenceNumber && acknowledgmentNumber == other.acknowledgmentNumber && dataOffset == other.dataOffset && srcPort == other.srcPort && dstPort == other.dstPort && urg == other.urg && ack == other.ack && psh == other.psh && rst == other.rst && syn == other.syn && fin == other.fin && window == other.window && urgentPointer == other.urgentPointer && reserved == other.reserved && options.equals(other.options) && Arrays.equals(padding, other.padding);
         }
 
         @Override
@@ -574,8 +525,7 @@ public final class TcpPacket extends Packet {
             return result;
         }
 
-        private short calcChecksum(
-                InetAddress srcAddr, InetAddress dstAddr, byte[] header, byte[] payload) {
+        private short calcChecksum(InetAddress srcAddr, InetAddress dstAddr, byte[] header, byte[] payload) {
             byte[] data;
             int destPos;
             int totalLength = payload.length + length();
@@ -611,8 +561,7 @@ public final class TcpPacket extends Packet {
             data[destPos] = 6; // tcp value
             destPos++;
 
-            System.arraycopy(
-                    ByteArrays.toByteArray((short) totalLength), 0, data, destPos, ByteArrays.SHORT_SIZE_IN_BYTES);
+            System.arraycopy(ByteArrays.toByteArray((short) totalLength), 0, data, destPos, ByteArrays.SHORT_SIZE_IN_BYTES);
             destPos += ByteArrays.SHORT_SIZE_IN_BYTES;
 
             return ByteArrays.calcChecksum(data);
@@ -645,5 +594,30 @@ public final class TcpPacket extends Packet {
          * @return raw data
          */
         public byte[] getRawData();
+    }
+
+    public static class SimplePacket extends Packet {
+        private final byte[] rawData;
+        private final int length;
+
+        public int length() {
+            return length;
+        }
+
+        public byte[] getRawData() {
+            return rawData;
+        }
+
+        protected SimplePacket(byte[] rawData, int offset, int length) {
+            this.rawData = new byte[length];
+            this.length = length;
+            System.arraycopy(rawData, offset, this.rawData, 0, length);
+        }
+
+        public static Packet tcpPayload(byte[] rawData, int offset, int length, short srcPort, short dstPort) {
+//            if(srcPort == 53 || dstPort == 53) return null; // don't handle DNS tcp packets
+            ByteArrays.validateBounds(rawData, offset, length);
+            return new SimplePacket(rawData, offset, length);
+        }
     }
 }

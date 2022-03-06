@@ -515,11 +515,6 @@ public abstract class Packet {
      */
     public static final class LazyValue<T1> implements Serializable {
 
-        /**
-         *
-         */
-        private static final long serialVersionUID = 1379102837076225509L;
-
         private final transient BuildValueCommand<T1> command;
         private final transient Object thisLock = new Object();
 

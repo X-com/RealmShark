@@ -27,7 +27,6 @@ public final class EthernetPacket extends Packet {
     // If it's less than 60 bytes, it's padded with this field.
     // Although this class handles pad, it's actually responsibility of NIF.
     private final byte[] pad;
-
     /**
      * A static factory method. This method validates the arguments by {@link
      * ByteArrays#validateBounds(byte[], int, int)}, which may throw exceptions undocumented here.
@@ -35,9 +34,7 @@ public final class EthernetPacket extends Packet {
      * @param rawData rawData
      * @param offset  offset
      * @param length  length
-     * @param ts
      * @return a new EthernetPacket object.
-     * @throws IllegalRawDataException if parsing the raw data fails.
      */
     public static EthernetPacket newPacket(byte[] rawData, int offset, int length, Instant ts) {
         instant = ts;

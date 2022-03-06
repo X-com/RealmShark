@@ -13,10 +13,10 @@ import java.util.HashMap;
  */
 public class StreamConstructor implements PConstructor {
 
-    HashMap<Integer, TcpPacket> packetMap = new HashMap();
+    HashMap<Long, TcpPacket> packetMap = new HashMap();
     PConstructor packetConstructor;
     PReset packetReset;
-    public int sequenseNumber;
+    public long sequenseNumber;
 
     /**
      * Constructor of StreamConstructor which needs a reset class to reset if reset
@@ -49,10 +49,10 @@ public class StreamConstructor implements PConstructor {
             return;
         }
         if (sequenseNumber == 0) {
-            sequenseNumber = packet.getHeader().getSequenceNumber();
+            sequenseNumber = packet.getHeader().getSequenceNumberAsLong();
         }
 
-        packetMap.put(packet.getHeader().getSequenceNumber(), packet);
+        packetMap.put(packet.getHeader().getSequenceNumberAsLong(), packet);
 
         if (packetMap.size() > 50) { // Temp hacky solution until better solution is found. TODO: fix this
             String errorMsg = "Error! Stream Constructor reached 50 packets. Shutting down.";
