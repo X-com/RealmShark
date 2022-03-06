@@ -1,11 +1,15 @@
 package packets.packetcapture.networktap;
 
-//import org.pcap4j.core.*;
-//import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
-//import org.pcap4j.packet.EthernetPacket;
-//import org.pcap4j.packet.Packet;
-//import org.pcap4j.packet.TcpPacket;
 import packets.packetcapture.PacketProcessor;
+import packets.packetcapture.networktap.ardikars.NativeBridge;
+import packets.packetcapture.networktap.ardikars.NativeMappings;
+import packets.packetcapture.networktap.pcap4j.TcpPacket;
+import pcap.spi.Interface;
+import pcap.spi.Pcap;
+import pcap.spi.Service;
+import pcap.spi.exception.ErrorException;
+import pcap.spi.exception.error.*;
+import pcap.spi.option.DefaultLiveOptions;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -19,11 +23,10 @@ import static util.PacketCruncher.getByteArray;
  */
 public class Sniffer {
     private static boolean disableChecksum = true;
-    //    private String filter = "tcp port 2050";
-    private String filter = "tcp";
-//    private PcapHandle[] handlers;
+    private String filter = "tcp port 2050";
+    private Pcap[] pcaps;
+    private Pcap realmPcap;
     private PacketProcessor processor;
-    private boolean[] sniffers;
     private boolean stop;
 
     /**
@@ -34,7 +37,6 @@ public class Sniffer {
     public Sniffer(PacketProcessor p) {
         processor = p;
     }
-
     /**
      * Main sniffer method to listen on the network tap for any packets filtered by port
      * 2050 (default port rotmg uses) and TCP packets only (the packet type rotmg uses).
@@ -43,25 +45,29 @@ public class Sniffer {
      * 2050 of type TCP) is found. The all other channels are halted and only the correct
      * interface is listened on.
      *
-     * @throws PcapNativeException or NotOpenException are thrown if unexpected issues are found.
+     * @throws If any unexpected issues are found.
      */
-    public void startSniffer() {
-//        stop = false;
-//        PcapNetworkInterface[] list = Pcaps.findAllDevs().toArray(new PcapNetworkInterface[0]);
-//        handlers = new PcapHandle[list.length];
-//        sniffers = new boolean[list.length];
-//
-//        for (int number = 0; number < list.length; number++) {
-//            int snapshotLength = 65536; // in bytes
-//            int readTimeout = 4000000; // in milliseconds, set to hour long to never ignore packets
-//            handlers[number] = list[number].openLive(snapshotLength, PromiscuousMode.PROMISCUOUS, readTimeout);
-//            handlers[number].setFilter(filter, BpfProgram.BpfCompileMode.OPTIMIZE);
-//
-//            if (handlers[number] != null) {
-//                pause(1);
-//                startPacketSniffer(number);
-//            }
-//        }
+    public void startSniffer() throws ErrorException, RadioFrequencyModeNotSupportedException,
+            ActivatedException, InterfaceNotSupportTimestampTypeException,
+            PromiscuousModePermissionDeniedException, InterfaceNotUpException,
+            PermissionDeniedException, NoSuchDeviceException,
+            TimestampPrecisionNotSupportedException {
+        Service service = Service.Creator.create("PcapService");
+        Interface[] interfaceList = NativeBridge.getInterfaces(service);
+        pcaps = new Pcap[interfaceList.length];
+        realmPcap = null;
+
+        for (int i = 0; i < interfaceList.length; i++) {
+            DefaultLiveOptions defaultLiveOptions = new DefaultLiveOptions();
+//            defaultLiveOptions.timeout(60000);
+
+            Pcap pcap = service.live(interfaceList[i], defaultLiveOptions);
+            pcap.setFilter(filter, true);
+
+            pcaps[i] = pcap;
+
+            startPacketSniffer(pcap);
+        }
 
         closeUnusedSniffers();
     }
@@ -84,28 +90,24 @@ public class Sniffer {
      *
      * @param number Index of the network interface.
      */
-    public void startPacketSniffer(int number) {
+    public void startPacketSniffer(Pcap pcap) {
         new Thread(new Runnable() {
-            final int num = number;
+            final Pcap p = pcap;
 
             @Override
             public void run() {
-//                PacketListener listener = packet -> {
-//                    Packet tcpPacket = packet.getLowerLayerOf(TcpPacket.class);
-////                    System.out.println(Arrays.toString(packet.getRawData()));
-//                    System.out.println(tcpPacket);
-////
-////                    if (tcpPacket != null && computeChecksum(packet.getRawData())) {
-//////                        processor.receivedPackets(tcpPacket);
-////                        sniffers[num] = true;
-////                    }
-//                };
-//                try {
-//                    handlers[num].loop(1, listener);
-//                } catch (PcapNativeException | InterruptedException | NotOpenException e) {
-//                }
+                NativeBridge.PacketListener listener = packet -> {
+                    TcpPacket tcpPacket = packet.get(TcpPacket.class);
+
+                    if (tcpPacket != null && computeChecksum(packet.getRawData())) {
+                        processor.receivedPackets(tcpPacket);
+                        realmPcap = pcap;
+                    }
+                };
+                NativeBridge.loop(p, -1, listener);
             }
         }).start();
+        pause(1);
     }
 
     /**
@@ -151,61 +153,34 @@ public class Sniffer {
      * Close threads of sniffer channels not being used.
      */
     private void closeUnusedSniffers() {
-//        pause(100);
-//        while (true) {
-//            for (int s = 0; s < sniffers.length; s++) {
-//                if (stop) {
-//                    return;
-//                } else if (sniffers[s]) {
-//                    for (int c = 0; c < sniffers.length; c++) {
-//                        if (s != c) {
-//                            handlers[c].close();
-//                        }
-//                    }
-//                    return;
-//                }
-//            }
-//            pause(100);
-//        }
+        pause(100);
+        while (true) {
+            for (int s = 0; s < pcaps.length; s++) {
+                if (realmPcap != null) {
+                    for (int c = 0; c < pcaps.length; c++) {
+                        if (s != c) {
+                            pcaps[c].close();
+                        }
+                    }
+                    return;
+                }
+            }
+            pause(100);
+        }
     }
 
     /**
      * Close all network interfaces sniffing the wire.
      */
     public void closeSniffers() {
-//        stop = true;
-//        for (PcapHandle c : handlers) {
-//            if (c != null) {
-//                try {
-//                    if (c.isOpen()) c.breakLoop();
-//                } catch (NotOpenException e) {
-//                }
-//                c.close();
-//            }
-//        }
-    }
-
-    public static void main(String[] args) {
-//        System.out.println("clearconsole");
-
-        try {
-//            new Sniffer(null).startSniffer();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (realmPcap != null) {
+            realmPcap.close();
+        } else {
+            for (Pcap c : pcaps) {
+                if (c != null) {
+                    c.close();
+                }
+            }
         }
-
-//        String s = "56, 44, 74, 116, 11, -119, 4, -110, 38, -59, -15, -116, 8, 0, 69, 0, 0, 61, 52, -93, 64, 0, -9, 6, 106, -110, 54, -21, -21, -116, -64, -88, 1, 101, 8, 2, -28, -94, -83, 5, 36, -126, -114, 109, 81, 99, 80, 24, 1, -26, 61, 3, 0, 0, 0, 0, 0, 21, 9, 20, 123, -116, -27, 83, -110, -9, -89, 86, 84, 102, 10, -17, 31, -98, -53";
-//        byte[] data = getByteArray(s);
-//        try {
-//            EthernetPacket packet = EthernetPacket.newPacket(data, 0, data.length);
-//            for (Iterator<Packet> it = packet.iterator(); it.hasNext(); ) {
-//                Packet p = (Packet) it.next();
-//                System.out.println(it.next().getClass());
-//            }
-//            TcpPacket tcp = packet.get(TcpPacket.class);
-//            System.out.println(tcp);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
 }
