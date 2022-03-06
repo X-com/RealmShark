@@ -1,15 +1,18 @@
-package packets.packetcapture.networktap;
+/*
+ * Copyright (c) 2020-2021 Pcap Project
+ * SPDX-License-Identifier: MIT OR Apache-2.0
+ */
+package packets.packetcapture.networktap.ardikars;
 
-import pcap.spi.Interface;
+import pcap.spi.Address;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class DefaultInterfaceIterator implements Iterator<Interface> {
+public class DefaultAddressIterator implements Iterator<Address> {
+    private Address next;
 
-    private Interface next;
-
-    DefaultInterfaceIterator(Interface next) {
+    DefaultAddressIterator(Address next) {
         this.next = next;
     }
 
@@ -19,11 +22,11 @@ public class DefaultInterfaceIterator implements Iterator<Interface> {
     }
 
     @Override
-    public Interface next() {
+    public Address next() {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        Interface previous = next;
+        Address previous = next;
         next = next.next();
         return previous;
     }

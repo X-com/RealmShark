@@ -47,8 +47,8 @@ public class ROTMGPacketConstructor implements PConstructor {
      */
     @Override
     public void build(TcpPacket packetSequenced) {
-        if (firstNonLargePacket) { // start listening after a non-max packet
-            // prevents errors in pSize.
+        if (firstNonLargePacket) {  // start listening after a non-max packet
+                                    // prevents errors in pSize.
             if (packetSequenced.length() < 1460) firstNonLargePacket = false;
             return;
         }
