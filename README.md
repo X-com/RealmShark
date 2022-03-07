@@ -6,4 +6,4 @@ Mainly made as an API to read packets without having the ability to modify, bloc
 
 Current version of the API only supports Windows OS. [WinPcap](https://www.winpcap.org/default.htm) is needed to make the sniffer work so it is required.
 
-This project uses [pcap4j](https://github.com/kaitoy/pcap4j) library with a MIT License.
+This project uses [pcap4j](https://github.com/kaitoy/pcap4j) and [ardikars](https://github.com/ardikars/pcap) librarys which both have MIT License.
