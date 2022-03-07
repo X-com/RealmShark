@@ -42,7 +42,7 @@ public class TomatoMenuBar implements ActionListener {
         about = new JMenuItem("About");
         about.addActionListener(this);
         about.setMargin(new Insets(2, -20, 2, 2));
-        bandwidth = new JMenuItem("Bandwidth");
+        bandwidth = new JMenuItem("Net traffic");
         bandwidth.addActionListener(this);
         bandwidth.setMargin(new Insets(2, -20, 2, 2));
         info = new JMenu("Info");

@@ -28,7 +28,7 @@ public class TomatoBandwidth extends JFrame {
                 frame.getY() + frame.getHeight() / 2 - bandwidth.getHeight() / 2);
 
         infoArea = new JTextArea();
-        infoArea.setEnabled(true);
+        infoArea.setEnabled(false);
         infoArea.setEditable(false);
         infoArea.setLineWrap(true);
         infoArea.setWrapStyleWord(true);
