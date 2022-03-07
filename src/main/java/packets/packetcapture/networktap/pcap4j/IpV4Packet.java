@@ -34,7 +34,6 @@ public final class IpV4Packet extends Packet {
      * @param offset  offset
      * @param length  length
      * @return a new IpV4Packet object.
-     * @throws IllegalRawDataException if parsing the raw data fails.
      */
     public static IpV4Packet newPacket(byte[] rawData, int offset, int length) {
         ByteArrays.validateBounds(rawData, offset, length);
@@ -435,9 +434,9 @@ public final class IpV4Packet extends Packet {
 
         private int measureLengthWithoutPadding() {
             int len = 0;
-//      for (IpV4Option o : options) {
-//        len += o.length();
-//      }
+            for (IpV4Option o : options) {
+                len += o.length();
+            }
             return len + MIN_IPV4_HEADER_SIZE;
         }
 
@@ -512,7 +511,7 @@ public final class IpV4Packet extends Packet {
                     && tos.equals(other.tos)
                     && ihl == other.ihl
                     && version == other.version
-//          && options.equals(other.options)
+                    && options.equals(other.options)
                     && Arrays.equals(padding, other.padding);
         }
 
@@ -534,7 +533,7 @@ public final class IpV4Packet extends Packet {
             result = 31 * result + srcAddr.hashCode();
             result = 31 * result + dstAddr.hashCode();
             result = 31 * result + Arrays.hashCode(padding);
-//      result = 31 * result + options.hashCode();
+            result = 31 * result + options.hashCode();
             return result;
         }
     }
@@ -678,11 +677,6 @@ public final class IpV4Packet extends Packet {
     /**
      * This method is a variant of {@link #newInstance(byte[], int, int, IpV4OptionType...)} and
      * exists only for performance reason.
-     *
-     * @param rawData see {@link PacketFactory#newInstance}.
-     * @param offset  see {@link PacketFactory#newInstance}.
-     * @param length  see {@link PacketFactory#newInstance}.
-     * @return see {@link PacketFactory#newInstance}.
      */
     public static IpV4Option newInstanceOption(byte[] rawData, int offset, int length) {
         return UnknownIpV4Option.newInstance(rawData, offset, length);
@@ -690,24 +684,18 @@ public final class IpV4Packet extends Packet {
 
     static public class UnknownIpV4Option implements IpV4Option {
 
-        /**
-         *
-         */
-        private static final long serialVersionUID = 5843622351774970021L;
-
         private final byte type;
         private final byte length;
         private final byte[] data;
 
         /**
          * A static factory method. This method validates the arguments by {@link
-         * org.pcap4j.util.ByteArrays#validateBounds(byte[], int, int)}, which may throw exceptions undocumented here.
+         * ByteArrays#validateBounds(byte[], int, int)}, which may throw exceptions undocumented here.
          *
          * @param rawData rawData
          * @param offset  offset
          * @param length  length
          * @return a new UnknownIpV4Option object.
-         * @throws IllegalRawDataException if parsing the raw data fails.
          */
         public static UnknownIpV4Option newInstance(byte[] rawData, int offset, int length)
                 throws RuntimeException {
