@@ -14,6 +14,10 @@ public class CreepMoveMessagePacket extends Packet {
      */
     public int objectId;
     /**
+     * Time of the server
+     */
+    public int serverTime;
+    /**
      * The position to move the creep to.
      */
     public WorldPosData position;
@@ -25,7 +29,12 @@ public class CreepMoveMessagePacket extends Packet {
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
         objectId = buffer.readInt();
+        serverTime = buffer.readInt();
         position = new WorldPosData().deserialize(buffer);
         hold = buffer.readBoolean();
+    }
+
+    public String toString() {
+        return String.format("objectId:%d serverTime:%d position%s hold:%b", objectId, serverTime, position, hold);
     }
 }
