@@ -10,6 +10,7 @@ import pcap.spi.Service;
 import pcap.spi.exception.ErrorException;
 import pcap.spi.exception.error.*;
 import pcap.spi.option.DefaultLiveOptions;
+import util.HackyPacketLoggerForABug;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -37,6 +38,7 @@ public class Sniffer {
     public Sniffer(PacketProcessor p) {
         processor = p;
     }
+
     /**
      * Main sniffer method to listen on the network tap for any packets filtered by port
      * 2050 (default port rotmg uses) and TCP packets only (the packet type rotmg uses).
@@ -98,6 +100,9 @@ public class Sniffer {
             public void run() {
                 NativeBridge.PacketListener listener = packet -> {
                     TcpPacket tcpPacket = packet.get(TcpPacket.class);
+
+                    if (packet.getRawData()[0] == 4) HackyPacketLoggerForABug.logTCPPacket(packet, 0);
+                    else HackyPacketLoggerForABug.logTCPPacket(packet, 1);
 
                     if (tcpPacket != null && computeChecksum(packet.getRawData())) {
                         processor.receivedPackets(tcpPacket);

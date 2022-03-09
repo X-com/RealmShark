@@ -3,6 +3,7 @@ package packets.packetcapture.pconstructor;
 import example.gui.TomatoGUI;
 import example.gui.TomatoMenuBar;
 import packets.packetcapture.networktap.pcap4j.TcpPacket;
+import util.HackyPacketLoggerForABug;
 import util.Util;
 
 import java.util.HashMap;
@@ -60,6 +61,7 @@ public class StreamConstructor implements PConstructor {
             TomatoGUI.appendTextAreaText(errorMsg);
             TomatoMenuBar.stopPacketSniffer();
             reset();
+            HackyPacketLoggerForABug.dumpData();
         }
 
         while (packetMap.containsKey(sequenseNumber)) {
