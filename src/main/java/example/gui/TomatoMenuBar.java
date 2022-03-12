@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
  * Menu bar builder class
  */
 public class TomatoMenuBar implements ActionListener {
-    private JMenuItem about, borders, bandwidth;
+    private JMenuItem about, borders, bandwidth, javav;
     private JMenu file, edit, info;
     private JMenuBar jMenuBar;
     private JFrame frame;
@@ -42,13 +42,19 @@ public class TomatoMenuBar implements ActionListener {
         about = new JMenuItem("About");
         about.addActionListener(this);
         about.setMargin(new Insets(2, -20, 2, 2));
+
         bandwidth = new JMenuItem("Net traffic");
         bandwidth.addActionListener(this);
         bandwidth.setMargin(new Insets(2, -20, 2, 2));
+        javav = new JMenuItem("Java version");
+        javav.addActionListener(this);
+        javav.setMargin(new Insets(2, -20, 2, 2));
         info = new JMenu("Info");
         info.add(about);
+        info.add(javav);
         info.add(bandwidth);
         jMenuBar.add(info);
+
         return jMenuBar;
     }
 
@@ -84,6 +90,11 @@ public class TomatoMenuBar implements ActionListener {
             }
         } else if (e.getSource() == bandwidth) { // Opens bandwidth window
             new TomatoBandwidth().make(frame);
+        } else if (e.getSource() == javav) { // Opens bandwidth window
+            String version = System.getProperty("java.version");
+            System.out.println("Java version: " + version);
+            JFrame frame = new JFrame("Java version");
+            JOptionPane.showMessageDialog(frame, "Java version: " + version);
         }
     }
 
