@@ -3,6 +3,8 @@ plugins {
     id 'application'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 project.version = 'v1.2'
 applicationName = 'Tomato'
