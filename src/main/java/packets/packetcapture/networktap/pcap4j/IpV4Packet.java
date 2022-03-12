@@ -477,9 +477,9 @@ public final class IpV4Packet extends Packet {
                     .append(ls);
             sb.append("  Source address: ").append(srcAddr).append(ls);
             sb.append("  Destination address: ").append(dstAddr).append(ls);
-//      for (IpV4Option opt : options) {
-//        sb.append("  Option: ").append(opt).append(ls);
-//      }
+            for (IpV4Option opt : options) {
+                sb.append("  Option: ").append(opt).append(ls);
+            }
             if (padding.length != 0) {
                 sb.append("  Padding: 0x").append(ByteArrays.toHexString(padding, " ")).append(ls);
             }
