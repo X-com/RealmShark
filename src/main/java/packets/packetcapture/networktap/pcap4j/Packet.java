@@ -513,7 +513,7 @@ public abstract class Packet {
      * @author Kaito Yamada
      * @since pcap4j 0.9.6
      */
-    public static final class LazyValue<T1> implements Serializable {
+    public static final class LazyValue<T1> {
 
         private final transient BuildValueCommand<T1> command;
         private final transient Object thisLock = new Object();
