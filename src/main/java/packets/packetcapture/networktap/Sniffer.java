@@ -29,6 +29,8 @@ public class Sniffer {
     private Pcap realmPcap;
     private PacketProcessor processor;
     private boolean stop;
+    private Sniffer thisObject;
+    private RingBuffer<TcpPacket> ringBuffer;
 
     /**
      * Constructor of a Windows sniffer.
@@ -37,6 +39,8 @@ public class Sniffer {
      */
     public Sniffer(PacketProcessor p) {
         processor = p;
+        thisObject = this;
+        ringBuffer = new RingBuffer(32);
     }
 
     /**
@@ -58,10 +62,11 @@ public class Sniffer {
         Interface[] interfaceList = NativeBridge.getInterfaces(service);
         pcaps = new Pcap[interfaceList.length];
         realmPcap = null;
+        stop = false;
 
         for (int i = 0; i < interfaceList.length; i++) {
             DefaultLiveOptions defaultLiveOptions = new DefaultLiveOptions();
-//            defaultLiveOptions.timeout(60000);
+            defaultLiveOptions.timeout(60000);
 
             Pcap pcap = service.live(interfaceList[i], defaultLiveOptions);
             pcap.setFilter(filter, true);
@@ -101,18 +106,54 @@ public class Sniffer {
                 NativeBridge.PacketListener listener = packet -> {
                     TcpPacket tcpPacket = packet.get(TcpPacket.class);
 
-                    if (packet.getRawData()[0] == 4) HackyPacketLoggerForABug.logTCPPacket(packet, 0);
-                    else HackyPacketLoggerForABug.logTCPPacket(packet, 1);
+                    HackyPacketLoggerForABug.logTCPPacket(packet);
 
                     if (tcpPacket != null && computeChecksum(packet.getRawData())) {
-                        processor.receivedPackets(tcpPacket);
+                        ringBuffer.push(tcpPacket);
                         realmPcap = pcap;
+                        thisObject.notify();
                     }
                 };
                 NativeBridge.loop(p, -1, listener);
             }
         }).start();
         pause(1);
+    }
+    /**
+     * Close threads of sniffer network interfaces not being used after
+     * capturing at least one realm packet in the correct net-interface.
+     *
+     * Then it waits until new packets are captured by the sniffer, wakes
+     * up and processes the buffered packets in the ring buffer and goes
+     * back to sleep.
+     */
+    private void closeUnusedSniffers() {
+        try {
+            wait();
+            while (!stop) {
+                for (int s = 0; s < pcaps.length; s++) {
+                    if (realmPcap != null) {
+                        for (int c = 0; c < pcaps.length; c++) {
+                            if (s != c) {
+                                pcaps[c].close();
+                            }
+                        }
+                        return;
+                    }
+                }
+                pause(100);
+            }
+
+            while(!stop) {
+                wait();
+                while(!ringBuffer.isEmpty()) {
+                    TcpPacket tcpPacket = ringBuffer.pop();
+                    processor.receivedPackets(tcpPacket);
+                }
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -155,29 +196,10 @@ public class Sniffer {
     }
 
     /**
-     * Close threads of sniffer channels not being used.
-     */
-    private void closeUnusedSniffers() {
-        pause(100);
-        while (true) {
-            for (int s = 0; s < pcaps.length; s++) {
-                if (realmPcap != null) {
-                    for (int c = 0; c < pcaps.length; c++) {
-                        if (s != c) {
-                            pcaps[c].close();
-                        }
-                    }
-                    return;
-                }
-            }
-            pause(100);
-        }
-    }
-
-    /**
      * Close all network interfaces sniffing the wire.
      */
     public void closeSniffers() {
+        stop = true;
         if (realmPcap != null) {
             realmPcap.close();
         } else {
