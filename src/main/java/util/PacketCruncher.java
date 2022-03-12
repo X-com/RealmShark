@@ -1,11 +1,9 @@
 package util;
 
 import jdk.nashorn.internal.codegen.CompileUnit;
-import org.pcap4j.packet.EthernetPacket;
-import org.pcap4j.packet.IpV4Packet;
-import org.pcap4j.packet.TcpPacket;
 import packets.Packet;
 import packets.PacketType;
+import packets.packetcapture.networktap.RingBuffer;
 import packets.reader.BufferReader;
 
 import java.io.BufferedReader;
@@ -40,57 +38,74 @@ public class PacketCruncher {
 
     private void run() {
         System.out.println("Sta");
+        RingBuffer<String> str = new RingBuffer<>(2);
 
-        ArrayList<byte[]> list = readFile();
-        boolean first = true;
-        int id = 0;
-        int counter = 0;
-        long sequenseNumber = 0;
-        long nextSeq = 0;
-        long dif;
-        long difdif = 0;
-        int starting = 15;
-        LinkedHashMap<Long, TcpPacket> packetMap = new LinkedHashMap<>();
+        str.push("tel1");
+        str.push("tel2");
+        str.push("tel3");
+        str.push("tel4");
+//        str.push("tel5");
 
-        for (int i = 0; i < list.size(); i++) {
-            byte[] b = list.get(i);
-            counter++;
-            if (counter > starting) System.out.printf("%3d\n", counter);
-            try {
-                EthernetPacket epacket = EthernetPacket.newPacket(b, 0, b.length);
-                IpV4Packet ip4 = epacket.get(IpV4Packet.class);
-                TcpPacket tcpPacket = epacket.get(TcpPacket.class);
-                if(counter >= 0 && counter < 1000) System.out.println(ip4.getHeader().getIdentification());
+        System.out.println(str.size());
 
-                if (tcpPacket.getHeader().getSyn()) {
-                    packetMap.clear();
-//                    sequenseNumber = tcpPacket.getHeader().getSequenceNumber();
-                    sequenseNumber = 0;
-                    System.out.println("-----------------------------------------------");
-                    System.out.println("-----------------------------------------------");
-                    System.out.println("-----------------------------------------------");
-                    System.out.println("-----------------------------------------------");
-                    continue;
-                }
+        System.out.println(str.pop());
+        System.out.println(str.pop());
+        System.out.println(str.pop());
+        System.out.println(str.pop());
+        System.out.println(str.pop());
 
-                id++;
-                if (first) id = ip4.getHeader().getIdentification();
-                first = false;
+        System.out.println(str.size());
 
-                long currentSeq = Integer.toUnsignedLong(tcpPacket.getHeader().getSequenceNumber());
-                if (tcpPacket.getPayload() != null) {
-                    nextSeq = tcpPacket.getPayload().length() + currentSeq;
-                }
-                if (ip4.getHeader().getMoreFragmentFlag()) System.out.println("fragmentation");
-//                if (counter > starting) System.out.println("Aa: " + sequenseNumber + " " + tcpPacket.getHeader().getSyn());
-                if (counter > starting) System.out.println("C: " + currentSeq + " + " + (tcpPacket.getPayload() == null ? 0 : tcpPacket.getPayload().length()) + " = D: " + nextSeq + "=" + sequenseNumber + " dif: (" +(nextSeq - currentSeq) +")");
-                if (sequenseNumber == 0) {
-                    sequenseNumber = currentSeq;
-//                    if (counter > starting) System.out.println("A: " + sequenseNumber);
-                }
-                packetMap.put(currentSeq, tcpPacket);
-                int size = packetMap.size();
-                if (size > 1) System.out.println("OVERSIZE " + size + " " + counter);
+//        ArrayList<byte[]> list = readFile();
+//        boolean first = true;
+//        int id = 0;
+//        int counter = 0;
+//        long sequenseNumber = 0;
+//        long nextSeq = 0;
+//        long dif;
+//        long difdif = 0;
+//        int starting = 15;
+//        LinkedHashMap<Long, TcpPacket> packetMap = new LinkedHashMap<>();
+//
+//        for (int i = 0; i < list.size(); i++) {
+//            byte[] b = list.get(i);
+//            counter++;
+//            if (counter > starting) System.out.printf("%3d\n", counter);
+//            try {
+//                EthernetPacket epacket = EthernetPacket.newPacket(b, 0, b.length);
+//                IpV4Packet ip4 = epacket.get(IpV4Packet.class);
+//                TcpPacket tcpPacket = epacket.get(TcpPacket.class);
+//                if(counter >= 0 && counter < 1000) System.out.println(ip4.getHeader().getIdentification());
+//
+//                if (tcpPacket.getHeader().getSyn()) {
+//                    packetMap.clear();
+////                    sequenseNumber = tcpPacket.getHeader().getSequenceNumber();
+//                    sequenseNumber = 0;
+//                    System.out.println("-----------------------------------------------");
+//                    System.out.println("-----------------------------------------------");
+//                    System.out.println("-----------------------------------------------");
+//                    System.out.println("-----------------------------------------------");
+//                    continue;
+//                }
+//
+//                id++;
+//                if (first) id = ip4.getHeader().getIdentification();
+//                first = false;
+//
+//                long currentSeq = Integer.toUnsignedLong(tcpPacket.getHeader().getSequenceNumber());
+//                if (tcpPacket.getPayload() != null) {
+//                    nextSeq = tcpPacket.getPayload().length() + currentSeq;
+//                }
+//                if (ip4.getHeader().getMoreFragmentFlag()) System.out.println("fragmentation");
+////                if (counter > starting) System.out.println("Aa: " + sequenseNumber + " " + tcpPacket.getHeader().getSyn());
+//                if (counter > starting) System.out.println("C: " + currentSeq + " + " + (tcpPacket.getPayload() == null ? 0 : tcpPacket.getPayload().length()) + " = D: " + nextSeq + "=" + sequenseNumber + " dif: (" +(nextSeq - currentSeq) +")");
+//                if (sequenseNumber == 0) {
+//                    sequenseNumber = currentSeq;
+////                    if (counter > starting) System.out.println("A: " + sequenseNumber);
+//                }
+//                packetMap.put(currentSeq, tcpPacket);
+//                int size = packetMap.size();
+//                if (size > 1) System.out.println("OVERSIZE " + size + " " + counter);
 
 //                if (counter >= 410) {
 //                    dif = nextSeq - sequenseNumber - (packet.getPayload() == null ? 0 : packet.getPayload().length());
@@ -100,20 +115,20 @@ public class PacketCruncher {
 //                        System.out.println("(" + 0 + "->" + (sequenseNumber == nextSeq) + ")");
 //                    }
 //                }
-                while (packetMap.containsKey(sequenseNumber)) {
-                    TcpPacket packetSeqed = packetMap.remove(sequenseNumber);
-                    if (packetSeqed.getPayload() != null) {
-                        sequenseNumber += packetSeqed.getPayload().length();
-                        if (counter > starting) System.out.println("B: " + sequenseNumber);
-                    }
-                }
+//                while (packetMap.containsKey(sequenseNumber)) {
+//                    TcpPacket packetSeqed = packetMap.remove(sequenseNumber);
+//                    if (packetSeqed.getPayload() != null) {
+//                        sequenseNumber += packetSeqed.getPayload().length();
+//                        if (counter > starting) System.out.println("B: " + sequenseNumber);
+//                    }
+//                }
 //                if(packet.getPayload() != null) sequenseNumber += packet.getPayload().length();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (counter > starting) System.out.println("END");
-        }
-        System.out.println("Fin " + packetMap.size() + " " + id + " " + list.size());
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            if (counter > starting) System.out.println("END");
+//        }
+//        System.out.println("Fin " + packetMap.size() + " " + id + " " + list.size());
     }
 
     private ArrayList<byte[]> readFile() {

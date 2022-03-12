@@ -1,9 +1,5 @@
 package packets.packetcapture.networktap;
 
-import org.pcap4j.packet.Packet;
-import org.pcap4j.packet.factory.PacketFactories;
-import org.pcap4j.packet.namednumber.IpNumber;
-import org.pcap4j.packet.namednumber.NotApplicable;
 import util.Util;
 
 import java.util.ArrayList;
