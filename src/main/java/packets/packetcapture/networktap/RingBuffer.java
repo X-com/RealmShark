@@ -66,6 +66,7 @@ public class RingBuffer<T> {
             state = FULL;
         } else {
             if (state == FULL) {
+                System.out.println("resize");
                 T[] next = (T[]) new Object[buffer.length << 1];
                 /*
                     [-----[writePointer,readPointer]-------]
@@ -100,7 +101,8 @@ public class RingBuffer<T> {
         } else {
             state = NORMAL;
         }
+        T buf = buffer[read];
         read = (read + 1) % buffer.length;
-        return buffer[read];
+        return buf;
     }
 }

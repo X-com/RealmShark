@@ -77,6 +77,7 @@ public class Sniffer {
         }
 
         closeUnusedSniffers();
+        processBufferedPackets();
     }
 
     /**
@@ -111,7 +112,9 @@ public class Sniffer {
                     if (tcpPacket != null && computeChecksum(packet.getRawData())) {
                         ringBuffer.push(tcpPacket);
                         realmPcap = pcap;
-                        thisObject.notify();
+                        synchronized (thisObject) {
+                            thisObject.notifyAll();
+                        }
                     }
                 };
                 NativeBridge.loop(p, -1, listener);
@@ -119,17 +122,16 @@ public class Sniffer {
         }).start();
         pause(1);
     }
+
     /**
      * Close threads of sniffer network interfaces not being used after
      * capturing at least one realm packet in the correct net-interface.
-     *
-     * Then it waits until new packets are captured by the sniffer, wakes
-     * up and processes the buffered packets in the ring buffer and goes
-     * back to sleep.
      */
     private void closeUnusedSniffers() {
         try {
-            wait();
+            synchronized (thisObject) {
+                wait();
+            }
             while (!stop) {
                 for (int s = 0; s < pcaps.length; s++) {
                     if (realmPcap != null) {
@@ -143,10 +145,23 @@ public class Sniffer {
                 }
                 pause(100);
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
-            while(!stop) {
-                wait();
-                while(!ringBuffer.isEmpty()) {
+    /**
+     * Processing waits until new packets are captured by the sniffer, wakes
+     * up and processes the buffered packets in the ring buffer and goes
+     * back to sleep.
+     */
+    private void processBufferedPackets() {
+        try {
+            while (!stop) {
+                synchronized (thisObject) {
+                    wait();
+                }
+                while (!ringBuffer.isEmpty()) {
                     TcpPacket tcpPacket = ringBuffer.pop();
                     processor.receivedPackets(tcpPacket);
                 }
