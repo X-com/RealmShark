@@ -19,7 +19,7 @@ public class PlayerShootPacket extends Packet {
     /**
      * (work-in-progress)
      */
-    public byte unknownByte;
+    public short unknownShort;
     /**
      * The item id of the weapon used to fire the projectile.
      */
@@ -41,10 +41,23 @@ public class PlayerShootPacket extends Packet {
     public void deserialize(BufferReader buffer) throws Exception {
         time = buffer.readInt();
         bulletId = buffer.readByte();
-        unknownByte = buffer.readByte();
+        unknownShort = buffer.readShort();
         containerType = buffer.readShort();
         startingPos = new WorldPosData().deserialize(buffer);
         angle = buffer.readFloat();
         isBurst = buffer.readBoolean();
+    }
+
+    @Override
+    public String toString() {
+        return "PlayerShootPacket{" +
+                "\n  time=" + time +
+                "\n, bulletId=" + bulletId +
+                "\n, unknownByte=" + unknownShort +
+                "\n, containerType=" + containerType +
+                "\n, startingPos=" + startingPos +
+                "\n, angle=" + angle +
+                "\n, isBurst=" + isBurst +
+                "\n}";
     }
 }
