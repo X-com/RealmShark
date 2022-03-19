@@ -1,8 +1,10 @@
 package packets.packetcapture.networktap.ardikars;
 
 import com.sun.jna.Pointer;
-import packets.packetcapture.networktap.pcap4j.EthernetPacket;
-import packets.packetcapture.networktap.pcap4j.TcpPacket;
+import packets.packetcapture.networktap.netpackets.EthernetPacket;
+import packets.packetcapture.networktap.netpackets.Ip4Packet;
+import packets.packetcapture.networktap.netpackets.RawPacket;
+import packets.packetcapture.networktap.netpackets.TcpPacket;
 import pcap.spi.Interface;
 import pcap.spi.Pcap;
 import pcap.spi.Service;
@@ -39,15 +41,20 @@ public class NativeBridge {
 
         PacketListener listener = packet -> {
             try {
-                EthernetPacket e = EthernetPacket.newPacket(packet.getRawData(), 0, packet.getRawData().length, null);
-                TcpPacket tcpPacket = e.get(TcpPacket.class);
-                System.out.println(tcpPacket);
+                EthernetPacket ethernetPacket = packet.getNewEthernetPacket();
+                if (ethernetPacket != null) {
+                    Ip4Packet ip4Packet = ethernetPacket.getNewIp4Packet();
+                    if (ip4Packet != null) {
+                        TcpPacket tcpPacket = ip4Packet.getNewTcpPacket();
+                        System.out.println(tcpPacket);
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         };
         try {
-            loop(pcap, 1, listener);
+            loop(pcap, -1, listener);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -95,7 +102,7 @@ public class NativeBridge {
      * Interface class for responding to captured packets.
      */
     public interface PacketListener {
-        void gotPacket(EthernetPacket packet);
+        void gotPacket(RawPacket packet);
     }
 
     /**
@@ -134,13 +141,15 @@ public class NativeBridge {
 
         @Override
         public void got_packet(Pointer args, Pointer header, final Pointer packet) {
-            final Instant ts = buildTimestamp(header);
+            final Instant now = buildTimestamp(header);
             final int len = NativeMappings.pcap_pkthdr.getLen(header);
-            final byte[] ba = packet.getByteArray(0, NativeMappings.pcap_pkthdr.getCaplen(header));
+            final byte[] data = packet.getByteArray(0, NativeMappings.pcap_pkthdr.getCaplen(header));
 
             try {
                 executor.execute(() -> {
-                    listener.gotPacket(EthernetPacket.newPacket(ba, 0, len, ts));
+                    if (data.length == len) {
+                        listener.gotPacket(RawPacket.newPacket(data, now));
+                    }
                 });
             } catch (Throwable e) {
             }

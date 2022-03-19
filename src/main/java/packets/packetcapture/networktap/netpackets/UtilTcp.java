@@ -1,6 +1,11 @@
-package packets.packetcapture.networktap;
+package packets.packetcapture.networktap.netpackets;
 
 public class UtilTcp {
+
+    public static final int BYTE_SIZE_IN_BYTES = 1;
+    public static final int SHORT_SIZE_IN_BYTES = 2;
+    public static final int INT_SIZE_IN_BYTES = 4;
+    public static final int LONG_SIZE_IN_BYTES = 8;
 
     public static void validateBounds(byte[] array, int offset, int len) {
         if (array == null) {
@@ -16,7 +21,7 @@ public class UtilTcp {
             throw new ArrayIndexOutOfBoundsException("Offset or len negative");
         }
         if (offset + len > array.length) {
-            throw new ArrayIndexOutOfBoundsException("Len plus offset larger than array");
+            throw new ArrayIndexOutOfBoundsException("Len plus offset larger than array offset: " + offset + " len: " + len + " array: " + array.length);
         }
     }
 
@@ -29,14 +34,18 @@ public class UtilTcp {
     }
 
     public static int getByte(byte[] data, int typeOffset) {
-        return Byte.toUnsignedInt(data[typeOffset]);
+        return 0xFF & Byte.toUnsignedInt(data[typeOffset]);
     }
 
     public static int getShort(byte[] data, int typeOffset) {
-        return (Byte.toUnsignedInt(data[typeOffset]) << 8) | (Byte.toUnsignedInt(data[typeOffset + 1]));
+        return 0xFFFF & ((Byte.toUnsignedInt(data[typeOffset]) << 8) | (Byte.toUnsignedInt(data[typeOffset + 1])));
     }
 
     public static int getInt(byte[] data, int typeOffset) {
         return (Byte.toUnsignedInt(data[typeOffset]) << 24) | (Byte.toUnsignedInt(data[typeOffset + 1]) << 16) | (Byte.toUnsignedInt(data[typeOffset + 2]) << 8) | Byte.toUnsignedInt(data[typeOffset + 3]);
+    }
+
+    public static long getIntAsLong(byte[] data, int typeOffset) {
+        return Integer.toUnsignedLong((Byte.toUnsignedInt(data[typeOffset]) << 24) | (Byte.toUnsignedInt(data[typeOffset + 1]) << 16) | (Byte.toUnsignedInt(data[typeOffset + 2]) << 8) | Byte.toUnsignedInt(data[typeOffset + 3]));
     }
 }

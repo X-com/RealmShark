@@ -3,7 +3,9 @@ package packets.packetcapture.networktap;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.networktap.ardikars.NativeBridge;
 import packets.packetcapture.networktap.ardikars.NativeMappings;
-import packets.packetcapture.networktap.pcap4j.TcpPacket;
+import packets.packetcapture.networktap.netpackets.EthernetPacket;
+import packets.packetcapture.networktap.netpackets.Ip4Packet;
+import packets.packetcapture.networktap.netpackets.TcpPacket;
 import pcap.spi.Interface;
 import pcap.spi.Pcap;
 import pcap.spi.Service;
@@ -105,15 +107,21 @@ public class Sniffer {
             @Override
             public void run() {
                 NativeBridge.PacketListener listener = packet -> {
-                    TcpPacket tcpPacket = packet.get(TcpPacket.class);
+                    EthernetPacket ethernetPacket = packet.getNewEthernetPacket();
+                    if (ethernetPacket != null) {
+                        Ip4Packet ip4Packet = ethernetPacket.getNewIp4Packet();
+                        if (ip4Packet != null) {
+                            TcpPacket tcpPacket = ip4Packet.getNewTcpPacket();
 
-                    HackyPacketLoggerForABug.logTCPPacket(packet);
+                            HackyPacketLoggerForABug.logTCPPacket(packet);
 
-                    if (tcpPacket != null && computeChecksum(packet.getRawData())) {
-                        ringBuffer.push(tcpPacket);
-                        realmPcap = pcap;
-                        synchronized (thisObject) {
-                            thisObject.notifyAll();
+                            if (tcpPacket != null && computeChecksum(packet.getPayload())) {
+                                ringBuffer.push(tcpPacket);
+                                realmPcap = pcap;
+                                synchronized (thisObject) {
+                                    thisObject.notifyAll();
+                                }
+                            }
                         }
                     }
                 };
@@ -130,7 +138,7 @@ public class Sniffer {
     private void closeUnusedSniffers() {
         try {
             synchronized (thisObject) {
-                wait();
+                thisObject.wait();
             }
             while (!stop) {
                 for (int s = 0; s < pcaps.length; s++) {
@@ -159,7 +167,7 @@ public class Sniffer {
         try {
             while (!stop) {
                 synchronized (thisObject) {
-                    wait();
+                    thisObject.wait();
                 }
                 while (!ringBuffer.isEmpty()) {
                     TcpPacket tcpPacket = ringBuffer.pop();

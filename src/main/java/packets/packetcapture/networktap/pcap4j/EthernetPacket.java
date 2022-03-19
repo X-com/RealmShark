@@ -58,7 +58,7 @@ public final class EthernetPacket extends Packet {
 
             if (payloadLength > 0) {
                 this.payload = IpV4Packet.newPacket(rawData, payloadOffset, payloadLength);
-            } else { // payloadLength == 0
+            } else {
                 this.payload = null;
             }
 
@@ -250,10 +250,22 @@ public final class EthernetPacket extends Packet {
             String ls = System.getProperty("line.separator");
 
             sb.append("[Ethernet Header (").append(length()).append(" bytes)]").append(ls);
-            sb.append("  Destination address: ").append(dstAddr).append(ls);
-            sb.append("  Source address: ").append(srcAddr).append(ls);
+            sb.append("  Destination address: ").append(macString(dstAddr)).append(ls);
+            sb.append("  Source address: ").append(macString(srcAddr)).append(ls);
             sb.append("  Type: ").append(type).append(ls);
 
+            return sb.toString();
+        }
+
+        private String macString(byte[] mac) {
+            StringBuilder sb = new StringBuilder();
+            boolean f = false;
+            for (byte b : mac) {
+                if (f) sb.append(":");
+                String str = String.format("%02x", b);
+                sb.append(str);
+                f = true;
+            }
             return sb.toString();
         }
 

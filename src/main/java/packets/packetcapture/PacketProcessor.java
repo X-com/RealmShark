@@ -1,16 +1,13 @@
 package packets.packetcapture;
 
 import example.gui.TomatoBandwidth;
-//import org.pcap4j.core.NotOpenException;
-//import org.pcap4j.core.PcapNativeException;
-//import org.pcap4j.packet.TcpPacket;
 import packets.Packet;
 import packets.PacketType;
 import packets.packetcapture.encryption.RC4;
 import packets.packetcapture.encryption.RotMGRC4Keys;
 import packets.packetcapture.logger.PacketLogger;
 import packets.packetcapture.networktap.Sniffer;
-import packets.packetcapture.networktap.pcap4j.TcpPacket;
+import packets.packetcapture.networktap.netpackets.TcpPacket;
 import packets.packetcapture.pconstructor.PConstructor;
 import packets.packetcapture.pconstructor.PacketConstructor;
 import packets.packetcapture.register.Register;
@@ -77,13 +74,11 @@ public class PacketProcessor extends Thread {
      * @param packet The TCP packets retrieved from the network tap.
      */
     public void receivedPackets(TcpPacket packet) {
-        // 2050 is default rotmg server port. Incoming packets have 2050 source port.
-        if (packet.getHeader().getSrcPort() == 2050) {
-            constIncomingPackets(packet);
-
-            // Outgoing packets have destination port set to 2050.
-        } else if (packet.getHeader().getDstPort() == 2050) {
-            constOutgoingPackets(packet); // removed given it is not implemented properly
+        // 2050 is default rotmg server port.
+        if (packet.getSrcPort() == 2050) {
+            constIncomingPackets(packet); // Incoming packets have 2050 source port.
+        } else if (packet.getDstPort() == 2050) {
+            constOutgoingPackets(packet);// Outgoing packets have destination port set to 2050.
         }
         TomatoBandwidth.setInfo(logger.toString()); // update info GUI if open // TODO: remove this bad garbage asap
     }

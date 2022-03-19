@@ -2,7 +2,7 @@ package packets.packetcapture.pconstructor;
 
 import example.gui.TomatoGUI;
 import example.gui.TomatoMenuBar;
-import packets.packetcapture.networktap.pcap4j.TcpPacket;
+import packets.packetcapture.networktap.netpackets.TcpPacket;
 import util.HackyPacketLoggerForABug;
 import util.Util;
 
@@ -45,15 +45,15 @@ public class StreamConstructor implements PConstructor {
      */
     @Override
     public void build(TcpPacket packet) {
-        if (packet.getHeader().getSyn()) {
+        if (packet.isResetBit()) {
             reset();
             return;
         }
         if (sequenseNumber == 0) {
-            sequenseNumber = packet.getHeader().getSequenceNumberAsLong();
+            sequenseNumber = packet.getSequenceNumber();
         }
 
-        packetMap.put(packet.getHeader().getSequenceNumberAsLong(), packet);
+        packetMap.put(packet.getSequenceNumber(), packet);
 
         if (packetMap.size() > 50) { // Temp hacky solution until better solution is found. TODO: fix this
             String errorMsg = "Error! Stream Constructor reached 50 packets. Shutting down.";
@@ -64,11 +64,13 @@ public class StreamConstructor implements PConstructor {
             HackyPacketLoggerForABug.dumpData();
         }
 
+//        System.out.println(packet.getDstPort() + " " + packetMap.size());
+
         while (packetMap.containsKey(sequenseNumber)) {
             TcpPacket packetSeqed = packetMap.remove(sequenseNumber);
             if (packet.getPayload() != null) {
-                sequenseNumber += packetSeqed.getPayload().length();
-                packetConstructor.build(packetSeqed);
+                sequenseNumber += packetSeqed.getPayloadSize();
+//                packetConstructor.build(packetSeqed);
             }
         }
     }

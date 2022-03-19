@@ -3,7 +3,7 @@ package packets.packetcapture.pconstructor;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.encryption.RC4;
 import packets.packetcapture.encryption.TickAligner;
-import packets.packetcapture.networktap.pcap4j.TcpPacket;
+import packets.packetcapture.networktap.netpackets.TcpPacket;
 
 import java.nio.ByteBuffer;
 

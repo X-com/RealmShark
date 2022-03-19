@@ -1,6 +1,6 @@
 package packets.packetcapture.pconstructor;
 
-import packets.packetcapture.networktap.pcap4j.TcpPacket;
+import packets.packetcapture.networktap.netpackets.TcpPacket;
 
 /**
  * Packet constructor interface used in constructing raw TCP packets.

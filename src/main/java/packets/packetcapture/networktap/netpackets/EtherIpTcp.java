@@ -1,10 +1,12 @@
-package packets.packetcapture.networktap;
+package packets.packetcapture.networktap.netpackets;
 
-import util.Util;
-
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * Ethernet Ip4 and TCP packet constructor based on
+ * Network programming in Linux:
+ * http://tcpip.marcolavoie.ca/ip.html
+ * and IP Fragmentation in Detail:
+ * https://packetpushers.net/ip-fragmentation-in-detail/
+ */
 public class EtherIpTcp {
     public static final int BYTE_SIZE_IN_BYTES = 1;
     public static final int SHORT_SIZE_IN_BYTES = 2;
@@ -19,13 +21,14 @@ public class EtherIpTcp {
     public static final int MAC_SIZE_IN_BYTES = 6;
     private static final int DST_ADDR_OFFSET_ETHER = 0;
     private static final int SRC_ADDR_OFFSET_ETHER = 6;
-    private static int ETHER_OFFSET;
     private static final int TYPE_OFFSET = 12;
 
     private final byte[] macDest;
     private final byte[] macSrc;
     private final int etherType;
+    private static int etherPayloadOffset;
     private final int etherPayloadSize;
+    private final byte[] payloadEther;
 
     // -------------------- IP4 Packet --------------------
 
@@ -48,8 +51,8 @@ public class EtherIpTcp {
     private static final int IP_ADDRESS_SIZE = 4;
     private static final int SRC_ADDR_OFFSET_IP = 12;
     private static final int DST_ADDR_OFFSET_IP = 16;
-    private static final int OPTIONS_OFFSET_IP = 4;
-    private static final int MIN_IPV4_HEADER_SIZE = 4;
+    private static final int OPTIONS_OFFSET_IP = 20;
+    private static final int MIN_IPV4_HEADER_SIZE = 20;
 
     private final int version;
     private final int ihl;
@@ -67,8 +70,7 @@ public class EtherIpTcp {
     private final int headerChecksum;
     private final byte[] srcAddr;
     private final byte[] dstAddr;
-    //    private final List<IpV4Packet.IpV4Option> optionsIP;
-    private final byte[] paddingIP;
+    private final byte[] optionsIP;
 
     // -------------------- TCP Packet -----------------------
     private static final int SRC_PORT_OFFSET = 0;
@@ -108,19 +110,24 @@ public class EtherIpTcp {
     private final int window;
     private final int checksum;
     private final int urgentPointer;
-    //    private final List<TcpPacket.TcpOption> optionsTCP;
-    private final byte[] paddingTCP;
+    private final byte[] optionsTCP;
+    private final byte[] payloadTCP;
 
     public EtherIpTcp(byte[] data) {
         // ------------------ Ethernet Packet -----------------
         macDest = UtilTcp.getBytes(data, DST_ADDR_OFFSET_ETHER, MAC_SIZE_IN_BYTES);
         macSrc = UtilTcp.getBytes(data, SRC_ADDR_OFFSET_ETHER, MAC_SIZE_IN_BYTES);
         etherType = UtilTcp.getShort(data, TYPE_OFFSET);
-        ETHER_OFFSET = etherType <= IEEE802_3_MAX_LENGTH ? 0 : 4;
-        etherPayloadSize = UtilTcp.getShort(data, TYPE_OFFSET + ETHER_OFFSET);
-        UtilTcp.validateBounds(data, etherPayloadSize, data.length);
+        if (etherType <= IEEE802_3_MAX_LENGTH) {
+            etherPayloadSize = etherType;
+            etherPayloadOffset = 14;
+        } else {
+            etherPayloadSize = -1;
+            etherPayloadOffset = etherType == 0x8100 ? 14 : 18;
+        }
+        payloadEther = UtilTcp.getBytes(data, etherPayloadOffset, data.length);
         // ----------------------  IP4  -----------------------
-        int offsetIP = ETHERNET_HEADER_SIZE + ETHER_OFFSET;
+        int offsetIP = ETHERNET_HEADER_SIZE + etherPayloadOffset;
         int versionAndIhl = UtilTcp.getByte(data, offsetIP);
         version = (byte) ((versionAndIhl & 0xF0) >> 4);
         ihl = (byte) (versionAndIhl & 0x0F);
@@ -141,46 +148,23 @@ public class EtherIpTcp {
         ttl = UtilTcp.getByte(data, TTL_OFFSET + offsetIP);
         protocol = UtilTcp.getByte(data, PROTOCOL_OFFSET + offsetIP);
         headerChecksum = UtilTcp.getShort(data, HEADER_CHECKSUM_OFFSET + offsetIP);
-        srcAddr = UtilTcp.getBytes(data, DST_ADDR_OFFSET_IP + offsetIP, IP_ADDRESS_SIZE);
+        srcAddr = UtilTcp.getBytes(data, SRC_ADDR_OFFSET_IP + offsetIP, IP_ADDRESS_SIZE);
         dstAddr = UtilTcp.getBytes(data, DST_ADDR_OFFSET_IP + offsetIP, IP_ADDRESS_SIZE);
 
         int headerLengthIP = ihl * 4;
-
-//        optionsIP = new ArrayList<>();
-        int currentOffsetInHeaderIP = OPTIONS_OFFSET_IP;
-//        try {
-//            while (currentOffsetInHeaderIP < headerLengthIP) {
-//                byte type = data[currentOffsetInHeaderIP + offsetIP];
-////                IpV4Packet.IpV4Option newOne = newInstanceOption(
-////                        data,
-////                        currentOffsetInHeaderIP + offsetIP,
-////                        headerLengthIP - currentOffsetInHeaderIP);
-////                options.add(newOne);
-//                currentOffsetInHeaderIP += newOne.length();
-//
-//                if (newOne.getType() == 0) { // END_OF_OPTION_LIST == 0
-//                    break;
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
-        int paddingLengthIP = headerLengthIP - currentOffsetInHeaderIP;
-        if (paddingLengthIP != 0) {
-            paddingIP = UtilTcp.getBytes(data, currentOffsetInHeaderIP + offsetIP, paddingLengthIP);
-
-            if (moreFragmentFlag || fragmentOffset != 0) {
-                Util.print("Fragmented packet");
-                // TODO: add fragmented ip packet reconstructor here.
-                // Not added given realm packets always send don't fragment flag true.
-            }
+        if (headerLengthIP != OPTIONS_OFFSET_IP) {
+            optionsIP = UtilTcp.getBytes(data, OPTIONS_OFFSET_IP + offsetIP, headerLengthIP + offsetIP);
         } else {
-            paddingIP = new byte[0];
+            optionsIP = new byte[0];
         }
+
+        if (moreFragmentFlag || fragmentOffset != 0) {
+//            return; // Return and construct the Ip fragments into a full ip4 packet before continuing.
+        }
+        int length = totalLength - headerLengthIP;
+        if (length > data.length) length = data.length;
         // -------------------- TCP Packet -----------------------
-        int offsetTCP = currentOffsetInHeaderIP + offsetIP;
-        int length = paddingLengthIP;
+        int offsetTCP = headerLengthIP + offsetIP;
         srcPort = UtilTcp.getShort(data, SRC_PORT_OFFSET + offsetTCP);
         dstPort = UtilTcp.getShort(data, DST_PORT_OFFSET + offsetTCP);
         sequenceNumber = UtilTcp.getInt(data, SEQUENCE_NUMBER_OFFSET + offsetTCP);
@@ -201,26 +185,19 @@ public class EtherIpTcp {
         checksum = UtilTcp.getShort(data, CHECKSUM_OFFSET + offsetTCP);
         urgentPointer = UtilTcp.getShort(data, URGENT_POINTER_OFFSET + offsetTCP);
 
-        int headerLength = (0xFF & dataOffset) * 4;
-        if (length < headerLength) {
-            StringBuilder sb = new StringBuilder(110);
-            sb.append("The data is too short to build this header(").append(headerLength).append(" bytes). data: ")/*.append(ByteArrays.toHexString(data, " "))*/.append(", offsetTCP: ").append(offsetTCP).append(", length: ").append(length);
-            throw new RuntimeException(sb.toString());
-        }
-        if (headerLength < OPTIONS_OFFSET_TCP) {
-            StringBuilder sb = new StringBuilder(100);
-            sb.append("The data offsetTCP must be equal or more than ").append(OPTIONS_OFFSET_TCP / 4).append(", but it is: ").append(0xFF & dataOffset);
-            throw new RuntimeException(sb.toString());
-        }
+        int headerLengthTCP = (0xFF & dataOffset) * 4;
 
-//        optionsTCP = new ArrayList<TcpPacket.TcpOption>();
-        int currentOffsetInHeader = OPTIONS_OFFSET_TCP;
-
-        int paddingLengthTCP = headerLength - currentOffsetInHeader;
-        if (paddingLengthTCP != 0) { // paddingLengthTCP is positive.
-            paddingTCP = UtilTcp.getBytes(data, currentOffsetInHeader + offsetTCP, paddingLengthTCP);
+        if (headerLengthTCP != OPTIONS_OFFSET_TCP) {
+            optionsTCP = UtilTcp.getBytes(data, OPTIONS_OFFSET_TCP + offsetTCP, headerLengthTCP + offsetTCP);
         } else {
-            paddingTCP = new byte[0];
+            optionsTCP = new byte[0];
+        }
+
+        int payloadSize = length - headerLengthTCP;
+        if (payloadSize != 0) {
+            payloadTCP = UtilTcp.getBytes(data, headerLengthTCP + offsetTCP, payloadSize);
+        } else {
+            payloadTCP = new byte[0];
         }
     }
 }

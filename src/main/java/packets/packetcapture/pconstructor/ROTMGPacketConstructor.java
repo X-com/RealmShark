@@ -1,6 +1,6 @@
 package packets.packetcapture.pconstructor;
 
-import packets.packetcapture.networktap.pcap4j.TcpPacket;
+import packets.packetcapture.networktap.netpackets.TcpPacket;
 import util.Util;
 
 import java.nio.ByteBuffer;
@@ -49,11 +49,11 @@ public class ROTMGPacketConstructor implements PConstructor {
     public void build(TcpPacket packetSequenced) {
         if (firstNonLargePacket) {  // start listening after a non-max packet
                                     // prevents errors in pSize.
-            if (packetSequenced.length() < 1460) firstNonLargePacket = false;
+            if (packetSequenced.getPayloadSize() < 1460) firstNonLargePacket = false;
             return;
         }
 
-        for (byte b : packetSequenced.getPayload().getRawData()) {
+        for (byte b : packetSequenced.getPayload()) {
             bytes[index++] = b;
             if (index >= 4) {
                 if (pSize == 0) {
