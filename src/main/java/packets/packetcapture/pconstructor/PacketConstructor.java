@@ -3,7 +3,6 @@ package packets.packetcapture.pconstructor;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.encryption.RC4;
 import packets.packetcapture.encryption.TickAligner;
-import packets.packetcapture.networktap.netpackets.TcpPacket;
 
 import java.nio.ByteBuffer;
 
@@ -14,13 +13,13 @@ import java.nio.ByteBuffer;
  * simple increment from the previous tick packet. If a new session packet is received then it
  * resets the cipher.
  */
-public class PacketConstructor implements PConstructor, PReset {
+public class PacketConstructor {
 
     private final RC4 rc4Cipher;
     private final PacketProcessor packetProcessor;
     private final ROTMGPacketConstructor rotmgConst;
-    private final StreamConstructor streamConst;
     private final TickAligner tickAligner;
+    private boolean firstNonLargePacket;
 
     /**
      * Packet constructor with specific cipher.
@@ -32,18 +31,21 @@ public class PacketConstructor implements PConstructor, PReset {
         packetProcessor = pp;
         rc4Cipher = r;
         rotmgConst = new ROTMGPacketConstructor(this);
-        streamConst = new StreamConstructor(this, rotmgConst);
         tickAligner = new TickAligner(rc4Cipher);
     }
 
     /**
      * Build method to send the packets retrieved by the sniffer for constructing.
      *
-     * @param packet Raw TCP packets incoming from the net tap.
+     * @param data Raw packet data incoming from the net tap.
      */
-    @Override
-    public void build(TcpPacket packet) {
-        streamConst.build(packet);
+    public void build(byte[] data) {
+        if (firstNonLargePacket) {  // start listening after a non-max packet
+            // prevents errors in pSize.
+            if (data.length < 1460) firstNonLargePacket = false;
+            return;
+        }
+        rotmgConst.build(data);
     }
 
     /**
@@ -80,9 +82,13 @@ public class PacketConstructor implements PConstructor, PReset {
     }
 
     /**
-     * Resets needed for starting the sniffer.
+     * Reset when starting the sniffer. Given the program can start at any time then any packet which
+     * follows a non-max packet will most likely contain the rotmg-packet header which contains the
+     * packet size. If ignoring this flag, any random MTU(maximum transmission unit packet) packet in
+     * a sequence of concatenated packets could produce a random packet size from its first 4 bytes
+     * resulting in a de-sync.
      */
     public void startResets() {
-        rotmgConst.startResets();
+        firstNonLargePacket = true;
     }
 }

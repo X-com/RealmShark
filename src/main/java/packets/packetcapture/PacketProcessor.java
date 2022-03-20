@@ -6,9 +6,8 @@ import packets.PacketType;
 import packets.packetcapture.encryption.RC4;
 import packets.packetcapture.encryption.RotMGRC4Keys;
 import packets.packetcapture.logger.PacketLogger;
-import packets.packetcapture.networktap.Sniffer;
-import packets.packetcapture.networktap.netpackets.TcpPacket;
-import packets.packetcapture.pconstructor.PConstructor;
+import packets.packetcapture.sniff.PProcessor;
+import packets.packetcapture.sniff.Sniffer;
 import packets.packetcapture.pconstructor.PacketConstructor;
 import packets.packetcapture.register.Register;
 import packets.reader.BufferReader;
@@ -23,11 +22,11 @@ import java.util.Arrays;
  * streamConstructor and rotmgConstructor class. After the packets are constructed the RC4 cipher is used
  * decrypt the data. The data is then matched with target classes and emitted through the registry.
  */
-public class PacketProcessor extends Thread {
-    private PConstructor incomingPacketConstructor;
-    private PConstructor outgoingPacketConstructor;
-    private Sniffer sniffer;
-    private PacketLogger logger;
+public class PacketProcessor extends Thread implements PProcessor {
+    private final PacketConstructor incomingPacketConstructor;
+    private final PacketConstructor outgoingPacketConstructor;
+    private final Sniffer sniffer;
+    private final PacketLogger logger;
 
     /**
      * Basic constructor of packetProcessor
@@ -58,9 +57,9 @@ public class PacketProcessor extends Thread {
      * Method to start the packet sniffer that will send packets back to receivedPackets.
      */
     public void tapPackets() {
+        logger.startLogger();
         incomingPacketConstructor.startResets();
         outgoingPacketConstructor.startResets();
-        logger.startLogger();
         try {
             sniffer.startSniffer();
         } catch (Exception e) {
@@ -69,38 +68,27 @@ public class PacketProcessor extends Thread {
     }
 
     /**
-     * Method for retrieving TCP packets incoming from the sniffer.
+     * Incoming byte data received from incoming TCP packets.
      *
-     * @param packet The TCP packets retrieved from the network tap.
+     * @param data Incoming byte stream
      */
-    public void receivedPackets(TcpPacket packet) {
-        // 2050 is default rotmg server port.
-        if (packet.getSrcPort() == 2050) {
-            constIncomingPackets(packet); // Incoming packets have 2050 source port.
-        } else if (packet.getDstPort() == 2050) {
-            constOutgoingPackets(packet);// Outgoing packets have destination port set to 2050.
-        }
-        TomatoBandwidth.setInfo(logger.toString()); // update info GUI if open // TODO: remove this bad garbage asap
+    @Override
+    public void incomingStream(byte[] data) {
+        logger.addIncoming(data.length);
+        incomingPacketConstructor.build(data);
+        TomatoBandwidth.setInfo(logger.toString()); // update info GUI if open
     }
 
     /**
-     * Incoming packets from rotmg servers.
+     * Outgoing byte data received from outgoing TCP packets.
      *
-     * @param packet Incoming TCP packet
+     * @param data Outgoing byte stream
      */
-    private void constIncomingPackets(TcpPacket packet) {
-        logger.addIncoming(packet.getRawData().length);
-        incomingPacketConstructor.build(packet);
-    }
-
-    /**
-     * Outgoing packets to rotmg servers.
-     *
-     * @param packet Outgoing TCP packet
-     */
-    private void constOutgoingPackets(TcpPacket packet) {
-        logger.addOutgoing(packet.getRawData().length);
-        outgoingPacketConstructor.build(packet);
+    @Override
+    public void outgoingStream(byte[] data) {
+        logger.addOutgoing(data.length);
+        outgoingPacketConstructor.build(data);
+        TomatoBandwidth.setInfo(logger.toString()); // update info GUI if open
     }
 
     /**
@@ -108,7 +96,7 @@ public class PacketProcessor extends Thread {
      * Decoded by the cipher and sent back to the processor to be emitted to subscribed users.
      *
      * @param type Constructed packet type.
-     * @param size
+     * @param size size of the packet.
      * @param data Constructed packet data.
      */
     public void processPackets(byte type, int size, ByteBuffer data) {
@@ -146,5 +134,11 @@ public class PacketProcessor extends Thread {
         } catch (Exception e) {
             Util.print(Arrays.toString(e.getStackTrace()).replaceAll(", ", "\n"));
         }
+    }
+
+    @Override
+    public void reset() {
+        incomingPacketConstructor.reset();
+        outgoingPacketConstructor.reset();
     }
 }

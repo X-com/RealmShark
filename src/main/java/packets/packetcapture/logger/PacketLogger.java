@@ -59,7 +59,7 @@ public class PacketLogger {
      * @param length Number of bytes, only the TCP packet.
      */
     public void addOutgoing(int length) {
-        length += 38; // Add IP (20 bytes) and Ethernet (18 bytes) header bytes as well.
+        length += 58; // Add TCP (20 bytes) + IP (20 bytes) + Ethernet (18 bytes) header and tail bytes as well.
         outTotal.add(length);
         int interval = getInterval();
         if (interval != outInterval) {
