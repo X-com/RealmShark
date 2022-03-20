@@ -1,6 +1,4 @@
-package packets.packetcapture.networktap.netpackets;
-
-import packets.packetcapture.networktap.pcap4j.ByteArrays;
+package packets.packetcapture.sniff.netpackets;
 
 import java.time.Instant;
 import java.util.Arrays;

@@ -1,10 +1,10 @@
-package packets.packetcapture.networktap.ardikars;
+package packets.packetcapture.sniff.ardikars;
 
 import com.sun.jna.Pointer;
-import packets.packetcapture.networktap.netpackets.EthernetPacket;
-import packets.packetcapture.networktap.netpackets.Ip4Packet;
-import packets.packetcapture.networktap.netpackets.RawPacket;
-import packets.packetcapture.networktap.netpackets.TcpPacket;
+import packets.packetcapture.sniff.netpackets.EthernetPacket;
+import packets.packetcapture.sniff.netpackets.Ip4Packet;
+import packets.packetcapture.sniff.netpackets.RawPacket;
+import packets.packetcapture.sniff.netpackets.TcpPacket;
 import pcap.spi.Interface;
 import pcap.spi.Pcap;
 import pcap.spi.Service;

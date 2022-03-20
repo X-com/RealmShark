@@ -1,7 +1,6 @@
 package util;
 
-import packets.packetcapture.networktap.netpackets.RawPacket;
-import packets.packetcapture.networktap.pcap4j.EthernetPacket;
+import packets.packetcapture.sniff.netpackets.RawPacket;
 
 import java.util.Arrays;
 

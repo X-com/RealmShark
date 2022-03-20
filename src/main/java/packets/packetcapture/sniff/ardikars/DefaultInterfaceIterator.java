@@ -2,7 +2,7 @@
  * Copyright (c) 2020-2021 Pcap Project
  * SPDX-License-Identifier: MIT OR Apache-2.0
  */
-package packets.packetcapture.networktap.ardikars;
+package packets.packetcapture.sniff.ardikars;
 
 import pcap.spi.Interface;
 

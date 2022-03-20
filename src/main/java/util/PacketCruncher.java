@@ -2,10 +2,10 @@ package util;
 
 import packets.Packet;
 import packets.PacketType;
-import packets.packetcapture.networktap.netpackets.Ip4Packet;
-import packets.packetcapture.networktap.netpackets.RawPacket;
-import packets.packetcapture.networktap.netpackets.TcpPacket;
-import packets.packetcapture.networktap.netpackets.EthernetPacket;
+import packets.packetcapture.sniff.netpackets.Ip4Packet;
+import packets.packetcapture.sniff.netpackets.RawPacket;
+import packets.packetcapture.sniff.netpackets.TcpPacket;
+import packets.packetcapture.sniff.netpackets.EthernetPacket;
 import packets.reader.BufferReader;
 
 import java.io.BufferedReader;
@@ -15,7 +15,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

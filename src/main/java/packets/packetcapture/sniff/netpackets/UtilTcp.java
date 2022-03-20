@@ -1,4 +1,4 @@
-package packets.packetcapture.networktap.netpackets;
+package packets.packetcapture.sniff.netpackets;
 
 public class UtilTcp {
 
