@@ -74,7 +74,7 @@ public class Ip4Packet {
 
         int headerLengthIP = ihl * 4;
         if (headerLengthIP != OPTIONS_OFFSET_IP) {
-            optionsIP = UtilTcp.getBytes(data, OPTIONS_OFFSET_IP, headerLengthIP);
+            optionsIP = UtilTcp.getBytes(data, OPTIONS_OFFSET_IP, headerLengthIP - MIN_IPV4_HEADER_SIZE);
         } else {
             optionsIP = new byte[0];
         }

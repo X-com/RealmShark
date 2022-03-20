@@ -1,4 +1,4 @@
-package packets.packetcapture.networktap.netpackets;
+package packets.packetcapture.sniff.netpackets;
 
 import java.util.Arrays;
 
@@ -69,7 +69,7 @@ public class TcpPacket {
         int headerLengthTCP = (0xFF & dataOffset) * 4;
 
         if (headerLengthTCP != OPTIONS_OFFSET_TCP) {
-            optionsTCP = UtilTcp.getBytes(data, OPTIONS_OFFSET_TCP, headerLengthTCP);
+            optionsTCP = UtilTcp.getBytes(data, OPTIONS_OFFSET_TCP, headerLengthTCP - MIN_TCP_HEADER_SIZE);
         } else {
             optionsTCP = new byte[0];
         }
