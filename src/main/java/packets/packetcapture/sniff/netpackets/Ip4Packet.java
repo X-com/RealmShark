@@ -1,4 +1,4 @@
-package packets.packetcapture.networktap.netpackets;
+package packets.packetcapture.sniff.netpackets;
 
 import java.util.Arrays;
 
@@ -26,6 +26,7 @@ public class Ip4Packet {
     private static final int OPTIONS_OFFSET_IP = 20;
     private static final int MIN_IPV4_HEADER_SIZE = 20;
 
+    private final byte[] rawData;
     private final int version;
     private final int ihl;
     private final int precedence;
@@ -47,7 +48,8 @@ public class Ip4Packet {
     private final byte[] payload;
 
     public Ip4Packet(byte[] data) {
-        int versionAndIhl = UtilTcp.getByte(data, 0);
+        rawData = data;
+        int versionAndIhl = UtilTcp.getByte(data, VERSION_AND_IHL_OFFSET);
         version = (byte) ((versionAndIhl & 0xF0) >> 4);
         ihl = (byte) (versionAndIhl & 0x0F);
 
@@ -195,6 +197,10 @@ public class Ip4Packet {
                 "\n, dataLength=" + payloadLength +
                 "\n, payloadIP=" + Arrays.toString(payload) +
                 "\n}";
+    }
+
+    public byte[] rawData() {
+        return rawData;
     }
 
     private String ipToString(byte[] ip) {
