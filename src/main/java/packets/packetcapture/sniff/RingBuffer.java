@@ -2,7 +2,7 @@
  * Class made by PrgmTrouble. Big thanks to him for implementing it.
  */
 
-package packets.packetcapture.networktap;
+package packets.packetcapture.sniff;
 
 /**
  * This is a simple Ring buffer made to store buffered packets as captured
@@ -66,8 +66,8 @@ public class RingBuffer<T> {
             state = FULL;
         } else {
             if (state == FULL) {
-                System.out.println("resize");
                 T[] next = (T[]) new Object[buffer.length << 1];
+                System.out.println("Ring resize to: " + buffer.length);
                 /*
                     [-----[writePointer,readPointer]-------]
                     start from zero to writePointer or readPointer given they
