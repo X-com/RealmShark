@@ -1,21 +1,20 @@
-package packets.packetcapture.pconstructor;
+package packets.packetcapture.sniff.assembly;
 
 import example.gui.TomatoGUI;
 import example.gui.TomatoMenuBar;
-import packets.packetcapture.networktap.netpackets.TcpPacket;
+import packets.packetcapture.sniff.netpackets.TcpPacket;
 import util.HackyPacketLoggerForABug;
 import util.Util;
 
 import java.util.HashMap;
 
 /**
- * Stream constructor ordering TCP packets in sequence. Packets are sent to the rotmg
- * constructor if they are in sequence.
+ * Stream constructor ordering TCP packets in sequence. Payload is extracted and sent back in its raw form.
  */
-public class StreamConstructor implements PConstructor {
+public class TcpStreamBuilder {
 
     HashMap<Long, TcpPacket> packetMap = new HashMap();
-    PConstructor packetConstructor;
+    PStream stream;
     PReset packetReset;
     public long sequenseNumber;
 
@@ -23,19 +22,12 @@ public class StreamConstructor implements PConstructor {
      * Constructor of StreamConstructor which needs a reset class to reset if reset
      * packet is retrieved and a constructor class to send ordered packets to.
      *
-     * @param pr Reset class if a reset packet is retrieved.
-     * @param pc Constructor class to send ordered packets to.
+     * @param preset  Reset class if a reset packet is retrieved.
+     * @param pstream Constructor class to send ordered packets to.
      */
-    public StreamConstructor(PReset pr, PConstructor pc) {
-        packetReset = pr;
-        packetConstructor = pc;
-    }
-
-    /**
-     * No start resets are needed.
-     */
-    @Override
-    public void startResets() {
+    public TcpStreamBuilder(PReset preset, PStream pstream) {
+        packetReset = preset;
+        stream = pstream;
     }
 
     /**
@@ -43,8 +35,7 @@ public class StreamConstructor implements PConstructor {
      *
      * @param packet TCP packets needing to be ordered.
      */
-    @Override
-    public void build(TcpPacket packet) {
+    public void streamBuilder(TcpPacket packet) {
         if (packet.isResetBit()) {
             reset();
             return;
@@ -64,13 +55,11 @@ public class StreamConstructor implements PConstructor {
             HackyPacketLoggerForABug.dumpData();
         }
 
-//        System.out.println(packet.getDstPort() + " " + packetMap.size());
-
         while (packetMap.containsKey(sequenseNumber)) {
             TcpPacket packetSeqed = packetMap.remove(sequenseNumber);
             if (packet.getPayload() != null) {
                 sequenseNumber += packetSeqed.getPayloadSize();
-//                packetConstructor.build(packetSeqed);
+                stream.stream(packetSeqed.getPayload());
             }
         }
     }

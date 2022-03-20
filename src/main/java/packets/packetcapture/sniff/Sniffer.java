@@ -1,11 +1,12 @@
-package packets.packetcapture.networktap;
+package packets.packetcapture.sniff;
 
-import packets.packetcapture.PacketProcessor;
-import packets.packetcapture.networktap.ardikars.NativeBridge;
-import packets.packetcapture.networktap.ardikars.NativeMappings;
-import packets.packetcapture.networktap.netpackets.EthernetPacket;
-import packets.packetcapture.networktap.netpackets.Ip4Packet;
-import packets.packetcapture.networktap.netpackets.TcpPacket;
+import packets.packetcapture.sniff.ardikars.NativeBridge;
+import packets.packetcapture.sniff.assembly.Ip4Defragmenter;
+import packets.packetcapture.sniff.assembly.TcpStreamBuilder;
+import packets.packetcapture.sniff.netpackets.EthernetPacket;
+import packets.packetcapture.sniff.netpackets.Ip4Packet;
+import packets.packetcapture.sniff.netpackets.RawPacket;
+import packets.packetcapture.sniff.netpackets.TcpPacket;
 import pcap.spi.Interface;
 import pcap.spi.Pcap;
 import pcap.spi.Service;
@@ -14,35 +15,33 @@ import pcap.spi.exception.error.*;
 import pcap.spi.option.DefaultLiveOptions;
 import util.HackyPacketLoggerForABug;
 
-import java.util.Arrays;
-import java.util.Iterator;
-
-import static util.PacketCruncher.getByteArray;
-
 /**
  * A sniffer used to tap packets out of the Windows OS network layer. Before sniffing
  * packets it needs to find what network interface the packets are sent or received from,
  * aka if proxies are used.
  */
 public class Sniffer {
-    private static boolean disableChecksum = true;
-    private String filter = "tcp port 2050";
+    private static boolean disableChecksum = true; // disabled given most routers checksum packets automatically.
+    private final int port = 2050; // 2050 is default rotmg server port.
+    private final String filter = "tcp port " + port;
+    private final Sniffer thisObject;
+    private final RingBuffer<RawPacket> ringBuffer;
+    private final TcpStreamBuilder incoming;
+    private final TcpStreamBuilder outgoing;
     private Pcap[] pcaps;
     private Pcap realmPcap;
-    private PacketProcessor processor;
     private boolean stop;
-    private Sniffer thisObject;
-    private RingBuffer<TcpPacket> ringBuffer;
 
     /**
      * Constructor of a Windows sniffer.
      *
      * @param p Object of parent class calling the sniffer.
      */
-    public Sniffer(PacketProcessor p) {
-        processor = p;
+    public Sniffer(PProcessor processor) {
         thisObject = this;
         ringBuffer = new RingBuffer(32);
+        incoming = new TcpStreamBuilder(processor::reset, processor::incomingStream);
+        outgoing = new TcpStreamBuilder(processor::reset, processor::outgoingStream);
     }
 
     /**
@@ -53,13 +52,14 @@ public class Sniffer {
      * 2050 of type TCP) is found. The all other channels are halted and only the correct
      * interface is listened on.
      *
-     * @throws If any unexpected issues are found.
+     * @throws Errors... If any unexpected issues are found.
      */
     public void startSniffer() throws ErrorException, RadioFrequencyModeNotSupportedException,
             ActivatedException, InterfaceNotSupportTimestampTypeException,
             PromiscuousModePermissionDeniedException, InterfaceNotUpException,
             PermissionDeniedException, NoSuchDeviceException,
             TimestampPrecisionNotSupportedException {
+
         Service service = Service.Creator.create("PcapService");
         Interface[] interfaceList = NativeBridge.getInterfaces(service);
         pcaps = new Pcap[interfaceList.length];
@@ -107,21 +107,13 @@ public class Sniffer {
             @Override
             public void run() {
                 NativeBridge.PacketListener listener = packet -> {
-                    EthernetPacket ethernetPacket = packet.getNewEthernetPacket();
-                    if (ethernetPacket != null) {
-                        Ip4Packet ip4Packet = ethernetPacket.getNewIp4Packet();
-                        if (ip4Packet != null) {
-                            TcpPacket tcpPacket = ip4Packet.getNewTcpPacket();
+                    HackyPacketLoggerForABug.logTCPPacket(packet);
 
-                            HackyPacketLoggerForABug.logTCPPacket(packet);
-
-                            if (tcpPacket != null && computeChecksum(packet.getPayload())) {
-                                ringBuffer.push(tcpPacket);
-                                realmPcap = pcap;
-                                synchronized (thisObject) {
-                                    thisObject.notifyAll();
-                                }
-                            }
+                    if (packet != null && computeChecksum(packet.getPayload())) {
+                        ringBuffer.push(packet);
+                        realmPcap = pcap;
+                        synchronized (thisObject) {
+                            thisObject.notifyAll();
                         }
                     }
                 };
@@ -170,12 +162,35 @@ public class Sniffer {
                     thisObject.wait();
                 }
                 while (!ringBuffer.isEmpty()) {
-                    TcpPacket tcpPacket = ringBuffer.pop();
-                    processor.receivedPackets(tcpPacket);
+                    RawPacket packet = ringBuffer.pop();
+                    EthernetPacket ethernetPacket = packet.getNewEthernetPacket();
+                    if (ethernetPacket != null) {
+                        Ip4Packet ip4packet = ethernetPacket.getNewIp4Packet();
+                        Ip4Packet assembledIp4packet = Ip4Defragmenter.defragment(ip4packet);
+                        if (assembledIp4packet != null) {
+                            TcpPacket tcpPacket = assembledIp4packet.getNewTcpPacket();
+                            if (tcpPacket != null) {
+                                receivedPackets(tcpPacket);
+                            }
+                        }
+                    }
                 }
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Sorting method to arrange incoming and outgoing packets based on ports.
+     *
+     * @param packet The TCP packets retrieved from the network tap.
+     */
+    private void receivedPackets(TcpPacket packet) {
+        if (packet.getSrcPort() == port) { // Incoming packets have 2050 source port.
+            incoming.streamBuilder(packet);
+        } else if (packet.getDstPort() == port) { // Outgoing packets have 2050 destination port.
+            outgoing.streamBuilder(packet);
         }
     }
 
@@ -190,7 +205,6 @@ public class Sniffer {
      * @param bytes Raw bytes of the packet being received.
      * @return true if the checksum is similar to the TCP checksum sent in the packet.
      * <p>
-     * TODO: fix checksum not messing with the system.
      */
     private static boolean computeChecksum(byte[] bytes) {
         if (disableChecksum) return true;
