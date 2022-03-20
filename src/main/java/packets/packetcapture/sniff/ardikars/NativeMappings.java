@@ -29,6 +29,10 @@ import pcap.spi.Interface;
 import pcap.spi.Timestamp;
 import pcap.spi.annotation.Version;
 
+/**
+ * Directly extracted out of ardikars library to make edits possible.
+ * https://github.com/ardikars/pcap
+ */
 public class NativeMappings {
 
     static final int RESTRICTED_LEVEL;

@@ -1,6 +1,9 @@
 package packets.packetcapture.sniff.netpackets;
 
-public class UtilTcp {
+/**
+ * Util class for Raw, Ether, Ip4 and TCP packets.
+ */
+public class UtilNetPackets {
 
     public static final int BYTE_SIZE_IN_BYTES = 1;
     public static final int SHORT_SIZE_IN_BYTES = 2;

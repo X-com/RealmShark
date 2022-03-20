@@ -9,6 +9,10 @@ import java.util.List;
 /**
  * Ip4 de-fragmenter class to re-assemble ip4 packets that have
  * been fragmented through sertan routes over the net.
+ *
+ * Implementation based on article:
+ * https://packetpushers.net/ip-fragmentation-in-detail/
+ *
  * TODO: test this class properly. WARNING UNTESTED!
  */
 public class Ip4Defragmenter {

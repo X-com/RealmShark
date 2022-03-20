@@ -2,6 +2,13 @@ package packets.packetcapture.sniff.netpackets;
 
 import java.util.Arrays;
 
+
+/**
+ * Packet building inspired by work done by Pcap4j (https://github.com/kaitoy/pcap4j)
+ * and Network programming in Linux (http://tcpip.marcolavoie.ca/ip.html)
+ *
+ * Ethernet packet constructor.
+ */
 public class EthernetPacket {
 
     public static final int IEEE802_3_MAX_LENGTH = 1500;
@@ -26,14 +33,14 @@ public class EthernetPacket {
     private final byte[] payload;
 
     public EthernetPacket(byte[] data) {
-        macDest = UtilTcp.getBytes(data, DST_ADDR_OFFSET_ETHER, MAC_SIZE_IN_BYTES);
-        macSrc = UtilTcp.getBytes(data, SRC_ADDR_OFFSET_ETHER, MAC_SIZE_IN_BYTES);
-        int type = UtilTcp.getShort(data, TYPE_OFFSET);
+        macDest = UtilNetPackets.getBytes(data, DST_ADDR_OFFSET_ETHER, MAC_SIZE_IN_BYTES);
+        macSrc = UtilNetPackets.getBytes(data, SRC_ADDR_OFFSET_ETHER, MAC_SIZE_IN_BYTES);
+        int type = UtilNetPackets.getShort(data, TYPE_OFFSET);
 
         if (type == 0x8100) {
-            etherType = UtilTcp.getShort(data, Q802_1HEADER_TYPE_OFFSET);
+            etherType = UtilNetPackets.getShort(data, Q802_1HEADER_TYPE_OFFSET);
             etherRawPayloadOffset = ETHERNET_HEADER_SIZE_WITH_Q802_1HEADER;
-            Q802_1Header = UtilTcp.getBytes(data, TYPE_OFFSET, Q802_1HEADER_SIZE);
+            Q802_1Header = UtilNetPackets.getBytes(data, TYPE_OFFSET, Q802_1HEADER_SIZE);
         } else {
             etherType = type;
             Q802_1Header = new byte[0];
@@ -50,7 +57,7 @@ public class EthernetPacket {
         } else {
             payloadSize = currentPayloadSize;
         }
-        payload = UtilTcp.getBytes(data, etherRawPayloadOffset, payloadSize);
+        payload = UtilNetPackets.getBytes(data, etherRawPayloadOffset, payloadSize);
     }
 
     public int getRawEtherOffset() {

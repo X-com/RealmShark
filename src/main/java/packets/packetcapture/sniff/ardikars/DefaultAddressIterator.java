@@ -9,6 +9,10 @@ import pcap.spi.Address;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * Directly extracted out of ardikars library to make edits possible.
+ * https://github.com/ardikars/pcap
+ */
 public class DefaultAddressIterator implements Iterator<Address> {
     private Address next;
 

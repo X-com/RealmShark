@@ -2,6 +2,12 @@ package packets.packetcapture.sniff.netpackets;
 
 import java.util.Arrays;
 
+/**
+ * Packet building inspired by work done by Pcap4j (https://github.com/kaitoy/pcap4j)
+ * and Network programming in Linux (http://tcpip.marcolavoie.ca/ip.html)
+ *
+ * Tcp packet constructor.
+ */
 public class TcpPacket {
 
     private static final int SRC_PORT_OFFSET = 0;
@@ -45,16 +51,16 @@ public class TcpPacket {
 
     public TcpPacket(byte[] data, int length) {
         rawData = data;
-        srcPort = UtilTcp.getShort(data, SRC_PORT_OFFSET);
-        dstPort = UtilTcp.getShort(data, DST_PORT_OFFSET);
-        sequenceNumber = UtilTcp.getIntAsLong(data, SEQUENCE_NUMBER_OFFSET);
-        acknowledgmentNumber = UtilTcp.getIntAsLong(data, ACKNOWLEDGMENT_NUMBER_OFFSET);
+        srcPort = UtilNetPackets.getShort(data, SRC_PORT_OFFSET);
+        dstPort = UtilNetPackets.getShort(data, DST_PORT_OFFSET);
+        sequenceNumber = UtilNetPackets.getIntAsLong(data, SEQUENCE_NUMBER_OFFSET);
+        acknowledgmentNumber = UtilNetPackets.getIntAsLong(data, ACKNOWLEDGMENT_NUMBER_OFFSET);
 
-        int sizeControlBits = UtilTcp.getByte(data, DATA_OFFSET_BITS_OFFSET);
+        int sizeControlBits = UtilNetPackets.getByte(data, DATA_OFFSET_BITS_OFFSET);
         dataOffset = (sizeControlBits & 0xF0) >> 4;
         reserved = sizeControlBits & 0xF;
 
-        int reservedAndControlBits = UtilTcp.getByte(data, CONTROL_BITS_OFFSET);
+        int reservedAndControlBits = UtilNetPackets.getByte(data, CONTROL_BITS_OFFSET);
         urg = (reservedAndControlBits & 0x0020) != 0;
         ack = (reservedAndControlBits & 0x0010) != 0;
         psh = (reservedAndControlBits & 0x0008) != 0;
@@ -62,21 +68,21 @@ public class TcpPacket {
         syn = (reservedAndControlBits & 0x0002) != 0;
         fin = (reservedAndControlBits & 0x0001) != 0;
 
-        window = UtilTcp.getShort(data, WINDOW_OFFSET);
-        checksum = UtilTcp.getShort(data, CHECKSUM_OFFSET);
-        urgentPointer = UtilTcp.getShort(data, URGENT_POINTER_OFFSET);
+        window = UtilNetPackets.getShort(data, WINDOW_OFFSET);
+        checksum = UtilNetPackets.getShort(data, CHECKSUM_OFFSET);
+        urgentPointer = UtilNetPackets.getShort(data, URGENT_POINTER_OFFSET);
 
         int headerLengthTCP = (0xFF & dataOffset) * 4;
 
         if (headerLengthTCP != OPTIONS_OFFSET_TCP) {
-            optionsTCP = UtilTcp.getBytes(data, OPTIONS_OFFSET_TCP, headerLengthTCP - MIN_TCP_HEADER_SIZE);
+            optionsTCP = UtilNetPackets.getBytes(data, OPTIONS_OFFSET_TCP, headerLengthTCP - MIN_TCP_HEADER_SIZE);
         } else {
             optionsTCP = new byte[0];
         }
 
         payloadSize = length - headerLengthTCP;
         if (payloadSize != 0) {
-            payload = UtilTcp.getBytes(data, headerLengthTCP, payloadSize);
+            payload = UtilNetPackets.getBytes(data, headerLengthTCP, payloadSize);
         } else {
             payload = new byte[0];
         }

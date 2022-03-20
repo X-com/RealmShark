@@ -3,6 +3,9 @@ package packets.packetcapture.sniff.netpackets;
 import java.time.Instant;
 import java.util.Arrays;
 
+/**
+ * Raw packet constructor for retrieving packets of the wire.
+ */
 public class RawPacket {
 
     private final Instant instant;
