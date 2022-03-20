@@ -6,7 +6,6 @@ import packets.PacketType;
 import packets.incoming.TextPacket;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.register.Register;
-
 import java.net.URL;
 
 /**
@@ -40,7 +39,8 @@ public class ExampleModTomato {
 
             Example 2: Subscribing to TEXT packets
          */
-        Register.INSTANCE.register(PacketType.TEXT, (packet) -> text(packet));
+        // [ExampleModTomato::text] is the same as [(packet) - > text(packet)]
+        Register.INSTANCE.register(PacketType.TEXT, ExampleModTomato::text);
 
         new TomatoGUI().create();
     }
