@@ -64,7 +64,7 @@ public class PacketConstructor {
             boolean sync = tickAligner.checkRC4Alignment(encryptedData, size, type);
 
             if (sync) {
-                rc4Cipher.decrypt(5, encryptedData);
+                rc4Cipher.decrypt(5, encryptedData); // encryptedData is decrypted in this method
                 packetProcessor.processPackets(type, size, encryptedData);
             }
         } catch (Exception e) {

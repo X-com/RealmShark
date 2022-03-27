@@ -137,8 +137,12 @@ public class PacketProcessor extends Thread implements PProcessor {
     }
 
     @Override
-    public void reset() {
+    public void resetIncoming() {
         incomingPacketConstructor.reset();
+    }
+
+    @Override
+    public void resetOutgoing() {
         outgoingPacketConstructor.reset();
     }
 }

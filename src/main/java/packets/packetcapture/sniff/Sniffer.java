@@ -40,8 +40,8 @@ public class Sniffer {
     public Sniffer(PProcessor processor) {
         thisObject = this;
         ringBuffer = new RingBuffer(32);
-        incoming = new TcpStreamBuilder(processor::reset, processor::incomingStream);
-        outgoing = new TcpStreamBuilder(processor::reset, processor::outgoingStream);
+        incoming = new TcpStreamBuilder(processor::resetIncoming, processor::incomingStream);
+        outgoing = new TcpStreamBuilder(processor::resetOutgoing, processor::outgoingStream);
     }
 
     /**
@@ -133,15 +133,13 @@ public class Sniffer {
                 thisObject.wait();
             }
             while (!stop) {
-                for (int s = 0; s < pcaps.length; s++) {
-                    if (realmPcap != null) {
-                        for (int c = 0; c < pcaps.length; c++) {
-                            if (s != c) {
-                                pcaps[c].close();
-                            }
+                if (realmPcap != null) {
+                    for (int c = 0; c < pcaps.length; c++) {
+                        if (realmPcap != pcaps[c]) {
+                            pcaps[c].close();
                         }
-                        return;
                     }
+                    return;
                 }
                 pause(100);
             }

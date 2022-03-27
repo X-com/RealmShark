@@ -6,9 +6,14 @@ package packets.packetcapture.sniff;
 public interface PProcessor {
 
     /**
-     * Reset called when a TCP reset packet is received.
+     * Reset called when a TCP reset packet is received on incoming packets.
      */
-    void reset();
+    void resetIncoming();
+
+    /**
+     * Reset called when a TCP reset packet is received on outgoing packets.
+     */
+    void resetOutgoing();
 
     /**
      * Incoming stream from the TCP payload.
