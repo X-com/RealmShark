@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 public class PacketCruncher {
     public static void main(String[] args) {
         try {
-            new PacketCruncher().run();
+            new PacketCruncher().crunch();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -31,7 +31,7 @@ public class PacketCruncher {
 
     public void crunch() {
 //        String s = "";
-        String s = "[0, 0, 0, 27, 30, 1, 34, 54, -8, 0, -5, 33, -39, -1, 67, 21, -22, 44, 67, 5, -98, 99, -64, 55, 64, -36, 0]";
+        String s = "[0, 0, 0, 13, 13, -120, -98, -23, -28, 119, 34, -6, 87]";
 //        String s1 = "  Hex stream: 00 00 00 05 51 00 00 00 27 2a 9d 81 b3 47 d1 98 65 fc a3 de 6f ec 25 e9 70 c4 60 85 21 31 a6 41 f2 23 3a 60 8c a4 5d b6 57 e3 d7 17 00 00 00 0d 1f 6b e8 1e fe ac 11 7e 63 00 00 00 05 51";
 //        String s2 = "  Hex stream: 00 00 00 05 51 00 00 00 33 2a 2d 09 c3 79 d6 2a 40 90 03 d3 cd 91 24 8e 00 71 4a ec af 9f d3 be 51 c1 12 e3 be ec 64 be 70 71 30 f9 ec df 73 9b 9a 7d cc 8a 51 8f bf 22 00 00 00 05 51";
 //        String s3 = "  Hex stream: 00 00 00 33 2a 03 a2 5d 1f ba 82 e6 5b 2d 5a 81 44 0f 65 36 3c 00 86 48 76 70 46 4c 00 1f 9c fa dd f3 27 13 83 2b 1e 71 bc 7c 3c 40 5f 14 cc 2f a1 26 9c";
