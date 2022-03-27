@@ -2,6 +2,9 @@ package util;
 
 import packets.Packet;
 import packets.PacketType;
+import packets.packetcapture.encryption.RC4;
+import packets.packetcapture.encryption.RotMGRC4Keys;
+import packets.packetcapture.encryption.TickAligner;
 import packets.packetcapture.sniff.netpackets.Ip4Packet;
 import packets.packetcapture.sniff.netpackets.RawPacket;
 import packets.packetcapture.sniff.netpackets.TcpPacket;
@@ -15,6 +18,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,7 +27,8 @@ import java.util.regex.Pattern;
 public class PacketCruncher {
     public static void main(String[] args) {
         try {
-            new PacketCruncher().crunch();
+            Util.saveLogs = false;
+            new PacketCruncher().run();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,7 +86,9 @@ public class PacketCruncher {
     private void run() {
         System.out.println("Sta");
 
-        ArrayList<byte[]> list = readFile();
+        boolean incoming = true;
+
+        ArrayList<byte[]> list = readFile(incoming);
         boolean first = true;
         int id = 0;
         int counter = 0;
@@ -89,6 +96,11 @@ public class PacketCruncher {
         long nextSeq = 0;
         int starting = 0;
         LinkedHashMap<Long, TcpPacket> packetMap = new LinkedHashMap<>();
+
+        RC4 rc4;
+        if(incoming) rc4 = new RC4(RotMGRC4Keys.INCOMING_STRING);
+        else rc4 = new RC4(RotMGRC4Keys.OUTGOING_STRING);
+        TickAligner tickAligner = new TickAligner(rc4);
 
         for (byte[] b : list) {
             counter++;
@@ -111,9 +123,10 @@ public class PacketCruncher {
 //                    sequenseNumber = tcpPacket.getHeader().getSequenceNumber();
                     sequenseNumber = 0;
                     System.out.println("-----------------------------------------------");
-                    System.out.println("-----------------------------------------------" + tcpPacket.isFin());
-                    System.out.println("-----------------------------------------------" + tcpPacket.isSyn());
-                    System.out.println("-----------------------------------------------" + tcpPacket.isRst());
+                    System.out.println("-----------------------------------------------isFin " + tcpPacket.isFin());
+                    System.out.println("-----------------------------------------------isSyn " + tcpPacket.isSyn());
+                    System.out.println("-----------------------------------------------isRst " + tcpPacket.isRst());
+                    tickAligner.reset();
                     continue;
                 }
 
@@ -138,7 +151,7 @@ public class PacketCruncher {
                 }
                 packetMap.put(currentSeq, tcpPacket);
                 int size = packetMap.size();
-                if (size > 0) System.out.println("OVERSIZE " + size + " " + counter);
+                if (size > 0) System.out.println("PACKETMAP " + size + " " + counter);
 
 //                if (counter >= 410) {
 //                    dif = nextSeq - sequenseNumber - (packet.getPayload() == null ? 0 : packet.getPayload().length());
@@ -153,6 +166,7 @@ public class PacketCruncher {
                     if (packetSeqed.getPayload() != null) {
                         sequenseNumber += packetSeqed.getPayloadSize();
 //                        if (counter > starting) System.out.println("B: " + sequenseNumber);
+                        build(tcpPacket.getPayload(), tickAligner, rc4);
                     }
                 }
 //                if (packet.getPayload() != null) sequenseNumber += packet.getPayload().length();
@@ -165,12 +179,49 @@ public class PacketCruncher {
         System.out.println("Fin " + packetMap.size() + " " + id + " " + list.size());
     }
 
-    private ArrayList<byte[]> readFile() {
-        String fileName = "error/2022-03-19-12.12.47.data";
+    private byte[] bytes = new byte[200000];
+    private int index;
+    private int pSize = 0;
+    private boolean firstNonLargePacket = true;
+    public void build(byte[] data, TickAligner tickAligner, RC4 r) {
+        if (firstNonLargePacket) {  // start listening after a non-max packet
+            // prevents errors in pSize.
+            if (data.length < 1460) firstNonLargePacket = false;
+            return;
+        }
+        for (byte b : data) {
+            bytes[index++] = b;
+            if (index >= 4) {
+                if (pSize == 0) {
+                    pSize = Util.decodeInt(bytes);
+                    if (pSize > 200000) {
+                        Util.print("Oversize packet construction.");
+                        pSize = 0;
+                        return;
+                    }
+                }
+
+                if (index == pSize) {
+                    index = 0;
+                    byte[] realmPacket = Arrays.copyOfRange(bytes, 0, pSize);
+                    pSize = 0;
+                    ByteBuffer packetData = ByteBuffer.wrap(realmPacket).order(ByteOrder.BIG_ENDIAN);
+                    int size = packetData.getInt();
+                    byte type = packetData.get();
+                    if(tickAligner.checkRC4Alignment(packetData, size, type)){
+                        r.skip(size - 5);
+                    }
+                }
+            }
+        }
+    }
+
+    private ArrayList<byte[]> readFile(boolean incoming) {
+        String fileName = "error/2022-03-27-16.35.02.data";
         Pattern p = Pattern.compile("  Sequence Number: ([0-9]*)");
 //        ArrayList<Pair<Long, Integer>> list = new ArrayList<>();
         ArrayList<byte[]> list2 = new ArrayList<>();
-
+        boolean firstBatch = false;
         try {
             BufferedReader br = new BufferedReader(new FileReader(fileName));
             String line;
@@ -182,8 +233,15 @@ public class PacketCruncher {
 //                    System.out.println(m.group(1));
                 }
                 i++;
-//                if (line.startsWith("[4")) {
-                if (line.startsWith("[56")) {
+                if (line.startsWith("[")) {
+                    firstBatch = true;
+                } else if (firstBatch) {
+//                    firstBatch = false;
+                    return list2;
+                }
+                String in = "[4";
+                if(incoming) in = "[5";
+                if (line.startsWith(in)) {
                     byte[] b = getByteArray(line);
 //                    if (computeChecksum(b)) list2.add(b);
 //                    else System.out.println("Checksum fail " + i);
