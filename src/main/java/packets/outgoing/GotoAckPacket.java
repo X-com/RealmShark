@@ -11,9 +11,14 @@ public class GotoAckPacket extends Packet {
      * The current client time.
      */
     public int time;
+    /**
+     * Unknown boolean
+     */
+    private boolean unknownBoolean;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
         time = buffer.readInt();
+        unknownBoolean = buffer.readBoolean();
     }
 }
