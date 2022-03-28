@@ -49,7 +49,8 @@ public class TcpStreamBuilder {
         if (packetMap.size() > 50) { // Temp hacky solution until better solution is found. TODO: fix this
             String errorMsg = "Error! Stream Constructor reached 50 packets. Shutting down.";
             Util.print(errorMsg);
-            TomatoGUI.appendTextAreaText(errorMsg);
+            TomatoGUI.appendTextAreaChat(errorMsg);
+            TomatoGUI.appendTextAreaKeypop(errorMsg);
             TomatoMenuBar.stopPacketSniffer();
             reset();
             HackyPacketLoggerForABug.dumpData();

@@ -9,10 +9,10 @@ import java.awt.*;
  * Example GUI for Tomato mod.
  */
 public class TomatoGUI {
-    private static JTextArea textArea;
+    private static JTextArea textAreaChat;
+    private static JTextArea textAreaKeypop;
     private static JLabel statusLabel;
     private static JFrame frame;
-    private JScrollPane scroll;
     private JMenuBar jMenuBar;
     private JPanel mainPanel;
     private TomatoMenuBar menuBar;
@@ -28,25 +28,40 @@ public class TomatoGUI {
         } catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
-        mainPanel = new JPanel();
 
-        textArea = new JTextArea();
-        textArea.setEnabled(true);
-        textArea.setEditable(false);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        scroll = new JScrollPane(textArea);
-        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scroll.setAutoscrolls(true);
-        new SmartScroller(scroll);
+        JTabbedPane tabbedPane = new JTabbedPane();
+        textAreaChat = new JTextArea();
+        textAreaChat.setEnabled(true);
+        textAreaChat.setEditable(false);
+        textAreaChat.setLineWrap(true);
+        textAreaChat.setWrapStyleWord(true);
+        JScrollPane scrollChat = new JScrollPane(textAreaChat);
+        scrollChat.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollChat.setAutoscrolls(true);
+        new SmartScroller(scrollChat);
+        tabbedPane.addTab("Chat", scrollChat);
+
+        textAreaKeypop = new JTextArea();
+        textAreaKeypop.setEnabled(true);
+        textAreaKeypop.setEditable(false);
+        textAreaKeypop.setLineWrap(true);
+        textAreaKeypop.setWrapStyleWord(true);
+        JScrollPane scrollKeypop = new JScrollPane(textAreaKeypop);
+        scrollKeypop.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollKeypop.setAutoscrolls(true);
+        new SmartScroller(scrollKeypop);
+        tabbedPane.addTab("Key-pops", scrollKeypop);
+
 
         center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
         menuBar = new TomatoMenuBar();
         jMenuBar = menuBar.make();
 
         statusLabel = new JLabel(" Network Tap: OFF");
+
+        mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
-        mainPanel.add(scroll, BorderLayout.CENTER);
+        mainPanel.add(tabbedPane, BorderLayout.CENTER);
         mainPanel.add(statusLabel, BorderLayout.SOUTH);
 
         icon = Toolkit.getDefaultToolkit().getImage(ExampleModTomato.imagePath);
@@ -70,12 +85,21 @@ public class TomatoGUI {
     }
 
     /**
-     * Add text to the text area.
+     * Add text to the chat text area.
      *
      * @param s The text to be added at the end of text area.
      */
-    public static void appendTextAreaText(String s) {
-        if (textArea != null) textArea.append(s);
+    public static void appendTextAreaChat(String s) {
+        if (textAreaChat != null) textAreaChat.append(s);
+    }
+
+    /**
+     * Add text to the key pop text area.
+     *
+     * @param s The text to be added at the end of text area.
+     */
+    public static void appendTextAreaKeypop(String s) {
+        if (textAreaKeypop != null) textAreaKeypop.append(s);
     }
 
     /**

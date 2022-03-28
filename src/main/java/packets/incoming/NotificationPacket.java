@@ -96,4 +96,21 @@ public class NotificationPacket extends Packet {
             default:
         }
     }
+
+    @Override
+    public String toString() {
+        return "NotificationPacket" +
+                "\n effect=" + effect +
+                "\n extra=" + extra +
+                "\n objectId=" + objectId +
+                "\n message='" + message +
+                "\n uiExtra=" + uiExtra +
+                "\n queuePos=" + queuePos +
+                "\n color=" + color +
+                "\n pictureType=" + pictureType +
+                "\n unknownInt1=" + unknownInt1 +
+                "\n unknownShort1=" + unknownShort1 +
+                "\n unknownInt2=" + unknownInt2 +
+                "\n unknownInt3=" + unknownInt3;
+    }
 }
