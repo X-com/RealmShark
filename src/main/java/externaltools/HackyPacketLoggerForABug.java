@@ -1,6 +1,7 @@
-package util;
+package externaltools;
 
 import packets.packetcapture.sniff.netpackets.RawPacket;
+import util.Util;
 
 import java.util.Arrays;
 

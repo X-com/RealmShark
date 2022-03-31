@@ -1,11 +1,8 @@
 package util;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class IdToName {
@@ -14,7 +11,6 @@ public class IdToName {
     private final String display;
     private final String clazz;
     private final String group;
-
     private static final HashMap<Integer, IdToName> ID = new HashMap<>();
 
     public IdToName(int i, String n, String d, String c, String g) {

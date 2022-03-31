@@ -1,7 +1,7 @@
 package packets.packetcapture.encryption;
 
 import packets.PacketType;
-import util.HackyPacketLoggerForABug;
+import externaltools.HackyPacketLoggerForABug;
 import util.Util;
 
 import java.nio.ByteBuffer;

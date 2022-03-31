@@ -13,7 +13,7 @@ import pcap.spi.Service;
 import pcap.spi.exception.ErrorException;
 import pcap.spi.exception.error.*;
 import pcap.spi.option.DefaultLiveOptions;
-import util.HackyPacketLoggerForABug;
+import externaltools.HackyPacketLoggerForABug;
 
 /**
  * A sniffer used to tap packets out of the Windows OS network layer. Before sniffing

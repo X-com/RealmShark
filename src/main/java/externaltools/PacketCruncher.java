@@ -1,4 +1,4 @@
-package util;
+package externaltools;
 
 import packets.Packet;
 import packets.PacketType;
@@ -10,6 +10,7 @@ import packets.packetcapture.sniff.netpackets.RawPacket;
 import packets.packetcapture.sniff.netpackets.TcpPacket;
 import packets.packetcapture.sniff.netpackets.EthernetPacket;
 import packets.reader.BufferReader;
+import util.Util;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

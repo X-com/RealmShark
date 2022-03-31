@@ -1,4 +1,6 @@
-package util;
+package externaltools;
+
+import util.Pair;
 
 import java.io.*;
 import java.util.ArrayList;
