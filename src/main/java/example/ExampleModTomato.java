@@ -8,6 +8,8 @@ import packets.incoming.NotificationPacket;
 import packets.incoming.TextPacket;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.register.Register;
+import util.IdToName;
+import util.Util;
 
 import java.net.URL;
 import java.util.regex.Matcher;
@@ -102,7 +104,7 @@ public class ExampleModTomato {
                 Matcher m = popperName.matcher(msg);
                 if (m.matches()) {
                     String playerName = m.group(1);
-                    TomatoGUI.appendTextAreaKeypop(String.format("[%s]: %s\n", playerName, nPacket.pictureType));
+                    TomatoGUI.appendTextAreaKeypop(String.format("%s [%s]: %s\n", Util.getHourTime(), playerName, IdToName.name(nPacket.pictureType)));
                 }
             }
         }

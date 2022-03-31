@@ -139,4 +139,15 @@ public class Util {
         }
         return sb.toString();
     }
+
+    /**
+     * Gets string format of the current time.
+     *
+     * @return String of the current time in hour:min:sec
+     */
+    public static String getHourTime() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        return dtf.format(now);
+    }
 }
