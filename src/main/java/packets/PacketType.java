@@ -144,7 +144,11 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
           MODERATOR_ACTION_MESSAGE(124, Outgoing, ModeratorActionMessagePacket::new),
                         // Missing
                 CREEP_MOVE_MESSAGE(126, Outgoing, CreepMoveMessagePacket::new),
-                       UNKNOWN134(-122, Outgoing, UnknownPacket134::new);
+                        // Missing
+                       UNKNOWN134(-122, Outgoing, UnknownPacket134::new),
+                        // Missing
+                       UNKNOWN145(-111, Outgoing, UnknownPacket145::new);
+
 
     private static final HashMap<Integer, PacketType> PACKET_TYPE = new HashMap<>();
     private static final HashMap<Integer, IPacket> PACKET_TYPE_FACTORY = new HashMap<>();
