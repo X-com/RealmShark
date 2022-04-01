@@ -5,6 +5,7 @@ import packets.PacketType;
 import packets.packetcapture.encryption.RC4;
 import packets.packetcapture.encryption.RotMGRC4Keys;
 import packets.packetcapture.encryption.TickAligner;
+import packets.packetcapture.sniff.RingBuffer;
 import packets.packetcapture.sniff.netpackets.Ip4Packet;
 import packets.packetcapture.sniff.netpackets.RawPacket;
 import packets.packetcapture.sniff.netpackets.TcpPacket;
@@ -25,11 +26,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class PacketCruncher {
+public class PacketTester {
+    static final String FILE_NAME = "error/2022-04-01-10.55.29.data";
+
     public static void main(String[] args) {
+        System.out.println("clearconsole");
         try {
             Util.saveLogs = false;
-            new PacketCruncher().run();
+            new PacketTester().testRingbuff();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -51,6 +55,26 @@ public class PacketCruncher {
 
 //        stringifyData(data);
         deserialize(data);
+    }
+
+    public void testRingbuff() {
+        RingBuffer<Integer> ringBuffer = new RingBuffer(32);
+        int test;
+        for(test = 0; test < 16; test++){
+            System.out.println("push: " + test);
+            ringBuffer.push(test);
+        }
+        for(int i = 0; i < 15; i++){
+            System.out.println("pop : " + ringBuffer.pop());
+        }
+
+        for(; test < (16+32); test++){
+            System.out.println("push: " + test);
+            ringBuffer.push(test);
+        }
+        for(int i = 0; i < 34; i++){
+            System.out.println("pop : " + ringBuffer.pop());
+        }
     }
 
     public void deserialize(byte[] data) {
@@ -87,7 +111,7 @@ public class PacketCruncher {
     private void run() {
         System.out.println("Sta");
 
-        boolean incoming = true;
+        boolean incoming = false;
 
         ArrayList<byte[]> list = readFile(incoming);
         boolean first = true;
@@ -218,13 +242,12 @@ public class PacketCruncher {
     }
 
     private ArrayList<byte[]> readFile(boolean incoming) {
-        String fileName = "error/2022-03-27-16.35.02.data";
         Pattern p = Pattern.compile("  Sequence Number: ([0-9]*)");
 //        ArrayList<Pair<Long, Integer>> list = new ArrayList<>();
         ArrayList<byte[]> list2 = new ArrayList<>();
         boolean firstBatch = false;
         try {
-            BufferedReader br = new BufferedReader(new FileReader(fileName));
+            BufferedReader br = new BufferedReader(new FileReader(FILE_NAME));
             String line;
             int i = 0;
             while ((line = br.readLine()) != null) {
