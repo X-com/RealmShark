@@ -20,7 +20,7 @@ public class RingBuffer<T> {
 
     private static final byte EMPTY = 0, NORMAL = 1, FULL = 2;
     private T[] buffer;
-    private int read = 0, writePointer = 0;
+    private int readPointer = 0, writePointer = 0;
     private byte state = EMPTY;
 
     /**
@@ -47,10 +47,10 @@ public class RingBuffer<T> {
      * @return The number of buffered elements in the buffer.
      */
     public synchronized int size() {
-        if (read > writePointer) {
-            return writePointer + (buffer.length - read);
+        if (readPointer > writePointer) {
+            return writePointer + (buffer.length - readPointer);
         } else {
-            return writePointer - read;
+            return writePointer - readPointer;
         }
     }
 
@@ -62,12 +62,11 @@ public class RingBuffer<T> {
      * @param item Items to be inserted into the buffer.
      */
     public synchronized void push(T item) {
-        if ((writePointer + 1) % buffer.length == read) {
+        if ((writePointer + 1) % buffer.length == readPointer) {
             state = FULL;
         } else {
             if (state == FULL) {
                 T[] next = (T[]) new Object[buffer.length << 1];
-                System.out.println("Ring resize to: " + buffer.length);
                 /*
                     [-----[writePointer,readPointer]-------]
                     start from zero to writePointer or readPointer given they
@@ -79,6 +78,7 @@ public class RingBuffer<T> {
                     into new
                  */
                 System.arraycopy(buffer, writePointer, next, buffer.length + writePointer, buffer.length - writePointer);
+                readPointer += buffer.length;
                 buffer = next;
             }
             state = NORMAL;
@@ -94,15 +94,15 @@ public class RingBuffer<T> {
      * @return Returns the oldest element in the buffer and removes it.
      */
     public synchronized T pop() {
-        if (read + 1 == writePointer) {
+        if (readPointer + 1 == writePointer) {
             state = EMPTY;
         } else if (state == EMPTY) {
             return null;
         } else {
             state = NORMAL;
         }
-        T buf = buffer[read];
-        read = (read + 1) % buffer.length;
+        T buf = buffer[readPointer];
+        readPointer = (readPointer + 1) % buffer.length;
         return buf;
     }
 }

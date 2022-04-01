@@ -14,6 +14,9 @@ import pcap.spi.exception.ErrorException;
 import pcap.spi.exception.error.*;
 import pcap.spi.option.DefaultLiveOptions;
 import externaltools.HackyPacketLoggerForABug;
+import util.Util;
+
+import java.util.Arrays;
 
 /**
  * A sniffer used to tap packets out of the Windows OS network layer. Before sniffing
@@ -54,11 +57,7 @@ public class Sniffer {
      *
      * @throws Errors... If any unexpected issues are found.
      */
-    public void startSniffer() throws ErrorException, RadioFrequencyModeNotSupportedException,
-            ActivatedException, InterfaceNotSupportTimestampTypeException,
-            PromiscuousModePermissionDeniedException, InterfaceNotUpException,
-            PermissionDeniedException, NoSuchDeviceException,
-            TimestampPrecisionNotSupportedException {
+    public void startSniffer() throws ErrorException, RadioFrequencyModeNotSupportedException, ActivatedException, InterfaceNotSupportTimestampTypeException, PromiscuousModePermissionDeniedException, InterfaceNotUpException, PermissionDeniedException, NoSuchDeviceException, TimestampPrecisionNotSupportedException {
 
         Service service = Service.Creator.create("PcapService");
         Interface[] interfaceList = NativeBridge.getInterfaces(service);
@@ -110,7 +109,9 @@ public class Sniffer {
                     HackyPacketLoggerForABug.logTCPPacket(packet);
 
                     if (packet != null && computeChecksum(packet.getPayload())) {
-                        ringBuffer.push(packet);
+                        synchronized (ringBuffer) {
+                            ringBuffer.push(packet);
+                        }
                         realmPcap = pcap;
                         synchronized (thisObject) {
                             thisObject.notifyAll();
@@ -160,17 +161,28 @@ public class Sniffer {
                     thisObject.wait();
                 }
                 while (!ringBuffer.isEmpty()) {
-                    RawPacket packet = ringBuffer.pop();
-                    EthernetPacket ethernetPacket = packet.getNewEthernetPacket();
-                    if (ethernetPacket != null) {
-                        Ip4Packet ip4packet = ethernetPacket.getNewIp4Packet();
-                        Ip4Packet assembledIp4packet = Ip4Defragmenter.defragment(ip4packet);
-                        if (assembledIp4packet != null) {
-                            TcpPacket tcpPacket = assembledIp4packet.getNewTcpPacket();
-                            if (tcpPacket != null) {
-                                receivedPackets(tcpPacket);
+                    RawPacket packet = null;
+                    synchronized (ringBuffer) {
+                        packet = ringBuffer.pop();
+                    }
+                    if (packet == null) continue;
+
+                    try {
+                        EthernetPacket ethernetPacket = packet.getNewEthernetPacket();
+                        if (ethernetPacket != null) {
+                            Ip4Packet ip4packet = ethernetPacket.getNewIp4Packet();
+                            Ip4Packet assembledIp4packet = Ip4Defragmenter.defragment(ip4packet);
+                            if (assembledIp4packet != null) {
+                                TcpPacket tcpPacket = assembledIp4packet.getNewTcpPacket();
+                                if (tcpPacket != null) {
+                                    receivedPackets(tcpPacket);
+                                }
                             }
                         }
+                    } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException | NullPointerException e) {
+                        Util.print(e.getMessage());
+                        Util.print(Arrays.toString(packet.getPayload()));
+                        e.printStackTrace();
                     }
                 }
             }

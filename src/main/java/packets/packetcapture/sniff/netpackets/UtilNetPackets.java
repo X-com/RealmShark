@@ -18,10 +18,13 @@ public class UtilNetPackets {
             throw new IllegalArgumentException("Array is empty");
         }
         if (len == 0) {
-            throw new RuntimeException("Zero len error");
+            throw new IllegalArgumentException("Zero len error");
         }
-        if (offset < 0 || len < 0) {
-            throw new ArrayIndexOutOfBoundsException("Offset or len negative");
+        if (offset < 0) {
+            throw new ArrayIndexOutOfBoundsException("Offset negative " + offset);
+        }
+        if (len < 0) {
+            throw new ArrayIndexOutOfBoundsException("Len negative " + len);
         }
         if (offset + len > array.length) {
             throw new ArrayIndexOutOfBoundsException("Len plus offset larger than array offset: " + offset + " len: " + len + " array: " + array.length);

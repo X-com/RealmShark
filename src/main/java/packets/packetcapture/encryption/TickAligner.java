@@ -66,7 +66,7 @@ public class TickAligner {
                 byte[] tick = Arrays.copyOfRange(encryptedData.array(), 5, 5 + 4);
                 if (TickA != null) {
                     rc4.reset();
-                    System.out.println("Packets between ticks: " + packetBytes);
+                    System.out.println("Packet bytes between sync packets: " + packetBytes);
                     int i = RC4Aligner.syncCipher(rc4, TickA, tick, packetBytes);
                     if (i != -1) {
                         synced = true;
