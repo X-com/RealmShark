@@ -13,7 +13,7 @@ import pcap.spi.Service;
 import pcap.spi.exception.ErrorException;
 import pcap.spi.exception.error.*;
 import pcap.spi.option.DefaultLiveOptions;
-import externaltools.HackyPacketLoggerForABug;
+import bugfixingtools.HackyPacketLoggerForABug;
 import util.Util;
 
 import java.util.Arrays;

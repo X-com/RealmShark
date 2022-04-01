@@ -1,4 +1,4 @@
-package externaltools;
+package bugfixingtools;
 
 import packets.Packet;
 import packets.PacketType;
