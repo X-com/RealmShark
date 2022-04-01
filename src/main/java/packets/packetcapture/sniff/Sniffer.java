@@ -57,7 +57,10 @@ public class Sniffer {
      *
      * @throws Errors... If any unexpected issues are found.
      */
-    public void startSniffer() throws ErrorException, RadioFrequencyModeNotSupportedException, ActivatedException, InterfaceNotSupportTimestampTypeException, PromiscuousModePermissionDeniedException, InterfaceNotUpException, PermissionDeniedException, NoSuchDeviceException, TimestampPrecisionNotSupportedException {
+    public void startSniffer() throws ErrorException, RadioFrequencyModeNotSupportedException,
+            ActivatedException, InterfaceNotSupportTimestampTypeException,
+            PromiscuousModePermissionDeniedException, InterfaceNotUpException,
+            PermissionDeniedException, NoSuchDeviceException, TimestampPrecisionNotSupportedException {
 
         Service service = Service.Creator.create("PcapService");
         Interface[] interfaceList = NativeBridge.getInterfaces(service);

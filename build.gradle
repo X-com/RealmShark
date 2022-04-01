@@ -6,7 +6,7 @@ plugins {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-project.version = 'v1.2'
+project.version = 'v1.3'
 applicationName = 'Tomato'
 
 repositories {
