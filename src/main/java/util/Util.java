@@ -1,9 +1,9 @@
 package util;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -149,5 +149,15 @@ public class Util {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         return dtf.format(now);
+    }
+
+    /**
+     * Returns the resource file as stream in the resource's folder.
+     *
+     * @param fileName Name of resource file.
+     * @return The resource file as stream.
+     */
+    public static InputStream resourceFilePath(String fileName) throws URISyntaxException {
+        return IdToName.class.getClassLoader().getResourceAsStream(fileName);
     }
 }
