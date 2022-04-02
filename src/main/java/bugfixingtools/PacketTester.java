@@ -27,13 +27,14 @@ import java.util.regex.Pattern;
 
 
 public class PacketTester {
-    static final String FILE_NAME = "error/2022-04-01-10.55.29.data";
+    static final String FILE_NAME = "error/2022-04-01-19.31.48.data";
+    private static boolean incoming = false;
 
     public static void main(String[] args) {
         System.out.println("clearconsole");
         try {
             Util.saveLogs = false;
-            new PacketTester().testRingbuff();
+            new PacketTester().errorSimulator();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -108,10 +109,8 @@ public class PacketTester {
         System.out.println(sb);
     }
 
-    private void run() {
+    private void errorSimulator() {
         System.out.println("Sta");
-
-        boolean incoming = false;
 
         ArrayList<byte[]> list = readFile(incoming);
         boolean first = true;
@@ -176,7 +175,7 @@ public class PacketTester {
                 }
                 packetMap.put(currentSeq, tcpPacket);
                 int size = packetMap.size();
-                if (size > 0) System.out.println("PACKETMAP " + size + " " + counter);
+                System.out.println("PACKETMAP " + size + " " + counter + " " + ip4.getIdentification());
 
 //                if (counter >= 410) {
 //                    dif = nextSeq - sequenseNumber - (packet.getPayload() == null ? 0 : packet.getPayload().length());
@@ -263,9 +262,24 @@ public class PacketTester {
 //                    firstBatch = false;
                     return list2;
                 }
-                String in = "[4";
-                if(incoming) in = "[5";
-                if (line.startsWith(in)) {
+
+                String[] splits = line.split(",");
+//                if(splits.length > 40){
+//                    for(int s = 0; s < splits.length-1; s++){
+//                        if(splits[s].equals(" 8") && splits[s+1].equals(" 2")){
+//                            System.out.println(s);
+//                        }
+//                    }
+//                }
+//                String in = "[4";
+//                if(incoming) in = "[5";
+                if(splits.length < 37) continue;
+                int shift = 2;
+                if(incoming) shift = 0;
+
+                boolean isIn = splits[34 + shift].equals(" 8") && splits[35 + shift].equals(" 2");
+
+                if (isIn) {
                     byte[] b = getByteArray(line);
 //                    if (computeChecksum(b)) list2.add(b);
 //                    else System.out.println("Checksum fail " + i);
