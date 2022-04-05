@@ -1,6 +1,7 @@
 package packets.incoming;
 
 import packets.Packet;
+import packets.data.FameData;
 import packets.reader.BufferReader;
 
 /**
@@ -14,33 +15,39 @@ public class DeathPacket extends Packet {
     /**
      * The character id of the player who died
      */
-    public int charId;
+    public int unknownFameID1;
     /**
      * The cause of death
      */
     public String killedBy;
     /**
-     * The object id of the zombie, if the player died wearing a cursed amulet
+     * Unknown int
      */
-    public int zombieId;
+    public int unknownFameID2;
     /**
-     * The type of zombie, if the player died wearing a cursed amulet
+     * Unknown short
      */
-    public int zombieType;
+    public int unknownFameID3;
     /**
-     * Whether or not a zombie was spawned
-     * <p>
-     * This is a derived property, and is the result of `zombieId !== -1`
+     * Death fame data
      */
-    public boolean isZombie;
+    public FameData[] fameData;
+    /**
+     * Unknown String
+     */
+    public String unknownString;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
         accountId = buffer.readString();
-        charId = buffer.readInt();
+        unknownFameID1 = buffer.readCompressedInt();
         killedBy = buffer.readString();
-        zombieType = buffer.readInt();
-        zombieId = buffer.readInt();
-        isZombie = zombieId != -1;
+        unknownFameID2 = buffer.readInt();
+        unknownFameID3 = buffer.readCompressedInt();
+        fameData = new FameData[buffer.readCompressedInt()];
+        for (int i = 0; i < fameData.length; i++) {
+            fameData[i] = new FameData().deserialize(buffer);
+        }
+        unknownString = buffer.readString();
     }
 }
