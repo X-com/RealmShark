@@ -1,5 +1,6 @@
 package packets.packetcapture;
 
+import example.gui.MissingNpcapGUI;
 import example.gui.TomatoBandwidth;
 import packets.Packet;
 import packets.PacketType;
@@ -62,6 +63,8 @@ public class PacketProcessor extends Thread implements PProcessor {
         outgoingPacketConstructor.startResets();
         try {
             sniffer.startSniffer();
+        } catch (UnsatisfiedLinkError e) {
+            new MissingNpcapGUI();
         } catch (Exception e) {
             e.printStackTrace();
         }
