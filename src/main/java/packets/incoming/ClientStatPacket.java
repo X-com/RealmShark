@@ -21,4 +21,11 @@ public class ClientStatPacket extends Packet {
         name = buffer.readString();
         value = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "ClientStatPacket{" +
+                "\n name='" + name + '\'' +
+                "\n value=" + value;
+    }
 }

@@ -147,7 +147,13 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
                         // Missing
                        UNKNOWN134(-122, Outgoing, UnknownPacket134::new),
                         // Missing
-                       UNKNOWN145(-111, Outgoing, UnknownPacket145::new);
+                       UNKNOWN137(-119, Outgoing, UnknownPacket137::new),
+                       UNKNOWN138(-118, Outgoing, UnknownPacket138::new),
+                       UNKNOWN139(-117, Outgoing, UnknownPacket139::new),
+                        // Missing
+                       UNKNOWN145(-111, Outgoing, UnknownPacket145::new),
+                       UNKNOWN146(-110, Outgoing, UnknownPacket146::new),
+                       UNKNOWN147(-109, Outgoing, UnknownPacket147::new);
 
 
     private static final HashMap<Integer, PacketType> PACKET_TYPE = new HashMap<>();

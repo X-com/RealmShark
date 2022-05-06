@@ -26,4 +26,12 @@ public class CreateSuccessPacket extends Packet {
         charId = buffer.readInt();
         str = buffer.readString();
     }
+
+    @Override
+    public String toString() {
+        return "CreateSuccessPacket{" +
+                "\n objectId=" + objectId +
+                "\n charId=" + charId +
+                "\n str='" + str + '\'';
+    }
 }

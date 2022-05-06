@@ -4,16 +4,16 @@ import packets.Packet;
 import packets.reader.BufferReader;
 
 /**
- * Nothing is known about this packet
+ * Unknown packet
  */
-public class UnknownPacket145 extends Packet {
+public class UnknownPacket138 extends Packet {
     /**
-     * Unknown int
+     * The current client time.
      */
-    public int unknownInt;
+    public int time;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
-        unknownInt = buffer.readInt();
+        time = buffer.readInt();
     }
 }

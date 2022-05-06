@@ -6,14 +6,18 @@ import packets.reader.BufferReader;
 /**
  * Nothing is known about this packet
  */
-public class UnknownPacket145 extends Packet {
+public class UnknownPacket146 extends Packet {
     /**
      * Unknown int
      */
-    public int unknownInt;
+    public int unknownInt1;
+    public int unknownInt2;
+    public int unknownInt3;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
-        unknownInt = buffer.readInt();
+        unknownInt1 = buffer.getIndex();
+        unknownInt2 = buffer.getIndex();
+        unknownInt3 = buffer.getIndex();
     }
 }

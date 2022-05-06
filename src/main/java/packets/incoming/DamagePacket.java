@@ -3,6 +3,8 @@ package packets.incoming;
 import packets.Packet;
 import packets.reader.BufferReader;
 
+import java.util.Arrays;
+
 /**
  * Received to tell the player about damage done to other players and enemies.
  */
@@ -48,5 +50,17 @@ public class DamagePacket extends Packet {
         armorPierce = buffer.readBoolean();
         bulletId = buffer.readUnsignedByte();
         objectId = buffer.readInt();
+    }
+
+    @Override
+    public String toString() {
+        return "DamagePacket{" +
+                "\n targetId=" + targetId +
+                "\n effects=" + Arrays.toString(effects) +
+                "\n damageAmount=" + damageAmount +
+                "\n kill=" + kill +
+                "\n armorPierce=" + armorPierce +
+                "\n bulletId=" + bulletId +
+                "\n objectId=" + objectId;
     }
 }

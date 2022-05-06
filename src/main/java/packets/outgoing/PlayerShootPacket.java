@@ -12,18 +12,18 @@ public class PlayerShootPacket extends Packet {
      * The current client time.
      */
     public int time;
-    /**
-     * The id of the bullet which was fired.
+     /**
+     * Counts the number of bullets sense entering dungeon.
      */
-    public byte bulletId;
-    /**
-     * (work-in-progress)
-     */
-    public short unknownShort;
+    public short bulletID;
     /**
      * The item id of the weapon used to fire the projectile.
      */
-    public short containerType;
+    public int containerType;
+    /**
+     * unknown byte
+     */
+    public byte unknownByte;
     /**
      * The position of the starting point where the projectile was fired.
      */
@@ -40,9 +40,9 @@ public class PlayerShootPacket extends Packet {
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
         time = buffer.readInt();
-        bulletId = buffer.readByte();
-        unknownShort = buffer.readShort();
-        containerType = buffer.readShort();
+        bulletID = buffer.readShort();
+        containerType = buffer.readUnsignedShort();
+        unknownByte = buffer.readByte();
         startingPos = new WorldPosData().deserialize(buffer);
         angle = buffer.readFloat();
         isBurst = buffer.readBoolean();
@@ -51,13 +51,12 @@ public class PlayerShootPacket extends Packet {
     @Override
     public String toString() {
         return "PlayerShootPacket{" +
-                "\n  time=" + time +
-                "\n, bulletId=" + bulletId +
-                "\n, unknownByte=" + unknownShort +
-                "\n, containerType=" + containerType +
-                "\n, startingPos=" + startingPos +
-                "\n, angle=" + angle +
-                "\n, isBurst=" + isBurst +
-                "\n}";
+                "\n time=" + time +
+                "\n bulletID=" + bulletID +
+                "\n containerType=" + containerType +
+                "\n unknownByte=" + unknownByte +
+                "\n startingPos=" + startingPos +
+                "\n angle=" + angle +
+                "\n isBurst=" + isBurst;
     }
 }

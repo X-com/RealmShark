@@ -73,6 +73,7 @@ public class IdToName {
      */
     public static String name(int id) {
         IdToName i = ID.get(id);
+        if (i == null) return "";
         if (i.display.equals("")) return i.idName;
         return i.display;
     }
