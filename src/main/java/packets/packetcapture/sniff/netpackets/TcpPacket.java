@@ -171,24 +171,23 @@ public class TcpPacket {
     @Override
     public String toString() {
         return "TcpPacket{" +
-                "\n  srcPort=" + srcPort +
-                "\n, dstPort=" + dstPort +
-                "\n, sequenceNumber=" + sequenceNumber +
-                "\n, acknowledgmentNumber=" + acknowledgmentNumber +
-                "\n, dataOffset=" + dataOffset +
-                "\n, reserved=" + reserved +
-                "\n, urg=" + urg +
-                "\n, ack=" + ack +
-                "\n, psh=" + psh +
-                "\n, rst=" + rst +
-                "\n, syn=" + syn +
-                "\n, fin=" + fin +
-                "\n, window=" + window +
-                "\n, checksum=" + checksum +
-                "\n, urgentPointer=" + urgentPointer +
-                "\n, optionsTCP=" + Arrays.toString(optionsTCP) +
-                "\n, payloadTCP=" + Arrays.toString(payload) +
-                "\n, payloadSize=" + payloadSize +
-                "\n}";
+                "\n srcPort=" + srcPort +
+                "\n dstPort=" + dstPort +
+                "\n sequenceNumber=" + sequenceNumber +
+                "\n acknowledgmentNumber=" + acknowledgmentNumber +
+                "\n dataOffset=" + dataOffset +
+                "\n reserved=" + reserved +
+                "\n urg=" + urg +
+                "\n ack=" + ack +
+                "\n psh=" + psh +
+                "\n rst=" + rst +
+                "\n syn=" + syn +
+                "\n fin=" + fin +
+                "\n window=" + window +
+                "\n checksum=" + checksum +
+                "\n urgentPointer=" + urgentPointer +
+                "\n optionsTCP=" + Arrays.toString(optionsTCP) +
+                "\n payloadTCP=" + Arrays.toString(payload) +
+                "\n payloadSize=" + payloadSize;
     }
 }

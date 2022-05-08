@@ -87,7 +87,7 @@ public class Ip4Packet {
 
         int dataLength = data.length - headerLengthIP;
         int length = totalLength - headerLengthIP;
-        if (length > dataLength) length = dataLength;
+        if (length > dataLength || length < 0) length = dataLength;
         payloadLength = length;
 
         if (payloadLength != 0) {
@@ -183,26 +183,25 @@ public class Ip4Packet {
     @Override
     public String toString() {
         return "Ip4Packet{" +
-                "\n  version=" + version +
-                "\n, ihl=" + ihl +
-                "\n, precedence=" + precedence +
-                "\n, tos=" + tos +
-                "\n, mbz=" + mbz +
-                "\n, totalLength=" + totalLength +
-                "\n, identification=" + identification +
-                "\n, reservedFlag=" + reservedFlag +
-                "\n, dontFragmentFlag=" + dontFragmentFlag +
-                "\n, moreFragmentFlag=" + moreFragmentFlag +
-                "\n, fragmentOffset=" + fragmentOffset +
-                "\n, ttl=" + ttl +
-                "\n, protocol=" + protocol +
-                "\n, headerChecksum=" + headerChecksum +
-                "\n, srcAddr=" + ipToString(srcAddr) +
-                "\n, dstAddr=" + ipToString(dstAddr) +
-                "\n, optionsIP=" + Arrays.toString(optionsIP) +
-                "\n, dataLength=" + payloadLength +
-                "\n, payloadIP=" + Arrays.toString(payload) +
-                "\n}";
+                "\n version=" + version +
+                "\n ihl=" + ihl +
+                "\n precedence=" + precedence +
+                "\n tos=" + tos +
+                "\n mbz=" + mbz +
+                "\n totalLength=" + totalLength +
+                "\n identification=" + identification +
+                "\n reservedFlag=" + reservedFlag +
+                "\n dontFragmentFlag=" + dontFragmentFlag +
+                "\n moreFragmentFlag=" + moreFragmentFlag +
+                "\n fragmentOffset=" + fragmentOffset +
+                "\n ttl=" + ttl +
+                "\n protocol=" + protocol +
+                "\n headerChecksum=" + headerChecksum +
+                "\n srcAddr=" + ipToString(srcAddr) +
+                "\n dstAddr=" + ipToString(dstAddr) +
+                "\n optionsIP=" + Arrays.toString(optionsIP) +
+                "\n dataLength=" + payloadLength +
+                "\n payloadIP=" + Arrays.toString(payload);
     }
 
     public byte[] rawData() {

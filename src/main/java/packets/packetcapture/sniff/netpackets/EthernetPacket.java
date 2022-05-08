@@ -102,12 +102,11 @@ public class EthernetPacket {
     @Override
     public String toString() {
         return "EthernetPacket{" +
-                "\n  macDest=" + macString(macDest) +
-                "\n, macSrc=" + macString(macSrc) +
-                "\n, etherType=" + String.format("%04x", etherType) +
-                "\n, etherPayloadOffset=" + etherRawPayloadOffset +
-                "\n, payloadEther=" + Arrays.toString(payload) +
-                "\n}";
+                "\n macDest=" + macString(macDest) +
+                "\n macSrc=" + macString(macSrc) +
+                "\n etherType=" + String.format("%04x", etherType) +
+                "\n etherPayloadOffset=" + etherRawPayloadOffset +
+                "\n payloadEther=" + Arrays.toString(payload);
     }
 
     private String macString(byte[] mac) {

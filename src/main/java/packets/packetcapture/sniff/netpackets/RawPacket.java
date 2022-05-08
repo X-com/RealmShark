@@ -41,9 +41,8 @@ public class RawPacket {
     @Override
     public String toString() {
         return "RawPacket{" +
-                "\n  instant=" + instant +
-                "\n, payloadSize=" + payloadSize +
-                "\n, payload=" + Arrays.toString(payload) +
-                "\n}";
+                "\n instant=" + instant +
+                "\n payloadSize=" + payloadSize +
+                "\n payload=" + Arrays.toString(payload);
     }
 }
