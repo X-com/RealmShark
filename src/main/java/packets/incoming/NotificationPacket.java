@@ -61,7 +61,6 @@ public class NotificationPacket extends Packet {
     public void deserialize(BufferReader buffer) throws Exception {
         effect = NotificationEffectType.byOrdinal(buffer.readByte());
         extra = buffer.readByte();
-        message = buffer.readString();
 
         switch (effect.get()) {
             case 0:
@@ -69,8 +68,10 @@ public class NotificationPacket extends Packet {
             case 2:
             case 3:
             case 9:
+                message = buffer.readString();
                 return;
             case 4:
+                message = buffer.readString();
                 uiExtra = buffer.readShort();
                 return;
             case 5:
@@ -78,19 +79,23 @@ public class NotificationPacket extends Packet {
                 queuePos = buffer.readShort();
                 return;
             case 6:
+                message = buffer.readString();
                 objectId = buffer.readInt();
                 color = buffer.readInt();
                 return;
             case 7:
             case 8:
+                message = buffer.readString();
                 pictureType = buffer.readInt();
                 return;
             case 10:
             case 11:
+                message = buffer.readString();
                 unknownInt1 = buffer.readInt();
                 unknownShort1 = buffer.readShort();
                 return;
             case 12:
+                message = buffer.readString();
                 unknownInt2 = buffer.readInt();
                 unknownInt3 = buffer.readInt();
             default:
