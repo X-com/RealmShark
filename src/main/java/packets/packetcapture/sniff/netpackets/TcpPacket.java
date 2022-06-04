@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * Packet building inspired by work done by Pcap4j (https://github.com/kaitoy/pcap4j)
  * and Network programming in Linux (http://tcpip.marcolavoie.ca/ip.html)
- *
+ * <p>
  * Tcp packet constructor.
  */
 public class TcpPacket {
@@ -73,6 +73,7 @@ public class TcpPacket {
         urgentPointer = UtilNetPackets.getShort(data, URGENT_POINTER_OFFSET);
 
         int headerLengthTCP = (0xFF & dataOffset) * 4;
+        if (headerLengthTCP < 20) headerLengthTCP = 20;
 
         if (headerLengthTCP != OPTIONS_OFFSET_TCP) {
             optionsTCP = UtilNetPackets.getBytes(data, OPTIONS_OFFSET_TCP, headerLengthTCP - MIN_TCP_HEADER_SIZE);
@@ -187,6 +188,7 @@ public class TcpPacket {
                 "\n checksum=" + checksum +
                 "\n urgentPointer=" + urgentPointer +
                 "\n optionsTCP=" + Arrays.toString(optionsTCP) +
+                "\n TCPdata=" + Arrays.toString(UtilNetPackets.getBytes(rawData, 0, (0xFF & dataOffset) * 4)) +
                 "\n payloadTCP=" + Arrays.toString(payload) +
                 "\n payloadSize=" + payloadSize;
     }

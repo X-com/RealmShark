@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * Packet building inspired by work done by Pcap4j (https://github.com/kaitoy/pcap4j)
  * and Network programming in Linux (http://tcpip.marcolavoie.ca/ip.html)
- *
+ * <p>
  * Ip4 packet constructor.
  */
 public class Ip4Packet {
@@ -79,6 +79,8 @@ public class Ip4Packet {
         dstAddr = UtilNetPackets.getBytes(data, DST_ADDR_OFFSET_IP, IP_ADDRESS_SIZE);
 
         int headerLengthIP = ihl * 4;
+        if (headerLengthIP < 20) headerLengthIP = 20;
+
         if (headerLengthIP != OPTIONS_OFFSET_IP) {
             optionsIP = UtilNetPackets.getBytes(data, OPTIONS_OFFSET_IP, headerLengthIP - MIN_IPV4_HEADER_SIZE);
         } else {
@@ -201,6 +203,7 @@ public class Ip4Packet {
                 "\n dstAddr=" + ipToString(dstAddr) +
                 "\n optionsIP=" + Arrays.toString(optionsIP) +
                 "\n dataLength=" + payloadLength +
+                "\n IPdata=" + Arrays.toString(UtilNetPackets.getBytes(rawData, 0, ihl * 4)) +
                 "\n payloadIP=" + Arrays.toString(payload);
     }
 

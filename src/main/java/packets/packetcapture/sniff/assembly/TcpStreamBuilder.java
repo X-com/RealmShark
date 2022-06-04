@@ -13,7 +13,7 @@ import java.util.HashMap;
  */
 public class TcpStreamBuilder {
 
-    HashMap<Long, TcpPacket> packetMap = new HashMap();
+    HashMap<Long, TcpPacket> packetMap = new HashMap<>();
     PStream stream;
     PReset packetReset;
     public long sequenseNumber;
@@ -36,7 +36,7 @@ public class TcpStreamBuilder {
      * @param packet TCP packets needing to be ordered.
      */
     public void streamBuilder(TcpPacket packet) {
-        if (packet.isResetBit()) {
+        if (packet.isSyn()) {
             reset();
             return;
         }
