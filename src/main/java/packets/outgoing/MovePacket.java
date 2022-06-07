@@ -5,6 +5,8 @@ import packets.reader.BufferReader;
 import packets.data.MoveRecord;
 import packets.data.WorldPosData;
 
+import java.util.Arrays;
+
 /**
  * Sent to acknowledge a `NewTickPacket`, and to notify the
  * server of the client's current position and time.
@@ -33,5 +35,13 @@ public class MovePacket extends Packet {
         for (int i = 0; i < records.length; i++) {
             records[i] = new MoveRecord().deserialize(buffer);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "MovePacket{" +
+                "\n   tickId=" + tickId +
+                "\n   time=" + time +
+                "\n   records=" + Arrays.toString(records);
     }
 }

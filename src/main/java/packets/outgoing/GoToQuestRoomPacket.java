@@ -11,4 +11,9 @@ public class GoToQuestRoomPacket extends Packet {
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
     }
+
+    @Override
+    public String toString() {
+        return "GoToQuestRoomPacket{}";
+    }
 }

@@ -27,4 +27,12 @@ public class GetPlayersListPacket extends Packet {
         skinType = buffer.readShort();
         isChallenger = buffer.readBoolean();
     }
+
+    @Override
+    public String toString() {
+        return "GetPlayersListPacket{" +
+                "\n   classType=" + classType +
+                "\n   skinType=" + skinType +
+                "\n   isChallenger=" + isChallenger;
+    }
 }

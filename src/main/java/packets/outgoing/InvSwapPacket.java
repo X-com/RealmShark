@@ -33,4 +33,13 @@ public class InvSwapPacket extends Packet {
         slotFrom = new SlotObjectData().deserialize(buffer);
         slotTo  = new SlotObjectData().deserialize(buffer);
     }
+
+    @Override
+    public String toString() {
+        return "InvSwapPacket{" +
+                "\n   time=" + time +
+                "\n   position=" + position +
+                "\n   slotFrom=" + slotFrom +
+                "\n   slotTo=" + slotTo;
+    }
 }

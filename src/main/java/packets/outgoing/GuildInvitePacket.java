@@ -16,4 +16,10 @@ public class GuildInvitePacket extends Packet {
     public void deserialize(BufferReader buffer) throws Exception {
         name = buffer.readString();
     }
+
+    @Override
+    public String toString() {
+        return "GuildInvitePacket{" +
+                "\n   name=" + name;
+    }
 }

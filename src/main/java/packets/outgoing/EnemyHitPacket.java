@@ -42,7 +42,14 @@ public class EnemyHitPacket extends Packet {
         mainID = buffer.readInt();
     }
 
+    @Override
     public String toString() {
-        return String.format("Time:%d BulletId:%d ShooterID:%d TargetID:%d Kill:%b MainID:%d", time, bulletId, shooterID, targetId, kill, mainID);
+        return "EnemyHitPacket{" +
+                "\n   time=" + time +
+                "\n   bulletId=" + bulletId +
+                "\n   targetId=" + targetId +
+                "\n   shooterID=" + shooterID +
+                "\n   kill=" + kill +
+                "\n   mainID=" + mainID;
     }
 }

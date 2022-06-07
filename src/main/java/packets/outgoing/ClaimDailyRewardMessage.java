@@ -21,4 +21,11 @@ public class ClaimDailyRewardMessage extends Packet {
         claimKey = buffer.readString();
         claimType = buffer.readString();
     }
+
+    @Override
+    public String toString() {
+        return "ClaimDailyRewardMessage{" +
+                "\n   claimKey=" + claimKey +
+                "\n   claimType=" + claimType;
+    }
 }

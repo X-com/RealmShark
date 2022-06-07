@@ -25,4 +25,13 @@ public class UnknownPacket147 extends Packet {
         unknownInt2 = buffer.getIndex();
         unknownInt3 = buffer.getIndex();
     }
+
+    @Override
+    public String toString() {
+        return "UnknownPacket147{" +
+                "\n   unknownByte=" + unknownByte +
+                "\n   unknownInt1=" + unknownInt1 +
+                "\n   unknownInt2=" + unknownInt2 +
+                "\n   unknownInt3=" + unknownInt3;
+    }
 }

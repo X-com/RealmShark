@@ -16,4 +16,10 @@ public class PlayerTextPacket extends Packet {
     public void deserialize(BufferReader buffer) throws Exception {
         text = buffer.readString();
     }
+
+    @Override
+    public String toString() {
+        return "PlayerTextPacket{" +
+                "\n   text=" + text;
+    }
 }

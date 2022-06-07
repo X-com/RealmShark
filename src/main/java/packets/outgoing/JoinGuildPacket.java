@@ -16,4 +16,10 @@ public class JoinGuildPacket extends Packet {
     public void deserialize(BufferReader buffer) throws Exception {
         guildName = buffer.readString();
     }
+
+    @Override
+    public String toString() {
+        return "JoinGuildPacket{" +
+                "\n   guildName=" + guildName;
+    }
 }

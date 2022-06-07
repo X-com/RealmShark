@@ -21,4 +21,11 @@ public class GotoAckPacket extends Packet {
         time = buffer.readInt();
         unknownBoolean = buffer.readBoolean();
     }
+
+    @Override
+    public String toString() {
+        return "GotoAckPacket{" +
+                "\n   time=" + time +
+                "\n   unknownBoolean=" + unknownBoolean;
+    }
 }

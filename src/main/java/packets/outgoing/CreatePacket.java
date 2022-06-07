@@ -27,4 +27,12 @@ public class CreatePacket extends Packet {
         skinType = buffer.readShort();
         isChallenger = buffer.readBoolean();
     }
+
+    @Override
+    public String toString() {
+        return "CreatePacket{" +
+                "\n   classType=" + classType +
+                "\n   skinType=" + skinType +
+                "\n   isChallenger=" + isChallenger;
+    }
 }

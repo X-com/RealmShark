@@ -16,4 +16,10 @@ public class ReskinPacket extends Packet {
     public void deserialize(BufferReader buffer) throws Exception {
         skinId = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "ReskinPacket{" +
+                "\n   skinId=" + skinId;
+    }
 }

@@ -27,7 +27,11 @@ public class SquareHitPacket extends Packet {
         objectId = buffer.readInt();
     }
 
+    @Override
     public String toString() {
-        return String.format("Time:%d BulletId:%d ObjectId:%d", time, bulletId, objectId);
+        return "SquareHitPacket{" +
+                "\n   time=" + time +
+                "\n   bulletId=" + bulletId +
+                "\n   objectId=" + objectId;
     }
 }

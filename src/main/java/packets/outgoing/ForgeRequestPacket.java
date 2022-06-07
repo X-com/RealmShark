@@ -22,4 +22,11 @@ public class ForgeRequestPacket extends Packet {
         objectId = buffer.readInt();
         slotsUsed = new SlotObjectData().deserialize(buffer);
     }
+
+    @Override
+    public String toString() {
+        return "ForgeRequestPacket{" +
+                "\n   objectId=" + objectId +
+                "\n   slotsUsed=" + slotsUsed;
+    }
 }

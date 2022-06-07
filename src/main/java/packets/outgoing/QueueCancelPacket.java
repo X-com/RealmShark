@@ -10,4 +10,9 @@ public class QueueCancelPacket extends Packet {
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
     }
+
+    @Override
+    public String toString() {
+        return "QueueCancelPacket{}";
+    }
 }

@@ -22,4 +22,11 @@ public class AoeAckPacket extends Packet {
         time = buffer.readInt();
         position = new WorldPosData().deserialize(buffer);
     }
+
+    @Override
+    public String toString() {
+        return "AoeAckPacket{" +
+                "\n   time=" + time +
+                "\n   position=" + position;
+    }
 }

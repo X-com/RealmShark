@@ -22,4 +22,11 @@ public class ModeratorActionMessagePacket extends Packet {
         actionCode = ModeratorActionType.byOrdinal(buffer.readInt());
         actionMessage = buffer.readString();
     }
+
+    @Override
+    public String toString() {
+        return "ModeratorActionMessagePacket{" +
+                "\n   actionCode=" + actionCode +
+                "\n   actionMessage=" + actionMessage;
+    }
 }

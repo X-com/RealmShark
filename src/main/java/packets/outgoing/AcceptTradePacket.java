@@ -3,6 +3,8 @@ package packets.outgoing;
 import packets.Packet;
 import packets.reader.BufferReader;
 
+import java.util.Arrays;
+
 /**
  * Sent to accept the current active trade.
  */
@@ -32,5 +34,12 @@ public class AcceptTradePacket extends Packet {
         for (int i = 0; i < partnerOffer.length; i++) {
             partnerOffer[i] = buffer.readBoolean();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "AcceptTradePacket{" +
+                "\n   clientOffer=" + Arrays.toString(clientOffer) +
+                "\n   partnerOffer=" + Arrays.toString(partnerOffer);
     }
 }

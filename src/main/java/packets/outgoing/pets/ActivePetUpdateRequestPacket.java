@@ -22,4 +22,11 @@ public class ActivePetUpdateRequestPacket extends Packet {
         commandType = ActivePetUpdateType.byOrdinal(buffer.readByte());
         instanceId = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "ActivePetUpdateRequestPacket{" +
+                "\n   commandType=" + commandType +
+                "\n   instanceId=" + instanceId;
+    }
 }

@@ -22,4 +22,11 @@ public class GroundDamagePacket extends Packet {
         time = buffer.readInt();
         position = new WorldPosData().deserialize(buffer);
     }
+
+    @Override
+    public String toString() {
+        return "GroundDamagePacket{" +
+                "\n   time=" + time +
+                "\n   position=" + position;
+    }
 }

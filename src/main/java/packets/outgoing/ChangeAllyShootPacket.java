@@ -23,7 +23,10 @@ public class ChangeAllyShootPacket extends Packet {
         unknownShort = buffer.readShort();
     }
 
+    @Override
     public String toString() {
-        return String.format("%d %d", toggle, unknownShort);
+        return "ChangeAllyShootPacket{" +
+                "\n   toggle=" + toggle +
+                "\n   unknownShort=" + unknownShort;
     }
 }

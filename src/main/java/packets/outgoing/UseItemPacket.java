@@ -34,4 +34,13 @@ public class UseItemPacket extends Packet {
         useItemPosition = new WorldPosData().deserialize(buffer);
         useItemType = UseItemType.fromCode(buffer.readByte());
     }
+
+    @Override
+    public String toString() {
+        return "UseItemPacket{" +
+                "\n   time=" + time +
+                "\n   slotObject=" + slotObject +
+                "\n   useItemPosition=" + useItemPosition +
+                "\n   useItemType=" + useItemType;
+    }
 }

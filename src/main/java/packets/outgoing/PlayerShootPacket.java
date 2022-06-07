@@ -51,12 +51,12 @@ public class PlayerShootPacket extends Packet {
     @Override
     public String toString() {
         return "PlayerShootPacket{" +
-                "\n time=" + time +
-                "\n bulletID=" + bulletID +
-                "\n containerType=" + containerType +
-                "\n unknownByte=" + unknownByte +
-                "\n startingPos=" + startingPos +
-                "\n angle=" + angle +
-                "\n isBurst=" + isBurst;
+                "\n   time=" + time +
+                "\n   bulletID=" + bulletID +
+                "\n   containerType=" + containerType +
+                "\n   unknownByte=" + unknownByte +
+                "\n   startingPos=" + startingPos +
+                "\n   angle=" + angle +
+                "\n   isBurst=" + isBurst;
     }
 }

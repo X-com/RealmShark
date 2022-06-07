@@ -11,4 +11,9 @@ public class EscapePacket extends Packet {
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
     }
+
+    @Override
+    public String toString() {
+        return "EscapePacket{}";
+    }
 }

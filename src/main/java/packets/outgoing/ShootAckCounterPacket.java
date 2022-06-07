@@ -17,4 +17,10 @@ public class ShootAckCounterPacket extends Packet {
     public void deserialize(BufferReader buffer) throws Exception {
         unknownInt = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "ShootAckCounterPacket{" +
+                "\n   unknownInt=" + unknownInt;
+    }
 }

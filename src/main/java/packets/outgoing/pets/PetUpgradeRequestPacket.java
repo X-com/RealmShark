@@ -6,6 +6,8 @@ import packets.data.enums.PaymentType;
 import packets.data.enums.PetUpgradeType;
 import packets.data.SlotObjectData;
 
+import java.util.Arrays;
+
 /**
  * Sent when you are feeding and fusing pets or upgrading your pet yard
  */
@@ -48,4 +50,14 @@ public class PetUpgradeRequestPacket extends Packet {
         }
     }
 
+    @Override
+    public String toString() {
+        return "PetUpgradeRequestPacket{" +
+                "\n   petTransType=" + petTransType +
+                "\n   pIdOne=" + pIdOne +
+                "\n   pIdTwo=" + pIdTwo +
+                "\n   objectId=" + objectId +
+                "\n   slotObjects=" + Arrays.toString(slotObjects) +
+                "\n   paymentType=" + paymentType;
+    }
 }

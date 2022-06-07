@@ -17,4 +17,10 @@ public class RequestTradePacket extends Packet {
     public void deserialize(BufferReader buffer) throws Exception {
         name = buffer.readString();
     }
+
+    @Override
+    public String toString() {
+        return "RequestTradePacket{" +
+                "\n   name=" + name;
+    }
 }

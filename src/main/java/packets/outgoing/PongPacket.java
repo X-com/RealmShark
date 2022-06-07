@@ -21,4 +21,11 @@ public class PongPacket extends Packet {
         serial = buffer.readInt();
         time = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "PongPacket{" +
+                "\n   serial=" + serial +
+                "\n   time=" + time;
+    }
 }

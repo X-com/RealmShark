@@ -17,4 +17,10 @@ public class UsePortalPacket extends Packet {
     public void deserialize(BufferReader buffer) throws Exception {
         objectId = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "UsePortalPacket{" +
+                "\n   objectId=" + objectId;
+    }
 }

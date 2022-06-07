@@ -26,4 +26,12 @@ public class EditAccountListPacket extends Packet {
         add = buffer.readBoolean();
         objectId = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "EditAccountListPacket{" +
+                "\n   accountListId=" + accountListId +
+                "\n   add=" + add +
+                "\n   objectId=" + objectId;
+    }
 }

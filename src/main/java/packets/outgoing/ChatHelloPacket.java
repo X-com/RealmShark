@@ -22,4 +22,10 @@ public class ChatHelloPacket extends Packet {
         token = buffer.readString();
     }
 
+    @Override
+    public String toString() {
+        return "ChatHelloPacket{" +
+                "\n   accountId=" + accountId +
+                "\n   token=" + token;
+    }
 }

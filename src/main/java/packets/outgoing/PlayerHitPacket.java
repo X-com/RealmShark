@@ -21,4 +21,11 @@ public class PlayerHitPacket extends Packet {
         bulletId = buffer.readShort();
         objectId = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "PlayerHitPacket{" +
+                "\n   bulletId=" + bulletId +
+                "\n   objectId=" + objectId;
+    }
 }

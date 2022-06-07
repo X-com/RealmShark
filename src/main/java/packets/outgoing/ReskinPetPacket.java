@@ -28,4 +28,11 @@ public class ReskinPetPacket extends Packet {
         item = new SlotObjectData().deserialize(buffer);
     }
 
+    @Override
+    public String toString() {
+        return "ReskinPetPacket{" +
+                "\n   instanceId=" + instanceId +
+                "\n   newPetType=" + newPetType +
+                "\n   item=" + item;
+    }
 }

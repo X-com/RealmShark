@@ -21,4 +21,11 @@ public class SetConditionPacket extends Packet {
         conditionEffect = buffer.readByte();
         conditionDuration = buffer.readFloat();
     }
+
+    @Override
+    public String toString() {
+        return "SetConditionPacket{" +
+                "\n   conditionEffect=" + conditionEffect +
+                "\n   conditionDuration=" + conditionDuration;
+    }
 }

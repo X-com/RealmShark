@@ -66,7 +66,18 @@ public class HelloPacket extends Packet {
         clientToken = buffer.readString();
     }
 
+    @Override
     public String toString() {
-        return String.format("BuildVersion:%s GameId:%d AccessToken:%s\nKeyTime:%d Key:%s\nPlayPlatform:%s PlatformToken:%s UserToken:%s ClientToken:%s", buildVersion, gameId, accessToken, keyTime, Arrays.toString(key), playPlatform, platformToken, userToken, clientToken);
+        return "HelloPacket{" +
+                "\n   buildVersion=" + buildVersion +
+                "\n   gameId=" + gameId +
+                "\n   accessToken=" + accessToken +
+                "\n   keyTime=" + keyTime +
+                "\n   key=" + Arrays.toString(key) +
+                "\n   userPlatform=" + userPlatform +
+                "\n   playPlatform=" + playPlatform +
+                "\n   platformToken=" + platformToken +
+                "\n   userToken=" + userToken +
+                "\n   clientToken=" + clientToken;
     }
 }

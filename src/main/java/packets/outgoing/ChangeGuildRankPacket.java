@@ -21,4 +21,11 @@ public class ChangeGuildRankPacket extends Packet {
         name = buffer.readString();
         guildRank = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "ChangeGuildRankPacket{" +
+                "\n   name=" + name +
+                "\n   guildRank=" + guildRank;
+    }
 }

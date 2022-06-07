@@ -21,4 +21,11 @@ public class TeleportPacket extends Packet {
         objectId = buffer.readInt();
         name = buffer.readString();
     }
+
+    @Override
+    public String toString() {
+        return "TeleportPacket{" +
+                "\n   objectId=" + objectId +
+                "\n   name=" + name;
+    }
 }

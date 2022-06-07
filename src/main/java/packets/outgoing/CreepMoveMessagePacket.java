@@ -34,7 +34,12 @@ public class CreepMoveMessagePacket extends Packet {
         hold = buffer.readBoolean();
     }
 
+    @Override
     public String toString() {
-        return String.format("objectId:%d serverTime:%d position%s hold:%b", objectId, serverTime, position, hold);
+        return "CreepMoveMessagePacket{" +
+                "\n   objectId=" + objectId +
+                "\n   serverTime=" + serverTime +
+                "\n   position=" + position +
+                "\n   hold=" + hold;
     }
 }

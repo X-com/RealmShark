@@ -23,7 +23,9 @@ public class InvDropPacket extends Packet {
         unknownBoolean = buffer.readBoolean();
     }
 
+    @Override
     public String toString() {
-        return String.format("SlotObject:%s Unknown:%b", slotObject, unknownBoolean);
+        return "InvDropPacket{" +
+                "\n   slotObject=" + slotObject;
     }
 }

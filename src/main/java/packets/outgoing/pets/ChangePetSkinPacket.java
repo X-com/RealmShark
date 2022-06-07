@@ -27,4 +27,12 @@ public class ChangePetSkinPacket extends Packet {
         skinType = buffer.readInt();
         currency = PaymentType.byOrdinal(buffer.readInt());
     }
+
+    @Override
+    public String toString() {
+        return "ChangePetSkinPacket{" +
+                "\n   petId=" + petId +
+                "\n   skinType=" + skinType +
+                "\n   currency=" + currency;
+    }
 }

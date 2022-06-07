@@ -16,4 +16,10 @@ public class UnknownPacket138 extends Packet {
     public void deserialize(BufferReader buffer) throws Exception {
         time = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "UnknownPacket138{" +
+                "\n   time=" + time;
+    }
 }

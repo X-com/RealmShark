@@ -21,4 +21,11 @@ public class BuyPacket extends Packet {
         objectId = buffer.readInt();
         quantity = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "BuyPacket{" +
+                "\n   objectId=" + objectId +
+                "\n   quantity=" + quantity;
+    }
 }

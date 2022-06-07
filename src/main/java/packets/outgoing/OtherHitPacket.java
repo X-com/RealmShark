@@ -36,4 +36,14 @@ public class OtherHitPacket extends Packet {
         targetId = buffer.readInt();
         unknownByte = buffer.readByte();
     }
+
+    @Override
+    public String toString() {
+        return "OtherHitPacket{" +
+                "\n   time=" + time +
+                "\n   bulletId=" + bulletId +
+                "\n   objectId=" + objectId +
+                "\n   targetId=" + targetId +
+                "\n   unknownByte=" + unknownByte;
+    }
 }

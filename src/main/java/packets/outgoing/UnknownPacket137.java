@@ -27,4 +27,14 @@ public class UnknownPacket137 extends Packet {
         unknownInt3 = buffer.readInt();
         unknownInt4 = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "UnknownPacket137{" +
+                "\n   time=" + time +
+                "\n   unknownInt1=" + unknownInt1 +
+                "\n   unknownInt2=" + unknownInt2 +
+                "\n   unknownInt3=" + unknownInt3 +
+                "\n   unknownInt4=" + unknownInt4;
+    }
 }
