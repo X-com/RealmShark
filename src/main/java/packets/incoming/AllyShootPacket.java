@@ -37,4 +37,14 @@ public class AllyShootPacket extends Packet {
         angle = buffer.readFloat();
         bard = buffer.readBoolean();
     }
+
+    @Override
+    public String toString() {
+        return "AllyShootPacket{" +
+                "\n   bulletId=" + bulletId +
+                "\n   ownerId=" + ownerId +
+                "\n   containerType=" + containerType +
+                "\n   angle=" + angle +
+                "\n   bard=" + bard;
+    }
 }

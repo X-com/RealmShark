@@ -26,4 +26,12 @@ public class KeyInfoResponsePacket extends Packet {
         description = buffer.readString();
         creator = buffer.readString();
     }
+
+    @Override
+    public String toString() {
+        return "KeyInfoResponsePacket{" +
+                "\n   name=" + name +
+                "\n   description=" + description +
+                "\n   creator=" + creator;
+    }
 }

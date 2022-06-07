@@ -21,4 +21,11 @@ public class PlaySoundPacket extends Packet {
         ownerId = buffer.readInt();
         soundId = buffer.readUnsignedByte();
     }
+
+    @Override
+    public String toString() {
+        return "PlaySoundPacket{" +
+                "\n   ownerId=" + ownerId +
+                "\n   soundId=" + soundId;
+    }
 }

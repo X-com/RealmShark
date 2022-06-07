@@ -26,4 +26,12 @@ public class ClaimDailyRewardResponse extends Packet {
         quantity = buffer.readInt();
         gold = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "ClaimDailyRewardResponse{" +
+                "\n   itemId=" + itemId +
+                "\n   quantity=" + quantity +
+                "\n   gold=" + gold;
+    }
 }

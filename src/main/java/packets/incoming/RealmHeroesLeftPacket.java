@@ -16,4 +16,10 @@ public class RealmHeroesLeftPacket extends Packet {
     public void deserialize(BufferReader buffer) throws Exception {
         realmHeroesLeft = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "RealmHeroesLeftPacket{" +
+                "\n   realmHeroesLeft=" + realmHeroesLeft;
+    }
 }

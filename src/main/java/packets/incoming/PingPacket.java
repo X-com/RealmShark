@@ -16,4 +16,10 @@ public class PingPacket extends Packet {
     public void deserialize(BufferReader buffer) throws Exception {
         serial = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "PingPacket{" +
+                "\n   serial=" + serial;
+    }
 }

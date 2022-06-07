@@ -3,6 +3,8 @@ package packets.incoming;
 import packets.Packet;
 import packets.reader.BufferReader;
 
+import java.util.Arrays;
+
 /**
  * Received when the player enters the nexus
  */
@@ -18,5 +20,11 @@ public class ForgeUnlockedBlueprints extends Packet {
         for (int i = 0; i < unlockedBlueprints.length; i++) {
             unlockedBlueprints[i] = buffer.readCompressedInt();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ForgeUnlockedBlueprints{" +
+                "\n   unlockedBlueprints=" + Arrays.toString(unlockedBlueprints);
     }
 }

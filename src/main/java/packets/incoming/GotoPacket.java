@@ -27,4 +27,12 @@ public class GotoPacket extends Packet {
         position = new WorldPosData().deserialize(buffer);
         unknownInt = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "GotoPacket{" +
+                "\n   objectId=" + objectId +
+                "\n   position=" + position +
+                "\n   unknownInt=" + unknownInt;
+    }
 }

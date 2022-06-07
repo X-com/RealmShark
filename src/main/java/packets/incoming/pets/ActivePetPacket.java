@@ -17,4 +17,9 @@ public class ActivePetPacket extends Packet {
         instanceId = buffer.readInt();
     }
 
+    @Override
+    public String toString() {
+        return "ActivePetPacket{" +
+                "\n   instanceId=" + instanceId;
+    }
 }

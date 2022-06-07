@@ -22,4 +22,11 @@ public class QueueInfoPacket extends Packet {
         currentPosition = buffer.readUnsignedShort();
         maxPosition = buffer.readUnsignedShort();
     }
+
+    @Override
+    public String toString() {
+        return "QueueInfoPacket{" +
+                "\n   currentPosition=" + currentPosition +
+                "\n   maxPosition=" + maxPosition;
+    }
 }

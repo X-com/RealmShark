@@ -26,4 +26,12 @@ public class EvolvedPetMessage extends Packet {
         initialSkin = buffer.readInt();
         finalSkin = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "EvolvedPetMessage{" +
+                "\n   petId=" + petId +
+                "\n   initialSkin=" + initialSkin +
+                "\n   finalSkin=" + finalSkin;
+    }
 }

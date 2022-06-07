@@ -3,6 +3,8 @@ package packets.incoming;
 import packets.Packet;
 import packets.reader.BufferReader;
 
+import java.util.Arrays;
+
 /**
  * A packet which contains a bitmap image
  */
@@ -25,5 +27,13 @@ public class PicPacket extends Packet {
         width = buffer.readInt();
         height = buffer.readInt();
         bitmapData = buffer.readBytes(width * height * 4);
+    }
+
+    @Override
+    public String toString() {
+        return "PicPacket{" +
+                "\n   width=" + width +
+                "\n   height=" + height +
+                "\n   bitmapData=" + Arrays.toString(bitmapData);
     }
 }

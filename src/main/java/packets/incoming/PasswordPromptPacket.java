@@ -16,4 +16,10 @@ public class PasswordPromptPacket extends Packet {
     public void deserialize(BufferReader buffer) throws Exception {
         cleanPasswordStatus = buffer.readUnsignedInt();
     }
+
+    @Override
+    public String toString() {
+        return "PasswordPromptPacket{" +
+                "\n   cleanPasswordStatus=" + cleanPasswordStatus;
+    }
 }

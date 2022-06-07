@@ -26,4 +26,12 @@ public class HatchPetMessage extends Packet {
         petSkin = buffer.readInt();
         petType = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "HatchPetMessage{" +
+                "\n   petName=" + petName +
+                "\n   petSkin=" + petSkin +
+                "\n   petType=" + petType;
+    }
 }

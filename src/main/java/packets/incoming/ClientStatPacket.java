@@ -25,7 +25,7 @@ public class ClientStatPacket extends Packet {
     @Override
     public String toString() {
         return "ClientStatPacket{" +
-                "\n name='" + name + '\'' +
+                "\n name=" + name +
                 "\n value=" + value;
     }
 }

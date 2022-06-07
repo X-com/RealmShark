@@ -21,4 +21,11 @@ public class BuyResultPacket extends Packet {
         result = buffer.readInt();
         resultString = buffer.readString();
     }
+
+    @Override
+    public String toString() {
+        return "BuyResultPacket{" +
+                "\n   result=" + result +
+                "\n   resultString=" + resultString;
+    }
 }

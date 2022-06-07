@@ -42,4 +42,15 @@ public class InvResultPacket extends Packet {
         unknownInt1 = buffer.readInt();
         unknownInt2 = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "InvResultPacket{" +
+                "\n   unknownBool=" + unknownBool +
+                "\n   unknownByte=" + unknownByte +
+                "\n   slotFrom=" + slotFrom +
+                "\n   slotTo=" + slotTo +
+                "\n   unknownInt1=" + unknownInt1 +
+                "\n   unknownInt2=" + unknownInt2;
+    }
 }

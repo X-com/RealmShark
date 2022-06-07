@@ -22,4 +22,11 @@ public class FilePacket extends Packet {
         fileName = buffer.readString();
         file = buffer.readStringUTF32();
     }
+
+    @Override
+    public String toString() {
+        return "FilePacket{" +
+                "\n   fileName=" + fileName +
+                "\n   file=" + file;
+    }
 }

@@ -4,6 +4,8 @@ import packets.Packet;
 import packets.reader.BufferReader;
 import packets.data.TradeItem;
 
+import java.util.Arrays;
+
 /**
  * Received when a new active trade has been initiated
  */
@@ -39,5 +41,14 @@ public class TradeStartPacket extends Packet {
             partnerItems[i] = new TradeItem().deserialize(buffer);
         }
         unknownInt = buffer.readInt();
+    }
+
+    @Override
+    public String toString() {
+        return "TradeStartPacket{" +
+                "\n   clientItems=" + Arrays.toString(clientItems) +
+                "\n   partnerName=" + partnerName +
+                "\n   partnerItems=" + Arrays.toString(partnerItems) +
+                "\n   unknownInt=" + unknownInt;
     }
 }

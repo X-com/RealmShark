@@ -56,4 +56,18 @@ public class TextPacket extends Packet {
         isSupporter = buffer.readBoolean();
         starBackground = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "TextPacket{" +
+                "\n   name=" + name +
+                "\n   objectId=" + objectId +
+                "\n   numStars=" + numStars +
+                "\n   bubbleTime=" + bubbleTime +
+                "\n   recipient=" + recipient +
+                "\n   text=" + text +
+                "\n   cleanText=" + cleanText +
+                "\n   isSupporter=" + isSupporter +
+                "\n   starBackground=" + starBackground;
+    }
 }

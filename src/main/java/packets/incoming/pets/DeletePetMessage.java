@@ -17,4 +17,9 @@ public class DeletePetMessage extends Packet {
         petId = buffer.readInt();
     }
 
+    @Override
+    public String toString() {
+        return "DeletePetMessage{" +
+                "\n   petId=" + petId;
+    }
 }

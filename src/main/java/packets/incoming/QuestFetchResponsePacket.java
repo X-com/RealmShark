@@ -4,6 +4,8 @@ import packets.Packet;
 import packets.reader.BufferReader;
 import packets.data.QuestData;
 
+import java.util.Arrays;
+
 /**
  * Received to tell the player about new quests
  */
@@ -24,5 +26,12 @@ public class QuestFetchResponsePacket extends Packet {
             quests[i] = new QuestData().deserialize(buffer);
         }
         nextRefreshPrice = buffer.readShort();
+    }
+
+    @Override
+    public String toString() {
+        return "QuestFetchResponsePacket{" +
+                "\n   quests=" + Arrays.toString(quests) +
+                "\n   nextRefreshPrice=" + nextRefreshPrice;
     }
 }

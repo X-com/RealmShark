@@ -3,6 +3,8 @@ package packets.incoming;
 import packets.Packet;
 import packets.reader.BufferReader;
 
+import java.util.StringJoiner;
+
 /**
  * Received in response to a `CreatePacket`
  */
@@ -30,8 +32,8 @@ public class CreateSuccessPacket extends Packet {
     @Override
     public String toString() {
         return "CreateSuccessPacket{" +
-                "\n objectId=" + objectId +
-                "\n charId=" + charId +
-                "\n str='" + str + '\'';
+                "\n   objectId=" + objectId +
+                "\n   charId=" + charId +
+                "\n   str=" + str;
     }
 }

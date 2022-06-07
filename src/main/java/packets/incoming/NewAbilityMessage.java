@@ -16,4 +16,10 @@ public class NewAbilityMessage extends Packet {
     public void deserialize(BufferReader buffer) throws Exception {
         abilityType = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "NewAbilityMessage{" +
+                "\n   abilityType=" + abilityType;
+    }
 }

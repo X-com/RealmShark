@@ -59,4 +59,17 @@ public class EnemyShootPacket extends Packet {
             angleInc = 0;
         }
     }
+
+    @Override
+    public String toString() {
+        return "EnemyShootPacket{" +
+                "\n   bulletId=" + bulletId +
+                "\n   ownerId=" + ownerId +
+                "\n   bulletType=" + bulletType +
+                "\n   startingPos=" + startingPos +
+                "\n   angle=" + angle +
+                "\n   damage=" + damage +
+                "\n   numShots=" + numShots +
+                "\n   angleInc=" + angleInc;
+    }
 }

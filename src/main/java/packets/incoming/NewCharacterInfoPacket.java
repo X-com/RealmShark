@@ -16,4 +16,10 @@ public class NewCharacterInfoPacket extends Packet {
     public void deserialize(BufferReader buffer) throws Exception {
         charXML = buffer.readString();
     }
+
+    @Override
+    public String toString() {
+        return "NewCharacterInfoPacket{" +
+                "\n   charXML=" + charXML;
+    }
 }

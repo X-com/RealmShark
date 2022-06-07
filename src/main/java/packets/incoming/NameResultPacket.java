@@ -21,4 +21,11 @@ public class NameResultPacket extends Packet {
         success = buffer.readBoolean();
         errorText = buffer.readString();
     }
+
+    @Override
+    public String toString() {
+        return "NameResultPacket{" +
+                "\n   success=" + success +
+                "\n   errorText=" + errorText;
+    }
 }

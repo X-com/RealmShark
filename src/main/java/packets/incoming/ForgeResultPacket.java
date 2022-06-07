@@ -4,6 +4,8 @@ import packets.Packet;
 import packets.reader.BufferReader;
 import packets.data.SlotObjectData;
 
+import java.util.Arrays;
+
 /**
  * Received when the player uses the item forge
  */
@@ -25,5 +27,12 @@ public class ForgeResultPacket extends Packet {
         for (int i = 0; i < results.length; i++) {
             results[i] = new SlotObjectData().deserialize(buffer);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ForgeResultPacket{" +
+                "\n   success=" + success +
+                "\n   results=" + Arrays.toString(results);
     }
 }

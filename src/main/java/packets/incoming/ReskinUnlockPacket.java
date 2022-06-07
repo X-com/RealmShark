@@ -21,4 +21,11 @@ public class ReskinUnlockPacket extends Packet {
         skinId = buffer.readInt();
         isPetSkin = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "ReskinUnlockPacket{" +
+                "\n   skinId=" + skinId +
+                "\n   isPetSkin=" + isPetSkin;
+    }
 }

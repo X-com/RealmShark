@@ -16,4 +16,10 @@ public class ArenaDeathPacket extends Packet {
     public void deserialize(BufferReader buffer) throws Exception {
         cost = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "ArenaDeathPacket{" +
+                "\n   cost=" + cost;
+    }
 }

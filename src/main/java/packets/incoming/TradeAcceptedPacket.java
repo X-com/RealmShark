@@ -3,6 +3,8 @@ package packets.incoming;
 import packets.Packet;
 import packets.reader.BufferReader;
 
+import java.util.Arrays;
+
 /**
  * Received when the active trade is accepted
  */
@@ -32,5 +34,12 @@ public class TradeAcceptedPacket extends Packet {
         for (int i = 0; i < partnerOffer.length; i++) {
             partnerOffer[i] = buffer.readBoolean();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "TradeAcceptedPacket{" +
+                "\n   clientOffer=" + Arrays.toString(clientOffer) +
+                "\n   partnerOffer=" + Arrays.toString(partnerOffer);
     }
 }

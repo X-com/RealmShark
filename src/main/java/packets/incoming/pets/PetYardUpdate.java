@@ -18,4 +18,10 @@ public class PetYardUpdate extends Packet {
     public void deserialize(BufferReader buffer) throws Exception {
         yardType = PetYardType.byOrdinal(buffer.readInt());
     }
+
+    @Override
+    public String toString() {
+        return "PetYardUpdate{" +
+                "\n   yardType=" + yardType;
+    }
 }

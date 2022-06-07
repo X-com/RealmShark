@@ -21,4 +21,11 @@ public class QuestRedeemResponsePacket extends Packet {
         ok = buffer.readBoolean();
         message = buffer.readString();
     }
+
+    @Override
+    public String toString() {
+        return "QuestRedeemResponsePacket{" +
+                "\n   ok=" + ok +
+                "\n   message=" + message;
+    }
 }

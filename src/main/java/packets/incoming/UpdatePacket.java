@@ -7,6 +7,8 @@ import packets.data.ObjectData;
 import packets.data.WorldPosData;
 import util.Util;
 
+import java.util.Arrays;
+
 /**
  * Received when an update even occurs. Some events include
  * + One or more new objects have entered the map (become visible)
@@ -56,7 +58,13 @@ public class UpdatePacket extends Packet {
         }
     }
 
+    @Override
     public String toString() {
-        return String.format("Unknown%s UnknownType:%d\n-GroundTileData-%s\n-ObjectData-%s\n-RemoveObjects-%s", pos, levelType, Util.showAll(tiles), Util.showAll(newObjects), Util.showAll(drops));
+        return "UpdatePacket{" +
+                "\n   levelType=" + levelType +
+                "\n   pos=" + pos +
+                "\n   tiles=" + Arrays.toString(tiles) +
+                "\n   newObjects=" + Arrays.toString(newObjects) +
+                "\n   drops=" + Arrays.toString(drops);
     }
 }

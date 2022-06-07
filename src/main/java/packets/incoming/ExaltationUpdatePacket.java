@@ -35,4 +35,18 @@ public class ExaltationUpdatePacket extends Packet {
         manaProgress = buffer.readCompressedInt();
         healthProgress = buffer.readCompressedInt();
     }
+
+    @Override
+    public String toString() {
+        return "ExaltationUpdatePacket{" +
+                "\n   objType=" + objType +
+                "\n   attackProgress=" + attackProgress +
+                "\n   defenseProgress=" + defenseProgress +
+                "\n   speedProgress=" + speedProgress +
+                "\n   dexterityProgress=" + dexterityProgress +
+                "\n   vitalityProgress=" + vitalityProgress +
+                "\n   wisdomProgress=" + wisdomProgress +
+                "\n   healthProgress=" + healthProgress +
+                "\n   manaProgress=" + manaProgress;
+    }
 }

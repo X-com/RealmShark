@@ -55,4 +55,17 @@ public class AoePacket extends Packet {
         color = buffer.readInt();
         armorPiercing = buffer.readBoolean();
     }
+
+    @Override
+    public String toString() {
+        return "AoePacket{" +
+                "\n   pos=" + pos +
+                "\n   radius=" + radius +
+                "\n   damage=" + damage +
+                "\n   effect=" + effect +
+                "\n   duration=" + duration +
+                "\n   origType=" + origType +
+                "\n   color=" + color +
+                "\n   armorPiercing=" + armorPiercing;
+    }
 }

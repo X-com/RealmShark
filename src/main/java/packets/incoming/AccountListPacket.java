@@ -3,6 +3,8 @@ package packets.incoming;
 import packets.Packet;
 import packets.reader.BufferReader;
 
+import java.util.Arrays;
+
 /**
  * Received to provide lists of accounts ids which are
  * those of players who have been locked, ignored, etc.
@@ -29,5 +31,13 @@ public class AccountListPacket extends Packet {
             accountIds[i] = buffer.readString();
         }
         lockAction = buffer.readInt();
+    }
+
+    @Override
+    public String toString() {
+        return "AccountListPacket{" +
+                "\n   accountListId=" + accountListId +
+                "\n   accountIds=" + Arrays.toString(accountIds) +
+                "\n   lockAction=" + lockAction;
     }
 }

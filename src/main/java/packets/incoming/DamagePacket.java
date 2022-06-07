@@ -55,12 +55,12 @@ public class DamagePacket extends Packet {
     @Override
     public String toString() {
         return "DamagePacket{" +
-                "\n targetId=" + targetId +
-                "\n effects=" + Arrays.toString(effects) +
-                "\n damageAmount=" + damageAmount +
-                "\n kill=" + kill +
-                "\n armorPierce=" + armorPierce +
-                "\n bulletId=" + bulletId +
-                "\n objectId=" + objectId;
+                "\n   targetId=" + targetId +
+                "\n   effects=" + Arrays.toString(effects) +
+                "\n   damageAmount=" + damageAmount +
+                "\n   kill=" + kill +
+                "\n   armorPierce=" + armorPierce +
+                "\n   bulletId=" + bulletId +
+                "\n   objectId=" + objectId;
     }
 }

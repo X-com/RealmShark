@@ -5,6 +5,8 @@ import packets.reader.BufferReader;
 import packets.data.ObjectStatusData;
 import util.Util;
 
+import java.util.Arrays;
+
 /**
  * Received to notify the player of a new game tick
  */
@@ -42,7 +44,13 @@ public class NewTickPacket extends Packet {
         }
     }
 
+    @Override
     public String toString() {
-        return String.format("TickId%s TickTime:%d ServerRealTimeMS:%d ServerLastTimeRTTMS:%d\n-ObjectStatusData-\n%s", tickId, tickTime, serverRealTimeMS, serverLastTimeRTTMS, Util.showAll(status));
+        return "NewTickPacket{" +
+                "\n   tickId=" + tickId +
+                "\n   tickTime=" + tickTime +
+                "\n   serverRealTimeMS=" + serverRealTimeMS +
+                "\n   serverLastTimeRTTMS=" + serverLastTimeRTTMS +
+                "\n   status=" + Arrays.toString(status);
     }
 }

@@ -21,4 +21,11 @@ public class InvitedToGuildPacket extends Packet {
         name = buffer.readString();
         guildName = buffer.readString();
     }
+
+    @Override
+    public String toString() {
+        return "InvitedToGuildPacket{" +
+                "\n   name=" + name +
+                "\n   guildName=" + guildName;
+    }
 }

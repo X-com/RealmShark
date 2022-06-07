@@ -3,6 +3,8 @@ package packets.incoming;
 import packets.Packet;
 import packets.reader.BufferReader;
 
+import java.util.Arrays;
+
 /**
  * Received when the player enters or updates their vault
  */
@@ -89,5 +91,23 @@ public class VaultContentPacket extends Packet {
 
         vaultItemString = buffer.readString();
         giftItemString = buffer.readString();
+    }
+
+    @Override
+    public String toString() {
+        return "VaultContentPacket{" +
+                "\n   unknownBool=" + unknownBool +
+                "\n   vaultItemCount=" + vaultItemCount +
+                "\n   giftItemCount=" + giftItemCount +
+                "\n   potionItemCount=" + potionItemCount +
+                "\n   vaultContents=" + Arrays.toString(vaultContents) +
+                "\n   giftContents=" + Arrays.toString(giftContents) +
+                "\n   potionContents=" + Arrays.toString(potionContents) +
+                "\n   vaultUpgradeCost=" + vaultUpgradeCost +
+                "\n   potionUpgradeCost=" + potionUpgradeCost +
+                "\n   currentPotionMax=" + currentPotionMax +
+                "\n   nextPotionMax=" + nextPotionMax +
+                "\n   vaultItemString=" + vaultItemString +
+                "\n   giftItemString=" + giftItemString;
     }
 }

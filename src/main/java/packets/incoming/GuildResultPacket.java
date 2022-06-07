@@ -21,4 +21,11 @@ public class GuildResultPacket extends Packet {
         success = buffer.readBoolean();
         lineBuilderJSON = buffer.readString();
     }
+
+    @Override
+    public String toString() {
+        return "GuildResultPacket{" +
+                "\n   success=" + success +
+                "\n   lineBuilderJSON=" + lineBuilderJSON;
+    }
 }

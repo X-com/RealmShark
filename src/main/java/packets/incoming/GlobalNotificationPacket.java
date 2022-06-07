@@ -21,4 +21,11 @@ public class GlobalNotificationPacket extends Packet {
         notificationType = buffer.readInt();
         text = buffer.readString();
     }
+
+    @Override
+    public String toString() {
+        return "GlobalNotificationPacket{" +
+                "\n   notificationType=" + notificationType +
+                "\n   text=" + text;
+    }
 }

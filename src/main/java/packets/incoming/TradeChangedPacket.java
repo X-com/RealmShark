@@ -3,6 +3,8 @@ package packets.incoming;
 import packets.Packet;
 import packets.reader.BufferReader;
 
+import java.util.Arrays;
+
 /**
  * Received when the active trade is changed
  */
@@ -21,5 +23,11 @@ public class TradeChangedPacket extends Packet {
         for (int i = 0; i < offer.length; i++) {
             offer[i] = buffer.readBoolean();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "TradeChangedPacket{" +
+                "\n   offer=" + Arrays.toString(offer);
     }
 }

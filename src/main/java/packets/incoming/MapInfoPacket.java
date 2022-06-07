@@ -3,6 +3,8 @@ package packets.incoming;
 import packets.Packet;
 import packets.reader.BufferReader;
 
+import java.util.Arrays;
+
 /**
  * Received in response to the `HelloPacket`
  */
@@ -93,7 +95,24 @@ public class MapInfoPacket extends Packet {
         dungeonModifiers = dungeonMods.split(";");
     }
 
+    @Override
     public String toString() {
-        return String.format("%d %d %s %s %s %d %d %f %b %b %b %d %d %s %d %s\n", width, height, name, displayName, realmName, seed, background, difficulty, allowPlayerTeleport, showDisplays, unknownBoolean, maxPlayers, gameOpenedTime, buildVersion, unknownInt, dungeonModifiers);
+        return "MapInfoPacket{" +
+                "\n   width=" + width +
+                "\n   height=" + height +
+                "\n   name='" + name + '\'' +
+                "\n   displayName='" + displayName + '\'' +
+                "\n   realmName='" + realmName + '\'' +
+                "\n   difficulty=" + difficulty +
+                "\n   seed=" + seed +
+                "\n   background=" + background +
+                "\n   allowPlayerTeleport=" + allowPlayerTeleport +
+                "\n   showDisplays=" + showDisplays +
+                "\n   unknownBoolean=" + unknownBoolean +
+                "\n   maxPlayers=" + maxPlayers +
+                "\n   gameOpenedTime=" + gameOpenedTime +
+                "\n   buildVersion='" + buildVersion + '\'' +
+                "\n   unknownInt=" + unknownInt +
+                "\n   dungeonModifiers=" + Arrays.toString(dungeonModifiers);
     }
 }

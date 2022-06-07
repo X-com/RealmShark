@@ -22,4 +22,11 @@ public class FailurePacket extends Packet {
         errorId = FailureCode.byOrdinal(buffer.readInt());
         errorDescription = buffer.readString();
     }
+
+    @Override
+    public String toString() {
+        return "FailurePacket{" +
+                "\n   errorId=" + errorId +
+                "\n   errorDescription=" + errorDescription;
+    }
 }

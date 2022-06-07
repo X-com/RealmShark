@@ -73,10 +73,6 @@ public class ServerPlayerShootPacket extends Packet {
         }
     }
 
-//    public String toString(){
-//        return String.format("%d %d %d %s %f %d (%d %d %d %f)\n", bulletId, ownerId, containerType, startingPos, angle, damage, unknownInt, unknownByte1, unknownByte2, unknownFloat);
-//    }
-
     @Override
     public String toString() {
         return "ServerPlayerShootPacket{" +

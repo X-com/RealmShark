@@ -86,4 +86,16 @@ public class ShowEffectPacket extends Packet {
             unknownByte = buffer.readByte();
         }
     }
+
+    @Override
+    public String toString() {
+        return "ShowEffectPacket{" +
+                "\n   effectType=" + effectType +
+                "\n   targetObjectId=" + targetObjectId +
+                "\n   pos1=" + pos1 +
+                "\n   pos2=" + pos2 +
+                "\n   color=" + color +
+                "\n   duration=" + duration +
+                "\n   unknownByte=" + unknownByte;
+    }
 }

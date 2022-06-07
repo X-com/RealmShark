@@ -23,4 +23,11 @@ public class TradeDonePacket extends Packet {
         code = TradeResult.byOrdinal(buffer.readInt());
         description = buffer.readString();
     }
+
+    @Override
+    public String toString() {
+        return "TradeDonePacket{" +
+                "\n   code=" + code +
+                "\n   description=" + description;
+    }
 }

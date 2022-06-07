@@ -16,4 +16,10 @@ public class ImminentArenaWavePacket extends Packet {
     public void deserialize(BufferReader buffer) throws Exception {
         currentRuntime = buffer.readInt();
     }
+
+    @Override
+    public String toString() {
+        return "ImminentArenaWavePacket{" +
+                "\n   currentRuntime=" + currentRuntime;
+    }
 }
