@@ -29,7 +29,10 @@ public class MoveRecord {
         return this;
     }
 
+    @Override
     public String toString() {
-        return String.format("Time:%d %s", time, pos);
+        return "MoveRecord{" +
+                "\n   time=" + time +
+                "\n   pos=" + pos;
     }
 }

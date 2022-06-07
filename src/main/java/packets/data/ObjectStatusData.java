@@ -3,6 +3,8 @@ package packets.data;
 import packets.reader.BufferReader;
 import util.Util;
 
+import java.util.Arrays;
+
 public class ObjectStatusData {
     /**
      * The object id of the object which this status is for
@@ -35,7 +37,11 @@ public class ObjectStatusData {
         return this;
     }
 
+    @Override
     public String toString() {
-        return String.format("ObjectID:%d %s %s", objectId, pos, Util.showAll(stats));
+        return "ObjectStatusData{" +
+                "\n   objectId=" + objectId +
+                "\n   pos=" + pos +
+                "\n   stats=" + Arrays.toString(stats);
     }
 }

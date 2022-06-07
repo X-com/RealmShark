@@ -35,7 +35,12 @@ public class TradeItem {
         return this;
     }
 
+    @Override
     public String toString() {
-        return String.format("ItemID:%d SlotType:%d Tradeable:%b Being-traded:%b", item, slotType, tradeable, included);
+        return "TradeItem{" +
+                "\n   item=" + item +
+                "\n   slotType=" + slotType +
+                "\n   tradeable=" + tradeable +
+                "\n   included=" + included;
     }
 }

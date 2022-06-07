@@ -2,6 +2,8 @@ package packets.data;
 
 import packets.reader.BufferReader;
 
+import java.util.Arrays;
+
 /**
  * Coordinate data of world objects.
  */
@@ -28,7 +30,10 @@ public class WorldPosData {
         return this;
     }
 
+    @Override
     public String toString() {
-        return String.format("Pos(%f,%f)", x, y);
+        return "WorldPosData{" +
+                "\n   x=" + x +
+                "\n   y=" + y;
     }
 }

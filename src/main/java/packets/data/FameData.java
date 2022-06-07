@@ -26,4 +26,12 @@ public class FameData {
         fameAdded = buffer.readCompressedInt();
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "FameData{" +
+                "\n   achievement=" + achievement +
+                "\n   fameLevel=" + fameLevel +
+                "\n   fameAdded=" + fameAdded;
+    }
 }

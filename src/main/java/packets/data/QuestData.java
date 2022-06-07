@@ -80,7 +80,19 @@ public class QuestData {
         return this;
     }
 
+    @Override
     public String toString() {
-        return String.format("Quest ID:%d Name:%d Description:%d Expiration:%b Item-Reqs:%s Item-Rew:%s %Completed:%b Item-Choise:%b Repeatable:%b Category:%d Unknown:%d", id, name, description, expiration, Arrays.toString(requirements), Arrays.toString(rewards), completed, itemOfChoice, repeatable, category, unknownInt);
+        return "QuestData{" +
+                "\n   id=" + id +
+                "\n   name=" + name +
+                "\n   description=" + description +
+                "\n   expiration=" + expiration +
+                "\n   requirements=" + Arrays.toString(requirements) +
+                "\n   rewards=" + Arrays.toString(rewards) +
+                "\n   completed=" + completed +
+                "\n   itemOfChoice=" + itemOfChoice +
+                "\n   repeatable=" + repeatable +
+                "\n   category=" + category +
+                "\n   unknownInt=" + unknownInt;
     }
 }

@@ -1,6 +1,7 @@
 package packets.data;
 
 import packets.reader.BufferReader;
+import util.IdToName;
 
 public class ObjectData {
     /**
@@ -25,7 +26,10 @@ public class ObjectData {
         return this;
     }
 
+    @Override
     public String toString() {
-        return String.format("ObjectType:%d\n-ObjectStatusData-\n%s", objectType, status);
+        return "ObjectData{" +
+                "\n   objectType=" + objectType +
+                "\n   status=" + status;
     }
 }

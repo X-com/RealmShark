@@ -59,7 +59,13 @@ public class StatData {
         return false;
     }
 
+    @Override
     public String toString() {
-        return String.format("Stat:%s Value:%s SecValue:%d", (statType != null ? statType : statTypeNum), (stringStatValue != null ? stringStatValue : Integer.toString(statValue)), statValueTwo);
+        return "StatData{" +
+                "\n         statTypeNum=" + statTypeNum +
+                "\n         statType=" + statType +
+                (isStringStat() ? "\n         stringStatValue='" + stringStatValue + '\'' :
+                "\n         statValue=" + statValue) +
+                "\n         statValueTwo=" + statValueTwo + "\n";
     }
 }

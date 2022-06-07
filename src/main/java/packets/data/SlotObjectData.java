@@ -31,7 +31,11 @@ public class SlotObjectData {
         return this;
     }
 
+    @Override
     public String toString() {
-        return String.format("ObjectId:%d SlotId:%d ObjectType:%d", objectId, slotId, objectType);
+        return "SlotObjectData{" +
+                "\n   objectId=" + objectId +
+                "\n   slotId=" + slotId +
+                "\n   objectType=" + objectType;
     }
 }

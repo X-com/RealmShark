@@ -32,7 +32,11 @@ public class GroundTileData {
         return this;
     }
 
+    @Override
     public String toString() {
-        return String.format("TileID:%d TilePos:(%d,%d)", type, x, y);
+        return "GroundTileData{" +
+                "\n   x=" + x +
+                "\n   y=" + y +
+                "\n   type=" + type;
     }
 }
