@@ -106,6 +106,18 @@ public class ExampleModTomato {
                     String playerName = m.group(1);
                     TomatoGUI.appendTextAreaKeypop(String.format("%s [%s]: %s\n", Util.getHourTime(), playerName, IdToName.name(nPacket.pictureType)));
                 }
+            } else if (nPacket.effect == NotificationEffectType.ServerMessage) {
+                String msg = nPacket.message;
+                if (msg.startsWith("Wine Cellar")) {
+                    String[] list = msg.split(" ");
+                    String playerName = list[list.length-1];
+                    TomatoGUI.appendTextAreaKeypop(String.format("%s [%s]: Inc\n", Util.getHourTime(), playerName));
+                } else if (msg.contains("Monument has been activated by")) {
+                    String[] list = msg.split(" ");
+                    String playerName = list[list.length-1];
+                    String type = list[1];
+                    TomatoGUI.appendTextAreaKeypop(String.format("%s [%s]: %s Rune\n", Util.getHourTime(), playerName, type));
+                }
             }
         }
     }
