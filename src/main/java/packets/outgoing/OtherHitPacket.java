@@ -14,7 +14,7 @@ public class OtherHitPacket extends Packet {
     /**
      * The id of the bullet which hit the object.
      */
-    public int bulletId;
+    public short bulletId;
     /**
      * The object id of player who fired the projectile which hit the object.
      */
@@ -23,18 +23,13 @@ public class OtherHitPacket extends Packet {
      * The object id of the object which was hit.
      */
     public int targetId;
-    /**
-     * Unknown byte
-     */
-    public byte unknownByte;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
         time = buffer.readInt();
-        bulletId = buffer.readUnsignedByte();
+        bulletId = buffer.readShort();
         objectId = buffer.readInt();
         targetId = buffer.readInt();
-        unknownByte = buffer.readByte();
     }
 
     @Override
@@ -43,7 +38,6 @@ public class OtherHitPacket extends Packet {
                 "\n   time=" + time +
                 "\n   bulletId=" + bulletId +
                 "\n   objectId=" + objectId +
-                "\n   targetId=" + targetId +
-                "\n   unknownByte=" + unknownByte;
+                "\n   targetId=" + targetId;
     }
 }
