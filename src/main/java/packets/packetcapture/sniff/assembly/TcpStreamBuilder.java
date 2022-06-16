@@ -36,8 +36,10 @@ public class TcpStreamBuilder {
      * @param packet TCP packets needing to be ordered.
      */
     public void streamBuilder(TcpPacket packet) {
-        if (packet.isSyn()) {
-            reset();
+        if (packet.isResetBit()) {
+            if (packet.isSyn()) {
+                reset();
+            }
             return;
         }
         if (sequenseNumber == 0) {
