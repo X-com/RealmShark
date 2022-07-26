@@ -6,6 +6,16 @@ import packets.reader.BufferReader;
  * Abstract packet class for all incoming or outgoing packets.
  */
 public abstract class Packet {
+
+    public byte[] data;
+
+    public byte[] getPayload() {
+        return data;
+    }
+    public void setData(byte[] data) {
+        this.data = data;
+    }
+
     /**
      * An interface to be used as a class factory for different packet types.
      */

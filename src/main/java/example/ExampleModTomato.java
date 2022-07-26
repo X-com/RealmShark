@@ -1,5 +1,6 @@
 package example;
 
+import example.damagecalc.DamageCalculator;
 import example.gui.TomatoGUI;
 import packets.Packet;
 import packets.PacketType;
@@ -31,6 +32,7 @@ public class ExampleModTomato {
     private static PacketProcessor packetProcessor;
 
     public static void main(String[] args) {
+        Util.setSaveLogs(true); // turns the logger to, save in to files.
         ExampleModTomato.example();
     }
 
@@ -51,6 +53,14 @@ public class ExampleModTomato {
         Register.INSTANCE.register(PacketType.TEXT, ExampleModTomato::textPacket);
         Register.INSTANCE.register(PacketType.NOTIFICATION, ExampleModTomato::notificationPacket);
 
+        Register.INSTANCE.register(PacketType.CREATE_SUCCESS, DamageCalculator::capturePackets);
+        Register.INSTANCE.register(PacketType.ENEMYHIT, DamageCalculator::capturePackets);
+        Register.INSTANCE.register(PacketType.PLAYERSHOOT, DamageCalculator::capturePackets);
+        Register.INSTANCE.register(PacketType.DAMAGE, DamageCalculator::capturePackets);
+        Register.INSTANCE.register(PacketType.SERVERPLAYERSHOOT, DamageCalculator::capturePackets);
+        Register.INSTANCE.register(PacketType.UPDATE, DamageCalculator::capturePackets);
+        Register.INSTANCE.register(PacketType.NEWTICK, DamageCalculator::capturePackets);
+        Register.INSTANCE.register(PacketType.MAPINFO, DamageCalculator::capturePackets);
         new TomatoGUI().create();
     }
 
@@ -77,6 +87,10 @@ public class ExampleModTomato {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static boolean isRunning() {
+        return packetProcessor != null;
     }
 
     /**
