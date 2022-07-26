@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class XmlIdParser {
-    static final String ROOTDIR = "D:/Programmering/rotmg-decompiled-ida/exalt-extractor/exalt-extractor/output";
+    static final String ROOTDIR = "D:\\Programmering\\himextractor\\exalt-extractor\\output";
     static final ArrayList<Pair<String, String>> pairs = new ArrayList<>();
     static final ArrayList<String> fullList = new ArrayList<>();
     static final HashMap<Integer, String> hashList = new HashMap<>();
@@ -33,7 +33,7 @@ public class XmlIdParser {
 
     private void run() {
         System.out.println("clearconsole");
-
+        Util.setSaveLogs(true);
         try {
             Files.walk(Paths.get(ROOTDIR)).filter(Files::isRegularFile).filter(p -> p.toString().endsWith("xml")).forEach(XmlIdParser::xml);
         } catch (IOException e) {
@@ -78,16 +78,18 @@ public class XmlIdParser {
 
                     Element element = (Element) node;
 
-                    // get staff's attribute
                     String idID = element.getAttribute("id");
                     String typeID = element.getAttribute("type");
                     NodeList displayID = element.getElementsByTagName("DisplayId");
                     NodeList clazzID = element.getElementsByTagName("Class");
                     NodeList groupID = element.getElementsByTagName("Group");
+                    NodeList projectile = element.getElementsByTagName("Projectile");
 
                     String display = "";
                     String clazz = "";
                     String group = "";
+                    String minDmg = "";
+                    String maxDmg = "";
                     if (displayID.getLength() > 0) {
                         display = displayID.item(0).getTextContent();
                     }
@@ -97,11 +99,29 @@ public class XmlIdParser {
                     if (groupID.getLength() > 0) {
                         group = groupID.item(0).getTextContent();
                     }
+                    if (projectile.getLength() > 0) {
+                        for (int i = 0; i < projectile.getLength(); i++) {
+                            Node n = list.item(i);
+                            if (n != null && n.getNodeType() == Node.ELEMENT_NODE) {
+                                Element e = (Element) n;
+                                NodeList min = element.getElementsByTagName("MinDamage");
+                                NodeList max = element.getElementsByTagName("MaxDamage");
+                                if (min.getLength() > 0) {
+                                    minDmg = min.item(0).getTextContent();
+                                }
+                                if (max.getLength() > 0) {
+                                    maxDmg = max.item(0).getTextContent();
+                                }
+                            }
+                        }
+                    }
 
                     int id = Integer.decode(typeID);
 //                    if (hashList.containsKey(id)) {
 //                    }
-                    Util.print(String.format("%d:%s:%s:%s:%s", id, display, clazz, group, idID));
+                    String s = String.format("%d:%s:%s:%s:%s:%s:%s", id, display, clazz, group, minDmg, maxDmg, idID);
+                    Util.print(s);
+//                    System.out.println(s);
 //                    hashList.put(id, idID);
                 }
             }
