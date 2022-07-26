@@ -111,7 +111,12 @@ public class PacketProcessor extends Thread implements PProcessor {
         Packet packetType = PacketType.getPacket(type).factory();
         BufferReader pData = new BufferReader(data);
 
+//        if (filter(PacketType.byOrdinal(type))) {
+//            System.out.println(PacketType.byOrdinal(type));
+//        }
+
         try {
+            packetType.setData(data.array()); // temporary for damage logger
             packetType.deserialize(pData);
             if (!pData.isBufferFullyParsed())
                 pData.printError(packetType);
@@ -121,6 +126,33 @@ public class PacketProcessor extends Thread implements PProcessor {
             return;
         }
         Register.INSTANCE.emit(packetType);
+    }
+
+    private boolean filter(PacketType byOrdinal) {
+        if(byOrdinal == PacketType.NEWTICK) return false;
+        if(byOrdinal == PacketType.MOVE) return false;
+        if(byOrdinal == PacketType.PONG) return false;
+        if(byOrdinal == PacketType.PING) return false;
+//        if(byOrdinal == PacketType.PLAYERSHOOT) return false;
+
+        return true;
+    }
+
+    private boolean filter(byte type) {
+//        if (type == 1) return false;
+//        if (type == 8) return false;
+//        if (type == 9) return false;
+//        if (type == 42) return false;
+//        if (type == 31) return false;
+//        if (type == 81) return false;
+//        if (type == 62) return false;
+//        if (type == 44) return false;
+//        if (type == 67) return false;
+//        if (type == 13) return false;
+//        if (type == 120) return false;
+//        if (type == 114) return false;
+//        if (type == 47) return false;
+        return true;
     }
 
     /**

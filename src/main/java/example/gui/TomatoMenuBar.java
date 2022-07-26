@@ -1,6 +1,8 @@
 package example.gui;
 
+import pipe.Injector;
 import example.ExampleModTomato;
+import pipe.PipeProducer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +13,7 @@ import java.awt.event.ActionListener;
  * Menu bar builder class
  */
 public class TomatoMenuBar implements ActionListener {
-    private JMenuItem about, borders, bandwidth, javav;
+    private JMenuItem about, borders, bandwidth, javav, inject, capture;
     private JMenu file, edit, info;
     private JMenuBar jMenuBar;
     private JFrame frame;
@@ -35,8 +37,16 @@ public class TomatoMenuBar implements ActionListener {
         borders = new JMenuItem("Borders");
         borders.addActionListener(this);
         borders.setMargin(new Insets(2, -20, 2, 2));
+        inject = new JMenuItem("Inject");
+        inject.addActionListener(this);
+        inject.setMargin(new Insets(2, -20, 2, 2));
+        capture = new JMenuItem("Capture");
+        capture.addActionListener(this);
+        capture.setMargin(new Insets(2, -20, 2, 2));
         edit = new JMenu("Edit");
         edit.add(borders);
+        edit.add(inject);
+        edit.add(capture);
         jMenuBar.add(edit);
 
         about = new JMenuItem("About");
@@ -80,6 +90,15 @@ public class TomatoMenuBar implements ActionListener {
             frame.dispose();
             frame.setUndecorated(!frame.isUndecorated());
             frame.setVisible(true);
+        } else if (e.getSource() == inject) { // Injects dll for damage calculation
+            Injector.injectDLL();
+            PipeProducer.createPipe();
+            inject.setEnabled(false);
+            capture.setEnabled(false);
+        } else if (e.getSource() == capture) { // Injects dll for damage calculation
+            PipeProducer.createPipe();
+            inject.setEnabled(false);
+            capture.setEnabled(false);
         } else if (e.getSource() == sniffer) { // Starts and stops the sniffer
             if (sniffer.getText().contains("Start")) {
                 sniffer.setText("Stop Sniffer");

@@ -1,5 +1,7 @@
 package util;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -173,5 +175,17 @@ public class Util {
      */
     public static InputStream resourceFilePath(String fileName) throws URISyntaxException {
         return IdToName.class.getClassLoader().getResourceAsStream(fileName);
+    }
+
+    public static void playSound() {
+        File lol = new File("beep.wav");
+
+        try {
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(lol));
+            clip.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
