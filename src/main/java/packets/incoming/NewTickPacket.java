@@ -46,11 +46,11 @@ public class NewTickPacket extends Packet {
 
     @Override
     public String toString() {
-        return "NewTickPacket{" +
-                "\n   tickId=" + tickId +
-                "\n   tickTime=" + tickTime +
-                "\n   serverRealTimeMS=" + serverRealTimeMS +
-                "\n   serverLastTimeRTTMS=" + serverLastTimeRTTMS +
-                "\n   status=" + Arrays.toString(status);
+        return "NewTickPacket" +
+                "\n  tickId=" + tickId +
+                "\n  tickTime=" + tickTime +
+                "\n  serverRealTimeMS=" + serverRealTimeMS +
+                "\n  serverLastTimeRTTMS=" + serverLastTimeRTTMS +
+                (status.length == 0 ? "" : Util.showAll(status));
     }
 }

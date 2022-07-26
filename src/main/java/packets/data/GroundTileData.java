@@ -1,6 +1,7 @@
 package packets.data;
 
 import packets.reader.BufferReader;
+import util.IdToName;
 
 /**
  * Tile data class storing tile coordinates (x and y) and type of each tile.
@@ -34,9 +35,6 @@ public class GroundTileData {
 
     @Override
     public String toString() {
-        return "GroundTileData{" +
-                "\n   x=" + x +
-                "\n   y=" + y +
-                "\n   type=" + type;
+        return "\n    Tile " + IdToName.name(type) + " (" + x + ", "+ y + ")";
     }
 }

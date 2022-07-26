@@ -47,8 +47,8 @@ public class EnemyHitPacket extends Packet {
         return "EnemyHitPacket{" +
                 "\n   time=" + time +
                 "\n   bulletId=" + bulletId +
-                "\n   targetId=" + targetId +
                 "\n   shooterID=" + shooterID +
+                "\n   targetId=" + targetId +
                 "\n   kill=" + kill +
                 "\n   mainID=" + mainID;
     }

@@ -235,4 +235,8 @@ public class BufferReader {
         Util.print(PacketType.byClass(packet) + " : " + buffer.position() + "/" + buffer.capacity());
         Util.print(Arrays.toString(buffer.array()));
     }
+
+    public String toString() {
+        return Arrays.toString(buffer.array());
+    }
 }

@@ -100,9 +100,9 @@ public class MapInfoPacket extends Packet {
         return "MapInfoPacket{" +
                 "\n   width=" + width +
                 "\n   height=" + height +
-                "\n   name='" + name + '\'' +
-                "\n   displayName='" + displayName + '\'' +
-                "\n   realmName='" + realmName + '\'' +
+                "\n   name=" + name +
+                "\n   displayName=" + displayName +
+                "\n   realmName=" + realmName +
                 "\n   difficulty=" + difficulty +
                 "\n   seed=" + seed +
                 "\n   background=" + background +
@@ -111,7 +111,7 @@ public class MapInfoPacket extends Packet {
                 "\n   unknownBoolean=" + unknownBoolean +
                 "\n   maxPlayers=" + maxPlayers +
                 "\n   gameOpenedTime=" + gameOpenedTime +
-                "\n   buildVersion='" + buildVersion + '\'' +
+                "\n   buildVersion=" + buildVersion +
                 "\n   unknownInt=" + unknownInt +
                 "\n   dungeonModifiers=" + Arrays.toString(dungeonModifiers);
     }

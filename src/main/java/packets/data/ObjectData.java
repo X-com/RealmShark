@@ -28,8 +28,8 @@ public class ObjectData {
 
     @Override
     public String toString() {
-        return "ObjectData{" +
-                "\n   objectType=" + objectType +
-                "\n   status=" + status;
+        String name = IdToName.name(objectType);
+        return "\n    " + (name.equals("") ? ("objectType=" + objectType) : name) +
+                status;
     }
 }

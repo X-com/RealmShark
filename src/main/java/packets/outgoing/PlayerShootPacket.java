@@ -15,7 +15,7 @@ public class PlayerShootPacket extends Packet {
      /**
      * Counts the number of bullets sense entering dungeon.
      */
-    public short bulletID;
+    public short bulletId;
     /**
      * The item id of the weapon used to fire the projectile.
      */
@@ -40,7 +40,7 @@ public class PlayerShootPacket extends Packet {
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
         time = buffer.readInt();
-        bulletID = buffer.readShort();
+        bulletId = buffer.readShort();
         containerType = buffer.readUnsignedShort();
         unknownByte = buffer.readByte();
         startingPos = new WorldPosData().deserialize(buffer);
@@ -52,7 +52,7 @@ public class PlayerShootPacket extends Packet {
     public String toString() {
         return "PlayerShootPacket{" +
                 "\n   time=" + time +
-                "\n   bulletID=" + bulletID +
+                "\n   bulletID=" + bulletId +
                 "\n   containerType=" + containerType +
                 "\n   unknownByte=" + unknownByte +
                 "\n   startingPos=" + startingPos +

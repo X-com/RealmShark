@@ -60,11 +60,11 @@ public class UpdatePacket extends Packet {
 
     @Override
     public String toString() {
-        return "UpdatePacket{" +
+        return "UpdatePacket" +
                 "\n   levelType=" + levelType +
-                "\n   pos=" + pos +
-                "\n   tiles=" + Arrays.toString(tiles) +
-                "\n   newObjects=" + Arrays.toString(newObjects) +
-                "\n   drops=" + Arrays.toString(drops);
+                "\n   playerPos=" + "(" + pos.x + ", " + pos.y + ")" +
+                (tiles.length == 0 ? "" : Util.showAll(tiles)) +
+                (newObjects.length == 0 ? "" : Util.showAll(newObjects)) +
+                (drops.length == 0 ? "" : Arrays.toString(drops));
     }
 }

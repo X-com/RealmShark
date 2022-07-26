@@ -22,7 +22,8 @@ public class UnknownPacket139 extends Packet {
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
         unknownByte1 = buffer.readByte();
-        unknownByte2 = buffer.readByte();
+        if (buffer.size() > 14)
+            unknownByte2 = buffer.readByte();
         if (buffer.size() > 15)
             unknownByte3 = buffer.readByte();
         unknownInt1 = buffer.readInt();
