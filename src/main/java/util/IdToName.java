@@ -8,28 +8,34 @@ import java.util.HashMap;
  * Id to name class. Used to convert incoming realm IDs to the resources names.
  */
 public class IdToName {
-    private final int iD;
+    private final int id;
     private final String idName;
     private final String display;
     private final String clazz;
     private final String group;
+    private int minDmg;
+    private int maxDmg;
     private static final HashMap<Integer, IdToName> ID = new HashMap<>();
 
     /**
      * Constructor for the resources.
      *
-     * @param i Id of the resource
-     * @param n Name of the resource
-     * @param d Display name of the resource
-     * @param c Class of the resource
-     * @param g Group of the resource
+     * @param id      Id of the resource
+     * @param idName  Name of the resource
+     * @param display Display name of the resource
+     * @param clazz   Class of the resource
+     * @param minDmg  Min damage of weapons
+     * @param maxDmg  Max damage of weapons
+     * @param group   Group of the resource
      */
-    public IdToName(int i, String n, String d, String c, String g) {
-        iD = i;
-        idName = n;
-        display = d;
-        clazz = c;
-        group = g;
+    public IdToName(int id, String idName, String display, String clazz, String minDmg, String maxDmg, String group) {
+        this.id = id;
+        this.idName = idName;
+        this.display = display;
+        this.clazz = clazz;
+        if(!minDmg.equals("")) this.minDmg = Integer.parseInt(minDmg);
+        if(!maxDmg.equals("")) this.maxDmg = Integer.parseInt(maxDmg);
+        this.group = group;
     }
 
     /**
@@ -43,7 +49,7 @@ public class IdToName {
      * Method to grab the full list of resource's from file and construct the hashmap.
      */
     private static void readList() {
-        String fileName = "ID.list";
+        String fileName = "ID2.list";
 
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(Util.resourceFilePath(fileName), StandardCharsets.UTF_8));
@@ -51,12 +57,14 @@ public class IdToName {
 
             while ((line = br.readLine()) != null) {
                 String[] l = line.split(":");
-                int i = Integer.parseInt(l[0]);
-                String d = l[1];
-                String c = l[2];
-                String g = l[3];
-                String n = l[4];
-                ID.put(i, new IdToName(i, n, d, c, g));
+                int id = Integer.parseInt(l[0]);
+                String display = l[1];
+                String clazz = l[2];
+                String group = l[3];
+                String minDmg = l[4];
+                String maxDmg = l[5];
+                String idName = l[6];
+                ID.put(id, new IdToName(id, idName, display, clazz, minDmg, maxDmg, group));
             }
             br.close();
         } catch (Exception e) {
@@ -120,5 +128,27 @@ public class IdToName {
     public static String getIdGroup(int id) {
         IdToName i = ID.get(id);
         return i.group;
+    }
+
+    /**
+     * Minimum damage of weapon.
+     *
+     * @param id Id of the object.
+     * @return Minimum damage
+     */
+    public static int getIdWeaponMin(int id) {
+        IdToName i = ID.get(id);
+        return i.minDmg;
+    }
+
+    /**
+     * Maximum damage of weapon.
+     *
+     * @param id Id of the object.
+     * @return Maximum damage
+     */
+    public static int getIdWeaponMax(int id) {
+        IdToName i = ID.get(id);
+        return i.maxDmg;
     }
 }
