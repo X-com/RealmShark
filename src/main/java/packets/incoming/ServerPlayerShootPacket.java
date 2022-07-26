@@ -37,21 +37,21 @@ public class ServerPlayerShootPacket extends Packet {
      */
     public int unknownInt;
     /**
-     * Unkown byte 1
+     * Unknown byte 1
      */
     public byte unknownByte1;
     /**
-     * Extra bytes sent to add unknownByte2 & unknownFloat
+     * Spell from wizard used receiving 2 additional bytes of data
      */
-    public boolean extraData = false;
+    public boolean spellBulletData = false;
     /**
-     * Unkown byte 1
+     * Number of bullets from the spell used
      */
-    public byte unknownByte2;
+    public byte bulletCount;
     /**
-     * Unkown byte 1
+     * The angle between the two neighboring bullets shot from the spell
      */
-    public float unknownFloat;
+    public float anglesBetweenBullets;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
@@ -64,12 +64,12 @@ public class ServerPlayerShootPacket extends Packet {
         unknownInt = buffer.readInt();
         unknownByte1 = buffer.readByte();
         if(buffer.getRemainingBytes() > 4) {
-            extraData = true;
-            unknownByte2 = buffer.readByte();
-            unknownFloat = buffer.readFloat();
+            spellBulletData = true;
+            bulletCount = buffer.readByte();
+            anglesBetweenBullets = buffer.readFloat();
         } else {
-            unknownByte2 = 0;
-            unknownFloat = 372.0f;
+            bulletCount = 0;
+            anglesBetweenBullets = 372.0f;
         }
     }
 
@@ -84,8 +84,8 @@ public class ServerPlayerShootPacket extends Packet {
                 "\n damage=" + damage +
                 "\n unknownInt=" + unknownInt +
                 "\n unknownByte1=" + unknownByte1 +
-                "\n extraData=" + extraData +
-                "\n unknownByte2=" + unknownByte2 +
-                "\n unknownFloat=" + unknownFloat;
+                "\n extraData=" + spellBulletData +
+                "\n bulletCount=" + bulletCount +
+                "\n anglesBetweenBullets=" + anglesBetweenBullets;
     }
 }
