@@ -6,6 +6,7 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 
 /**
  * Generic utility class to insert methods used randomly.
@@ -13,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 public class Util {
 
     public static boolean saveLogs = true;
-    private static PrintWriter printWriter;
+    private static HashMap<String, PrintWriter> printWriter = new HashMap<>();
 
     /**
      * Fast method to get an integer out of the first 4 bytes of an array.
@@ -35,32 +36,45 @@ public class Util {
     }
 
     /**
-     * Print error logs to console or to file.
+     * Error logger.
      *
-     * @param s String of the log.
+     * @param s String of the error log.
      */
     public static void print(String s) {
+        print("error", s);
+    }
+
+    /**
+     * Print logs to console or to files in a folder.
+     *
+     * @param folder The folder to write the logs into.
+     * @param s      String of the log.
+     */
+    public static void print(String folder, String s) {
         if (!saveLogs) {
             System.out.println(s);
         } else {
             System.out.println(s);
-            if (printWriter == null) {
+            PrintWriter printWriterObject = printWriter.get(folder);
+            if (printWriterObject == null) {
                 try {
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss");
                     LocalDateTime now = LocalDateTime.now();
-                    File f = new File("error/" + dtf.format(now) + ".data");
+                    File f = new File(folder + "/" + folder + "-" + dtf.format(now) + ".data");
                     if (!f.exists()) {
                         f.getParentFile().mkdirs();
                         f.createNewFile();
                     }
                     FileWriter fileWriter = new FileWriter(f);
-                    printWriter = new PrintWriter(fileWriter);
+                    printWriterObject = new PrintWriter(fileWriter);
+                    printWriter.put(folder, printWriterObject);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    return;
                 }
             }
-            printWriter.print("\n" + s);
-            printWriter.flush();
+            printWriterObject.print("\n" + s);
+            printWriterObject.flush();
         }
     }
 
@@ -107,7 +121,7 @@ public class Util {
     public static String showAll(Object[] list) {
         StringBuilder sb = new StringBuilder();
         for (Object o : list) {
-            sb.append("\n" + o);
+            sb.append(o);
         }
         return sb.toString();
     }
