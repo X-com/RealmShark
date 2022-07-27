@@ -44,7 +44,7 @@ public class XmlIdParser {
 //        for (Pair pair : pairs) {
 //            System.out.printf("%s:%s\n", pair.left(), pair.right());
 //        }
-        System.out.println(hashList.size());
+//        System.out.println(hashList.size());
     }
 
     private static void xml(Path path) {
@@ -80,6 +80,8 @@ public class XmlIdParser {
 
                     String idID = element.getAttribute("id");
                     String typeID = element.getAttribute("type");
+                    int id = Integer.decode(typeID);
+
                     NodeList displayID = element.getElementsByTagName("DisplayId");
                     NodeList clazzID = element.getElementsByTagName("Class");
                     NodeList groupID = element.getElementsByTagName("Group");
@@ -99,27 +101,33 @@ public class XmlIdParser {
                     if (groupID.getLength() > 0) {
                         group = groupID.item(0).getTextContent();
                     }
-                    if (projectile.getLength() > 0) {
-                        for (int i = 0; i < projectile.getLength(); i++) {
-                            Node n = list.item(i);
-                            if (n != null && n.getNodeType() == Node.ELEMENT_NODE) {
-                                Element e = (Element) n;
-                                NodeList min = element.getElementsByTagName("MinDamage");
-                                NodeList max = element.getElementsByTagName("MaxDamage");
-                                if (min.getLength() > 0) {
-                                    minDmg = min.item(0).getTextContent();
-                                }
-                                if (max.getLength() > 0) {
-                                    maxDmg = max.item(0).getTextContent();
-                                }
+                    StringBuilder pTemp = new StringBuilder();
+                    boolean projectilesFound = false;
+                    for (int i = 0; i < projectile.getLength(); i++) {
+                        Node n = projectile.item(i);
+                        if (n != null && n.getNodeType() == Node.ELEMENT_NODE) {
+                            Element e = (Element) n;
+                            NodeList min = e.getElementsByTagName("MinDamage");
+                            NodeList max = e.getElementsByTagName("MaxDamage");
+                            NodeList armorPiercing = e.getElementsByTagName("ArmorPiercing");
+                            if (min.getLength() > 0) {
+                                minDmg = min.item(0).getTextContent();
+                                projectilesFound = true;
                             }
+                            if (max.getLength() > 0) {
+                                maxDmg = max.item(0).getTextContent();
+                                projectilesFound = true;
+                            }
+                            pTemp.append(minDmg).append(",").append(maxDmg).append(",").append(armorPiercing.item(0) != null ? "1," : "0,");
                         }
                     }
-
-                    int id = Integer.decode(typeID);
+                    String projectileString = "";
+                    if (projectilesFound) {
+                        projectileString = pTemp.substring(0, pTemp.length() - 1);
+                    }
 //                    if (hashList.containsKey(id)) {
 //                    }
-                    String s = String.format("%d:%s:%s:%s:%s:%s:%s", id, display, clazz, group, minDmg, maxDmg, idID);
+                    String s = String.format("%d:%s:%s:%s:%s:%s", id, display, clazz, group, projectileString, idID);
                     Util.print(s);
 //                    System.out.println(s);
 //                    hashList.put(id, idID);

@@ -32,20 +32,25 @@ public class Bullet {
         this.eff2 = eff2;
     }
 
-    public int calcBulletDmg(RNG rng, Entity player) {
-        if (player == null || rng == null) return 0;
+    public void calcBulletDmg(RNG rng, Entity player) {
+        if (player == null || rng == null) return;
         long r = rng.next();
         int weapon = ((PlayerShootPacket) packet).containerType;
-        int min = IdToName.getIdWeaponMin(weapon);
-        int max = IdToName.getIdWeaponMax(weapon);
+        int projectileId = ((PlayerShootPacket) packet).projectileId;
+        if (projectileId == -1){
+            projectileId = 0;
+        }
+        int min = IdToName.getIdProjectileMinDmg(weapon, projectileId);
+        int max = IdToName.getIdProjectileMaxDmg(weapon, projectileId);
+        boolean ap = IdToName.getIdProjectileArmorPierces(weapon, projectileId);
         int dmg = (int) (min + r % (max - min));
         float f = player.playerDmgMult();
 //            System.out.println(IdToName.name(weapon) + " Min: " +  min + " Max: " + max + " ff: " + f + " dmg: " + dmg + " " + r % (max - min) + " id: " + ((PlayerShootPacket) packet).bulletID);
         totalDmg = (int) (dmg * f);
+        armorPiercing = ap;
         effects = new int[1];
         effects[0] = player.stats[29].statValue;
 //        System.out.println("shoot: " + effects);
-        return totalDmg;
     }
 
     public int damageWithDefense(int damage, boolean armorPiercing, int defence, int[] conditions) {

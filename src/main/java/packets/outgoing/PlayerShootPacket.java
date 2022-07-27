@@ -21,9 +21,10 @@ public class PlayerShootPacket extends Packet {
      */
     public int containerType;
     /**
-     * unknown byte
+     * ID of the projectile for weapons with multiple types of projectiles. (i.e. bows)
+     * Warning: some projectileIDs can be -1 and should be treated as 0!
      */
-    public byte unknownByte;
+    public byte projectileId;
     /**
      * The position of the starting point where the projectile was fired.
      */
@@ -42,7 +43,7 @@ public class PlayerShootPacket extends Packet {
         time = buffer.readInt();
         bulletId = buffer.readShort();
         containerType = buffer.readUnsignedShort();
-        unknownByte = buffer.readByte();
+        projectileId = buffer.readByte();
         startingPos = new WorldPosData().deserialize(buffer);
         angle = buffer.readFloat();
         isBurst = buffer.readBoolean();
@@ -54,7 +55,7 @@ public class PlayerShootPacket extends Packet {
                 "\n   time=" + time +
                 "\n   bulletID=" + bulletId +
                 "\n   containerType=" + containerType +
-                "\n   unknownByte=" + unknownByte +
+                "\n   projectileId=" + projectileId +
                 "\n   startingPos=" + startingPos +
                 "\n   angle=" + angle +
                 "\n   isBurst=" + isBurst;

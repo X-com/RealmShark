@@ -134,9 +134,8 @@ public class DamageSimulator {
 
     public void packetCapture(Packet packet) {
         if (packet instanceof MapInfoPacket) {
-            MapInfoPacket p = (MapInfoPacket) packet;
-            mapInfo = p;
-            TomatoGUI.setTextAreaDPS(stringDmg());
+            if (mapInfo != null) TomatoGUI.setTextAreaDPS(stringDmg());
+            mapInfo = (MapInfoPacket) packet;
             Entity.clear();
             seed = mapInfo.seed;
             rng = new RNG(seed);
@@ -154,7 +153,7 @@ public class DamageSimulator {
         } else if (packet instanceof PlayerShootPacket) {
             PlayerShootPacket p = (PlayerShootPacket) packet;
             Bullet bullet = new Bullet(p, PacketType.PLAYERSHOOT);
-            int dmg = bullet.calcBulletDmg(rng, Entity.player);
+            bullet.calcBulletDmg(rng, Entity.player);
             Entity.player.addBullet(p.bulletId, bullet);
         } else if (packet instanceof ServerPlayerShootPacket) {
             ServerPlayerShootPacket p = (ServerPlayerShootPacket) packet;
