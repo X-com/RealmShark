@@ -120,8 +120,6 @@ public class TomatoGUI {
      * @param s Sets the text of text area.
      */
     public static void setTextAreaDPS(String s) {
-        System.out.println("test output");
-        System.out.println(s);
         if (textAreaDPS != null) textAreaDPS.setText(s);
     }
 
