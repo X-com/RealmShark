@@ -11,6 +11,7 @@ import java.awt.*;
 public class TomatoGUI {
     private static JTextArea textAreaChat;
     private static JTextArea textAreaKeypop;
+    private static JTextArea textAreaDPS;
     private static JLabel statusLabel;
     private static JFrame frame;
     private JMenuBar jMenuBar;
@@ -51,6 +52,17 @@ public class TomatoGUI {
         scrollKeypop.setAutoscrolls(true);
         new SmartScroller(scrollKeypop);
         tabbedPane.addTab("Key-pops", scrollKeypop);
+
+        textAreaDPS = new JTextArea();
+        textAreaDPS.setEnabled(true);
+        textAreaDPS.setEditable(false);
+        textAreaDPS.setLineWrap(true);
+        textAreaDPS.setWrapStyleWord(true);
+        JScrollPane scrollDPS = new JScrollPane(textAreaDPS);
+        scrollDPS.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollDPS.setAutoscrolls(true);
+        new SmartScroller(scrollDPS);
+        tabbedPane.addTab("DPS Logger", scrollDPS);
 
 
         center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
@@ -100,6 +112,17 @@ public class TomatoGUI {
      */
     public static void appendTextAreaKeypop(String s) {
         if (textAreaKeypop != null) textAreaKeypop.append(s);
+    }
+
+    /**
+     * Sets the text of DPS logger text area.
+     *
+     * @param s Sets the text of text area.
+     */
+    public static void setTextAreaDPS(String s) {
+        System.out.println("test output");
+        System.out.println(s);
+        if (textAreaDPS != null) textAreaDPS.setText(s);
     }
 
     /**

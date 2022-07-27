@@ -1,6 +1,7 @@
 package example;
 
 import example.damagecalc.DamageCalculator;
+import example.damagecalc.Entity;
 import example.gui.TomatoGUI;
 import packets.Packet;
 import packets.PacketType;
@@ -87,6 +88,7 @@ public class ExampleModTomato {
                 e.printStackTrace();
             }
         }
+        Entity.clear();
     }
 
     public static boolean isRunning() {

@@ -1,10 +1,9 @@
 package example.damagecalc;
 
+import example.gui.TomatoGUI;
 import packets.Packet;
 import packets.PacketType;
 import packets.data.StatData;
-import packets.data.enums.ConditionBits;
-import packets.data.enums.ConditionNewBits;
 import packets.incoming.*;
 import packets.outgoing.EnemyHitPacket;
 import packets.outgoing.PlayerShootPacket;
@@ -19,8 +18,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class DamageSimulator {
-
-    public static boolean something;
 
     public static void main(String[] args) {
         try {
@@ -89,91 +86,10 @@ public class DamageSimulator {
                     }
                     continue;
                 }
-                Packet packetType = PacketType.getPacket(type).factory();
-                packetType.deserialize(pData);
+                Packet packet = PacketType.getPacket(type).factory();
+                packet.deserialize(pData);
 
-                if (type == PacketType.MAPINFO.getIndex()) {
-                    MapInfoPacket p = (MapInfoPacket) packetType;
-                    if (mapInfo == null) {
-                        mapInfo = p;
-                        seed = mapInfo.seed;
-                        rng = new RNG(seed);
-                        randy = new RNG(seed);
-                    }
-                } else if (mapInfo == null) {
-                    continue;
-                } else if (type == PacketType.CREATE_SUCCESS.getIndex()) {
-                    CreateSuccessPacket p = (CreateSuccessPacket) packetType;
-                    createSuccess = p;
-                    playerID = p.objectId;
-                    Entity.player = new Entity(p.objectId);
-                } else if (type == PacketType.PLAYERSHOOT.getIndex()) {
-                    PlayerShootPacket p = (PlayerShootPacket) packetType;
-                    Bullet bullet = new Bullet(p, PacketType.PLAYERSHOOT);
-                    int dmg = bullet.calcBulletDmg(rng, Entity.player);
-                    Entity.player.addBullet(p.bulletId, bullet);
-                } else if (type == PacketType.SERVERPLAYERSHOOT.getIndex()) {
-                    ServerPlayerShootPacket p = (ServerPlayerShootPacket) packetType;
-                    Bullet bullet = new Bullet(p, PacketType.SERVERPLAYERSHOOT);
-                    bullet.totalDmg = p.damage;
-                    if (p.spellBulletData) {
-                        for (int j = p.bulletId; j < p.bulletId + p.bulletCount; j++) {
-                            Entity.player.addBullet(p.bulletId, bullet);
-                        }
-                    }
-//                    player.addBullet(p, p.damage);
-                } else if (type == PacketType.ENEMYHIT.getIndex()) {
-                    EnemyHitPacket p = (EnemyHitPacket) packetType;
-//                    System.out.println("ENEMYHIT " + p.time);
-//                    Bullet b = player.findBullet(p);
-//                    if (b == null) {
-//                        System.out.println("didn't find bullet ID");
-////                        System.out.println(p);
-//                        continue;
-//                    }
-                    Bullet b = Entity.player.getBullet(p);
-                    Entity.hit(p.targetId, b, p);
-//                    System.out.println(p);
-                    counter++;
-                } else if (type == PacketType.DAMAGE.getIndex()) {
-                    DamagePacket p = (DamagePacket) packetType;
-                    int id = p.targetId;
-                    Bullet bullet = new Bullet(packetType, PacketType.DAMAGE);
-                    Entity.dmg(id, bullet);
-                } else if (type == PacketType.NEWTICK.getIndex()) {
-                    NewTickPacket p = (NewTickPacket) packetType;
-//                    System.out.println("NEWTICK==="+p.tickId + " " + p.tickTime);
-                    for (int j = 0; j < p.status.length; j++) {
-                        int id = p.status[j].objectId;
-                        StatData[] stats = p.status[j].stats;
-                        if (id == playerID) {
-                            Entity.player.setStats(stats);
-                            continue;
-                        }
-                        Entity.setStats(id, stats);
-                    }
-                } else if (type == PacketType.UPDATE.getIndex()) {
-                    UpdatePacket p = (UpdatePacket) packetType;
-                    for (int j = 0; j < p.newObjects.length; j++) {
-                        int id = p.newObjects[j].status.objectId;
-                        StatData[] stats = p.newObjects[j].status.stats;
-                        if (id == playerID) {
-                            Entity.player.setStats(stats);
-                            continue;
-                        }
-//                        if(id == logTarget) System.out.println("new UPDATE updates " + p.newObjects[j].status);
-                        int objectType = p.newObjects[j].objectType;
-                        Entity.setType(id, objectType);
-                        Entity.setStats(id, stats);
-//
-//                        if (id == 8776) {
-//                            System.out.println(IdToName.name(id));
-//                            for (StatData d : stats) {
-//                                System.out.print(d);
-//                            }
-//                        }
-                    }
-                }
+                packetCapture(packet);
             }
         }
 
@@ -200,13 +116,110 @@ public class DamageSimulator {
 //        System.out.println(Entity.bulletsHit.size() + " " + logBullets.size());
     }
 
+    public static boolean filterDungys(String dungName) {
+        switch (dungName) {
+            case "{s.vault}":
+            case "Daily Quest Room":
+            case "Pet Yard":
+//            case "{s.guildhall}":
+            case "{s.nexus}":
+            case "{s.rotmg}":
+                System.out.println("disabled - " + dungName);
+                return false;
+            default:
+                System.out.println("enabled - " + dungName);
+                return true;
+        }
+    }
+
+    public void packetCapture(Packet packet) {
+        if (packet instanceof MapInfoPacket) {
+            MapInfoPacket p = (MapInfoPacket) packet;
+            mapInfo = p;
+            TomatoGUI.setTextAreaDPS(stringDmg());
+            Entity.clear();
+            seed = mapInfo.seed;
+            rng = new RNG(seed);
+            randy = new RNG(seed);
+            if (!filterDungys(mapInfo.displayName)) {
+                mapInfo = null;
+            }
+        } else if (mapInfo == null) {
+            return;
+        } else if (packet instanceof CreateSuccessPacket) {
+            CreateSuccessPacket p = (CreateSuccessPacket) packet;
+            createSuccess = p;
+            playerID = p.objectId;
+            Entity.player = new Entity(p.objectId);
+        } else if (packet instanceof PlayerShootPacket) {
+            PlayerShootPacket p = (PlayerShootPacket) packet;
+            Bullet bullet = new Bullet(p, PacketType.PLAYERSHOOT);
+            int dmg = bullet.calcBulletDmg(rng, Entity.player);
+            Entity.player.addBullet(p.bulletId, bullet);
+        } else if (packet instanceof ServerPlayerShootPacket) {
+            ServerPlayerShootPacket p = (ServerPlayerShootPacket) packet;
+            Bullet bullet = new Bullet(p, PacketType.SERVERPLAYERSHOOT);
+            bullet.totalDmg = p.damage;
+            if (p.spellBulletData) {
+                for (int j = p.bulletId; j < p.bulletId + p.bulletCount; j++) {
+                    Entity.player.addBullet(p.bulletId, bullet);
+                }
+            }
+//                    player.addBullet(p, p.damage);
+        } else if (packet instanceof EnemyHitPacket) {
+            EnemyHitPacket p = (EnemyHitPacket) packet;
+//                    System.out.println("ENEMYHIT " + p.time);
+//                    Bullet b = player.findBullet(p);
+//                    if (b == null) {
+//                        System.out.println("didn't find bullet ID");
+////                        System.out.println(p);
+//                        continue;
+//                    }
+            Bullet b = Entity.player.getBullet(p);
+            Entity.hit(p.targetId, b, p);
+//                    System.out.println(p);
+//            counter++;
+        } else if (packet instanceof DamagePacket) {
+            DamagePacket p = (DamagePacket) packet;
+            int id = p.targetId;
+            Bullet bullet = new Bullet(packet, PacketType.DAMAGE);
+            Entity.dmg(id, bullet);
+        } else if (packet instanceof NewTickPacket) {
+            NewTickPacket p = (NewTickPacket) packet;
+//                    System.out.println("NEWTICK==="+p.tickId + " " + p.tickTime);
+            for (int j = 0; j < p.status.length; j++) {
+                int id = p.status[j].objectId;
+                StatData[] stats = p.status[j].stats;
+                if (id == playerID) {
+                    Entity.player.setStats(stats);
+                    continue;
+                }
+                Entity.setStats(id, stats);
+            }
+        } else if (packet instanceof UpdatePacket) {
+            UpdatePacket p = (UpdatePacket) packet;
+            for (int j = 0; j < p.newObjects.length; j++) {
+                int id = p.newObjects[j].status.objectId;
+                StatData[] stats = p.newObjects[j].status.stats;
+                if (id == playerID) {
+                    Entity.player.setStats(stats);
+                    continue;
+                }
+//                        if(id == logTarget) System.out.println("new UPDATE updates " + p.newObjects[j].status);
+                int objectType = p.newObjects[j].objectType;
+                Entity.setType(id, objectType);
+                Entity.setStats(id, stats);
+            }
+        }
+    }
+
     public static String stringDmg() {
         StringBuilder sb = new StringBuilder();
 
         List<Entity> sortedList = Arrays.stream(Entity.list()).sorted(Comparator.comparingInt(Entity::maxHp).reversed()).collect(Collectors.toList());
         int count = 0;
         for (Entity e : sortedList) {
-            if(count > 10) break;
+            if (count > 10) break;
             count++;
             if (e.maxHp() < 4000 || e.bullets.isEmpty()) continue;
 
