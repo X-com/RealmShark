@@ -13,28 +13,26 @@ public class IdToName {
     private final String display;
     private final String clazz;
     private final String group;
-    private int minDmg;
-    private int maxDmg;
+    private final String projectile;
+    private Projectile[] projectiles = null;
     private static final HashMap<Integer, IdToName> ID = new HashMap<>();
 
     /**
      * Constructor for the resources.
      *
-     * @param id      Id of the resource
-     * @param idName  Name of the resource
-     * @param display Display name of the resource
-     * @param clazz   Class of the resource
-     * @param minDmg  Min damage of weapons
-     * @param maxDmg  Max damage of weapons
-     * @param group   Group of the resource
+     * @param id         Id of the resource
+     * @param idName     Name of the resource
+     * @param display    Display name of the resource
+     * @param clazz      Class of the resource
+     * @param projectile Projectile min,max,armorPiercing,(repeated) listed
+     * @param group      Group of the resource
      */
-    public IdToName(int id, String idName, String display, String clazz, String minDmg, String maxDmg, String group) {
+    public IdToName(int id, String idName, String display, String clazz, String projectile, String group) {
         this.id = id;
         this.idName = idName;
         this.display = display;
         this.clazz = clazz;
-        if(!minDmg.equals("")) this.minDmg = Integer.parseInt(minDmg);
-        if(!maxDmg.equals("")) this.maxDmg = Integer.parseInt(maxDmg);
+        this.projectile = projectile;
         this.group = group;
     }
 
@@ -49,7 +47,7 @@ public class IdToName {
      * Method to grab the full list of resource's from file and construct the hashmap.
      */
     private static void readList() {
-        String fileName = "ID2.list";
+        String fileName = "ID3.list";
 
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(Util.resourceFilePath(fileName), StandardCharsets.UTF_8));
@@ -61,10 +59,9 @@ public class IdToName {
                 String display = l[1];
                 String clazz = l[2];
                 String group = l[3];
-                String minDmg = l[4];
-                String maxDmg = l[5];
-                String idName = l[6];
-                ID.put(id, new IdToName(id, idName, display, clazz, minDmg, maxDmg, group));
+                String projectile = l[4];
+                String idName = l[5];
+                ID.put(id, new IdToName(id, idName, display, clazz, projectile, group));
             }
             br.close();
         } catch (Exception e) {
@@ -131,14 +128,36 @@ public class IdToName {
     }
 
     /**
+     * Parses the projectile string to the number of projectiles the entity can shoot.
+     *
+     * @param entity that should be projectile parsed
+     * @return List of parsed projectiles
+     */
+    private static Projectile[] parseProjectile(IdToName entity) {
+        String[] l = entity.projectile.split(",");
+        Projectile[] p = new Projectile[l.length / 3];
+        int index = 0;
+        for (int i = 0; i < l.length; i += 3) {
+            int min = Integer.parseInt(l[i]);
+            int max = Integer.parseInt(l[1 + i]);
+            boolean ap = l[2 + i].equals("1");
+            p[index] = new Projectile(min, max, ap);
+            index++;
+        }
+
+        return p;
+    }
+
+    /**
      * Minimum damage of weapon.
      *
      * @param id Id of the object.
      * @return Minimum damage
      */
-    public static int getIdWeaponMin(int id) {
+    public static int getIdProjectileMinDmg(int id, int projectileId) {
         IdToName i = ID.get(id);
-        return i.minDmg;
+        if (i.projectiles == null) i.projectiles = parseProjectile(i);
+        return i.projectiles[projectileId].min;
     }
 
     /**
@@ -147,8 +166,36 @@ public class IdToName {
      * @param id Id of the object.
      * @return Maximum damage
      */
-    public static int getIdWeaponMax(int id) {
+    public static int getIdProjectileMaxDmg(int id, int projectileId) {
         IdToName i = ID.get(id);
-        return i.maxDmg;
+        if (i.projectiles == null) i.projectiles = parseProjectile(i);
+        return i.projectiles[projectileId].max;
+    }
+
+    /**
+     * Maximum damage of weapon.
+     *
+     * @param id Id of the object.
+     * @return Maximum damage
+     */
+    public static boolean getIdProjectileArmorPierces(int id, int projectileId) {
+        IdToName i = ID.get(id);
+        if (i.projectiles == null) i.projectiles = parseProjectile(i);
+        return i.projectiles[projectileId].ap;
+    }
+
+    /**
+     * Simple class to store projectile info
+     */
+    private static class Projectile {
+        int min; // min dmg
+        int max; // max dmg
+        boolean ap; // armor piercing
+
+        public Projectile(int min, int max, boolean ap) {
+            this.min = min;
+            this.max = max;
+            this.ap = ap;
+        }
     }
 }
