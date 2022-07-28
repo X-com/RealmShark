@@ -315,6 +315,16 @@ public class DpsLogger {
     }
 
     /**
+     * Clears all logged data.
+     */
+    public void clear() {
+        entityList.clear();
+        mapInfo = null;
+        player = null;
+        rng = null;
+    }
+
+    /**
      * Class used for storing bullet data.
      */
     private static class Bullet {

@@ -1,6 +1,6 @@
 package example;
 
-import example.damagecalc.DamageCalculator;
+import example.damagecalc.DpsLogger;
 import example.gui.TomatoGUI;
 import packets.Packet;
 import packets.PacketType;
@@ -88,6 +88,7 @@ public class ExampleModTomato {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            dpsLogger.clear();
         }
     }
 
