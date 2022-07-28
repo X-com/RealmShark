@@ -35,7 +35,7 @@ public class Bullet {
     public void calcBulletDmg(RNG rng, Entity player) {
         if (player == null || rng == null) return;
         long r = rng.next();
-        int weapon = ((PlayerShootPacket) packet).containerType;
+        int weapon = ((PlayerShootPacket) packet).weaponId;
         int projectileId = ((PlayerShootPacket) packet).projectileId;
         if (projectileId == -1){
             projectileId = 0;

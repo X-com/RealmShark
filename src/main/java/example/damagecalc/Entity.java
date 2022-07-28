@@ -101,27 +101,27 @@ public class Entity {
         this.type = type;
     }
 
-    public Bullet findBullet(EnemyHitPacket hit) {
-        for (int i = bullets.size() - 1; i >= 0; i--) {
-            Bullet b = bullets.get(i);
-            if (b.type == PacketType.PLAYERSHOOT) {
-                PlayerShootPacket shoot = (PlayerShootPacket) b.packet;
-                if (shoot.bulletId == hit.bulletId) {
-                    return b;
-                }
-            } else if (b.type == PacketType.SERVERPLAYERSHOOT) {
-                ServerPlayerShootPacket shoot = (ServerPlayerShootPacket) b.packet;
-                if (shoot.spellBulletData) {
-                    int bottomId = shoot.bulletId;
-                    int topId = (shoot.bulletId + shoot.bulletCount) % 512;
-                    if ((bottomId >= topId || hit.bulletId >= bottomId) && hit.bulletId <= topId) {
-                        return b;
-                    }
-                }
-            }
-        }
-        return null;
-    }
+//    public Bullet findBullet(EnemyHitPacket hit) {
+//        for (int i = bullets.size() - 1; i >= 0; i--) {
+//            Bullet b = bullets.get(i);
+//            if (b.type == PacketType.PLAYERSHOOT) {
+//                PlayerShootPacket shoot = (PlayerShootPacket) b.packet;
+//                if (shoot.bulletId == hit.bulletId) {
+//                    return b;
+//                }
+//            } else if (b.type == PacketType.SERVERPLAYERSHOOT) {
+//                ServerPlayerShootPacket shoot = (ServerPlayerShootPacket) b.packet;
+//                if (shoot.spellBulletData) {
+//                    int bottomId = shoot.bulletId;
+//                    int topId = (shoot.bulletId + shoot.bulletCount) % 512;
+//                    if ((bottomId >= topId || hit.bulletId >= bottomId) && hit.bulletId <= topId) {
+//                        return b;
+//                    }
+//                }
+//            }
+//        }
+//        return null;
+//    }
 
     public Bullet getBullet(EnemyHitPacket p) {
         return bulletDmg[p.bulletId];
