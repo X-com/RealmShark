@@ -24,6 +24,8 @@ import java.util.stream.Stream;
  */
 public class DpsLogger {
 
+    int stringIndex = 0;
+    ArrayList<String> stringLogs = new ArrayList<>();
     HashMap<Integer, Entity> entityList = new HashMap<>();
     MapInfoPacket mapInfo;
     Entity player;
@@ -36,7 +38,10 @@ public class DpsLogger {
      */
     public void packetCapture(Packet packet) {
         if (packet instanceof MapInfoPacket) {
-            if (mapInfo != null) TomatoGUI.setTextAreaDPS(stringDmg(player, entityList));
+            if (mapInfo != null) {
+                String s = stringDmg(player, entityList);
+                updateStringLogs(s);
+            }
             mapInfo = (MapInfoPacket) packet;
             entityList.clear();
             rng = new RNG(mapInfo.seed);
@@ -85,7 +90,8 @@ public class DpsLogger {
                     player.setStats(stats);
                     continue;
                 }
-                entityList.get(id).setStats(stats);
+                Entity entity = getEntity(id);
+                entity.setStats(stats);
             }
         } else if (packet instanceof UpdatePacket) {
             UpdatePacket p = (UpdatePacket) packet;
@@ -97,8 +103,9 @@ public class DpsLogger {
                     continue;
                 }
                 int objectType = p.newObjects[j].objectType;
-                entityList.get(id).setType(objectType);
-                entityList.get(id).setStats(stats);
+                Entity entity = getEntity(id);
+                entity.setType(objectType);
+                entity.setStats(stats);
             }
         }
     }
@@ -109,7 +116,7 @@ public class DpsLogger {
      * @param dungName Name of the dungeon.
      * @return true if dungeon should be logged.
      */
-    public static boolean filteredInstances(String dungName) {
+    private static boolean filteredInstances(String dungName) {
         switch (dungName) {
             case "{s.vault}":
             case "Daily Quest Room":
@@ -130,19 +137,20 @@ public class DpsLogger {
      * @param entityList full list of all entities logged.
      * @return logged dps output as a string.
      */
-    public static String stringDmg(Entity player, HashMap<Integer, Entity> entityList) {
+    private static String stringDmg(Entity player, HashMap<Integer, Entity> entityList) {
         StringBuilder sb = new StringBuilder();
 
         List<Entity> sortedList = Arrays.stream(entityList.values().toArray(new Entity[0])).sorted(Comparator.comparingInt(Entity::maxHp).reversed()).collect(Collectors.toList());
         int count = 0;
-        for (Entity e : sortedList) {
-            if (count > 10) break;
-            count++;
-            if (e.maxHp() < 4000 || e.bulletDamageList.isEmpty()) continue;
+        HashMap<Integer, Integer> totPlayersDmg = new HashMap<>();
+        int totPlayerDmg = 0;
+        int totalHp = 0;
+        for (Entity entity : sortedList) {
+            if (entity.bulletDamageList.isEmpty()) continue;
 
             HashMap<Integer, Integer> players = new HashMap<>();
             int playerDmg = 0;
-            for (Bullet b : e.bulletDamageList) {
+            for (Bullet b : entity.bulletDamageList) {
                 if (PacketType.DAMAGE == b.type) {
                     DamagePacket p = (DamagePacket) b.packet;
                     int ownerId = p.objectId;
@@ -161,21 +169,62 @@ public class DpsLogger {
                 }
             }
 
-            sb.append(e).append(" ").append(e.maxHp()).append("\n");
-            float playerPers = ((float) playerDmg * 100 / (float) e.maxHp());
-            sb.append(String.format("  My DMG: %d  %.3f%%    [%s]\n\n", playerDmg, playerPers, itemToString(player)));
-            Stream<Map.Entry<Integer, Integer>> sorted2 = players.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()));
-            for (Map.Entry<Integer, Integer> m : sorted2.collect(Collectors.toList())) {
-                Entity entityPlayer = entityList.get(m.getKey());
-                if (entityPlayer == null || entityPlayer.getStat(31) == null) continue;
-                String name = entityPlayer.getStat(31).stringStatValue;
-                float pers = ((float) m.getValue() * 100 / (float) e.maxHp());
-                sb.append(String.format("  %s DMG: %d  %.3f%%    [%s]\n", name, m.getValue(), pers, itemToString(player)));
+            if (qualifiedEntityAddToTotalDmg(entity)) {
+                for (Map.Entry<Integer, Integer> pd : players.entrySet()) {
+                    int totdmg = totPlayersDmg.get(pd.getKey()) == null ? 0 : totPlayersDmg.get(pd.getKey());
+                    totPlayersDmg.put(pd.getKey(), totdmg + pd.getValue());
+                }
+                totPlayerDmg += playerDmg;
+                totalHp += entity.maxHp();
             }
-            sb.append("\n");
+
+            if (count < 10) {
+                sb.append(entity).append(" HP:").append(entity.maxHp()).append("\n");
+                appendEntityDmgText(sb, playerDmg, player, entity.maxHp(), players, entityList);
+            }
+            count++;
         }
 
+        sb.append("All entity's HP:").append(totalHp).append("\n");
+        appendEntityDmgText(sb, totPlayerDmg, player, totalHp, totPlayersDmg, entityList);
+
         return sb.toString();
+    }
+
+    /**
+     * Qualifies if the entity should be added to the total damage or not.
+     *
+     * @param entity
+     */
+    private static boolean qualifiedEntityAddToTotalDmg(Entity entity) {
+        return entity.getStat(31) == null;
+    }
+
+    /**
+     * Appends sorted string output to sb and returns.
+     */
+    private static void appendEntityDmgText(StringBuilder sb, int playerDmg, Entity player, int entityHp, HashMap<Integer, Integer> players, HashMap<Integer, Entity> entityList) {
+        float playerPers = ((float) playerDmg * 100 / (float) entityHp);
+        sb.append(String.format("   My DMG: %d  %.3f%%    [%s]\n\n", playerDmg, playerPers, itemToString(player)));
+        Stream<Map.Entry<Integer, Integer>> sorted2 = players.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+        int num = 0;
+        boolean playerFound = false;
+        for (Map.Entry<Integer, Integer> m : sorted2.collect(Collectors.toList())) {
+            num++;
+            if (!playerFound && m.getValue() < playerDmg) {
+                sb.append(String.format("-> %d %s DMG: %d  %.3f%%\n", num, player.getStat(31).stringStatValue, playerDmg, playerPers));
+                playerFound = true;
+                num++;
+            }
+            Entity entityPlayer = entityList.get(m.getKey());
+            if (entityPlayer == null || entityPlayer.getStat(31) == null) continue;
+            String name = entityPlayer.getStat(31).stringStatValue;
+            float pers = ((float) m.getValue() * 100 / (float) entityHp);
+            sb.append(String.format("   %d %s DMG: %d  %.3f%%    [%s]\n", num, name, m.getValue(), pers, itemToString(entityPlayer)));
+        }
+        if (!playerFound)
+            sb.append(String.format("-> %d %s DMG: %d  %.3f%%\n", num, player.getStat(31).stringStatValue, playerDmg, playerPers));
+        sb.append("\n");
     }
 
     /**
@@ -322,6 +371,40 @@ public class DpsLogger {
         mapInfo = null;
         player = null;
         rng = null;
+    }
+
+    /**
+     * Find the next dps log to display in the dps calculator.
+     */
+    public void nextDisplay() {
+        if (stringIndex < (stringLogs.size() - 1)) {
+            stringIndex++;
+            String s = stringLogs.get(stringIndex);
+            String l = (stringIndex + 1) + "/" + stringLogs.size();
+            TomatoGUI.setTextAreaAndLabelDPS(s, l);
+        }
+    }
+
+    /**
+     * Find the previous dps log to display in the dps calculator.
+     */
+    public void previousDisplay() {
+        if (stringIndex > 0) {
+            stringIndex--;
+            String s = stringLogs.get(stringIndex);
+            String l = (stringIndex + 1) + "/" + stringLogs.size();
+            TomatoGUI.setTextAreaAndLabelDPS(s, l);
+        }
+    }
+
+    /**
+     * Update the text area of the dps calculator.
+     */
+    private void updateStringLogs(String s) {
+        stringLogs.add(s);
+        String l = stringLogs.size() + "/" + stringLogs.size();
+        TomatoGUI.setTextAreaAndLabelDPS(s, l);
+        stringIndex = stringLogs.size();
     }
 
     /**

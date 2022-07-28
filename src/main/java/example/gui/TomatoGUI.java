@@ -12,13 +12,14 @@ public class TomatoGUI {
     private static JTextArea textAreaChat;
     private static JTextArea textAreaKeypop;
     private static JTextArea textAreaDPS;
-    private static JLabel statusLabel;
+    private static JLabel statusLabel, dpsLabel;
     private static JFrame frame;
     private JMenuBar jMenuBar;
-    private JPanel mainPanel;
+    private JPanel mainPanel, dpsPanel, dpsTopPanel;
     private TomatoMenuBar menuBar;
     private Point center;
     private Image icon;
+    private JButton next, prev;
 
     /**
      * Create main panel and initializes the GUI for the example Tomato.
@@ -62,7 +63,25 @@ public class TomatoGUI {
         scrollDPS.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollDPS.setAutoscrolls(true);
         new SmartScroller(scrollDPS);
-        tabbedPane.addTab("DPS Logger", scrollDPS);
+        next = new JButton("  Next  ");
+        prev = new JButton("Previous");
+        dpsLabel = new JLabel("0/0");
+        dpsTopPanel = new JPanel();
+        dpsTopPanel.setLayout(new BoxLayout(dpsTopPanel, BoxLayout.X_AXIS));
+        dpsTopPanel.add(Box.createHorizontalGlue());
+        dpsTopPanel.add(prev);
+        dpsTopPanel.add(Box.createRigidArea(new Dimension(20, 0)));
+        dpsTopPanel.add(dpsLabel);
+        dpsTopPanel.add(Box.createRigidArea(new Dimension(20, 0)));
+        dpsTopPanel.add(next);
+        dpsTopPanel.add(Box.createHorizontalGlue());
+        dpsPanel = new JPanel();
+        dpsPanel.setLayout(new BorderLayout());
+        dpsPanel.add(dpsTopPanel, BorderLayout.NORTH);
+        dpsPanel.add(scrollDPS, BorderLayout.CENTER);
+        tabbedPane.addTab("DPS Logger", dpsPanel);
+        next.addActionListener(event -> ExampleModTomato.nextDpsLogDungeon());
+        prev.addActionListener(event -> ExampleModTomato.previousDpsLogDungeon());
 
 
         center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
@@ -106,6 +125,13 @@ public class TomatoGUI {
     }
 
     /**
+     * Clears the chat text area.
+     */
+    public static void clearTextAreaChat() {
+        textAreaChat.setText("");
+    }
+
+    /**
      * Add text to the key pop text area.
      *
      * @param s The text to be added at the end of text area.
@@ -119,10 +145,9 @@ public class TomatoGUI {
      *
      * @param s Sets the text of text area.
      */
-    public static void setTextAreaDPS(String s) {
-        System.out.println("test output");
-        System.out.println(s);
+    public static void setTextAreaAndLabelDPS(String s, String l) {
         if (textAreaDPS != null) textAreaDPS.setText(s);
+        if (dpsLabel != null) dpsLabel.setText(l);
     }
 
     /**

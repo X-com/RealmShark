@@ -30,7 +30,7 @@ public class ExampleModTomato {
     public static URL imagePath = ExampleModTomato.class.getResource("/icon/tomatoIcon.png");
     private static final Pattern popperName = Pattern.compile("[^ ]*\"player\":\"([A-Za-z]*)[^ ]*");
     private static PacketProcessor packetProcessor;
-    private static DpsLogger dpsLogger;
+    private static final DpsLogger dpsLogger = new DpsLogger();
 
     public static void main(String[] args) {
         Util.setSaveLogs(true); // turns the logger to, save in to files.
@@ -63,6 +63,7 @@ public class ExampleModTomato {
         Register.INSTANCE.register(PacketType.UPDATE, ExampleModTomato::dpsLoggerPacket);
         Register.INSTANCE.register(PacketType.NEWTICK, ExampleModTomato::dpsLoggerPacket);
         Register.INSTANCE.register(PacketType.MAPINFO, ExampleModTomato::dpsLoggerPacket);
+
         new TomatoGUI().create();
     }
 
@@ -92,10 +93,11 @@ public class ExampleModTomato {
         }
     }
 
-    public static boolean isRunning() { // TODO remove in release version
-        return packetProcessor != null;
-    }
-
+    /**
+     * Dps logger packets
+     *
+     * @param packet packets for dps logger.
+     */
     private static void dpsLoggerPacket(Packet packet) {
         dpsLogger.packetCapture(packet);
     }
@@ -141,5 +143,19 @@ public class ExampleModTomato {
                 }
             }
         }
+    }
+
+    /**
+     * Next dungeon displayed by dps calculator.
+     */
+    public static void nextDpsLogDungeon() {
+        dpsLogger.nextDisplay();
+    }
+
+    /**
+     * Previous dungeon displayed by dps calculator.
+     */
+    public static void previousDpsLogDungeon() {
+        dpsLogger.previousDisplay();
     }
 }

@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
  * Menu bar builder class
  */
 public class TomatoMenuBar implements ActionListener {
-    private JMenuItem about, borders, bandwidth, javav;
+    private JMenuItem about, borders, clearChat, bandwidth, javav;
     private JMenu file, edit, info;
     private JMenuBar jMenuBar;
     private JFrame frame;
@@ -35,8 +35,12 @@ public class TomatoMenuBar implements ActionListener {
         borders = new JMenuItem("Borders");
         borders.addActionListener(this);
         borders.setMargin(new Insets(2, -20, 2, 2));
+        clearChat = new JMenuItem("Clear Chat");
+        clearChat.addActionListener(this);
+        clearChat.setMargin(new Insets(2, -20, 2, 2));
         edit = new JMenu("Edit");
         edit.add(borders);
+        edit.add(clearChat);
         jMenuBar.add(edit);
 
         about = new JMenuItem("About");
@@ -80,6 +84,8 @@ public class TomatoMenuBar implements ActionListener {
             frame.dispose();
             frame.setUndecorated(!frame.isUndecorated());
             frame.setVisible(true);
+        } else if (e.getSource() == clearChat) { // clears the text chat
+            TomatoGUI.clearTextAreaChat();
         } else if (e.getSource() == sniffer) { // Starts and stops the sniffer
             if (sniffer.getText().contains("Start")) {
                 sniffer.setText("Stop Sniffer");
