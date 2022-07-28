@@ -30,6 +30,7 @@ public class ExampleModTomato {
     public static URL imagePath = ExampleModTomato.class.getResource("/icon/tomatoIcon.png");
     private static final Pattern popperName = Pattern.compile("[^ ]*\"player\":\"([A-Za-z]*)[^ ]*");
     private static PacketProcessor packetProcessor;
+    private static DpsLogger dpsLogger;
 
     public static void main(String[] args) {
         Util.setSaveLogs(true); // turns the logger to, save in to files.
@@ -51,16 +52,17 @@ public class ExampleModTomato {
          */
         // [ExampleModTomato::text] is the same as [(packet) - > text(packet)]
         Register.INSTANCE.register(PacketType.TEXT, ExampleModTomato::textPacket);
+
         Register.INSTANCE.register(PacketType.NOTIFICATION, ExampleModTomato::notificationPacket);
 
-        Register.INSTANCE.register(PacketType.CREATE_SUCCESS, DamageCalculator::capturePackets);
-        Register.INSTANCE.register(PacketType.ENEMYHIT, DamageCalculator::capturePackets);
-        Register.INSTANCE.register(PacketType.PLAYERSHOOT, DamageCalculator::capturePackets);
-        Register.INSTANCE.register(PacketType.DAMAGE, DamageCalculator::capturePackets);
-        Register.INSTANCE.register(PacketType.SERVERPLAYERSHOOT, DamageCalculator::capturePackets);
-        Register.INSTANCE.register(PacketType.UPDATE, DamageCalculator::capturePackets);
-        Register.INSTANCE.register(PacketType.NEWTICK, DamageCalculator::capturePackets);
-        Register.INSTANCE.register(PacketType.MAPINFO, DamageCalculator::capturePackets);
+        Register.INSTANCE.register(PacketType.CREATE_SUCCESS, ExampleModTomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.ENEMYHIT, ExampleModTomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.PLAYERSHOOT, ExampleModTomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.DAMAGE, ExampleModTomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.SERVERPLAYERSHOOT, ExampleModTomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.UPDATE, ExampleModTomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.NEWTICK, ExampleModTomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.MAPINFO, ExampleModTomato::dpsLoggerPacket);
         new TomatoGUI().create();
     }
 
@@ -89,8 +91,12 @@ public class ExampleModTomato {
         }
     }
 
-    public static boolean isRunning() {
+    public static boolean isRunning() { // TODO remove in release version
         return packetProcessor != null;
+    }
+
+    private static void dpsLoggerPacket(Packet packet) {
+        dpsLogger.packetCapture(packet);
     }
 
     /**
@@ -124,11 +130,11 @@ public class ExampleModTomato {
                 String msg = nPacket.message;
                 if (msg.startsWith("Wine Cellar")) {
                     String[] list = msg.split(" ");
-                    String playerName = list[list.length-1];
+                    String playerName = list[list.length - 1];
                     TomatoGUI.appendTextAreaKeypop(String.format("%s [%s]: Inc\n", Util.getHourTime(), playerName));
                 } else if (msg.contains("Monument has been activated by")) {
                     String[] list = msg.split(" ");
-                    String playerName = list[list.length-1];
+                    String playerName = list[list.length - 1];
                     String type = list[1];
                     TomatoGUI.appendTextAreaKeypop(String.format("%s [%s]: %s Rune\n", Util.getHourTime(), playerName, type));
                 }
