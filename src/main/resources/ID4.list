@@ -3071,6 +3071,15 @@
 2806::Equipment::130,175,0:Wand of Recompense
 2506::Equipment::145,180,0:Wand of Evocation
 2496::Equipment::150,195,0:Wand of Retribution
+21091::Equipment::50,60,0:Morning Star of Mystic Light
+21092::Equipment::55,60,0:Morning Star of Silent Mourning
+21093::Equipment::55,65,0:Morning Star of Hidden Secrets
+21094::Equipment::60,65,0:Morning Star of the Night
+21095::Equipment::60,70,0:Morning Star of Harrowing Memories
+21096::Equipment::65,70,0:Morning Star of Repentance
+21097::Equipment::70,75,0:Morning Star of Conjuration
+21098::Equipment::75,80,0:Morning Star of Reckoning
+55381::Equipment::75,100,1:Beekeeper's Flamethrower
 2879::Equipment::95,140,1:Crystal Wand
 3076::Equipment::500,600,0:Wand of the Bulwark
 2568::Equipment::55,90,0:Wooden Shield
@@ -3145,6 +3154,15 @@
 2818::Equipment::125,135,0,25,35,1:Bow of Covert Havens
 2508::Equipment::135,145,0,35,45,1:Bow of Mystical Energy
 2509::Equipment::145,155,0,35,45,1:Bow of Deep Enchantment
+28683::Equipment::75,80,0:Hunter's Longbow
+28684::Equipment::65,70,0:Gilded Longbow
+28685::Equipment::85,90,0:Emerald Longbow
+28686::Equipment::90,105,0:Mystic Longbow
+28687::Equipment::95,115,0:Crimson Longbow
+28688::Equipment::100,125,0:Longbow of the Endless Sky
+28689::Equipment::105,130,0:Longbow of the Morning Spirit
+28690::Equipment::110,145,0:Longbow of the Midnight Diamond
+55382:Hama Yumi:Equipment::120,150,0,55,65,1:Longbow of the Guardian
 3074::Equipment::500,600,0:Doom Bow
 3088::Equipment::70,90,0:Coral Bow
 2591::Equipment:::Potion of Attack
@@ -3352,6 +3370,15 @@
 2824::Equipment::60,100,0:Staff of the Cosmic Whole
 2513::Equipment::65,110,0:Staff of the Vital Unity
 2320::Equipment::75,115,0:Staff of the Fundamental Core
+14172::Equipment::50,75,0,35,50,1:Spellblade of Decimation
+14173::Equipment::55,80,0,40,55,1:Spellblade of Nightmares
+14397::Equipment::55,85,0,40,55,1:Spellblade of Arcane Magic
+21099::Equipment::65,90,0,60,65,1:Spellblade of Corrupt Premonitions
+21100::Equipment::65,95,0,50,65,1:Spellblade of Starry Insight
+21101::Equipment::80,95,0,55,70,1:Spellblade of the Sun
+21102::Equipment::80,105,0,65,70,1:Spellblade of the Heavens Light
+21103:Spellblade of the Everlasting Death:Equipment::90,110,0,65,80,1:Spellblade of the Everlasting Death
+55383::Equipment::30,30,1,60,75,0:Crystallized Worm Spellblade
 3075::Equipment::80,95,0:Staff of Extreme Prejudice
 2723::Equipment:::Centipede Poison
 2724::Equipment:::Spider Venom
@@ -4457,7 +4484,7 @@
 15760::Equipment::300,400,0:HTT Eye Proc
 15761::Equipment::650,750,0:Q.U.I.V.E.R.
 15757::Equipment::70,95,0:B.O.W.
-15758::Equipment::130,220,0:S.T.A.F.F.
+15758::Equipment::110,200,0:S.T.A.F.F.
 15759::Equipment::300,400,0:E.Y.E.
 32484:Gravekeeper's Scythe:Equipment::40,105,0:HNecroST0
 32485:Hooded Skull:Equipment:::HNecroST1
@@ -4989,31 +5016,123 @@
 32443:Burlap Cowl:Equipment:::3WarriorST1
 32444:Overalls of Endurance:Equipment:::3WarriorST2
 32445:Headless Ted:Equipment:::3WarriorST3
-32451:Huntress 4 - Back Four Revenge (1):Equipment:::Huntress Lore Book 1
-32452:Huntress 4 - Back Four Revenge (2):Equipment:::Huntress Lore Book 2
-32453:Huntress 4 - Back Four Revenge (3):Equipment:::Huntress Lore Book 3
-32454:Huntress 4 - Back Four Revenge (4):Equipment:::Huntress Lore Book 4
-32455:Huntress 4 - Back Four Revenge (5):Equipment:::Huntress Lore Book 5
-32456:Huntress 4 - Back Four Revenge (6):Equipment:::Huntress Lore Book 6
-14214:Chrysalis of Eternity:Equipment:::Shatters A20
 32243:Mythical ST Chest:Equipment:::3STMysteryChest
-32457:Huntress 4 - Back Four Revenge (7):Equipment:::Huntress Lore Book 7
-32458:Killbilly (1):Equipment:::Warrior Lore Book 1
-32459:Killbilly (2):Equipment:::Warrior Lore Book 2
-32460:Killbilly (3):Equipment:::Warrior Lore Book 3
-32461:Killbilly (4):Equipment:::Warrior Lore Book 4
-32462:Killbilly (5):Equipment:::Warrior Lore Book 5
-32463:Killbilly (6):Equipment:::Warrior Lore Book 6
-32464:Killbilly (7):Equipment:::Warrior Lore Book 7
-32465:Killbilly (8):Equipment:::Warrior Lore Book 8
 32466:Resurrected Huntress Set Token:Equipment:::3HuntressSTToken
 32467:Killbilly Warrior Set Token:Equipment:::3WarriorSTToken
-17569:Helm of minstack:Equipment::500,650,0:Stat Test Helm1
-17570:Helm of noStack:Equipment::500,650,0:Stat Test Helm2
-17571::Equipment:::Stat Test Consumable1
-17572::Equipment:::Stat Test Consumable2
-29072:Special Blueprint:Equipment:::Blueprint_Test
+17569:Helm of minstack:Equipment:::Stat Test Helm1
+14214:Chrysalis of Eternity:Equipment:::Shatters A20
+17434:Royal Blades:Equipment::55,80,0,35,70,0:Royal Blades
+17435:Blazing Blades:Equipment::55,90,0,45,80,0:Blazing Blades
+17436:Garnet Blades:Equipment::60,100,0,45,85,0:Garnet Blades
+17437:Verdant Blades:Equipment::70,105,0,50,85,0:Verdant Blades
+17438:Occult Blades:Equipment::75,110,0,55,90,0:Occult Blades
+17439:Bloodshed Blades:Equipment::80,120,0,60,95,0:Bloodshed Blades
+17455:Moonstone Blades:Equipment::90,130,0,65,105,0:Moonstone Blades
+17456:Soulforged Blades:Equipment::100,140,0,75,110,0:Soulforged Blades
+17425:Cloudstrike Tachi:Equipment::45,80,0:Cloudstrike Tachi
+17427:Devilbane Tachi:Equipment::55,90,0:Devilbane Tachi
+17428:Darksteel Tachi:Equipment::60,95,0:Darksteel Tachi
+17429:Dragonbone Tachi:Equipment::65,100,0:Dragonbone Tachi
+17430:Accursed Tachi:Equipment::70,105,0:Accursed Tachi
+17431:Skyslash Tachi:Equipment::75,110,0:Skyslash Tachi
+17432:Sunset Tachi:Equipment::85,120,0:Sunset Tachi
+17433:Godslayer Tachi:Equipment::95,125,0:Godslayer Tachi
+17552:Gilded Flail:Equipment::200,260,0,40,60,1,40,60,1:Gilded Flail
+17553:Champion's Flail:Equipment::285,345,0,50,70,1,50,70,1:Champion's Flail
+17554:Drakerider's Flail:Equipment::295,355,0,55,70,1,55,70,1:Drakerider's Flail
+17555:Infernal Flail:Equipment::305,365,0,55,75,1,55,75,1:Infernal Flail
+17556:Mithril Flail:Equipment::315,375,0,60,75,1,60,75,1:Mithril Flail
+17557:Celebrant Flail:Equipment::325,385,0,60,80,1,60,80,1:Celebrant Flail
+17558:Divine Flail:Equipment::340,400,0,65,90,1,65,90,1:Divine Flail
+17559:Gravelord's Flail:Equipment::355,415,0,70,100,1,70,100,1:Gravelord's Flail
+17560:Fractal Blades:Equipment::65,100,0,65,100,0,35,70,0,35,70,0,35,70,0,35,70,0:Fractal Blades
+17561:Barnacle Basher:Equipment::375,500,0,50,120,0,50,120,1,50,120,1:Barnacle Basher
+17563:Burial Blades:Equipment::65,120,1,65,120,1,0,0,0:Burial Blades
 29073:Mythical ST Crate:Equipment:::3STKeyMysteryChest
+32288::Equipment:::Unsigned Parcel
+29312::Equipment:::Glacial Cache
+14447::Equipment::65,85,1:Enhanced Bow Shot 1
+14444::Equipment::110,140,1:Enhanced Bow Shot 2
+14445::Equipment::90,120,1:Enhanced Bow Shot 3
+14448:Frangible Longbow:Equipment::0,0,1,110,140,0:Interregnum Longbow
+14209::Equipment::65,85,1:Enhanced Spellblade Shot 1
+14442::Equipment::65,90,1:Enhanced Magic Shot 2
+14443::Equipment::80,95,1:Enhanced Magic Shot 3
+14449:Royal Sekhem:Equipment::80,100,0,60,70,1:Interregnum Spellblade
+14468::Equipment::65,85,1:Enhanced Morning Shot 1
+14469::Equipment::70,70,1:Enhanced Morning Shot 2
+14208::Equipment::90,90,1:Enhanced Morning Shot 3
+14450:Obsidian Macuahuitl:Equipment::0,0,1,70,70,0:Interregnum Morning Star
+14430::Equipment::95,135,0:Enhanced Flail Ball 3
+14454::Equipment::65,130,0:Enhanced Flail Ball 2
+14455::Equipment::65,86,0:Enhanced Flail Ball 1
+14451:Gilded Chain Scythe:Equipment::330,390,0,65,85,1,65,85,1:Interregnum Flail
+14459::Equipment::65,85,1:Enhanced Tachi Shot 1
+14460::Equipment::80,120,1:Enhanced Tachi Shot 2
+14461::Equipment::90,125,1:Enhanced Tachi Shot 3
+14452:Ritual Khopesh:Equipment::0,0,1,80,115,0,80,115,0,0,0,1:Interregnum Tachi
+14462::Equipment::65,85,1:Enhanced Dagger Shot 1
+14463::Equipment::80,120,1:Enhanced Dagger Shot 2
+14467::Equipment::85,100,1:Enhanced Dagger Shot 3
+14453:Pirate's Sidearms:Equipment::85,125,0,65,100,0:Interregnum Blades
+14426::Equipment:::Light Syndicate Attire
+14427::Equipment:::Mystic Syndicate Attire
+14428::Equipment:::Heavy Syndicate Attire
+14456:Sunken Fire Opal Ring:Equipment:::Interregnum Ring 1
+14457:Faded Heart Scarab:Equipment:::Interregnum Ring 2
+14458:Fractured Hannya:Equipment:::Interregnum Ring 3
+26784:Seasonal BXP Accelerator:Equipment:::Acc BXP EP
+26785:BXP Boost Potion (20%):Equipment:::Acc BXP 1
+26786:BXP Boost Potion (33%):Equipment:::Acc BXP 2
+26787:BXP Boost Potion (50%):Equipment:::Acc BXP 3
+26788:Stat Potion Drop Potion (33%):Equipment:::Acc StatPotions
+25457:Huntsman's Volley:Equipment::200,250,0:Interregnum Quiver
+25449::Equipment::75,100,1:MotMG Quiver Proc 1
+25442::Equipment::75,100,1:MotMG Quiver Proc 2
+25443::Equipment::75,100,1:MotMG Quiver Proc 3
+25458::Equipment::75,100,1:MotMG Quiver Proc 4
+14265:Storm Caller:Equipment:::Scepter of MotMG
+14283:Rusted Barrel:Equipment:::Poison of MotMG
+34765:Interregnum Blueprint:Equipment:::Blueprint_215
+34766:Interregnum Blueprint:Equipment:::Blueprint_216
+34767:Interregnum Blueprint:Equipment:::Blueprint_217
+34768:Interregnum Blueprint:Equipment:::Blueprint_218
+34769:Interregnum Blueprint:Equipment:::Blueprint_219
+34770:Interregnum Blueprint:Equipment:::Blueprint_220
+34771:Interregnum Blueprint:Equipment:::Blueprint_221
+34772:Interregnum Blueprint:Equipment:::Blueprint_222
+34773:Interregnum Blueprint:Equipment:::Blueprint_223
+34774:Interregnum Blueprint:Equipment:::Blueprint_224
+34775:Interregnum Blueprint:Equipment:::Blueprint_225
+34776:Interregnum Blueprint:Equipment:::Blueprint_226
+34777:Interregnum Blueprint:Equipment:::Blueprint_227
+34778:Barnacle Blueprint:Equipment:::Blueprint_228
+34779:Hama Yumi Blueprint:Equipment:::Blueprint_229
+34780:Fractal Blades Blueprint:Equipment:::Blueprint_230
+34781:Beekeeper's Flamethrower Blueprint:Equipment:::Blueprint_231
+34782:Crystalized Worm Blueprint:Equipment:::Blueprint_232
+34783:Burial Blades Blueprint:Equipment:::Blueprint_233
+34784::Equipment:::Mark of the Interregnum
+34801::Equipment:::MOTMG Title Unlocker
+37455:Shrouded Summons:Equipment:::InterregnumLore_1
+37456:Intercepted Letter 1:Equipment:::InterregnumLore_2
+37457:Intercepted Letter 2:Equipment:::InterregnumLore_3
+37458:Vagrant's Journal:Equipment:::InterregnumLore_4
+37459:Captain's Log:Equipment:::InterregnumLore_5
+37460:Izel's Prayer:Equipment:::InterregnumLore_6
+37461:Nefret's Journal:Equipment:::InterregnumLore_7
+37462:Ozuchi's Vow:Equipment:::InterregnumLore_8
+37463:The Wanderer's Journal Page 1:Equipment:::InterregnumLore_9
+37464:The Wanderer's Journal Page 2:Equipment:::InterregnumLore_10
+37465:The Wanderer's Journal Page 3:Equipment:::InterregnumLore_11
+37466::Equipment:::Wanderer's Cape
+37467::Equipment:::Cuirass of the Black Blade
+37468::Equipment:::Pirate Queen's Brigandine
+37469::Equipment:::Emblem of the Empire
+37470::Equipment:::Amulet of the Great Shaman
+38191:Interregnum Treasure Chest:Equipment:::Interregnum Quest Chest Item
+38193::Equipment:::Conspirator Title Unlocker
+38194::Equipment:::Vindicator Title Unlocker
 3205::Equipment:::Common Feline Egg
 3206::Equipment:::Uncommon Feline Egg
 3207::Equipment:::Rare Feline Egg
@@ -5255,6 +5374,7 @@
 32285::Equipment:::Abyss of Demons Augmented Key
 32286::Equipment:::Theatre Augmented Key
 32287::Equipment:::Draconis Augmented Key
+32475::Equipment:::Hidden Interregnum Key
 5473::Equipment:::Olive Gladiator Skin
 5474::Equipment:::Ivory Gladiator Skin
 5475::Equipment:::Rosen Blade Skin
@@ -6225,6 +6345,15 @@
 31377::Equipment:::Wrestling Referee Priest Skin
 31379::Equipment:::Luchadora Kensei Skin
 31381::Equipment:::Arena Gladiator Paladin Skin
+31383::Equipment:::Frost Prince Summoner Skin
+31385::Equipment:::Frost Ronin Samurai Skin
+31387::Equipment:::Resistance Scout Rogue Skin
+31389::Equipment:::Fur Trader Archer Skin
+31391::Equipment:::Resistance Leader Knight Skin
+31393::Equipment:::Syndicate Necromancer Skin
+31395::Equipment:::Syndicate Samurai Skin
+31397::Equipment:::Syndicate Assassin Skin
+31399::Equipment:::Syndicate Sorcerer Skin
 400:Apple of Extreme Maxening:Equipment:::Apple
 399:Gift of Krathan:Equipment:::Gift
 1601:Skeleton Key:Equipment:::Keys
@@ -6314,7 +6443,7 @@
 19244::GameObject:::Ruby Initiator
 19245:Keyper of the Arena:GameObject:::Keyper Initiator
 45660:Keyper of the Arena:GameObject:::Keyper Spawner
-19246:Keyper of the Arena:Character:::The Keyper
+19246::Character:::The Keyper
 19248::Character:::Prismimic Summoner
 19247:Prismimic:Character:::Prismimic Attacker
 19249:Prismimic:Character:::Prismimic Defender
@@ -6497,6 +6626,17 @@
 17224:Arena Announcer:GameObject:::Oryxmania Spawner
 32289::GameObject:::Easy Void Spawner
 32290:The Rad Raver:Character:::DWD Rad Raver
+32291::GameObject:::Ice Tomb Spawner
+31112::Character:::Hard Merc 2
+31110::GameObject:::Bomb1
+31111::GameObject:::Bomb2
+31095::GameObject:::Merc A Spawner
+31096::GameObject:::Merc B Spawner
+31097::GameObject:::Merc C Spawner
+31098::GameObject:::Merc D Spawner
+31104::GameObject:::Hero Helper Object
+31105::GameObject:::Hero Helper Counter
+28824::GameObject:::Wanderer or Merc D Spawner
 5934::GameObject:::Mixcoatl Summoner
 3523::Character:Jungle Men::Mixcoatl the Masked God
 3524::GameObject:::Boss Totem
@@ -7892,6 +8032,264 @@
 44138::GameObject:::CHS Void Emperor Teleportation Controller
 44139::GameObject:::CHS Void Emperor Controller
 44113::Container:::CHS Explain Dropper
+52736:Interregnum Nexus Triangle Top Left:GameObject:::IntN Tri TL
+52737:Interregnum Nexus Triangle Top Right:GameObject:::IntN Tri TR
+52738:Interregnum Nexus Triangle Bottom Left:GameObject:::IntN Tri BL
+52739:Interregnum Nexus Triangle Bottom Right:GameObject:::IntN Tri BR
+52740:Interregnum Nexus Square Broken:GameObject:::IntN Sq Br
+52741:Interregnum Nexus Triangle Top Left Broken:GameObject:::IntN Tri TL Br
+52742:Interregnum Nexus Triangle Top Right Broken:GameObject:::IntN Tri TR Br
+52743:Interregnum Nexus Triangle Bottom Left Broken:GameObject:::IntN Tri BL Br
+52744:Interregnum Nexus Triangle Bottom Right Broken:GameObject:::IntN Tri BR Br
+52745:Interregnum Nexus Triangle Over Flow Top Right:GameObject:::IntN Tri Ov Fl TL
+52746:Interregnum Nexus Triangle Over Flow Top Right:GameObject:::IntN Tri Ov Fl TR
+52747:Interregnum Nexus Triangle Over Flow Bottom Left:GameObject:::IntN Tri Ov Fl BL
+52748:Interregnum Nexus Triangle Over Flow Bottom Right:GameObject:::IntN Tri Ov Fl BR
+52749:Interregnum Nexus Over Flow Shadow:GameObject:::IntN Ov Fl Sh
+52750:Interregnum Nexus Stone Broken:GameObject:::IntN St Br
+52751:Interregnum Nexus I Stone Horizontal:GameObject:::IntN I St Hr
+52752:Interregnum Nexus I Stone Vertical:GameObject:::IntN I St Vr
+52753:Interregnum Nexus Edge Flow Outer Bottom Right:GameObject:::IntN Ed Fl Ou BR
+52754:Interregnum Nexus Edge Flow Outer Top Right:GameObject:::IntN Ed Fl Ou Top Right
+52764:Interregnum Nexus Edge Flow Outer Bottom Left:GameObject:::IntN Ed Fl Ou Bottom Left
+52765:Interregnum Nexus Edge Flow Outer Top Left:GameObject:::IntN Ed Fl Ou TL
+52755:Interregnum Nexus Edge Flow Bottom:GameObject:::IntN Ed Fl B
+52756:Interregnum Nexus Edge Flow Top:GameObject:::IntN Ed Fl T
+52757:Interregnum Nexus Edge Flow Left:GameObject:::IntN Ed Fl L
+52758:Interregnum Nexus Edge Flow Right:GameObject:::IntN Ed Fl R
+52759:Interregnum Nexus Edge Flow Bottom Right:GameObject:::IntN Ed Fl BR
+52760:Interregnum Nexus Edge Flow Bottom Left:GameObject:::IntN Ed Fl BL
+52761:Interregnum Nexus Edge Flow Top Right:GameObject:::IntN Ed Fl TR
+52762:Interregnum Nexus Edge Flow Top Left:GameObject:::IntN Ed Fl TL
+52763:Interregnum Nexus Circle Large:GameObject:::IntN Cir L
+52766:Interregnum Nexus I Stone Horizontal Sand:GameObject:::IntN I St Hr Sd
+52767:Interregnum Nexus I Stone Vertical Sand:GameObject:::IntN I St Vr Sd
+52768:Interregnum Nexus Triangle Top Left Sand:GameObject:::IntN Tri TL Sd
+52769:Interregnum Nexus Triangle Top Right Sand:GameObject:::IntN Tri TR Sd
+52770:Interregnum Nexus Triangle Bottom Left Sand:GameObject:::IntN Tri BL Sd
+52771:Interregnum Nexus Triangle Bottom Right Sand:GameObject:::IntN Tri BR Sd
+52772:Interregnum Nexus Square Broken Sand:GameObject:::IntN Sq Br Sd
+52773:Interregnum Nexus Triangle Top Left Broken Sand:GameObject:::IntN Tri TL Br Sd
+52774:Interregnum Nexus Triangle Top Right Broken Sand:GameObject:::IntN Tri TR Br Sd
+52775:Interregnum Nexus Triangle Bottom Left Broken Sand:GameObject:::IntN Tri BL Br Sd
+52776:Interregnum Nexus Triangle Bottom Right Broken Sand:GameObject:::IntN Tri BR Br Sd
+52777:Interregnum Nexus Blink:Character:::IntN Bl
+52778:Interregnum Nexus Circle Large Sand:GameObject:::IntN Cir L Sd
+52779:Interregnum Nexus Mad Lab DrawOnGround 1:GameObject:::IntN ML DoG 1
+52780:Interregnum Nexus Mad Lab DrawOnGround 2:GameObject:::IntN ML DoG 2
+52781:Interregnum Nexus Mad Lab DrawOnGround 3:GameObject:::IntN ML DoG 3
+52782:Interregnum Nexus Mad Lab DrawOnGround 4:GameObject:::IntN ML DoG 4
+52783:Interregnum Nexus Mad Lab DrawOnGround 5:GameObject:::IntN ML DoG 5
+52784:Interregnum Nexus Mad Lab DrawOnGround 6:GameObject:::IntN ML DoG 6
+52785:Interregnum Nexus Mad Lab DrawOnGround 7:GameObject:::IntN ML DoG 7
+52786:Interregnum Nexus Mad Lab DrawOnGround 8:GameObject:::IntN ML DoG 8
+52787:Interregnum Nexus Mad Lab DrawOnGround 9:GameObject:::IntN ML DoG 9
+52788:Interregnum Nexus Mad Lab DrawOnGround 10:GameObject:::IntN ML DoG 10
+52789:Interregnum Nexus Mad Lab DrawOnGround 11:GameObject:::IntN ML DoG 11
+52790:Interregnum Nexus Mad Lab DrawOnGround 12:GameObject:::IntN ML DoG 12
+52791:Interregnum Nexus Mad Lab DrawOnGround 13:GameObject:::IntN ML DoG 13
+52792:Interregnum Nexus Mad Lab DrawOnGround 14:GameObject:::IntN ML DoG 14
+52793:Interregnum Nexus Mad Lab DrawOnGround 15:GameObject:::IntN ML DoG 15
+52794:Interregnum Nexus Mad Lab DrawOnGround 16:GameObject:::IntN ML DoG 16
+52795:Interregnum Nexus Mad Lab DrawOnGround 17:GameObject:::IntN ML DoG 17
+52796:Interregnum Nexus Mad Lab DrawOnGround 18:GameObject:::IntN ML DoG 18
+52797:Interregnum Nexus Mad Lab DrawOnGround 19:GameObject:::IntN ML DoG 19
+52798:Interregnum Nexus Mad Lab DrawOnGround 20:GameObject:::IntN ML DoG 20
+52799:Interregnum Nexus Mad Lab DrawOnGround 21:GameObject:::IntN ML DoG 21
+52800:Interregnum Nexus Mad Lab DrawOnGround 22:GameObject:::IntN ML DoG 22
+52801:Interregnum Nexus Mad Lab DrawOnGround 23:GameObject:::IntN ML DoG 23
+52802:Interregnum Nexus Mad Lab DrawOnGround 24:GameObject:::IntN ML DoG 24
+52803:Interregnum Nexus Mad Lab DrawOnGround 25:GameObject:::IntN ML DoG 25
+52804:Interregnum Nexus Mad Lab DrawOnGround 26:GameObject:::IntN ML DoG 26
+52805:Interregnum Nexus Mad Lab DrawOnGround 27:GameObject:::IntN ML DoG 27
+52806:Interregnum Nexus Mad Lab DrawOnGround 28:GameObject:::IntN ML DoG 28
+52807:Interregnum Nexus Mad Lab DrawOnGround 29:GameObject:::IntN ML DoG 29
+52808:Interregnum Nexus Mad Lab DrawOnGround 30:GameObject:::IntN ML DoG 30
+52809:Interregnum Nexus Mad Lab DrawOnGround 31:GameObject:::IntN ML DoG 31
+52810:Interregnum Nexus Mad Lab DrawOnGround 32:GameObject:::IntN ML DoG 32
+52811:Interregnum Nexus Abyss Wall 1:Wall:::IntN Abs Wl 1
+52812:Interregnum Nexus Abyss Wall 2:Wall:::IntN Abs Wl 2
+52813:Interregnum Nexus UDL Wall 1:Wall:::IntN UDL Wl 1
+52814:Interregnum Nexus UDL Wall 2:Wall:::IntN UDL Wl 2
+52815:Interregnum Nexus UDL Wall 3:Wall:::IntN UDL Wl 3
+52816:Interregnum Nexus UDL Wall 4:Wall:::IntN UDL Wl 4
+52817:Interregnum Nexus UDL Wall 5:Wall:::IntN UDL Wl 5
+52818:Interregnum Nexus Mad Lab Wall 1:Wall:::IntN ML Wl 1
+52819:Interregnum Nexus Mad Lab Wall 2:Wall:::IntN ML Wl 2
+52820:Interregnum Nexus Mad Lab Wall 3:Wall:::IntN ML Wl 3
+52821:Interregnum Nexus Mad Lab Wall 4:Wall:::IntN ML Wl 4
+52822:Interregnum Nexus Cursed Library Wall 1:Wall:::IntN CL Wl 1
+52823:Interregnum Nexus Cursed Library Wall 2:Wall:::IntN CL Wl 2
+52824:Interregnum Nexus Cursed Library Wall 3:Wall:::IntN CL Wl 3
+52825:Interregnum Nexus Snake Pit Wall 1:Wall:::IntN SP Wl 1
+52827:Interregnum Nexus Summer Wall:Wall:::IntN SN Wl
+52828:Interregnum Nexus Pillar Sand 1:GameObject:::IntN Pil Sd 1
+52829:Interregnum Nexus Pillar Sand 2:GameObject:::IntN Pil Sd 2
+52830:Interregnum Nexus Cursed Library 1:GameObject:::IntN CL Tbl 1
+52831:Interregnum Nexus Cursed Library 2:GameObject:::IntN CL Tbl 2
+52832:Interregnum Nexus Cursed Library 3:GameObject:::IntN CL Tbl 3
+52833:Interregnum Nexus Cursed Library 4:GameObject:::IntN CL Tbl 4
+52834:Interregnum Nexus Cursed Library 5:GameObject:::IntN CL Tbl 5
+52835:Interregnum Nexus Cursed Library 1 Up Left:GameObject:::IntN CL Tbl 1 Ed UL
+52836:Interregnum Nexus Cursed Library 1 Edge Up Right:GameObject:::IntN CL Tbl 1 Ed UR
+52837:Interregnum Nexus Cursed Library 1 Edge Low Right:GameObject:::IntN CL Tbl 1 Ed LR
+52838:Interregnum Nexus Cursed Library 1 Edge Low Left:GameObject:::IntN CL Tbl 1 Ed LL
+52839:Interregnum Nexus SN Table Up Left:GameObject:::IntN SN Tbl UL
+52840:Interregnum Nexus SN Table Up Right:GameObject:::IntN SN Tbl UR
+52841:Interregnum Nexus SN Table Low Right:GameObject:::IntN SN Tbl LR
+52842:Interregnum Nexus SN Table Low Left:GameObject:::IntN SN Tbl LL
+52843:Interregnum Nexus Abyss Object 1:GameObject:::IntN Abs Obj 1
+52844:Interregnum Nexus Abyss Object 2:GameObject:::IntN Abs Obj 2
+52845:Interregnum Nexus Abyss Object 3:GameObject:::IntN Abs Obj 3
+52846:Interregnum Nexus Abyss Object 4:GameObject:::IntN Abs Obj 4
+52847:Interregnum Nexus Abyss Object 5:GameObject:::IntN Abs Obj 5
+52848:Interregnum Nexus Abyss Object 6:GameObject:::IntN Abs Obj 6
+52849:Interregnum Nexus Abyss Object 7:GameObject:::IntN Abs Obj 7
+52850:Interregnum Nexus Abyss Object 8:GameObject:::IntN Abs Obj 8
+52851:Interregnum Nexus Abyss Object 9:GameObject:::IntN Abs Obj 9
+52852:Interregnum Nexus Abyss Object 10:GameObject:::IntN Abs Obj 10
+52853:Interregnum Nexus UDL Object 1:GameObject:::IntN UDL Obj 1
+52854:Interregnum Nexus UDL Object 2:GameObject:::IntN UDL Obj 2
+52855:Interregnum Nexus UDL Object 3:GameObject:::IntN UDL Obj 3
+52856:Interregnum Nexus UDL Object 4:GameObject:::IntN UDL Obj 4
+52857:Interregnum Nexus UDL Object 5:GameObject:::IntN UDL Obj 5
+52858:Interregnum Nexus UDL Object 6:GameObject:::IntN UDL Obj 6
+52859:Interregnum Nexus UDL Object 7:GameObject:::IntN UDL Obj 7
+52860:Interregnum Nexus UDL Object 8:GameObject:::IntN UDL Obj 8
+52861:Interregnum Nexus UDL Object 9:GameObject:::IntN UDL Obj 9
+52862:Interregnum Nexus UDL Object 10:GameObject:::IntN UDL Obj 10
+52863:Interregnum Nexus Mad Lab Object 1:GameObject:::IntN ML Obj 1
+52864:Interregnum Nexus Cursed Library Object 1:GameObject:::IntN CL Obj 1
+52865:Interregnum Nexus Cursed Library Object 2:GameObject:::IntN CL Obj 2
+52867:Interregnum Nexus Cursed Library Hight Wall 1:GameObject:::IntN CL HWl 1
+52868:Interregnum Nexus Cursed Library Hight Wall 2:GameObject:::IntN CL HWl 2
+52869:Interregnum Nexus Cursed Library Hight Wall 2:GameObject:::IntN CL HWl 3
+52870:Interregnum Nexus Snake Pit Object 1:GameObject:::IntN SP Obj 1
+52872:Interregnum Nexus Snake Pit Object 2:GameObject:::IntN SP Obj 2
+52826:Interregnum Nexus Snake Pit Object 3:GameObject:::IntN SP Obj 3
+52866:Interregnum Nexus Summer High Wall:GameObject:::IntN SN HWl
+52871:Interregnum Nexus Indoor Triangle Top Left:GameObject:::IntN Ind Tri TL
+52873:Interregnum Nexus Indoor Triangle Top Right:GameObject:::IntN Ind Tri TR
+52874:Interregnum Nexus Indoor Triangle Bottom Left:GameObject:::IntN Ind Tri BL
+52875:Interregnum Nexus Indoor Triangle Bottom Right:GameObject:::IntN Ind Tri BR
+52876:Interregnum Nexus Indoor Square Broken:GameObject:::IntN Ind Sq Br
+52877:Interregnum Nexus Indoor Triangle Top Left Broken:GameObject:::IntN Ind Tri TL Br
+52878:Interregnum Nexus Indoor Triangle Top Right Broken:GameObject:::IntN Ind Tri TR Br
+52879:Interregnum Nexus Indoor Triangle Bottom Left Broken:GameObject:::IntN Ind Tri BL Br
+52880:Interregnum Nexus Indoor Triangle Bottom Right Broken:GameObject:::IntN Ind Tri BR Br
+52881:Interregnum Nexus Indoor Stone Broken:GameObject:::IntN Ind St Br
+52882:Interregnum Nexus Indoor I Stone Horizontal:GameObject:::IntN Ind I St Hr
+52883:Interregnum Nexus Indoor I Stone Vertical:GameObject:::IntN Ind I St Vr
+52884:Interregnum Nexus Indoor Circle Large:GameObject:::IntN Ind Cir L
+52885:Interregnum Nexus Indoor I Stone Horizontal Sand:GameObject:::IntN Ind I St Hr Sd
+52886:Interregnum Nexus Indoor I Stone Vertical Sand:GameObject:::IntN Ind I St Vr Sd
+52887:Interregnum Nexus Indoor Triangle Top Left Sand:GameObject:::IntN Ind Tri TL Sd
+52888:Interregnum Nexus Indoor Triangle Top Right Sand:GameObject:::IntN Ind Tri TR Sd
+52889:Interregnum Nexus Indoor Triangle Bottom Left Sand:GameObject:::IntN Ind Tri BL Sd
+52890:Interregnum Nexus Indoor Triangle Bottom Right Sand:GameObject:::IntN Ind Tri BR Sd
+52891:Interregnum Nexus Indoor Square Broken Sand:GameObject:::IntN Ind Sq Br Sd
+52892:Interregnum Nexus Indoor Triangle Top Left Broken Sand:GameObject:::IntN Ind Tri TL Br Sd
+52893:Interregnum Nexus Indoor Triangle Top Right Broken Sand:GameObject:::IntN Ind Tri TR Br Sd
+52894:Interregnum Nexus Indoor Triangle Bottom Left Broken Sand:GameObject:::IntN Ind Tri BL Br Sd
+52895:Interregnum Nexus Indoor Triangle Bottom Right Broken Sand:GameObject:::IntN Ind Tri BR Br Sd
+52896:Interregnum Nexus Indoor Wall:Wall:::IntN Ind Wl
+52897:Interregnum Nexus Indoor Wall Lit:Wall:::IntN Ind Wl Lt
+52898:Interregnum Nexus Indoor Ground Lit 1:GameObject:::IntN Ind Gr Lt 1
+52899:Interregnum Nexus Indoor Ground Lit 2:GameObject:::IntN Ind Gr Lt 2
+52900:Interregnum Nexus Indoor Lantern:GameObject:::IntN Ind Ltn
+52901:Interregnum Nexus Indoor Lantern Up:GameObject:::IntN Ind Ltn up
+52902:Interregnum Nexus Floating Rocks 1:GameObject:::IntN Fl Rk 1
+52903:Interregnum Nexus Floating Rocks 2:GameObject:::IntN Fl Rk 2
+52904:Interregnum Nexus Floating Rocks 3:GameObject:::IntN Fl Rk 3
+52905:Interregnum Nexus Floating Rocks 4:GameObject:::IntN Fl Rk 4
+52906:Interregnum Nexus Floating Rocks 5:GameObject:::IntN Fl Rk 5
+52907:Interregnum Nexus Floating Rocks 6:GameObject:::IntN Fl Rk 6
+52908:Interregnum Nexus Floating Rocks 7:GameObject:::IntN Fl Rk 7
+52909:Interregnum Nexus Floating Rocks 8:GameObject:::IntN Fl Rk 8
+52910:Interregnum Nexus Floating Rocks 9:GameObject:::IntN Fl Rk 9
+52911:Interregnum Nexus Floating Rocks 10:GameObject:::IntN Fl Rk 10
+52912:Interregnum Nexus Indoor Crate:GameObject:::IntN Ind Cr
+52913:Interregnum Nexus Indoor Crate Lit 1:GameObject:::IntN Ind Cr Lt 1
+52914:Interregnum Nexus Indoor Crate Lit 2:GameObject:::IntN Ind Cr Lt 2
+52915:Interregnum Nexus Rock Wall:CaveWall:::IntN Rk Wl
+52916:Interregnum Nexus Indoor Rock Wall:CaveWall:::IntN Ind Rk Wl
+52917:Interregnum Nexus Wanderer Cloth Rack 1:GameObject:::IntN Wndr Cth Rck 1
+52918:Interregnum Nexus Wanderer Cloth Rack 2:GameObject:::IntN Wndr Cth Rck 2
+52919:Interregnum Nexus Wanderer Sword Rack 1:GameObject:::IntN Wndr Swd Rck 1
+52920:Interregnum Nexus Wanderer Sword Rack 2:GameObject:::IntN Wndr Swd Rck 2
+52921:Interregnum Nexus Wanderer Axe Rack:GameObject:::IntN Wndr Ax Rck
+52922:Interregnum Nexus Candle:GameObject:::IntN Cdle
+52923:Interregnum Nexus Holy Crystal:GameObject:::IntN Hl Cry
+52924:Interregnum Nexus Circle Lit:GameObject:::IntN Cir L Lt
+52925:Interregnum Nexus Floating Rocks Spawner:GameObject:::IntN Fl Rk Spw
+52929:Interregnum Nexus Floating Rocks Spawner Blink:GameObject:::IntN Fl Rk Spw Bl
+52926:Interregnum Daily Quest Room:Portal:::Interregnum Daily Quest Portal
+52927:Interregnum Nexus Vertical Over Flow:GameObject:::IntN Vt Ov Fl
+52928:Interregnum Nexus Horizontal Over Flow:GameObject:::IntN Hr Ov Fl
+49699::Character:::Shady Vagrant
+49700::Character:::MotMG Invisible Rift
+49702::Character:::Shady Vagrant Spawner
+49712:Syndicate Fighter:Character:Syndicate::Syndicate Fighter A
+49698:Syndicate Ranger:Character:Syndicate::Syndicate Ranger B
+49703::Character:Syndicate::Syndicate Fighter
+49704::Character:Syndicate::Syndicate Ranger
+49705::Character:Syndicate::Syndicate Mage
+49706::Character:Syndicate::Syndicate Healer
+49707:Pirate Queen Ramm:Character:::Mercenary A Realm
+49708:Pirate Queen Ramm:Character:::Mercenary A Dungeon
+49713::Character:::Mercenary A Corpse
+49715::Character:::Mercenary A Orbiter
+49817::Character:::Mercenary B Orbiter
+49717:Izel the Grand Shaman:Character:::Mercenary B Realm
+49718:Izel the Grand Shaman:Character:::Mercenary B Dungeon
+49723::Character:::Mercenary B Corpse
+49727::Character:::Lightning Spawner
+49728::Character:::Lightning Spine
+49767::Character:::Lightning Spine 2
+49729:Nefret the Pharaoh:Character:::Mercenary C Realm
+49730:Nefret the Pharaoh:Character:::Mercenary C Dungeon
+49735::Character:::Mercenary C Corpse
+49739:Mercenary C:GameObject:::Health Drain Beam
+49740:Mercenary C:GameObject:::Health Drain Beam Strike
+49762:Mercenary C:GameObject:::Mercenary C Healer
+49763:Sandstorm:GameObject:::Mercenary C Sand Storm
+49780:Pine Tree:GameObject:::Mercenary D Pine Tree Target
+49783:Pine Tree:GameObject:::Mercenary D Pine Tree Target 2
+49782:Black Blade Ozuchi:Character:::Mercenary D Realm 2
+49784::Projectile:::BellaPetal New Slow
+49743:Black Blade Ozuchi:Character:::Mercenary D Dungeon
+49744::Character:::Mercenary D Corpse
+49755:The Wanderer:Character:::MOTMG Wanderer Boss Hard
+17664:The Wanderer:Character:::Motmg Wanderer Portal
+17665:The Wanderer:Character:::Motmg Wanderer Shadow Portal
+17666:The Wanderer:Character:::Motmg Wanderer Shadow
+17667:The Wanderer:Character:::Motmg Finale Wanderer Portal 1
+17668:The Wanderer:Character:::Motmg Finale Wanderer Portal 2
+17669:The Wanderer:Character:::Motmg Finale Wanderer Portal 3
+17670:The Wanderer:Character:::Motmg Finale Wanderer Portal 4
+17671:The Wanderer:GameObject:::Motmg Wanderer Sword
+29867::GameObject:::INT Merc Spawner A
+29868::GameObject:::INT Merc Spawner B
+29873::GameObject:::INT Merc Spawner C
+29874::GameObject:::INT Merc Spawner D
+29869:Izel the Grand Shaman:Character:::INT Merc A
+29870:Pirate Queen Ramm:Character:::INT Merc B
+29871:Nefret the Pharaoh:Character:::INT Merc C
+29872:Black Blade Ozuchi:Character:::INT Merc D
+29875::GameObject:::INT A Anchor
+29876::GameObject:::INT B Anchor
+29877::GameObject:::INT C Anchor
+29878::GameObject:::INT A Anchor 2
+29879::GameObject:::INT B Anchor 2
+29880::GameObject:::INT C Anchor 2
+29881::GameObject:::INT Finale Portal Outer
+29887:Xoz'cil:GameObject:::INT Left Anchor
+29888:Xoz'cil:GameObject:::INT Right Anchor
+29882:Izel Lightning Blast:GameObject:::INT Lightning Beam
+29883:Izel Lightning Blast:GameObject:::INT Lightning Beam Strike
+29884::GameObject:::INT Ground Crack 1 Anim
+29885:Xoz'cil:GameObject:::INT Lightning Beam 2
+29886:Xoz'cil:GameObject:::INT Lightning Beam Strike 2
 43690::Projectile:::Totalia Bullet
 43691::Projectile:::Totalia Star
 43692::Projectile:::Totalia Bolt
@@ -9216,15 +9614,16 @@
 14372:Puppet Master's Encore Guild Chest:Character:::Puppet Master's Encore Guild Chest
 14362:The Third Dimension Guild Chest:Character:::The Third Dimension Guild Chest
 14363:High Tech Terror Guild Chest:Character:::High Tech Terror Guild Chest
+38192:Interregnum Treasure Chest:Character:::Interregnum Quest Chest
 1902:Thessal the Mermaid Goddess:Character:Ocean Trench::Thessal Double Boss
 5935::GameObject:::Thessal Summoner
 5888::Character:Ocean Trench::Fishman Warrior
 5889::GameObject:Ocean Trench::Deep Sea Beast Spawner
 5890::GameObject:Ocean Trench::Coral Bomb Big
 5891::Character:Ocean Trench::Coral Bomb Small
-5892:Deep Sea Diva:Character:Ocean Trench::Thessal the Mermaid Goddess Wounded
+5892:Thessal the Mermaid Goddess:Character:Ocean Trench::Thessal the Mermaid Goddess Wounded
 5893::Character:Ocean Trench::Coral Gift
-5894:Deep Sea Diva:Character:Ocean Trench::Thessal the Mermaid Goddess
+5894::Character:Ocean Trench::Thessal the Mermaid Goddess
 5460::GameObject:::Thessal Dropper
 5895::Character:Ocean Trench::Deep Sea Beast
 5896::Character:Ocean Trench::Fishman
@@ -12012,6 +12411,18 @@
 31066::Pet:::The Thunderbringer Action Figure
 31067:The Thunderbringer Action Figure:PetSkin:::The Thunderbringer Action Figure Pet Skin
 31068:The Thunderbringer Action Figure Pet Skin:Equipment:::The Thunderbringer Action Figure Pet Stone
+31069::Pet:::White Husky
+31070:White Husky:PetSkin:::White Husky Pet Skin
+31071:White Husky Pet Skin:Equipment:::White Husky Pet Stone
+31072::Pet:::Arctic Fox
+31073:Arctic Fox:PetSkin:::Arctic Fox Pet Skin
+31074:Arctic Fox Pet Skin:Equipment:::Arctic Fox Pet Stone
+31075::Pet:::Penguin Gunslinger
+31076:Penguin Gunslinger:PetSkin:::Penguin Gunslinger Pet Skin
+31077:Penguin Gunslinger Pet Skin:Equipment:::Penguin Gunslinger Pet Stone
+31078::Pet:::Dimensional Wanderer
+31079:Dimensional Wanderer:PetSkin:::Dimensional Wanderer Pet Skin
+31080:Dimensional Wanderer Pet Skin:Equipment:::Dimensional Wanderer Pet Stone
 690::Projectile:::Pirate Shot
 706::Projectile:::Pirate Sword
 707::Projectile:::Pirate Fiery Bullet
@@ -12216,6 +12627,7 @@
 26078:Mysterious Arena:Portal:::Thessal Arena Portal
 26127:Mysterious Arena:Portal:::Xolotl Arena Portal
 26128:Mysterious Arena:Portal:::Puppet Arena Portal
+49768:Hidden Interregnum:Portal:::Interregnum Portal
 28621::Projectile:::md2 laser body
 28622::Projectile:::md2 laser head
 28623::Projectile:::md2 laser tail
@@ -13676,11 +14088,144 @@
 14419::Projectile:::Large Ignis Arrow
 14420::Projectile:::Tectonus Arrow
 14425::Projectile:::Small Ignis Arrow
+14777::Projectile:::Small Red Missle
+14778::Projectile:::Large Red Missle
+868::Projectile:::Small Blue Missle
+869::Projectile:::Large Blue Missle
+22444::Projectile:::Small White Missle
+22445::Projectile:::Large White Missle
+22446::Projectile:::Small Purple Missle
+22447::Projectile:::Large Purple Missle
+22448::Projectile:::Small Teal Missle
+22449::Projectile:::Large Teal Missle
+22450::Projectile:::Small Redder Missle
+22451::Projectile:::Large Redder Missle
+22452::Projectile:::Small Yellow Missle
+22453::Projectile:::Large Yellow Missle
+22454::Projectile:::Small Bluer Missle
+22455::Projectile:::Large Bluer Missle
+17504::Projectile:::Large Blue Blade
+17505::Projectile:::Small Blue Blade
+17506::Projectile:::Large Fire Blade
+17507::Projectile:::Small Fire Blade
+17508::Projectile:::Large Pink Blade
+17509::Projectile:::Small Pink Blade
+17510::Projectile:::Large Green Blade
+17511::Projectile:::Small Green Blade
+17512::Projectile:::Large Purple Blade
+17513::Projectile:::Small Purple Blade
+17514::Projectile:::Large Red Blade
+17515::Projectile:::Small Red Blade
+17516::Projectile:::Large Orange Blade
+17517::Projectile:::Small Orange Blade
+17518::Projectile:::Large Dark Blue Blade
+17519::Projectile:::Small Dark Blue Blade
 32446::Projectile:::Bolt Thrower Main
 32447::Projectile:::Bolt Thrower Sub
 32448::Projectile:::Bolt Thrower Full
 32449::Projectile:::Jagged Hatchet Normal
 32450::Projectile:::Jagged Hatchet Large
+17520::Projectile:::Light Blue Cross Slash
+17521::Projectile:::Red Cross Slash
+17522::Projectile:::Dark Cross Slash
+17523::Projectile:::White Cross Slash
+17524::Projectile:::Purple Cross Slash
+17525::Projectile:::Gold Cross Slash
+17526::Projectile:::Pink Cross Slash
+17527::Projectile:::Cyan Cross Slash
+17528::Projectile:::Gold Flail Ball
+17529::Projectile:::Steel Flail Ball
+17530::Projectile:::Yellow Flail Ball
+17531::Projectile:::Red Flail Ball
+17532::Projectile:::Blue Flail Ball
+17533::Projectile:::Purple Flail Ball
+17534::Projectile:::Silver Flail Ball
+17535::Projectile:::Black Flail Ball
+17536::Projectile:::Steel Flail Chain
+17537::Projectile:::Black Flail Chain
+17538::Projectile:::Blue Flail Chain
+17539::Projectile:::Purple Flail Chain
+17540::Projectile:::Gold Flail Chain
+14646::Projectile:::Magenta Long Arrow
+14647::Projectile:::Gold Long Arrow
+14648::Projectile:::Green Long Arrow
+14649::Projectile:::Purple Long Arrow
+14650::Projectile:::Red Long Arrow
+14651::Projectile:::Blue Long Arrow
+14652::Projectile:::Yellow Long Arrow
+14653::Projectile:::Black Long Arrow
+14654::Projectile:::Red Morning Star
+14655::Projectile:::Green Morning Star
+14656::Projectile:::Yellow Morning Star
+14657::Projectile:::Blue Morning Star
+14658::Projectile:::Greener Morning Star
+14659::Projectile:::Bluer Morning Star
+55373::Projectile:::Orange Morning Star
+55374::Projectile:::Purple Morning Star
+55375::Projectile:::Crystal Teeth Projectile
+55376::Projectile:::Crystal Head Projectile
+55377::Projectile:::Crystal Body Projectile
+55378::Projectile:::Crystal Tail Projectile
+55384::Projectile:::Crystal Head 1
+55385::Projectile:::Crystal Tail 1
+55379::Projectile:::Fire Morning Star
+55380::Projectile:::Jade Long Arrow
+17544::Projectile:::Right Fractal Blade
+17545::Projectile:::Left Fractal Blade
+17546::Projectile:::Flail Anchor
+17547::Projectile:::Anchor Chain
+17548::Projectile:::Valus Cross Slash
+17549::Projectile:::Phaedra Cross Slash
+14210::Projectile:::Interregnum Large Blade
+14211::Projectile:::Interregnum Small Blade
+14240::Projectile:::Interregnum Long Arrow
+14241::Projectile:::Interregnum Star
+14253::Projectile:::Interregnum Tachi 1
+14255::Projectile:::Interregnum Tachi 2
+14282::Projectile:::Interregnum Flail 1
+14263::Projectile:::Interregnum Flail 2
+14264::Projectile:::Interregnum Flail 3
+14284::Projectile:::Interregnum Projectile 1 Weak
+14285::Projectile:::Interregnum Projectile 1 Strong
+14286::Projectile:::Interregnum Projectile 2 Weak
+14289::Projectile:::Interregnum Projectile 2 Strong
+14358::Projectile:::Interregnum Projectile 3 Weak
+14359::Projectile:::Interregnum Projectile 3 Strong
+14360::Projectile:::Wanderer Arrow
+14788::Projectile:::INT Energy Arrow Left
+18921::Projectile:::INT Animated Arrow
+17910::Projectile:::INT White Morningstar
+14965::Projectile:::Pink Big Petal
+14966::Projectile:::Pink White Big Petal
+14967::Projectile:::White Big Petal
+14968::Projectile:::Sakura Petal Purple
+14969::Projectile:::Sakura Petal Red
+14970::Projectile:::Spiral Petal
+14971::Projectile:::Wind Spiral
+14972::Projectile:::Medium Pink Petal Bolt
+14973::Projectile:::Small Pink Petal Bolt
+14974::Projectile:::A Twin Blade 1
+14975::Projectile:::A Twin Blade 2
+19104::Projectile:::B Mornigstar Shots
+19105::Projectile:::C Spellblade
+19106::Projectile:::C Spellblade Slash
+19107::Projectile:::C Curse Nova
+19108::Projectile:::B Lightning Toss
+19109::Projectile:::A Bleeding Grenade
+19110::Projectile:::C Flaming Skull
+29335::Projectile:::Purple Slash Projectile
+29336::Projectile:::Red Spinner Projectile
+17911::Projectile:::Blue Spinner Projectile
+18910::Projectile:::Purple Magic Projectile
+18915::Projectile:::Red Magic Projectile
+29337::Projectile:::White Arrow Projectile
+29338::Projectile:::Big Pink Star Projectile
+17672::Projectile:::Wanderer Portal Bolt
+17673::Projectile:::Wanderer Portal Arrow
+17674::Projectile:::Wanderer Portal Spinner
+17675::Projectile:::Wanderer Dagger
+19721::Projectile:::Interregnum Spellblade Large
+19722::Projectile:::Interregnum Spellblade Small
 29763::GameObject:::Puppet Theatre Boss Spawn
 29747:The Puppet Master:Character:Master::The Puppet Master
 29758:Wizard Puppet:Character:::Puppet Wizard 2
@@ -13716,7 +14261,7 @@
 29761::Character:::Puppet Loot Chest
 29767::Character:::Puppet Treasure Chest
 32845::GameObject:::Puppet Portal Dropper
-29793:Mister Backstage:Character:Master::Puppet Master v2
+29793:The Puppet Master:Character:Master::Puppet Master v2
 29857:Cursed Blast:Character:Statue::HomingFire
 29859:Huntress Puppet:Character:Statues::Encore Huntress Statue
 29796:Huntress Puppet:Character:Statues::Encore Huntress
@@ -13961,7 +14506,7 @@
 14023:Bird Mask:Character:::ST B2
 14024:Bird Mask:Character:::ST B3
 14025:Bird Mask:Character:::ST B4
-14026:The Thunderbringer:Character:::Xolotl the Lightning God
+14026:Xolotl the Lightning God:Character:::Xolotl the Lightning God
 14027:Lightning Totem:Character:::Lightning Totem
 14028:Lightning Target:Character:::Lightning Target
 14029:Lightning Target:Character:::Lightning Target 2
@@ -15032,6 +15577,15 @@
 31378::Skin:::Wrestling Referee Priest
 31380::Skin:::Luchadora Kensei
 31382::Skin:::Arena Gladiator Paladin
+31384::Skin:::Frost Prince Summoner
+31386::Skin:::Frost Ronin Samurai
+31388::Skin:::Resistance Scout Rogue
+31390::Skin:::Fur Trader Archer
+31392::Skin:::Resistance Leader Knight
+31394::Skin:::Syndicate Necromancer
+31396::Skin:::Syndicate Samurai
+31398::Skin:::Syndicate Assassin
+31400::Skin:::Syndicate Sorcerer
 5937::GameObject:::Stheno Summoner
 3624::GameObject:::Snakepit Guard Spawner
 3623::Character:::Snakepit Button
@@ -16522,6 +17076,10 @@
 5023:{textiles.Small_Migrating_Birds_Cloth}:Dye:::Small Migrating Birds Cloth
 4768:{textiles.Large_Spinning_Shamrock_Cloth}:Dye:::Large Spinning Shamrock Cloth
 5024:{textiles.Small_Spinning_Shamrock_Cloth}:Dye:::Small Spinning Shamrock Cloth
+4769:{textiles.Large_Black_Coin_Cloth}:Dye:::Large Black Coin Cloth
+5025:{textiles.Small_Black_Coin_Cloth}:Dye:::Small Black Coin Cloth
+4770:{textiles.Large_Black_Coin_Rain_Cloth}:Dye:::Large Black Coin Rain Cloth
+5026:{textiles.Small_Black_Coin_Rain_Cloth}:Dye:::Small Black Coin Rain Cloth
 292::GameObject:::TH honey Heal
 293::Character:::TH Mini Hive
 294:Small Bee:Character:::TH Small Bees
@@ -17736,6 +18294,34 @@
 21171::GameObject:::tD Protect TR
 21172::GameObject:::tD Protect BL
 21173::GameObject:::tD Protect BR
+39421:the Mad:Title:::Title_Mad
+39422:Drunkard:Title:::Title_Drunkard
+39423:Vanquisher:Title:::Title_Vanquisher
+39424:the Deadly:Title:::Title_Deadly
+39425:Slayer of Gods:Title:::Title_SlayerOfGods
+39426:Liberator:Title:::Title_Liberator
+39427:Bounty Hunter:Title:::Title_BountyHunter
+39428:Marksman:Title:::Title_Marksman
+39429:the Trailblazer:Title:::Title_Trailblazer
+39430:Cartographer of the Realm:Title:::Title_CartographerOfTheRealm
+39431:Enemy of the Court:Title:::Title_EnemyOfTheCourt
+39432:Conqueror of the Realm:Title:::Title_ConquerorOfTheRealm
+39433:Hero of the Nexus:Title:::Title_HeroOfTheNexus
+39434:Nexus:Title:::Title_Nexus
+39435:Adventurer:Title:::Title_Adventurer
+39436:Inaugural Champion:Title:::Title_Inagural_Champion
+39437:The Triumphant:Title:::Title_The_Triumphant
+39438:Collector:Title:::Title_Collector
+39439:Battler:Title:::Title_Battler
+39440:Infiltrator:Title:::Title_Infiltrator
+39441:Syndicate Minion:Title:::Title_Syndicate_Minion
+39442:Saboteur:Title:::Title_Saboteur
+39443:Sydicate Mercenary:Title:::Title_Syndicate_Mercenary
+39444:Savior of Oryx:Title:::Title_Savior_of_Oryx
+39445:Syndicate Slayer:Title:::Title_Syndicate_Slayer
+39446:Wanderer:Title:::Title_Wanderer
+39447:Conspirator:Title:::Title_Conspirator
+39448:Vindicator:Title:::Title_Vindicator
 4048:Heroic Undead Lair Incantation:Equipment:::Heroic Undead Lair Unlocker x 1
 4049:Heroic Undead Lair Incantation:Equipment:::Heroic Undead Lair Unlocker x 2
 4050:Heroic Undead Lair Incantation:Equipment:::Heroic Undead Lair Unlocker x 3
@@ -18775,6 +19361,71 @@
 32252::Equipment:::Void Catalyst x8
 32253::Equipment:::Void Catalyst x9
 32254::Equipment:::Void Catalyst x10
+32004::Equipment:::Frost Orb x1
+32005::Equipment:::Frost Orb x2
+32006::Equipment:::Frost Orb x3
+32007::Equipment:::Frost Orb x4
+32008::Equipment:::Frost Orb x5
+32009::Equipment:::Frost Orb x6
+32010::Equipment:::Frost Orb x7
+32011::Equipment:::Frost Orb x8
+32012::Equipment:::Frost Orb x9
+32013::Equipment:::Frost Orb x10
+33667::Equipment:::Fluffy Hood x1
+33668::Equipment:::Fluffy Hood x2
+33669::Equipment:::Fluffy Hood x3
+33670::Equipment:::Fluffy Hood x4
+33671::Equipment:::Fluffy Hood x5
+33672::Equipment:::Fluffy Hood x6
+33673::Equipment:::Fluffy Hood x7
+33674::Equipment:::Fluffy Hood x8
+33675::Equipment:::Fluffy Hood x9
+33676::Equipment:::Fluffy Hood x10
+32293::Equipment:::Encrypted Note x1
+32294::Equipment:::Encrypted Note x2
+32295::Equipment:::Encrypted Note x3
+32296::Equipment:::Encrypted Note x4
+32297::Equipment:::Encrypted Note x5
+32298::Equipment:::Encrypted Note x6
+32299::Equipment:::Encrypted Note x7
+32300::Equipment:::Encrypted Note x8
+32301::Equipment:::Encrypted Note x9
+32302::Equipment:::Encrypted Note x10
+32303::Equipment:::Encrypted Note x11
+32304::Equipment:::Encrypted Note x12
+32305::Equipment:::Encrypted Note x13
+32306::Equipment:::Encrypted Note x14
+32307::Equipment:::Encrypted Note x15
+32308::Equipment:::Encrypted Note x16
+32309::Equipment:::Encrypted Note x17
+32310::Equipment:::Encrypted Note x18
+32311::Equipment:::Encrypted Note x19
+32312::Equipment:::Encrypted Note x20
+32313::Equipment:::Encrypted Note x21
+32314::Equipment:::Encrypted Note x22
+32315::Equipment:::Encrypted Note x23
+32316::Equipment:::Encrypted Note x24
+32317::Equipment:::Encrypted Note x25
+32318::Equipment:::Encrypted Note x26
+32319::Equipment:::Encrypted Note x27
+32320::Equipment:::Encrypted Note x28
+32321::Equipment:::Encrypted Note x29
+32322::Equipment:::Encrypted Note x30
+32323::Equipment:::Encrypted Note x31
+32324::Equipment:::Encrypted Note x32
+32325::Equipment:::Encrypted Note x33
+32326::Equipment:::Encrypted Note x34
+32327::Equipment:::Encrypted Note x35
+34786:Black Coin x1:Equipment:::Black Coin x1
+34787:Black Coin x2:Equipment:::Black Coin x2
+34788:Black Coin x3:Equipment:::Black Coin x3
+34789:Black Coin x4:Equipment:::Black Coin x4
+34790:Black Coin x5:Equipment:::Black Coin x5
+34791:Black Coin x6:Equipment:::Black Coin x6
+34792:Black Coin x7:Equipment:::Black Coin x7
+34793:Black Coin x8:Equipment:::Black Coin x8
+34794:Black Coin x9:Equipment:::Black Coin x9
+34795:Black Coin x10:Equipment:::Black Coin x10
 3392:Portal of Cowardice:Portal:::Tomb Portal of Cowardice
 3344::Character:::Red Swarm Minions
 3345::Character:Tomb Swarms::Red Swarm Masters

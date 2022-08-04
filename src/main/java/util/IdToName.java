@@ -47,7 +47,7 @@ public class IdToName {
      * Method to grab the full list of resource's from file and construct the hashmap.
      */
     private static void readList() {
-        String fileName = "ID3.list";
+        String fileName = "ID4.list";
 
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(Util.resourceFilePath(fileName), StandardCharsets.UTF_8));
