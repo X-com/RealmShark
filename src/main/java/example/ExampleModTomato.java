@@ -94,6 +94,13 @@ public class ExampleModTomato {
     }
 
     /**
+     * Clear the DPS logs.
+     */
+    public static void clearDpsLogs() {
+        dpsLogger.clearTextLogs();
+    }
+
+    /**
      * Dps logger packets
      *
      * @param packet packets for dps logger.
