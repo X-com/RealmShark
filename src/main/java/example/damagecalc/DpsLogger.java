@@ -118,12 +118,12 @@ public class DpsLogger {
      */
     private static boolean filteredInstances(String dungName) {
         switch (dungName) {
-            case "{s.vault}":
-            case "Daily Quest Room":
-            case "Pet Yard":
-            case "{s.guildhall}":
-            case "{s.nexus}":
-            case "{s.rotmg}":
+            case "{s.vault}":  // vault
+            case "Daily Quest Room": // quest room
+            case "Pet Yard": // pet yard
+            case "{s.guildhall}": // guild hall
+            case "{s.nexus}": // nexus
+//            case "{s.rotmg}": // realm
                 return false;
             default:
                 return true;
@@ -374,6 +374,13 @@ public class DpsLogger {
     }
 
     /**
+     * Clears all dps logs
+     */
+    public void clearTextLogs() {
+        stringLogs.clear();
+    }
+
+    /**
      * Find the next dps log to display in the dps calculator.
      */
     public void nextDisplay() {
@@ -404,7 +411,7 @@ public class DpsLogger {
         stringLogs.add(s);
         String l = stringLogs.size() + "/" + stringLogs.size();
         TomatoGUI.setTextAreaAndLabelDPS(s, l);
-        stringIndex = stringLogs.size();
+        stringIndex = stringLogs.size() - 1;
     }
 
     /**

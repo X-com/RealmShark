@@ -1,14 +1,20 @@
 package example.gui;
 
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.theme.*;
 import example.ExampleModTomato;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * Example GUI for Tomato mod.
  */
 public class TomatoGUI {
+    private static Properties properties;
     private static JTextArea textAreaChat;
     private static JTextArea textAreaKeypop;
     private static JTextArea textAreaDPS;
@@ -21,16 +27,22 @@ public class TomatoGUI {
     private Image icon;
     private JButton next, prev;
 
+    /*
+     * Load the properties as the GUI loads to set the preset options by the user.
+     */
+    static {
+        try {
+            FileReader reader = new FileReader("realmShark.properties");
+            properties = new Properties();
+            properties.load(reader);
+        } catch (IOException ignored) {
+        }
+    }
+
     /**
      * Create main panel and initializes the GUI for the example Tomato.
      */
     public void create() {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
         JTabbedPane tabbedPane = new JTabbedPane();
         textAreaChat = new JTextArea();
         textAreaChat.setEnabled(true);
@@ -97,14 +109,58 @@ public class TomatoGUI {
 
         icon = Toolkit.getDefaultToolkit().getImage(ExampleModTomato.imagePath);
         makeFrame();
+        loadPresets();
         frame.setVisible(true);
+    }
+
+    /**
+     * Loads the presets chosen by the user.
+     */
+    private void loadPresets() {
+        if (properties == null) {
+            LafManager.install(new DarculaTheme());
+            return;
+        }
+
+        String theme = properties.getProperty("theme");
+
+        switch (theme) {
+            case "contrastDark":
+                LafManager.install(new HighContrastDarkTheme());
+                break;
+            case "contrastLight":
+                LafManager.install(new HighContrastLightTheme());
+                break;
+            case "intelliJ":
+                LafManager.install(new IntelliJTheme());
+                break;
+            case "solarizedDark":
+                LafManager.install(new SolarizedDarkTheme());
+                break;
+            case "solarizedLight":
+                LafManager.install(new SolarizedLightTheme());
+                break;
+            default:
+            case "darcula":
+                LafManager.install(new DarculaTheme());
+                break;
+        }
+
+        String fontSize = properties.getProperty("fontSize");
+        int fs = 0;
+        try {
+            fs = Integer.parseInt(fontSize);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        fontSizeTextAreas(fs);
     }
 
     /**
      * Creates the frame with icon.
      */
     public void makeFrame() {
-        frame = new JFrame("Tomato");
+        frame = new JFrame("    Tomato    ");
         frame.setIconImage(icon);
         frame.setLocation(center.x / 2, 25);
         frame.setSize(400, 400);
@@ -129,6 +185,16 @@ public class TomatoGUI {
      */
     public static void clearTextAreaChat() {
         textAreaChat.setText("");
+    }
+
+    /**
+     * Set font size of text area.
+     */
+    public static void fontSizeTextAreas(int size) {
+        Font f = textAreaChat.getFont();
+        textAreaChat.setFont(new Font(f.getName(), f.getStyle(), size));
+        textAreaKeypop.setFont(new Font(f.getName(), f.getStyle(), size));
+        textAreaDPS.setFont(new Font(f.getName(), f.getStyle(), size));
     }
 
     /**
@@ -157,5 +223,26 @@ public class TomatoGUI {
      */
     public static void setStateOfSniffer(boolean running) {
         statusLabel.setText(" Network Tap: " + (running ? "RUNNING" : "OFF"));
+    }
+
+    /**
+     * Sets a preset needed when reloading the program.
+     *
+     * @param name  Name of the property.
+     * @param value Value of the property.
+     */
+    public static void setProperties(String name, String value) {
+        properties.setProperty(name, value);
+    }
+
+    /**
+     * Gets the property value by the name of the property.
+     *
+     * @param name Name of the property
+     * @return Value of the property.
+     */
+    public static String getPropertie(String name) {
+        if (properties == null) return null;
+        return properties.getProperty(name);
     }
 }
