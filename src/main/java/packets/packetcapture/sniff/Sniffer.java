@@ -71,8 +71,15 @@ public class Sniffer {
         for (int i = 0; i < interfaceList.length; i++) {
             DefaultLiveOptions defaultLiveOptions = new DefaultLiveOptions();
             defaultLiveOptions.timeout(60000);
+            Pcap pcap = null;
 
-            Pcap pcap = service.live(interfaceList[i], defaultLiveOptions);
+            try {
+                pcap = service.live(interfaceList[i], defaultLiveOptions);
+            } catch (Exception e) {
+                Util.print(e.toString());
+                continue;
+            }
+
             pcap.setFilter(filter, true);
 
             pcaps[i] = pcap;
@@ -139,7 +146,7 @@ public class Sniffer {
             while (!stop) {
                 if (realmPcap != null) {
                     for (int c = 0; c < pcaps.length; c++) {
-                        if (realmPcap != pcaps[c]) {
+                        if (pcaps[c] != null && realmPcap != pcaps[c]) {
                             pcaps[c].close();
                         }
                     }
