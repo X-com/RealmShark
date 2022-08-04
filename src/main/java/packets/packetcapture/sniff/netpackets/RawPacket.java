@@ -35,7 +35,7 @@ public class RawPacket {
     }
 
     public EthernetPacket getNewEthernetPacket() {
-        return new EthernetPacket(payload);
+        return new EthernetPacket(payload, this);
     }
 
     @Override

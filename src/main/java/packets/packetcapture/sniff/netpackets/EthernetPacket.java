@@ -6,7 +6,7 @@ import java.util.Arrays;
 /**
  * Packet building inspired by work done by Pcap4j (https://github.com/kaitoy/pcap4j)
  * and Network programming in Linux (http://tcpip.marcolavoie.ca/ip.html)
- *
+ * <p>
  * Ethernet packet constructor.
  */
 public class EthernetPacket {
@@ -24,6 +24,7 @@ public class EthernetPacket {
     private static final int Q802_1HEADER_SIZE = 4;
     private static final int Q802_1HEADER_TYPE_OFFSET = 16;
 
+    private final RawPacket rawPacket;
     private final byte[] macDest;
     private final byte[] macSrc;
     private final int etherType;
@@ -32,7 +33,8 @@ public class EthernetPacket {
     private final byte[] Q802_1Header;
     private final byte[] payload;
 
-    public EthernetPacket(byte[] data) {
+    public EthernetPacket(byte[] data, RawPacket packet) {
+        rawPacket = packet;
         macDest = UtilNetPackets.getBytes(data, DST_ADDR_OFFSET_ETHER, MAC_SIZE_IN_BYTES);
         macSrc = UtilNetPackets.getBytes(data, SRC_ADDR_OFFSET_ETHER, MAC_SIZE_IN_BYTES);
         int type = UtilNetPackets.getShort(data, TYPE_OFFSET);
@@ -94,9 +96,13 @@ public class EthernetPacket {
 
     public Ip4Packet getNewIp4Packet() {
         if (payload != null && etherType == 0x800) {
-            return new Ip4Packet(payload);
+            return new Ip4Packet(payload, this);
         }
         return null;
+    }
+
+    public RawPacket getRawPacket() {
+        return rawPacket;
     }
 
     @Override

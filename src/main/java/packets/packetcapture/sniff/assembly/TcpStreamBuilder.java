@@ -2,6 +2,7 @@ package packets.packetcapture.sniff.assembly;
 
 import example.gui.TomatoGUI;
 import example.gui.TomatoMenuBar;
+import packets.Packet;
 import packets.packetcapture.sniff.netpackets.TcpPacket;
 import bugfixingtools.HackyPacketLoggerForABug;
 import util.Util;
@@ -16,7 +17,8 @@ public class TcpStreamBuilder {
     HashMap<Long, TcpPacket> packetMap = new HashMap<>();
     PStream stream;
     PReset packetReset;
-    public long sequenseNumber;
+    private long sequenseNumber;
+    private int idNumber;
 
     /**
      * Constructor of StreamConstructor which needs a reset class to reset if reset
@@ -44,12 +46,29 @@ public class TcpStreamBuilder {
         }
         if (sequenseNumber == 0) {
             sequenseNumber = packet.getSequenceNumber();
+            idNumber = packet.getIp4Packet().getIdentification();
         }
 
         packetMap.put(packet.getSequenceNumber(), packet);
 
-        if (packetMap.size() > 50) { // Temp hacky solution until better solution is found. TODO: fix this
-            String errorMsg = "Error! Stream Constructor reached 50 packets. Shutting down.";
+        if (packetMap.size() > 95) {
+            long index = sequenseNumber;
+            int counter = 0;
+            while (counter < 100000) {
+                if(packetMap.containsKey(index)) {
+                    sequenseNumber = index;
+                    TcpPacket tempPack = packetMap.get(index);
+                    String errorMsg = "Packets missing id:" + (idNumber - tempPack.getIp4Packet().getIdentification()) + " seq:" + (sequenseNumber - tempPack.getSequenceNumber()) + " outgoing:" + (tempPack.getDstPort() == 2050);
+                    Util.print(errorMsg);
+                    TomatoGUI.appendTextAreaChat(errorMsg);
+                    TomatoGUI.appendTextAreaKeypop(errorMsg);
+                    break;
+                }
+                index++;
+                counter++;
+            }
+        } else if (packetMap.size() >= 100) { // Temp hacky solution until better solution is found. TODO: fix this
+            String errorMsg = "Error! Stream Constructor reached 100 packets. Shutting down.";
             Util.print(errorMsg);
             TomatoGUI.appendTextAreaChat(errorMsg);
             TomatoGUI.appendTextAreaKeypop(errorMsg);
@@ -60,6 +79,7 @@ public class TcpStreamBuilder {
 
         while (packetMap.containsKey(sequenseNumber)) {
             TcpPacket packetSeqed = packetMap.remove(sequenseNumber);
+            idNumber = packetSeqed.getIp4Packet().getIdentification();
             if (packet.getPayload() != null) {
                 sequenseNumber += packetSeqed.getPayloadSize();
                 stream.stream(packetSeqed.getPayload());
@@ -74,5 +94,6 @@ public class TcpStreamBuilder {
         packetReset.reset();
         packetMap.clear();
         sequenseNumber = 0;
+        idNumber = 0;
     }
 }

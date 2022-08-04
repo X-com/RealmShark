@@ -29,6 +29,7 @@ public class TcpPacket {
     private static final int OPTIONS_OFFSET_TCP = 20;
     private static final int MIN_TCP_HEADER_SIZE = 20;
 
+    private final Ip4Packet ip4Packet;
     private final byte[] rawData;
     private final int srcPort;
     private final int dstPort;
@@ -49,7 +50,8 @@ public class TcpPacket {
     private final byte[] payload;
     private final int payloadSize;
 
-    public TcpPacket(byte[] data, int length) {
+    public TcpPacket(byte[] data, int length, Ip4Packet packet) {
+        ip4Packet = packet;
         rawData = data;
         srcPort = UtilNetPackets.getShort(data, SRC_PORT_OFFSET);
         dstPort = UtilNetPackets.getShort(data, DST_PORT_OFFSET);
@@ -167,6 +169,10 @@ public class TcpPacket {
 
     public int getPayloadSize() {
         return payloadSize;
+    }
+
+    public Ip4Packet getIp4Packet() {
+        return ip4Packet;
     }
 
     @Override

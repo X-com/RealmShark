@@ -35,16 +35,17 @@ public class Ip4Defragmenter {
         }
         int id = ip4packet.getIdentification();
         fragments.computeIfAbsent(id, k -> new ArrayList<>(5)).add(ip4packet);
-        return assemble(id);
+        return assemble(id, ip4packet);
     }
 
     /**
      * Assembler that puts the packets back into the original Ip4 packet before it was fragmented.
      *
      * @param id The id of the packet
+     * @param ip4packet
      * @return Assembled packet if it needs to be re-assemble or returns null if all fragments haven't arrived.
      */
-    private static Ip4Packet assemble(int id) {
+    private static Ip4Packet assemble(int id, Ip4Packet ip4packet) {
         Ip4Packet head = null, tail = null;
         List<Ip4Packet> frags = fragments.get(id);
         int math = 0;
@@ -69,6 +70,6 @@ public class Ip4Defragmenter {
             }
         }
         fragments.remove(id);
-        return new Ip4Packet(data);
+        return new Ip4Packet(data, ip4packet.getEthernetPacket());
     }
 }

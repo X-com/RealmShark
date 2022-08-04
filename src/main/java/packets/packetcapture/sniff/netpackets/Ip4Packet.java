@@ -32,6 +32,7 @@ public class Ip4Packet {
     private static final int OPTIONS_OFFSET_IP = 20;
     private static final int MIN_IPV4_HEADER_SIZE = 20;
 
+    private final EthernetPacket ethernetPacket;
     private final byte[] rawData;
     private final int version;
     private final int ihl;
@@ -53,7 +54,8 @@ public class Ip4Packet {
     private final int payloadLength;
     private final byte[] payload;
 
-    public Ip4Packet(byte[] data) {
+    public Ip4Packet(byte[] data, EthernetPacket packet) {
+        ethernetPacket = packet;
         rawData = data;
         int versionAndIhl = UtilNetPackets.getByte(data, VERSION_AND_IHL_OFFSET);
         version = (byte) ((versionAndIhl & 0xF0) >> 4);
@@ -177,34 +179,18 @@ public class Ip4Packet {
 
     public TcpPacket getNewTcpPacket() {
         if (payload != null && protocol == 6) {
-            return new TcpPacket(payload, payloadLength);
+            return new TcpPacket(payload, payloadLength, this);
         }
         return null;
     }
 
+    public EthernetPacket getEthernetPacket() {
+        return ethernetPacket;
+    }
+
     @Override
     public String toString() {
-        return "Ip4Packet{" +
-                "\n version=" + version +
-                "\n ihl=" + ihl +
-                "\n precedence=" + precedence +
-                "\n tos=" + tos +
-                "\n mbz=" + mbz +
-                "\n totalLength=" + totalLength +
-                "\n identification=" + identification +
-                "\n reservedFlag=" + reservedFlag +
-                "\n dontFragmentFlag=" + dontFragmentFlag +
-                "\n moreFragmentFlag=" + moreFragmentFlag +
-                "\n fragmentOffset=" + fragmentOffset +
-                "\n ttl=" + ttl +
-                "\n protocol=" + protocol +
-                "\n headerChecksum=" + headerChecksum +
-                "\n srcAddr=" + ipToString(srcAddr) +
-                "\n dstAddr=" + ipToString(dstAddr) +
-                "\n optionsIP=" + Arrays.toString(optionsIP) +
-                "\n dataLength=" + payloadLength +
-                "\n IPdata=" + Arrays.toString(UtilNetPackets.getBytes(rawData, 0, ihl * 4)) +
-                "\n payloadIP=" + Arrays.toString(payload);
+        return "Ip4Packet{" + "\n version=" + version + "\n ihl=" + ihl + "\n precedence=" + precedence + "\n tos=" + tos + "\n mbz=" + mbz + "\n totalLength=" + totalLength + "\n identification=" + identification + "\n reservedFlag=" + reservedFlag + "\n dontFragmentFlag=" + dontFragmentFlag + "\n moreFragmentFlag=" + moreFragmentFlag + "\n fragmentOffset=" + fragmentOffset + "\n ttl=" + ttl + "\n protocol=" + protocol + "\n headerChecksum=" + headerChecksum + "\n srcAddr=" + ipToString(srcAddr) + "\n dstAddr=" + ipToString(dstAddr) + "\n optionsIP=" + Arrays.toString(optionsIP) + "\n dataLength=" + payloadLength + "\n IPdata=" + Arrays.toString(UtilNetPackets.getBytes(rawData, 0, ihl * 4)) + "\n payloadIP=" + Arrays.toString(payload);
     }
 
     public byte[] rawData() {
