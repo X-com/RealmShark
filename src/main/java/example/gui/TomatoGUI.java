@@ -7,6 +7,7 @@ import example.ExampleModTomato;
 import javax.swing.*;
 import java.awt.*;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -31,9 +32,9 @@ public class TomatoGUI {
      * Load the properties as the GUI loads to set the preset options by the user.
      */
     static {
+        properties = new Properties();
         try {
             FileReader reader = new FileReader("realmShark.properties");
-            properties = new Properties();
             properties.load(reader);
         } catch (IOException ignored) {
         }
@@ -124,6 +125,11 @@ public class TomatoGUI {
 
         String theme = properties.getProperty("theme");
 
+        if (theme == null) {
+            LafManager.install(new DarculaTheme());
+            return;
+        }
+
         switch (theme) {
             case "contrastDark":
                 LafManager.install(new HighContrastDarkTheme());
@@ -150,8 +156,7 @@ public class TomatoGUI {
         int fs = 0;
         try {
             fs = Integer.parseInt(fontSize);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
         fontSizeTextAreas(fs);
     }
@@ -233,6 +238,10 @@ public class TomatoGUI {
      */
     public static void setProperties(String name, String value) {
         properties.setProperty(name, value);
+        try {
+            properties.store(new FileWriter("realmShark.properties"),"Realm shark properties");
+        } catch (IOException ignored) {
+        }
     }
 
     /**
