@@ -23,6 +23,7 @@ public class TomatoGUI {
     private static JTextArea textAreaChat;
     private static JTextArea textAreaKeypop;
     private static JTextArea textAreaDPS;
+    private static JTextArea textAreaQuests;
     private static JLabel statusLabel, dpsLabel;
     private static JFrame frame;
     private JMenuBar jMenuBar;
@@ -50,40 +51,14 @@ public class TomatoGUI {
     public void create() {
         JTabbedPane tabbedPane = new JTabbedPane();
         textAreaChat = new JTextArea();
-        textAreaChat.setEnabled(true);
-        textAreaChat.setEditable(false);
-        textAreaChat.setLineWrap(true);
-        textAreaChat.setWrapStyleWord(true);
-
-        JScrollPane scrollChat = new JScrollPane(textAreaChat);
-        scrollChat.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollChat.setAutoscrolls(true);
-        new SmartScroller(scrollChat);
-        tabbedPane.addTab("Chat", scrollChat);
+        tabbedPane.addTab("Chat", createTextArea(textAreaChat));
 
         textAreaKeypop = new JTextArea();
-        textAreaKeypop.setEnabled(true);
-        textAreaKeypop.setEditable(false);
-        textAreaKeypop.setLineWrap(true);
-        textAreaKeypop.setWrapStyleWord(true);
+        tabbedPane.addTab("Key-pops", createTextArea(textAreaKeypop));
 
-        JScrollPane scrollKeypop = new JScrollPane(textAreaKeypop);
-        scrollKeypop.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollKeypop.setAutoscrolls(true);
-        new SmartScroller(scrollKeypop);
-        tabbedPane.addTab("Key-pops", scrollKeypop);
+        textAreaQuests = new JTextArea();
+        tabbedPane.addTab("Quests", createTextArea(textAreaQuests));
 
-        textAreaDPS = new JTextArea();
-        textAreaDPS.setEnabled(true);
-        textAreaDPS.setEditable(false);
-        textAreaDPS.setLineWrap(true);
-        textAreaDPS.setWrapStyleWord(true);
-
-        JScrollPane scrollDPS = new JScrollPane(textAreaDPS);
-        scrollDPS.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollDPS.setAutoscrolls(true);
-
-        new SmartScroller(scrollDPS);
         next = new JButton("  Next  ");
         prev = new JButton("Previous");
         dpsLabel = new JLabel("0/0");
@@ -101,13 +76,12 @@ public class TomatoGUI {
         dpsPanel = new JPanel();
         dpsPanel.setLayout(new BorderLayout());
         dpsPanel.add(dpsTopPanel, BorderLayout.NORTH);
-        dpsPanel.add(scrollDPS, BorderLayout.CENTER);
-
+        textAreaDPS = new JTextArea();
+        dpsPanel.add(createTextArea(textAreaDPS), BorderLayout.CENTER);
         tabbedPane.addTab("DPS Logger", dpsPanel);
 
         next.addActionListener(event -> ExampleModTomato.nextDpsLogDungeon());
         prev.addActionListener(event -> ExampleModTomato.previousDpsLogDungeon());
-
 
         center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
         menuBar = new TomatoMenuBar();
@@ -125,6 +99,24 @@ public class TomatoGUI {
         makeFrame();
         loadPresets();
         frame.setVisible(true);
+    }
+
+    /**
+     * Method to create text areas.
+     *
+     * @param textArea Text area object.
+     * @return Scroll pane object to add to a parent object.
+     */
+    private JScrollPane createTextArea(JTextArea textArea) {
+        textArea.setEnabled(true);
+        textArea.setEditable(false);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        JScrollPane scrollChat = new JScrollPane(textArea);
+        scrollChat.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollChat.setAutoscrolls(true);
+        new SmartScroller(scrollChat);
+        return scrollChat;
     }
 
     /**
@@ -235,6 +227,15 @@ public class TomatoGUI {
     }
 
     /**
+     * Sets the text of Quests text area.
+     *
+     * @param s Sets the text of text area.
+     */
+    public static void setTextAreaQuests(String s) {
+        if (textAreaQuests != null) textAreaQuests.setText(s);
+    }
+
+    /**
      * Updates the state of the sniffer at the bottom label to show if running or off.
      *
      * @param running Set the label to running or off.
@@ -252,7 +253,7 @@ public class TomatoGUI {
     public static void setProperties(String name, String value) {
         properties.setProperty(name, value);
         try {
-            properties.store(new FileWriter("realmShark.properties"),"Realm shark properties");
+            properties.store(new FileWriter("realmShark.properties"), "Realm shark properties");
         } catch (IOException ignored) {
         }
     }

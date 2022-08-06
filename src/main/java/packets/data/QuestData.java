@@ -34,7 +34,7 @@ public class QuestData {
      */
     public boolean completed;
     /**
-     * > Unknown
+     * If the quest has multiple rewards and the user needs to pick one.
      */
     public boolean itemOfChoice;
     /**

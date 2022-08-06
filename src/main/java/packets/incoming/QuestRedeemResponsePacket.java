@@ -4,15 +4,15 @@ import packets.Packet;
 import packets.reader.BufferReader;
 
 /**
- * > Unknown
+ * Packet sent after a successful attempt to redeem a quest.
  */
 public class QuestRedeemResponsePacket extends Packet {
     /**
-     * > Unknown
+     * If the quest was successfully accepted.
      */
     public boolean ok;
     /**
-     * > Unknown
+     * Message used in the response dialog.
      */
     public String message;
 

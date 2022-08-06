@@ -12,13 +12,13 @@ import java.util.Arrays;
  */
 public class QuestRedeemPacket extends Packet {
     /**
-     * Unknown string
+     * ID of the quest
      */
-    String unknownString;
+    String questIdString;
     /**
      * > Unknown int
      */
-    public int questId;
+    public int questIdInt;
     /**
      * > Unknown slots
      */
@@ -26,8 +26,8 @@ public class QuestRedeemPacket extends Packet {
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
-        unknownString = buffer.readString();
-        questId = buffer.readInt();
+        questIdString = buffer.readString();
+        questIdInt = buffer.readInt();
         slots = new SlotObjectData[buffer.readShort()];
         for (int i = 0; i < slots.length; i++) {
             slots[i] = new SlotObjectData().deserialize(buffer);
@@ -37,8 +37,8 @@ public class QuestRedeemPacket extends Packet {
     @Override
     public String toString() {
         return "QuestRedeemPacket{" +
-                "\n   unknownString=" + unknownString +
-                "\n   questId=" + questId +
+                "\n   questIdString=" + questIdString +
+                "\n   questIdInt=" + questIdInt +
                 "\n   slots=" + Arrays.toString(slots);
     }
 }

@@ -121,6 +121,37 @@ public class PacketProcessor extends Thread implements PProcessor {
             return;
         }
         Register.INSTANCE.emit(packetType);
+
+        if(type == PacketType.NEWTICK.getIndex()) return;
+        if(type == PacketType.UPDATE.getIndex()) return;
+        if(type == PacketType.UPDATEACK.getIndex()) return;
+        if(type == PacketType.PING.getIndex()) return;
+        if(type == PacketType.PONG.getIndex()) return;
+        if(type == PacketType.MOVE.getIndex()) return;
+        if(type == PacketType.SHOWEFFECT.getIndex()) return;
+        if(type == PacketType.TEXT.getIndex()) return;
+        if(type == PacketType.PLAYERTEXT.getIndex()) return;
+        if(type == PacketType.PLAYERSHOOT.getIndex()) return;
+        if(type == PacketType.SERVERPLAYERSHOOT.getIndex()) return;
+        if(type == PacketType.USEPORTAL.getIndex()) return;
+        if(type == PacketType.RECONNECT.getIndex()) return;
+        if(type == PacketType.HELLO.getIndex()) return;
+        if(type == PacketType.MAPINFO.getIndex()) return;
+        if(type == PacketType.LOAD.getIndex()) return;
+        if(type == PacketType.CREATE_SUCCESS.getIndex()) return;
+        if(type == PacketType.EXALTATION_BONUS_CHANGED.getIndex()) return;
+        if(type == PacketType.SHOOT_ACK_COUNTER.getIndex()) return;
+        if(type == PacketType.NOTIFICATION.getIndex()) return;
+        if(type == PacketType.FORGE_UNLOCKED_BLUEPRINTS.getIndex()) return;
+        if(type == PacketType.VAULT_UPDATE.getIndex()) return;
+        if(type == PacketType.GOTO.getIndex()) return;
+        if(type == PacketType.GOTOACK.getIndex()) return;
+        if(type == PacketType.PLAYSOUND.getIndex()) return;
+        if(type == PacketType.INVRESULT.getIndex()) return;
+        if(type == PacketType.USEITEM.getIndex()) return;
+
+//        System.out.println(PacketType.byOrdinal(type));
+//        System.out.println(packetType);
     }
 
     /**
