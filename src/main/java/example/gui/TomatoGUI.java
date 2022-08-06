@@ -16,9 +16,9 @@ import java.util.Properties;
  * Example GUI for Tomato mod.
  */
 public class TomatoGUI {
-    private static final int WindowWidth = 600;
-    private static final int WindowHeight = 600;
-    private static int FontSize = 12;
+    private static final int windowWidth = 600;
+    private static final int windowHeight = 600;
+    private static int fontSize = 12;
     private static Properties properties;
     private static JTextArea textAreaChat;
     private static JTextArea textAreaKeypop;
@@ -157,7 +157,7 @@ public class TomatoGUI {
         }
 
         String fontSize = properties.getProperty("fontSize");
-        int fs = FontSize;
+        int fs = TomatoGUI.fontSize;
         try {
             fs = Integer.parseInt(fontSize);
         } catch (Exception ignored) { }
@@ -171,7 +171,7 @@ public class TomatoGUI {
     public void makeFrame() {
         frame = new JFrame("    Tomato    ");
         frame.setIconImage(icon);
-        frame.setSize(WindowWidth, WindowHeight);
+        frame.setSize(windowWidth, windowHeight);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(jMenuBar);
