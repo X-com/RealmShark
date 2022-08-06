@@ -5,6 +5,7 @@ import com.github.weisj.darklaf.theme.*;
 import example.ExampleModTomato;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -15,6 +16,9 @@ import java.util.Properties;
  * Example GUI for Tomato mod.
  */
 public class TomatoGUI {
+    private static final int WindowWidth = 600;
+    private static final int WindowHeight = 600;
+    private static int FontSize = 12;
     private static Properties properties;
     private static JTextArea textAreaChat;
     private static JTextArea textAreaKeypop;
@@ -50,6 +54,7 @@ public class TomatoGUI {
         textAreaChat.setEditable(false);
         textAreaChat.setLineWrap(true);
         textAreaChat.setWrapStyleWord(true);
+
         JScrollPane scrollChat = new JScrollPane(textAreaChat);
         scrollChat.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollChat.setAutoscrolls(true);
@@ -61,6 +66,7 @@ public class TomatoGUI {
         textAreaKeypop.setEditable(false);
         textAreaKeypop.setLineWrap(true);
         textAreaKeypop.setWrapStyleWord(true);
+
         JScrollPane scrollKeypop = new JScrollPane(textAreaKeypop);
         scrollKeypop.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollKeypop.setAutoscrolls(true);
@@ -72,13 +78,16 @@ public class TomatoGUI {
         textAreaDPS.setEditable(false);
         textAreaDPS.setLineWrap(true);
         textAreaDPS.setWrapStyleWord(true);
+
         JScrollPane scrollDPS = new JScrollPane(textAreaDPS);
         scrollDPS.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollDPS.setAutoscrolls(true);
+
         new SmartScroller(scrollDPS);
         next = new JButton("  Next  ");
         prev = new JButton("Previous");
         dpsLabel = new JLabel("0/0");
+
         dpsTopPanel = new JPanel();
         dpsTopPanel.setLayout(new BoxLayout(dpsTopPanel, BoxLayout.X_AXIS));
         dpsTopPanel.add(Box.createHorizontalGlue());
@@ -88,11 +97,14 @@ public class TomatoGUI {
         dpsTopPanel.add(Box.createRigidArea(new Dimension(20, 0)));
         dpsTopPanel.add(next);
         dpsTopPanel.add(Box.createHorizontalGlue());
+
         dpsPanel = new JPanel();
         dpsPanel.setLayout(new BorderLayout());
         dpsPanel.add(dpsTopPanel, BorderLayout.NORTH);
         dpsPanel.add(scrollDPS, BorderLayout.CENTER);
+
         tabbedPane.addTab("DPS Logger", dpsPanel);
+
         next.addActionListener(event -> ExampleModTomato.nextDpsLogDungeon());
         prev.addActionListener(event -> ExampleModTomato.previousDpsLogDungeon());
 
@@ -101,9 +113,10 @@ public class TomatoGUI {
         menuBar = new TomatoMenuBar();
         jMenuBar = menuBar.make();
 
-        statusLabel = new JLabel(" Network Tap: OFF");
+        statusLabel = new JLabel(" Network Monitor: OFF");
 
         mainPanel = new JPanel();
+        mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         mainPanel.setLayout(new BorderLayout());
         mainPanel.add(tabbedPane, BorderLayout.CENTER);
         mainPanel.add(statusLabel, BorderLayout.SOUTH);
@@ -124,7 +137,6 @@ public class TomatoGUI {
         }
 
         String theme = properties.getProperty("theme");
-
         if (theme == null) {
             LafManager.install(new DarculaTheme());
             return;
@@ -153,11 +165,11 @@ public class TomatoGUI {
         }
 
         String fontSize = properties.getProperty("fontSize");
-        int fs = 0;
+        int fs = FontSize;
         try {
             fs = Integer.parseInt(fontSize);
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) { }
+
         fontSizeTextAreas(fs);
     }
 
@@ -167,13 +179,14 @@ public class TomatoGUI {
     public void makeFrame() {
         frame = new JFrame("    Tomato    ");
         frame.setIconImage(icon);
-        frame.setLocation(center.x / 2, 25);
-        frame.setSize(400, 400);
+        frame.setSize(WindowWidth, WindowHeight);
+        frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(jMenuBar);
         frame.setJMenuBar(jMenuBar);
         menuBar.setFrame(frame);
         frame.setContentPane(mainPanel);
+        frame.setVisible(true);
     }
 
     /**
@@ -227,7 +240,7 @@ public class TomatoGUI {
      * @param running Set the label to running or off.
      */
     public static void setStateOfSniffer(boolean running) {
-        statusLabel.setText(" Network Tap: " + (running ? "RUNNING" : "OFF"));
+        statusLabel.setText(" Network Monitor: " + (running ? "RUNNING" : "OFF"));
     }
 
     /**
@@ -250,7 +263,7 @@ public class TomatoGUI {
      * @param name Name of the property
      * @return Value of the property.
      */
-    public static String getPropertie(String name) {
+    public static String getProperty(String name) {
         if (properties == null) return null;
         return properties.getProperty(name);
     }
