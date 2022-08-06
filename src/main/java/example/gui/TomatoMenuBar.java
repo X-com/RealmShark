@@ -7,7 +7,6 @@ import example.ExampleModTomato;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Properties;
 
 /**
  * Menu bar builder class
@@ -93,7 +92,7 @@ public class TomatoMenuBar implements ActionListener {
      * Selects the theme radio button from the preset.
      */
     private void setThemeRadioButton() {
-        String theme = TomatoGUI.getPropertie("theme");
+        String theme = TomatoGUI.getProperty("theme");
 
         if (theme == null) {
             themeDarcula.setSelected(true);
@@ -127,7 +126,7 @@ public class TomatoMenuBar implements ActionListener {
      * Selects the font size radio button from the preset.
      */
     private void setFontSizeRadioButton() {
-        String fontSize = TomatoGUI.getPropertie("fontSize");
+        String fontSize = TomatoGUI.getProperty("fontSize");
 
         if (fontSize == null) {
             fontSize12.setSelected(true);
