@@ -49,7 +49,7 @@ If the Tomato-v*.jar file does nothing double clicking it after following the in
 4. Type "java -jar ". Make sure to add space after "-jar ".
 5. Press tab several times until the Tomato-v*.jar name appears. Then press Enter. [Example image](https://user-images.githubusercontent.com/5974568/183231024-a1e006b7-7dd0-43f3-8a99-4fdee3827f94.png)
 
-If the program starts without problems it means you have issues with your register keys. To fix your register to not need command prompt to start the program a simple jarfix is needed. If the program still doesn't start, report the bug in the [issues here.](https://github.com/X-com/RealmShark/issues). Try to include as much information as possible in the report.
+If the program starts without problems it means you have issues with your register keys. To fix your register to not need command prompt to start the program a simple jarfix is needed. If the program still doesn't start, report the bug in the [issues here](https://github.com/X-com/RealmShark/issues). Try to include as much information as possible in the report.
 
 1. Download the jarfix from [here](https://johann.loefflmann.net/en/software/jarfix/index.html). Image of file [here](https://user-images.githubusercontent.com/5974568/183231327-ac0a33c7-edb4-41bb-897f-bb86fa9ab939.png).
 2. Run it as Administrator. Example of running the jarfix [here](https://user-images.githubusercontent.com/5974568/183231330-9d53b0b9-8288-4cab-a726-4095f3e3f479.png).
@@ -59,7 +59,9 @@ If you can start the program, but you can not see any chat messages from ingame 
 
 1. Open the program in console prompt described above.
 2. Start the sniffer and check console for error messages.
-3. If you get an error stating "The pcap_t has not been activated" similar to this [image](https://user-images.githubusercontent.com/5974568/183231488-c79f0189-4513-4b06-85d7-17deb610a340.png) your network interface is faulty or you are missing a Loopback Adapter. Following the guides link [here](https://tencomputer.com/npcap-loopback-adapter-no-internet/) for repairing your network interface (recommending to do the steps in inverted order starting with step 5). If it still doesn't fix the problem follow this youtube guide to install a Loopback Adapter [here](https://www.youtube.com/watch?v=N3Ido5VEkNE).
+3. If you get an error stating "The pcap_t has not been activated" similar to this [image](https://user-images.githubusercontent.com/5974568/183231488-c79f0189-4513-4b06-85d7-17deb610a340.png) your network interface is faulty or you are missing a Loopback Adapter. 
+4. Follow this guide, link [here](https://tencomputer.com/npcap-loopback-adapter-no-internet/), for repairing your network interface (recommending to do the steps in inverted order starting with step 5). Do one step at a time and check if it fixes the problem before trying the next.
+5. If it still doesn't fix the problem follow a youtube guide to install a Loopback Adapter [here](https://www.youtube.com/watch?v=N3Ido5VEkNE).
 
 If any other problem shows up. Please report them in the issues tracker found [here](https://github.com/X-com/RealmShark/issues) to have it resolved. Make sure to include any console outputs, version of java installed (type "java -v" in console to get the version), windows version and other reproduction steps.
 
