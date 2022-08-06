@@ -76,7 +76,7 @@ public class Sniffer {
             try {
                 pcap = service.live(interfaceList[i], defaultLiveOptions);
             } catch (Exception e) {
-                Util.print(e.toString());
+                e.printStackTrace();
                 continue;
             }
 
