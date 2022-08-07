@@ -41,6 +41,8 @@ If there are errors running the program described above, please look under Troub
 
 Windows trouble shooting guide:
 
+Some Windows 11 users have issues with Npcap 1.70. Try and uninstall 1.70 and install the 1.60 version. Link found here, [Npcap 1.60](https://www.mediafire.com/file/xkjmfz1v1b47e0a/npcap-1.60.exe/file).
+
 If the Tomato-v*.jar file does nothing double clicking it after following the installation guide above. Open powershell or CMD in the folder where the Tomato-v*.jar file is located.
 
 1. Open File Explorer and navigate to the folder where the *.jar is located.
