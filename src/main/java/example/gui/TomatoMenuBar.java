@@ -216,7 +216,6 @@ public class TomatoMenuBar implements ActionListener {
             TomatoGUI.clearTextAreaChat();
         } else if (e.getSource() == clearDpsLogs) { // clears the dps logs
             ExampleModTomato.clearDpsLogs();
-            TomatoGUI.setTextAreaAndLabelDPS("", "0/0");
         } else if (e.getSource() == themeDarcula) { // theme
             LafManager.install(new DarculaTheme());
             TomatoGUI.setProperties("theme", "darcula");

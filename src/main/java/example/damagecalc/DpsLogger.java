@@ -8,6 +8,7 @@ import packets.incoming.*;
 import packets.outgoing.EnemyHitPacket;
 import packets.outgoing.PlayerShootPacket;
 import util.IdToName;
+import util.Util;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -24,12 +25,15 @@ import java.util.stream.Stream;
  */
 public class DpsLogger {
 
-    int stringIndex = 0;
-    ArrayList<String> stringLogs = new ArrayList<>();
-    HashMap<Integer, Entity> entityList = new HashMap<>();
-    MapInfoPacket mapInfo;
-    Entity player;
-    RNG rng;
+    private boolean saveToFile = false;
+    private int stringIndex = 0;
+    private ArrayList<Packet> logPackets = new ArrayList<>();
+    private ArrayList<String> stringLogs = new ArrayList<>();
+    private HashMap<Integer, Entity> entityList = new HashMap<>();
+    private MapInfoPacket mapInfo;
+    private Entity player;
+    private RNG rng;
+    private String firstPage;
 
     /**
      * Packet processing method used to unwrap packets and log any damage and effects.
@@ -39,13 +43,13 @@ public class DpsLogger {
     public void packetCapture(Packet packet) {
         if (packet instanceof MapInfoPacket) {
             if (mapInfo != null) {
-                String s = stringDmg(player, entityList);
+                addToStringLogs();
                 if (saveToFile) saveDpsLogsToFile();
             }
             mapInfo = (MapInfoPacket) packet;
             entityList.clear();
             rng = new RNG(mapInfo.seed);
-            if (!filteredInstances(mapInfo.displayName)) {
+            if (filteredInstances(mapInfo.displayName)) {
                 mapInfo = null;
             }
         } else if (mapInfo == null) {
@@ -94,6 +98,7 @@ public class DpsLogger {
                 Entity entity = getEntity(id);
                 entity.setStats(stats);
             }
+            updateStringLogs();
         } else if (packet instanceof UpdatePacket) {
             UpdatePacket p = (UpdatePacket) packet;
             for (int j = 0; j < p.newObjects.length; j++) {
@@ -151,20 +156,18 @@ public class DpsLogger {
             case "{s.guildhall}": // guild hall
             case "{s.nexus}": // nexus
 //            case "{s.rotmg}": // realm
-                return false;
-            default:
                 return true;
+            default:
+                return false;
         }
     }
 
     /**
      * Full output string from damage logs of all hostile mobs.
      *
-     * @param player     entity object.
-     * @param entityList full list of all entities logged.
      * @return logged dps output as a string.
      */
-    private static String stringDmg(Entity player, HashMap<Integer, Entity> entityList) {
+    public String stringDmg() {
         StringBuilder sb = new StringBuilder();
 
         List<Entity> sortedList = Arrays.stream(entityList.values().toArray(new Entity[0])).sorted(Comparator.comparingInt(Entity::maxHp).reversed()).collect(Collectors.toList());
@@ -405,6 +408,8 @@ public class DpsLogger {
      */
     public void clearTextLogs() {
         stringLogs.clear();
+        stringIndex = 1;
+        TomatoGUI.setTextAreaAndLabelDPS("", "1/1", false);
     }
 
     /**
@@ -414,8 +419,12 @@ public class DpsLogger {
         if (stringIndex < (stringLogs.size() - 1)) {
             stringIndex++;
             String s = stringLogs.get(stringIndex);
-            String l = (stringIndex + 1) + "/" + stringLogs.size();
-            TomatoGUI.setTextAreaAndLabelDPS(s, l);
+            String l = (stringIndex + 1) + "/" + (stringLogs.size() + 1);
+            TomatoGUI.setTextAreaAndLabelDPS(s, l, true);
+        } else if (stringIndex < stringLogs.size()) {
+            stringIndex++;
+            String l = (stringIndex + 1) + "/" + (stringLogs.size() + 1);
+            TomatoGUI.setTextAreaAndLabelDPS(firstPage, l, false);
         }
     }
 
@@ -426,19 +435,32 @@ public class DpsLogger {
         if (stringIndex > 0) {
             stringIndex--;
             String s = stringLogs.get(stringIndex);
-            String l = (stringIndex + 1) + "/" + stringLogs.size();
-            TomatoGUI.setTextAreaAndLabelDPS(s, l);
+            String l = (stringIndex + 1) + "/" + (stringLogs.size() + 1);
+            TomatoGUI.setTextAreaAndLabelDPS(s, l, true);
         }
+    }
+
+    private void addToStringLogs() {
+        boolean b = true;
+        String s = null;
+        if (stringIndex == stringLogs.size()) {
+            stringIndex++;
+            b = false;
+            s = "";
+        }
+        firstPage = stringDmg();
+        stringLogs.add(firstPage);
+        String l = (stringIndex + 1) + "/" + (stringLogs.size() + 1);
+        TomatoGUI.setTextAreaAndLabelDPS(s, l, b);
     }
 
     /**
      * Update the text area of the dps calculator.
      */
-    private void updateStringLogs(String s) {
-        stringLogs.add(s);
-        String l = stringLogs.size() + "/" + stringLogs.size();
-        TomatoGUI.setTextAreaAndLabelDPS(s, l);
-        stringIndex = stringLogs.size() - 1;
+    private void updateStringLogs() {
+        if (stringIndex != stringLogs.size()) return;
+        String firstPage = stringDmg();
+        TomatoGUI.setTextAreaAndLabelDPS(firstPage, null, false);
     }
 
     /**

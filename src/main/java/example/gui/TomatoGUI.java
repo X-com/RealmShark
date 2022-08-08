@@ -61,7 +61,7 @@ public class TomatoGUI {
 
         next = new JButton("  Next  ");
         prev = new JButton("Previous");
-        dpsLabel = new JLabel("0/0");
+        dpsLabel = new JLabel("1/1");
 
         dpsTopPanel = new JPanel();
         dpsTopPanel.setLayout(new BoxLayout(dpsTopPanel, BoxLayout.X_AXIS));
@@ -78,6 +78,7 @@ public class TomatoGUI {
         dpsPanel.add(dpsTopPanel, BorderLayout.NORTH);
         textAreaDPS = new JTextArea();
         dpsPanel.add(createTextArea(textAreaDPS), BorderLayout.CENTER);
+        textAreaDPS.setEnabled(false);
         tabbedPane.addTab("DPS Logger", dpsPanel);
 
         next.addActionListener(event -> ExampleModTomato.nextDpsLogDungeon());
@@ -160,7 +161,8 @@ public class TomatoGUI {
         int fs = TomatoGUI.fontSize;
         try {
             fs = Integer.parseInt(fontSize);
-        } catch (Exception ignored) { }
+        } catch (Exception ignored) {
+        }
 
         fontSizeTextAreas(fs);
     }
@@ -219,11 +221,14 @@ public class TomatoGUI {
     /**
      * Sets the text of DPS logger text area.
      *
-     * @param s Sets the text of text area.
+     * @param text       Sets the text of text area.
+     * @param label      Sets the text label showing the page being viewed.
+     * @param selectable Sets if the text area should be selectable.
      */
-    public static void setTextAreaAndLabelDPS(String s, String l) {
-        if (textAreaDPS != null) textAreaDPS.setText(s);
-        if (dpsLabel != null) dpsLabel.setText(l);
+    public static void setTextAreaAndLabelDPS(String text, String label, boolean selectable) {
+        if (textAreaDPS != null && text != null) textAreaDPS.setText(text);
+        if (dpsLabel != null && label != null) dpsLabel.setText(label);
+        if (textAreaDPS != null) textAreaDPS.setEnabled(selectable);
     }
 
     /**
