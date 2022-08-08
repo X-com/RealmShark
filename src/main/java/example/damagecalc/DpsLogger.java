@@ -137,7 +137,7 @@ public class DpsLogger {
             for (byte b : p.getPayload()) {
                 sb.append(String.format("%02x", b));
             }
-            Util.print("loggedDps/" + mapInfo.displayName, sb.toString());
+            Util.print("dpsLogs/" + mapInfo.displayName, sb.toString());
         }
         logPackets.clear();
     }
