@@ -40,7 +40,7 @@ public class DpsLogger {
         if (packet instanceof MapInfoPacket) {
             if (mapInfo != null) {
                 String s = stringDmg(player, entityList);
-                updateStringLogs(s);
+                if (saveToFile) saveDpsLogsToFile();
             }
             mapInfo = (MapInfoPacket) packet;
             entityList.clear();
@@ -52,6 +52,7 @@ public class DpsLogger {
             return;
         }
 
+        if (saveToFile) logPackets.add(packet);
         if (packet instanceof CreateSuccessPacket) {
             CreateSuccessPacket p = (CreateSuccessPacket) packet;
             player = new Entity(p.objectId);
@@ -108,6 +109,32 @@ public class DpsLogger {
                 entity.setStats(stats);
             }
         }
+    }
+
+    /**
+     * Toggle for saving dps logs to file.
+     *
+     * @param save Enable logging to file.
+     */
+    public void setSaveToFile(boolean save) {
+        saveToFile = save;
+        if (!save) logPackets.clear();
+    }
+
+    /**
+     * Saves all dps packets to file for analysis.
+     */
+    private void saveDpsLogsToFile() {
+        System.out.println("logging: " + logPackets.size());
+        for (Packet p : logPackets) {
+            if (p == null || p.getPayload() == null) continue;
+            StringBuilder sb = new StringBuilder();
+            for (byte b : p.getPayload()) {
+                sb.append(String.format("%02x", b));
+            }
+            Util.print("loggedDps/" + mapInfo.displayName, sb.toString());
+        }
+        logPackets.clear();
     }
 
     /**

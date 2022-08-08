@@ -7,7 +7,7 @@ import packets.reader.BufferReader;
  */
 public abstract class Packet {
 
-    public byte[] data;
+    private byte[] data;
 
     public byte[] getPayload() {
         return data;

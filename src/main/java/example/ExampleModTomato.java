@@ -69,6 +69,7 @@ public class ExampleModTomato {
         Register.INSTANCE.register(PacketType.UPDATE, ExampleModTomato::dpsLoggerPacket);
         Register.INSTANCE.register(PacketType.NEWTICK, ExampleModTomato::dpsLoggerPacket);
         Register.INSTANCE.register(PacketType.MAPINFO, ExampleModTomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.TEXT, ExampleModTomato::dpsLoggerPacket);
 
         Register.INSTANCE.register(PacketType.QUEST_FETCH_RESPONSE, ExampleModTomato::questPacket);
         Register.INSTANCE.register(PacketType.QUEST_REDEEM, ExampleModTomato::questPacket);
@@ -107,6 +108,15 @@ public class ExampleModTomato {
      */
     public static void clearDpsLogs() {
         dpsLogger.clearTextLogs();
+    }
+
+    /**
+     * Sets the flag for saving all packets related to dps logs to file.
+     *
+     * @param save If the dps logs should be saved to file.
+     */
+    public static void saveDpsLogsToFile(boolean save) {
+        dpsLogger.setSaveToFile(save);
     }
 
     /**

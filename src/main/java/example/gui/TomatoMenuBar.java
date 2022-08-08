@@ -15,6 +15,7 @@ public class TomatoMenuBar implements ActionListener {
     private JMenuItem about, borders, clearChat, bandwidth, javav, clearDpsLogs, theme, fontSize;
     private JRadioButtonMenuItem fontSize8, fontSize10, fontSize12, fontSize14, fontSize16, fontSize24, fontSize32, fontSize48, fontSizeCustom;
     private JRadioButtonMenuItem themeDarcula, themeighContrastDark, themeHighContrastLight, themeIntelliJ, themeSolarizedDark, themeSolarizedLight;
+    private JCheckBoxMenuItem saveDpsToFile;
     private JMenu file, edit, info;
     private JMenuBar jMenuBar;
     private JFrame frame;
@@ -46,10 +47,13 @@ public class TomatoMenuBar implements ActionListener {
         clearChat.addActionListener(this);
         clearDpsLogs = new JMenuItem("Clear DPS Logs");
         clearDpsLogs.addActionListener(this);
+        saveDpsToFile = new JCheckBoxMenuItem("Save DPS Logs");
+        saveDpsToFile.addActionListener(this);
         edit = new JMenu("Edit");
         edit.add(borders);
         edit.add(clearChat);
         edit.add(clearDpsLogs);
+        edit.add(saveDpsToFile);
         jMenuBar.add(edit);
 
         ButtonGroup groupTheme = new ButtonGroup();
@@ -266,6 +270,9 @@ public class TomatoMenuBar implements ActionListener {
             if (size > 0 && size <= 1000) {
                 TomatoGUI.fontSizeTextAreas(size);
             }
+        } else if (e.getSource() == saveDpsToFile) { // font size
+            boolean save = saveDpsToFile.isSelected();
+            ExampleModTomato.saveDpsLogsToFile(save);
         } else if (e.getSource() == sniffer) { // Starts and stops the sniffer
             if (sniffer.getText().contains("Start")) {
                 sniffer.setText("Stop Sniffer");

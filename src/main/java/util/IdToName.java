@@ -67,6 +67,8 @@ public class IdToName {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        ID.put(-1, new IdToName(-1, "Unloaded", "Unloaded", "", "", "Unloaded"));
     }
 
     /**

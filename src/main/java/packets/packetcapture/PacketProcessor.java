@@ -109,6 +109,7 @@ public class PacketProcessor extends Thread implements PProcessor {
         }
         logger.addPacket(type, size);
         Packet packetType = PacketType.getPacket(type).factory();
+        packetType.setData(data.array());
         BufferReader pData = new BufferReader(data);
 
         try {

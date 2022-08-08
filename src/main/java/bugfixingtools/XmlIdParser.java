@@ -23,7 +23,7 @@ import java.util.HashMap;
 
 public class XmlIdParser {
     static final String ROOTDIR = "D:\\Programmering\\himextractor\\exalt-extractor\\output";
-    static final String name = "src\\main\\resources";
+    static final String name = "src/main/resources";
     static final ArrayList<Pair<String, String>> pairs = new ArrayList<>();
     static final ArrayList<String> fullList = new ArrayList<>();
     static final HashMap<Integer, String> hashList = new HashMap<>();

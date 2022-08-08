@@ -41,39 +41,39 @@ public class Util {
      * @param s String of the error log.
      */
     public static void print(String s) {
-        print("error", s);
+        print("error/error", s);
     }
 
     /**
-     * Print logs to console or to files in a folder.
+     * Print logs to console or to files in a folderAndName.
      *
-     * @param folder The folder to write the logs into.
+     * @param folderAndName The folder and the name to write the logs into.
      * @param s      String of the log.
      */
-    public static void print(String folder, String s) {
+    public static void print(String folderAndName, String s) {
         if (!saveLogs) {
             System.out.println(s);
         } else {
-            System.out.println(s);
-            PrintWriter printWriterObject = printWriter.get(folder);
+//            System.out.println(s);
+            PrintWriter printWriterObject = printWriter.get(folderAndName);
             if (printWriterObject == null) {
                 try {
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss");
                     LocalDateTime now = LocalDateTime.now();
-                    File f = new File(folder + "/" + folder + "-" + dtf.format(now) + ".data");
+                    File f = new File(folderAndName + "-" + dtf.format(now) + ".data");
                     if (!f.exists()) {
                         f.getParentFile().mkdirs();
                         f.createNewFile();
                     }
                     FileWriter fileWriter = new FileWriter(f);
                     printWriterObject = new PrintWriter(fileWriter);
-                    printWriter.put(folder, printWriterObject);
+                    printWriter.put(folderAndName, printWriterObject);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return;
                 }
             }
-            printWriterObject.print("\n" + s);
+            printWriterObject.print(s + "\n");
             printWriterObject.flush();
         }
     }
