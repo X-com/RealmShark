@@ -125,7 +125,7 @@ public class ExampleModTomato {
      * @param packet packets for dps logger.
      */
     private static void dpsLoggerPacket(Packet packet) {
-        dpsLogger.packetCapture(packet);
+        dpsLogger.packetCapture(packet, true);
     }
 
     /**

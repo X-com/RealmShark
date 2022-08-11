@@ -49,6 +49,7 @@ public class TomatoGUI {
      * Create main panel and initializes the GUI for the example Tomato.
      */
     public void create() {
+        loadThemePreset();
         JTabbedPane tabbedPane = new JTabbedPane();
         textAreaChat = new JTextArea();
         tabbedPane.addTab("Chat", createTextArea(textAreaChat));
@@ -86,7 +87,6 @@ public class TomatoGUI {
 
         center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
         menuBar = new TomatoMenuBar();
-        jMenuBar = menuBar.make();
 
         statusLabel = new JLabel(" Network Monitor: OFF");
 
@@ -97,8 +97,10 @@ public class TomatoGUI {
         mainPanel.add(statusLabel, BorderLayout.SOUTH);
 
         icon = Toolkit.getDefaultToolkit().getImage(ExampleModTomato.imagePath);
+        jMenuBar = menuBar.make();
         makeFrame();
-        loadPresets();
+        loadFontSizePreset();
+
         frame.setVisible(true);
     }
 
@@ -121,9 +123,9 @@ public class TomatoGUI {
     }
 
     /**
-     * Loads the presets chosen by the user.
+     * Loads the theme preset chosen by the user.
      */
-    private void loadPresets() {
+    private void loadThemePreset() {
         if (properties == null) {
             LafManager.install(new DarculaTheme());
             return;
@@ -156,7 +158,12 @@ public class TomatoGUI {
                 LafManager.install(new DarculaTheme());
                 break;
         }
+    }
 
+    /**
+     * Loads the font size preset chosen by the user.
+     */
+    private void loadFontSizePreset() {
         String fontSize = properties.getProperty("fontSize");
         int fs = TomatoGUI.fontSize;
         try {

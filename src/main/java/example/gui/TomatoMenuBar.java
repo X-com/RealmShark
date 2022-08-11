@@ -31,14 +31,8 @@ public class TomatoMenuBar implements ActionListener {
 
         sniffer = new JMenuItem("Start Sniffer");
         sniffer.addActionListener(this);
-        theme = new JMenu("Theme");
-        theme.addActionListener(this);
-        fontSize = new JMenu("Font size");
-        fontSize.addActionListener(this);
         file = new JMenu("File");
         file.add(sniffer);
-        file.add(theme);
-        file.add(fontSize);
         jMenuBar.add(file);
 
         borders = new JMenuItem("Borders");
@@ -49,11 +43,18 @@ public class TomatoMenuBar implements ActionListener {
         clearDpsLogs.addActionListener(this);
         saveDpsToFile = new JCheckBoxMenuItem("Save DPS Logs");
         saveDpsToFile.addActionListener(this);
+        theme = new JMenu("Theme");
+        theme.addActionListener(this);
+        fontSize = new JMenu("Font size");
+        fontSize.addActionListener(this);
+
         edit = new JMenu("Edit");
         edit.add(borders);
         edit.add(clearChat);
         edit.add(clearDpsLogs);
         edit.add(saveDpsToFile);
+        edit.add(theme);
+        edit.add(fontSize);
         jMenuBar.add(edit);
 
         ButtonGroup groupTheme = new ButtonGroup();
@@ -89,7 +90,21 @@ public class TomatoMenuBar implements ActionListener {
         info.add(bandwidth);
         jMenuBar.add(info);
 
+        autoStartSnifferPreset();
+
         return jMenuBar;
+    }
+
+    /**
+     * Auto-starts the sniffer if the app was closed when it was running.
+     */
+    private void autoStartSnifferPreset() {
+        String snifAuto = TomatoGUI.getProperty("sniffer");
+        if (snifAuto == null || !snifAuto.equals("T")) return;
+
+        sniffer.setText("Stop Sniffer");
+        ExampleModTomato.startPacketSniffer();
+        TomatoGUI.setStateOfSniffer(true);
     }
 
     /**
@@ -277,8 +292,10 @@ public class TomatoMenuBar implements ActionListener {
                 sniffer.setText("Stop Sniffer");
                 ExampleModTomato.startPacketSniffer();
                 TomatoGUI.setStateOfSniffer(true);
+                TomatoGUI.setProperties("sniffer", "T");
             } else {
                 stopPacketSniffer();
+                TomatoGUI.setProperties("sniffer", "F");
             }
         } else if (e.getSource() == bandwidth) { // Opens bandwidth window
             TomatoBandwidth.make(frame);
