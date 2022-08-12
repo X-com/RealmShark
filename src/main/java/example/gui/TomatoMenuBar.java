@@ -12,10 +12,11 @@ import java.awt.event.ActionListener;
  * Menu bar builder class
  */
 public class TomatoMenuBar implements ActionListener {
-    private JMenuItem about, borders, clearChat, bandwidth, javav, clearDpsLogs, theme, fontSize;
-    private JRadioButtonMenuItem fontSize8, fontSize10, fontSize12, fontSize14, fontSize16, fontSize24, fontSize32, fontSize48, fontSizeCustom;
+    private JMenuItem about, borders, clearChat, bandwidth, javav, clearDpsLogs, theme, fontMenu;
+    private JRadioButtonMenuItem fontSize8, fontSize12, fontSize16, fontSize24, fontSize48, fontSizeCustom;
     private JRadioButtonMenuItem themeDarcula, themeighContrastDark, themeHighContrastLight, themeIntelliJ, themeSolarizedDark, themeSolarizedLight;
-    private JCheckBoxMenuItem saveDpsToFile;
+    private JRadioButtonMenuItem fontNameMonospaced, fontNameDialog, fontNameDialogInput, fontNameSerif, fontNameSansSerif, fontNameSegoe;
+    private JCheckBoxMenuItem saveDpsToFile, fontStyleBold, fontStyleItalic;
     private JMenu file, edit, info;
     private JMenuBar jMenuBar;
     private JFrame frame;
@@ -45,8 +46,8 @@ public class TomatoMenuBar implements ActionListener {
         saveDpsToFile.addActionListener(this);
         theme = new JMenu("Theme");
         theme.addActionListener(this);
-        fontSize = new JMenu("Font size");
-        fontSize.addActionListener(this);
+        fontMenu = new JMenu("Font");
+        fontMenu.addActionListener(this);
 
         edit = new JMenu("Edit");
         edit.add(borders);
@@ -54,7 +55,7 @@ public class TomatoMenuBar implements ActionListener {
         edit.add(clearDpsLogs);
         edit.add(saveDpsToFile);
         edit.add(theme);
-        edit.add(fontSize);
+        edit.add(fontMenu);
         jMenuBar.add(edit);
 
         ButtonGroup groupTheme = new ButtonGroup();
@@ -66,17 +67,31 @@ public class TomatoMenuBar implements ActionListener {
         themeSolarizedLight = addRadioButtonMenuItem(groupTheme, theme, "Solarized Light Theme");
         setThemeRadioButton();
 
-        ButtonGroup groupFont = new ButtonGroup();
-        fontSize8 = addRadioButtonMenuItem(groupFont, fontSize, "Size 8");
-        fontSize10 = addRadioButtonMenuItem(groupFont, fontSize, "Size 10");
-        fontSize12 = addRadioButtonMenuItem(groupFont, fontSize, "Size 12");
-        fontSize14 = addRadioButtonMenuItem(groupFont, fontSize, "Size 14");
-        fontSize16 = addRadioButtonMenuItem(groupFont, fontSize, "Size 16");
-        fontSize24 = addRadioButtonMenuItem(groupFont, fontSize, "Size 24");
-        fontSize32 = addRadioButtonMenuItem(groupFont, fontSize, "Size 32");
-        fontSize48 = addRadioButtonMenuItem(groupFont, fontSize, "Size 48");
-        fontSizeCustom = addRadioButtonMenuItem(groupFont, fontSize, "Custom Size");
+        ButtonGroup groupFontSize = new ButtonGroup();
+        fontSize8 = addRadioButtonMenuItem(groupFontSize, fontMenu, "Size 8");
+        fontSize12 = addRadioButtonMenuItem(groupFontSize, fontMenu, "Size 12");
+        fontSize16 = addRadioButtonMenuItem(groupFontSize, fontMenu, "Size 16");
+        fontSize24 = addRadioButtonMenuItem(groupFontSize, fontMenu, "Size 24");
+        fontSize48 = addRadioButtonMenuItem(groupFontSize, fontMenu, "Size 48");
+        fontSizeCustom = addRadioButtonMenuItem(groupFontSize, fontMenu, "Custom Size");
+        fontMenu.add(new JSeparator(SwingConstants.HORIZONTAL));
         setFontSizeRadioButton();
+
+        ButtonGroup groupFontName = new ButtonGroup();
+        fontNameMonospaced = addRadioButtonMenuItem(groupFontName, fontMenu, "Monospaced");
+        fontNameSegoe = addRadioButtonMenuItem(groupFontName, fontMenu, "Segoe");
+        fontNameDialog = addRadioButtonMenuItem(groupFontName, fontMenu, "Dialog");
+        fontNameDialogInput = addRadioButtonMenuItem(groupFontName, fontMenu, "DialogInput");
+        fontNameSerif = addRadioButtonMenuItem(groupFontName, fontMenu, "Serif");
+        fontNameSansSerif = addRadioButtonMenuItem(groupFontName, fontMenu, "SansSerif");
+        fontStyleBold = new JCheckBoxMenuItem("Bold");
+        fontStyleBold.addActionListener(this);
+        fontStyleItalic = new JCheckBoxMenuItem("Italic");
+        fontStyleItalic.addActionListener(this);
+        fontMenu.add(new JSeparator(SwingConstants.HORIZONTAL));
+        fontMenu.add(fontStyleBold);
+        fontMenu.add(fontStyleItalic);
+        setFontNameRadioButton();
 
         about = new JMenuItem("About");
         about.addActionListener(this);
@@ -162,14 +177,8 @@ public class TomatoMenuBar implements ActionListener {
                 case 8:
                     fontSize8.setSelected(true);
                     break;
-                case 10:
-                    fontSize10.setSelected(true);
-                    break;
                 case 12:
                     fontSize12.setSelected(true);
-                    break;
-                case 14:
-                    fontSize14.setSelected(true);
                     break;
                 case 16:
                     fontSize16.setSelected(true);
@@ -177,15 +186,62 @@ public class TomatoMenuBar implements ActionListener {
                 case 24:
                     fontSize24.setSelected(true);
                     break;
-                case 32:
-                    fontSize32.setSelected(true);
-                    break;
                 case 48:
                     fontSize48.setSelected(true);
                     break;
                 default:
                     fontSizeCustom.setSelected(true);
             }
+        }
+    }
+
+    /**
+     * Selects the font size radio button from the preset.
+     */
+    private void setFontNameRadioButton() {
+        String fontText = TomatoGUI.getProperty("fontName");
+        String fontStyle = TomatoGUI.getProperty("fontStyle");
+        int fs = 0;
+
+        if (fontText == null) {
+            fontNameMonospaced.setSelected(true);
+            return;
+        }
+
+        if (fontStyle != null) {
+            try {
+                fs = Integer.parseInt(fontStyle);
+            } catch (Exception ignored) {
+            }
+        }
+
+        if (fs == 1 || fs == 3) {
+            fontStyleBold.setSelected(true);
+        }
+        if (fs == 2 || fs == 3) {
+            fontStyleItalic.setSelected(true);
+        }
+
+        switch (fontText) {
+            case "Dialog":
+                fontNameDialog.setSelected(true);
+                break;
+            case "DialogInput":
+                fontNameDialogInput.setSelected(true);
+                break;
+            case "Serif":
+                fontNameSerif.setSelected(true);
+                break;
+            case "SansSerif":
+                fontNameSansSerif.setSelected(true);
+                break;
+            case "Segoe":
+                fontNameSegoe.setSelected(true);
+                break;
+            default:
+            case "Monospaced":
+                fontNameMonospaced.setSelected(true);
+                break;
         }
     }
 
@@ -203,6 +259,37 @@ public class TomatoMenuBar implements ActionListener {
         superMenu.add(jRadioMenuItem);
         jRadioMenuItem.addActionListener(this);
         return jRadioMenuItem;
+    }
+
+    /**
+     * Gets the font size from property.
+     *
+     * @return Value of font size.
+     */
+    private String getFontSize() {
+        return TomatoGUI.getProperty("fontSize");
+    }
+
+    /**
+     * Gets the font name from property.
+     *
+     * @return Value of font name.
+     */
+    private String getFontName() {
+        return TomatoGUI.getProperty("fontName");
+    }
+
+    /**
+     * Gets the font style from selection buttons.
+     *
+     * @return Value of font style.
+     */
+    private int getFontStyle() {
+        int fs = 0;
+        if (fontStyleBold.isSelected()) fs += 1;
+        if (fontStyleItalic.isSelected()) fs += 2;
+
+        return fs;
     }
 
     /**
@@ -252,29 +339,20 @@ public class TomatoMenuBar implements ActionListener {
         } else if (e.getSource() == fontSize8) { // font size
             TomatoGUI.fontSizeTextAreas(8);
             TomatoGUI.setProperties("fontSize", Integer.toString(8));
-        } else if (e.getSource() == fontSize10) { // font size
-            TomatoGUI.fontSizeTextAreas(10);
-            TomatoGUI.setProperties("fontSize", Integer.toString(10));
         } else if (e.getSource() == fontSize12) { // font size
             TomatoGUI.fontSizeTextAreas(12);
             TomatoGUI.setProperties("fontSize", Integer.toString(12));
-        } else if (e.getSource() == fontSize14) { // font size
-            TomatoGUI.fontSizeTextAreas(14);
-            TomatoGUI.setProperties("fontSize", Integer.toString(14));
         } else if (e.getSource() == fontSize16) { // font size
             TomatoGUI.fontSizeTextAreas(16);
             TomatoGUI.setProperties("fontSize", Integer.toString(16));
         } else if (e.getSource() == fontSize24) { // font size
             TomatoGUI.fontSizeTextAreas(24);
             TomatoGUI.setProperties("fontSize", Integer.toString(24));
-        } else if (e.getSource() == fontSize32) { // font size
-            TomatoGUI.fontSizeTextAreas(32);
-            TomatoGUI.setProperties("fontSize", Integer.toString(32));
         } else if (e.getSource() == fontSize48) { // font size
             TomatoGUI.fontSizeTextAreas(48);
             TomatoGUI.setProperties("fontSize", Integer.toString(48));
         } else if (e.getSource() == fontSizeCustom) { // font size
-            String sizeText = JOptionPane.showInputDialog("Enter custom font size (between 1 and 1000)");
+            String sizeText = JOptionPane.showInputDialog("Enter custom font size (between 1 and 1000)", getFontSize());
             int size = 0;
             try {
                 size = Integer.parseInt(sizeText);
@@ -284,7 +362,31 @@ public class TomatoMenuBar implements ActionListener {
             if (size > 0 && size <= 1000) {
                 TomatoGUI.fontSizeTextAreas(size);
             }
-        } else if (e.getSource() == saveDpsToFile) { // font size
+        } else if (e.getSource() == fontNameMonospaced) { // font text
+            TomatoGUI.fontNameTextAreas("Monospaced", getFontStyle());
+            TomatoGUI.setProperties("fontName", "Monospaced");
+        } else if (e.getSource() == fontNameSegoe) { // font text
+            TomatoGUI.fontNameTextAreas("Segoe", getFontStyle());
+            TomatoGUI.setProperties("fontName", "Segoe");
+        } else if (e.getSource() == fontNameDialog) { // font text
+            TomatoGUI.fontNameTextAreas("Dialog", getFontStyle());
+            TomatoGUI.setProperties("fontName", "Dialog");
+        } else if (e.getSource() == fontNameDialogInput) { // font text
+            TomatoGUI.fontNameTextAreas("DialogInput", getFontStyle());
+            TomatoGUI.setProperties("fontName", "DialogInput");
+        } else if (e.getSource() == fontNameSerif) { // font text
+            TomatoGUI.fontNameTextAreas("Serif", getFontStyle());
+            TomatoGUI.setProperties("fontName", "Serif");
+        } else if (e.getSource() == fontNameSansSerif) { // font text
+            TomatoGUI.fontNameTextAreas("SansSerif", getFontStyle());
+            TomatoGUI.setProperties("fontName", "SansSerif");
+        } else if (e.getSource() == fontStyleBold) { // font style
+            TomatoGUI.fontNameTextAreas(getFontName(), getFontStyle());
+            TomatoGUI.setProperties("fontStyle", Integer.toString(getFontStyle()));
+        } else if (e.getSource() == fontStyleItalic) { // font style
+            TomatoGUI.fontNameTextAreas(getFontName(), getFontStyle());
+            TomatoGUI.setProperties("fontStyle", Integer.toString(getFontStyle()));
+        } else if (e.getSource() == saveDpsToFile) { // Toggle for saving dps logs
             boolean save = saveDpsToFile.isSelected();
             ExampleModTomato.saveDpsLogsToFile(save);
         } else if (e.getSource() == sniffer) { // Starts and stops the sniffer

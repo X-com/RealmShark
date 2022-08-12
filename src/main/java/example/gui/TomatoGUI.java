@@ -6,6 +6,7 @@ import example.ExampleModTomato;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.synth.SynthUI;
 import java.awt.*;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -16,9 +17,11 @@ import java.util.Properties;
  * Example GUI for Tomato mod.
  */
 public class TomatoGUI {
-    private static final int windowWidth = 600;
-    private static final int windowHeight = 600;
+    private static final int windowWidth = 500;
+    private static final int windowHeight = 500;
     private static int fontSize = 12;
+    private static int fontStyle = 0;
+    private static String fontName = "Monospaced";
     private static Properties properties;
     private static JTextArea textAreaChat;
     private static JTextArea textAreaKeypop;
@@ -97,9 +100,10 @@ public class TomatoGUI {
         mainPanel.add(statusLabel, BorderLayout.SOUTH);
 
         icon = Toolkit.getDefaultToolkit().getImage(ExampleModTomato.imagePath);
+        loadFontSizePreset();
+        loadFontNamePreset();
         jMenuBar = menuBar.make();
         makeFrame();
-        loadFontSizePreset();
 
         frame.setVisible(true);
     }
@@ -166,12 +170,35 @@ public class TomatoGUI {
     private void loadFontSizePreset() {
         String fontSize = properties.getProperty("fontSize");
         int fs = TomatoGUI.fontSize;
-        try {
-            fs = Integer.parseInt(fontSize);
-        } catch (Exception ignored) {
+        if (fontSize != null) {
+            try {
+                fs = Integer.parseInt(fontSize);
+            } catch (Exception ignored) {
+            }
         }
 
         fontSizeTextAreas(fs);
+    }
+
+    /**
+     * Loads the font size preset chosen by the user.
+     */
+    private void loadFontNamePreset() {
+        String fontName = properties.getProperty("fontName");
+        if (fontName == null) {
+            fontName = TomatoGUI.fontName;
+        } else {
+            TomatoGUI.fontName = fontName;
+        }
+        String fontStyle = properties.getProperty("fontStyle");
+        int fontStyleNum = TomatoGUI.fontStyle;
+        if (fontStyle != null) {
+            try {
+                fontStyleNum = Integer.parseInt(fontStyle);
+            } catch (Exception ignored) {
+            }
+        }
+        fontNameTextAreas(fontName, fontStyleNum);
     }
 
     /**
@@ -213,7 +240,19 @@ public class TomatoGUI {
         Font f = textAreaChat.getFont();
         textAreaChat.setFont(new Font(f.getName(), f.getStyle(), size));
         textAreaKeypop.setFont(new Font(f.getName(), f.getStyle(), size));
+        textAreaQuests.setFont(new Font(f.getName(), f.getStyle(), size));
         textAreaDPS.setFont(new Font(f.getName(), f.getStyle(), size));
+    }
+
+    /**
+     * Set font size of text area.
+     */
+    public static void fontNameTextAreas(String name, int style) {
+        Font f = textAreaChat.getFont();
+        textAreaChat.setFont(new Font(name, style, f.getSize()));
+        textAreaKeypop.setFont(new Font(name, style, f.getSize()));
+        textAreaQuests.setFont(new Font(name, style, f.getSize()));
+        textAreaDPS.setFont(new Font(name, style, f.getSize()));
     }
 
     /**
