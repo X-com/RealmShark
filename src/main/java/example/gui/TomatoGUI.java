@@ -61,7 +61,7 @@ public class TomatoGUI {
         tabbedPane.addTab("Key-pops", createTextArea(textAreaKeypop));
 
         textAreaQuests = new JTextArea();
-        tabbedPane.addTab("Quests", createTextArea(textAreaQuests));
+        tabbedPane.addTab("Daily Quests", createTextArea(textAreaQuests));
 
         next = new JButton("  Next  ");
         prev = new JButton("Previous");
