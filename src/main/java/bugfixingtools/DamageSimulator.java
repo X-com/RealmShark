@@ -10,16 +10,31 @@ import packets.incoming.TextPacket;
 import packets.incoming.UpdatePacket;
 import packets.reader.BufferReader;
 import util.IdToName;
+import util.Pair;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.Map.Entry.comparingByValue;
 
 /**
  * Test class for checking dps calculations. Please ignore.
  */
 public class DamageSimulator {
+
+    public static final String TEXT_RESET = "\u001B[0m";
+    public static final String TEXT_BLACK = "\u001B[30m";
+    public static final String TEXT_RED = "\u001B[31m";
+    public static final String TEXT_GREEN = "\u001B[32m";
+    public static final String TEXT_YELLOW = "\u001B[33m";
+    public static final String TEXT_BLUE = "\u001B[34m";
+    public static final String TEXT_PURPLE = "\u001B[35m";
+    public static final String TEXT_CYAN = "\u001B[36m";
+    public static final String TEXT_WHITE = "\u001B[37m";
 
     public static void main(String[] args) {
         try {
@@ -32,12 +47,18 @@ public class DamageSimulator {
     static ArrayList<BufferReader> injectData = new ArrayList<>();
     DpsLogger dpsLogger = new DpsLogger();
     HashMap<Integer, Entity> entityList = new HashMap<>();
+    long serverTime = 0;
+    long serverFirstTime = 0;
+    private HashMap<Integer, Integer> crystalList = new HashMap<>();
 
     private void readfile() throws Exception {
-//        String fileName = "dmgLogs/Oryx's_Sanctuary.dmgLog-2022-07-25-11.12.35.data";
-//        String fileName = "dmgLogs/Oryx's_Sanctuary.dmgLog-2022-07-25-16.30.50.data";
-        String fileName = "dmgLogs/Oryx's Sanctuary-2022-08-08-01.47.43.data";
-//        String fileName = "dmgLogs/Oryx's Sanctuary-2022-08-08-10.43.45.data";
+//        String fileName = "dpsLogs/outdated/Oryx's_Sanctuary.dmgLog-2022-07-25-11.12.35.data";
+//        String fileName = "dpsLogs/outdated/Oryx's_Sanctuary.dmgLog-2022-07-25-16.30.50.data";
+//        String fileName = "dpsLogs/outdated/Oryx's Sanctuary-2022-08-08-01.47.43.data";
+//        String fileName = "dpsLogs/outdated/Oryx's Sanctuary-2022-08-08-10.43.45.data";
+//        String fileName = "dpsLogs/outdated/The Shatters-2022-08-12-13.20.43.data";
+//        String fileName = "dpsLogs/Oryx's Sanctuary-2022-08-14-03.22.45.data";
+        String fileName = "dpsLogs/ppxkow.data";
         File f = new File(fileName);
 
         BufferedReader br = new BufferedReader(new FileReader(f));
@@ -59,13 +80,18 @@ public class DamageSimulator {
                 Packet packet = PacketType.getPacket(type).factory();
                 packet.deserialize(pData);
 
-                dpsLogger.packetCapture(packet, false);
-//                packetCapture(packet);
+//                dpsLogger.packetCapture(packet, false);
+                packetCapture(packet);
             }
         }
 
+//        for (Entity e : entityList.values()) {
+//            String s = e.showInv(serverFirstTime, serverTime);
+//            if (!s.equals("")) System.out.println(s);
+//        }
 
-        System.out.println(dpsLogger.stringDmg());
+
+//        System.out.println(dpsLogger.stringDmg());
     }
 
     private Entity getEntity(int id) {
@@ -78,18 +104,22 @@ public class DamageSimulator {
     }
 
     int count = 0;
+    long markerTime = 0;
+
     public void packetCapture(Packet packet) {
         if (packet instanceof DamagePacket) {
             DamagePacket p = (DamagePacket) packet;
             if (p.damageAmount > 0) {
                 if (p.targetId == 1181 && count < 3) {
                     count++;
-                    System.out.print("\ndmg: " + p.damageAmount);
+//                    System.out.print("\ndmg: " + p.damageAmount);
                 }
             }
         }
         if (packet instanceof NewTickPacket) {
             NewTickPacket p = (NewTickPacket) packet;
+            serverTime = p.serverRealTimeMS;
+            if (serverFirstTime == 0) serverFirstTime = serverTime;
             for (int j = 0; j < p.status.length; j++) {
                 int id = p.status[j].objectId;
                 StatData[] stats = p.status[j].stats;
@@ -98,61 +128,40 @@ public class DamageSimulator {
 //                    continue;
 //                }
                 Entity entity = getEntity(id);
-                entity.setStats(stats);
+                entity.setStats(stats, serverTime);
 //                if (8776 == id || id == 8189 || id == 11962) {
-                if (entity.objectType == 453630) {
+                o3phases(stats, entity);
+
+//                if (entity.objectType == 9635) { // Dammah
+                if (entity.objectType == 29039) { // Shat king
+                    if (markerTime == 0) markerTime = serverTime;
                     for (StatData sd : stats) {
-                        if (sd.statTypeNum == 0 || sd.statTypeNum == 1 || sd.statTypeNum == 29 || sd.statTypeNum == 96)
+                        if (sd.statTypeNum == 0 || sd.statTypeNum == 1 || sd.statTypeNum == 126 || sd.statTypeNum == 96)
                             continue;
-                        if (sd.statTypeNum == 125) {
-                            System.out.print(sd);
-                            if (sd.statValue == -409726348) System.out.print("\nBlack Cosmos");
-                            if (sd.statValue == -935464302) System.out.print("\nBlack GUARD");
-                            if (sd.statValue == -443134491) System.out.print("\nBlack Splendor");
-                            if (sd.statValue == -901909064) System.out.print("\nBlack Stagger");
-                            if (sd.statValue == 1804374907) System.out.print("\nBlack neutral");
-                            if (sd.statValue == -868353826) System.out.print("\nBlack Slashes");
-                            if (sd.statValue == 1821299621) System.out.print("\nBlack Melts");
-                            if (sd.statValue == 1519449574) System.out.print("\nBlack Run");
-                            if (sd.statValue == -727250676) System.out.print("\nBlack Stationary");
-                            if (sd.statValue == 1955520573) System.out.print("\nBlack Outer");
-
-
-                            if (sd.statValue == -392948729) System.out.print("\nWhite Cosmos");
-                            if (sd.statValue == -918686683) System.out.print("\nWhite GUARD");
-                            if (sd.statValue == -476689729) System.out.print("\nWhite Splendor");
-                            if (sd.statValue == -885131445) System.out.print("\nWhite Staggered");
-                            if (sd.statValue == 1888263002) System.out.print("\nWhite Celest Guarded");
-                            if (sd.statValue == 488135007) System.out.print("\nWhite Celest Damageable");
-                            if (sd.statValue == 1905040621) System.out.print("\nWhite Celest Staggered");
-                            if (sd.statValue == -784465731) System.out.print("\nWhite Neutral");
-                            if (sd.statValue == 1485894336) System.out.print("\nWhite Melt");
-                            if (sd.statValue == -645598752) System.out.print("\nWhite Fate");
-                            if (sd.statValue == -376862658) System.out.print("\nWhite Fleeing");
-                            if (sd.statValue == -527861229) System.out.print("\nWhite Panic");
-                            if (sd.statValue == 1553004812) System.out.print("\nWhite Run");
-                            if (sd.statValue == -578341181) System.out.print("\nWhite Control");
-                            if (sd.statValue == 1888410097) System.out.print("\nWhite Outer");
-                            if (sd.statValue == -560577824) System.out.print("\nWhite Inner");
-                            if (sd.statValue == -511230705) System.out.print("\nWhite Crumple");
-                            if (sd.statValue == -851576207) System.out.print("\nWhite Slashes");
-                            if (sd.statValue == -375729825) System.out.print("\nWhite Stationary");
-
-//                            System.out.println(sd.statValue - val);
-//                            val = sd.statValue;
+                        if (sd.statTypeNum == 29) {
+                            System.out.printf("%s  %.2f min", sd, (float) (serverTime - markerTime) / 60000);
+                            continue;
                         }
-//                        if (sd.statTypeNum == 126) System.out.print(sd);
-                    }
-                }
 
-                if (entity.objectType == 9635) {
-                    for (StatData sd : stats) {
-                        if (sd.statTypeNum == 0 || sd.statTypeNum == 1 || sd.statTypeNum == 29 || sd.statTypeNum == 96 || sd.statTypeNum == 126)
-                            continue;
+                        if(sd.statValue == -123818367 && floorPlanCrystals() == 12) {
+                            System.out.println("------------------- wallgarden reflector ------------------ " + (float) (serverTime - markerTime) / 1000);
+                        }
                         count = 0;
-                        System.out.print(sd);
+                        System.out.printf("%s  %.2f sec", sd, (float) (serverTime - markerTime) / 1000);
+
                     }
                 }
+                float time = ((float) (serverTime - markerTime) / 1000);
+//                if (entity.toString().contains("Crystal") && time < 500) {
+//                    System.out.println(entity + " " + entity.objectType + " " + p.status[j] + " " + time);
+//                }
+
+//                for (int k = 0; k < 256; k++) {
+//                    if (k >= 8 && k <= 11 && entity.getStat(k) != null) {
+//                        int itemID = entity.getStat(k).statValue;
+//                        System.out.println(IdToName.getIdName(itemID));
+//                    }
+//                }
             }
         } else if (packet instanceof UpdatePacket) {
             UpdatePacket p = (UpdatePacket) packet;
@@ -165,8 +174,11 @@ public class DamageSimulator {
 //                }
                 int objectType = p.newObjects[j].objectType;
                 Entity entity = getEntity(id);
+                float time = ((float) (serverTime - markerTime) / 1000);
+//                if(time < 300) System.out.println(entity + " " + time);
                 entity.setType(objectType);
-                entity.setStats(stats);
+                entity.setStats(stats, serverTime);
+                crystalTracker(id, objectType);
 //                if (8776 == id || id == 8189) {
 //                    System.out.printf("%s %d %d\n", entity, objectType, id);
 //                }
@@ -178,8 +190,12 @@ public class DamageSimulator {
 //                    System.out.printf("%s %d %d\n", entity, objectType, id);
 //                }
                 if (objectType == 9635) {
-                    System.out.printf("%s %d %d\n", entity, objectType, id);
+//                    System.out.printf("%s %d %d\n", entity, objectType, id);
                 }
+//                if(entity.toString().equals("Shatters King")) System.out.printf("%s %d %d\n", entity, objectType, id);
+//                if (objectType == 33119) {
+//                    System.out.printf("%s %d %d %.1f min\n", entity, objectType, id, (float)(serverTime - serverFirstTime)/60000);
+//                }
 //                if(entity.toString().equals("Chancellor Dammah")) {
 //                    System.out.printf("%s %d %d\n", entity, objectType, id);
 //                    System.out.println(IdToName.name(objectType));
@@ -190,18 +206,115 @@ public class DamageSimulator {
 //                    }
 //                    System.out.println();
 //                }
+                if (objectType == 33445) {
+//                    System.out.println(p);
+//                    System.out.printf("%s %d %d\n", entity, objectType, id);
+//                    System.out.printf("%s %d %d\n", entity, objectType, id);
+                }
             }
+            for (int j = 0; j < p.drops.length; j++) {
+//                if (p.drops[j] == 1287) System.out.println(p.drops[j]);
+                crystalTracker(p.drops[j], 0);
+            }
+//            if (floorPlanCrystals() != 0) System.out.println(floorPlanCrystals());
         } else if (packet instanceof TextPacket) {
             TextPacket p = (TextPacket) packet;
 //            if (p.objectId == 10245 && !p.text.equals("")) {
-//                System.out.println();
-//                System.out.println(p.text + " " + p.objectId);
+            System.out.println();
+            System.out.println(p.text + " " + p.objectId);
 //            }
             if (p.objectId == 1181 && !p.text.equals("")) {
-                System.out.println();
-                System.out.println(p.text + " " + p.objectId);
+//                System.out.println();
+//                System.out.println(p.text + " " + p.objectId);
             }
         }
+    }
+
+    private void o3phases(StatData[] stats, Entity entity) {
+        if (entity.objectType == 453630) {
+            for (StatData sd : stats) {
+                if (sd.statTypeNum == 0 || sd.statTypeNum == 1 || sd.statTypeNum == 29 || sd.statTypeNum == 96)
+                    continue;
+                if (sd.statTypeNum == 125) {
+                    System.out.print(sd);
+                    if (sd.statValue == -409726348) System.out.print("\nBlack Cosmos");
+                    if (sd.statValue == -935464302) System.out.print("\nBlack GUARD");
+                    if (sd.statValue == -443134491) System.out.print("\nBlack Splendor");
+                    if (sd.statValue == -901909064) System.out.print("\nBlack Stagger");
+                    if (sd.statValue == 1804374907) System.out.print("\nBlack neutral");
+                    if (sd.statValue == -868353826) System.out.print("\nBlack Slashes");
+                    if (sd.statValue == 1821299621) System.out.print("\nBlack Melts");
+                    if (sd.statValue == 1519449574) System.out.print("\nBlack Run");
+                    if (sd.statValue == -727250676) System.out.print("\nBlack Stationary");
+                    if (sd.statValue == 1955520573) System.out.print("\nBlack Outer");
+
+
+                    if (sd.statValue == -392948729) System.out.print("\nWhite Cosmos");
+                    if (sd.statValue == -918686683) System.out.print("\nWhite GUARD");
+                    if (sd.statValue == -476689729) System.out.print("\nWhite Splendor");
+                    if (sd.statValue == -885131445) System.out.print("\nWhite Staggered");
+                    if (sd.statValue == 1888263002) System.out.print("\nWhite Celest Guarded");
+                    if (sd.statValue == 488135007) System.out.print("\nWhite Celest Damageable");
+                    if (sd.statValue == 1905040621) System.out.print("\nWhite Celest Staggered");
+                    if (sd.statValue == -784465731) System.out.print("\nWhite Neutral");
+                    if (sd.statValue == 1485894336) System.out.print("\nWhite Melt");
+                    if (sd.statValue == -645598752) System.out.print("\nWhite Fate");
+                    if (sd.statValue == -376862658) System.out.print("\nWhite Fleeing");
+                    if (sd.statValue == -527861229) System.out.print("\nWhite Panic");
+                    if (sd.statValue == 1553004812) System.out.print("\nWhite Run");
+                    if (sd.statValue == -578341181) System.out.print("\nWhite Control");
+                    if (sd.statValue == 1888410097) System.out.print("\nWhite Outer");
+                    if (sd.statValue == -560577824) System.out.print("\nWhite Inner");
+                    if (sd.statValue == -511230705) System.out.print("\nWhite Crumple");
+                    if (sd.statValue == -851576207) System.out.print("\nWhite Slashes");
+                    if (sd.statValue == -375729825) System.out.print("\nWhite Stationary");
+
+//                            System.out.println(sd.statValue - val);
+//                            val = sd.statValue;
+                }
+//                        if (sd.statTypeNum == 126) System.out.print(sd);
+            }
+        }
+    }
+
+    /**
+     * Adds shatters crystal entities to a short list to track floor pattern in shatters king fight.
+     *
+     * @param id   id of the entity.
+     * @param type type of the entity.
+     */
+    private void crystalTracker(int id, int type) { // blue, yellow, red, green crystal IDs in that order.
+        if (type == 46721 || type == 46771 || type == 29501 || type == 33656) {
+            crystalList.put(id, type);
+        } else {
+            crystalList.remove(id);
+        }
+    }
+
+    /**
+     * Determines the floor pattern in shatters king fight.
+     *
+     * Blue   == 1
+     * Yellow == 2
+     * Red    == 4
+     * Green  == 8
+     *
+     * @return Gives a mask id indicating the crystal colors in the king fight.
+     */
+    private int floorPlanCrystals() {
+        int mask = 0;
+        for (Integer m : crystalList.values()) {
+            if (m == 46721) {
+                mask |= 1;
+            } else if (m == 46771) {
+                mask |= 2;
+            } else if (m == 29501) {
+                mask |= 4;
+            } else if (m == 33656) {
+                mask |= 8;
+            }
+        }
+        return mask;
     }
 
     public static void processHooks(BufferReader pData, byte[] data) {
@@ -287,10 +400,14 @@ public class DamageSimulator {
         private int objectType = -1;
         private final StatData[] stats = new StatData[256];
         private final Bullet[] bulletDmg = new Bullet[512];
-        private final ArrayList<Bullet> bulletDamageList = new ArrayList<>();
+
+        private final ArrayList<Pair<StatData, Long>>[] inv = new ArrayList[4];
 
         public Entity(int id) {
             this.id = id;
+            for (int i = 0; i < inv.length; i++) {
+                inv[i] = new ArrayList<>();
+            }
         }
 
         public void setBullet(short bulletId, Bullet bullet) {
@@ -301,8 +418,11 @@ public class DamageSimulator {
             return bulletDmg[p];
         }
 
-        public void setStats(StatData[] stats) {
+        public void setStats(StatData[] stats, long serverTime) {
             for (StatData sd : stats) {
+                if (sd.statTypeNum >= 8 && sd.statTypeNum <= 11) {
+                    inv[sd.statTypeNum - 8].add(new Pair(sd, serverTime));
+                }
                 this.stats[sd.statTypeNum] = sd;
             }
         }
@@ -320,9 +440,76 @@ public class DamageSimulator {
             return stats[0].statValue;
         }
 
+        public String showInv(long firstServertime, long endServerTime) {
+            if (stats[31] == null) return "";
+            String s = "";
+            for (int inventory = 0; inventory < 4; inventory++) {
+                s += "<";
+
+                if (inv[inventory].size() == 0) {
+                    s += "  ";
+                } else if (inv[inventory].size() == 1) {
+                    s += String.format("%s %.1fsec %s\n", IdToName.name(inv[inventory].get(0).left().statValue), (float) (endServerTime - firstServertime) / 1000, "100% Equipped:1 ");
+                } else {
+                    HashMap<Integer, Equipment> gear = new HashMap<>();
+                    Pair<StatData, Long> pair2 = null;
+                    long firstTime = 0;
+                    boolean sameItem = false;
+                    for (int i = 1; i < inv[inventory].size(); i++) {
+                        Pair<StatData, Long> pair1 = inv[inventory].get(i - 1);
+                        pair2 = inv[inventory].get(i);
+                        if (pair1.left().statValue == pair2.left().statValue) sameItem = true;
+                        else sameItem = false;
+                        long time1 = pair1.right();
+                        if (time1 == 0) time1 = firstServertime;
+                        if (firstTime == 0) firstTime = time1;
+                        addGear(gear, time1, pair2.right(), pair1.left().statValue, sameItem);
+                    }
+                    long totalTime = endServerTime - firstTime;
+                    addGear(gear, pair2.right(), endServerTime, pair2.left().statValue, false);
+
+                    Stream<Map.Entry<Integer, Equipment>> sorted2 = gear.entrySet().stream().sorted(comparingByValue());
+                    for (Map.Entry<Integer, Equipment> m : sorted2.collect(Collectors.toList())) {
+                        s += String.format("%s %.1fsec %.2f%% Equipped:%d ,", IdToName.name(m.getKey()), ((float) m.getValue().time / 1000), ((float) m.getValue().time * 100 / totalTime), m.getValue().swaps);
+                    }
+                }
+                s = s.substring(0, s.length() - 2);
+                s += "> ";
+            }
+            return s.substring(0, s.length() - 1);
+        }
+
+        private void addGear(HashMap<Integer, Equipment> gear, long time1, long time2, int itemID, boolean sameItem) {
+            if (!gear.containsKey(itemID)) {
+                Equipment e = new Equipment(itemID, time2 - time1, sameItem ? 0 : 1);
+                gear.put(itemID, e);
+            } else {
+                Equipment e = gear.get(itemID);
+                e.time += time2 - time1;
+                e.swaps++;
+            }
+        }
+
         @Override
         public String toString() {
             return IdToName.name(objectType);
+        }
+    }
+
+    private static class Equipment implements Comparable {
+        int id;
+        long time;
+        int swaps;
+
+        public Equipment(int id, long time, int swaps) {
+            this.id = id;
+            this.time = time;
+            this.swaps = swaps;
+        }
+
+        @Override
+        public int compareTo(Object o) {
+            return (int) (time - ((Equipment) o).time);
         }
     }
 }
