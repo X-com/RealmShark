@@ -37,9 +37,10 @@ public class DpsLogger {
     private Entity player;
     private RNG rng;
     private String firstPage;
-    private static boolean dammahCountered = false;
     private long serverTime = 0;
     private long serverFirstTime = 0;
+    private static boolean dammahCountered = false;
+    private static HashMap<Integer, Integer> crystalList = new HashMap<>();
 
     /**
      * Packet processing method used to unwrap packets and log any damage and effects.
@@ -125,11 +126,50 @@ public class DpsLogger {
                 Entity entity = getEntity(id);
                 entity.setType(objectType);
                 entity.setStats(stats, serverTime);
+                crystalTracker(id, objectType);
+            }
+            for (int j = 0; j < p.drops.length; j++) {
+                crystalTracker(p.drops[j], 0);
             }
         } else if (packet instanceof TextPacket) {
             TextPacket p = (TextPacket) packet;
             if (p.text.equals("I SAID DO NOT INTERRUPT ME! For this I shall hasten your end!")) dammahCountered = true;
         }
+    }
+
+    /**
+     * Adds shatters crystal entities to a short list to track floor pattern in shatters king fight.
+     *
+     * @param id   id of the entity.
+     * @param type type of the entity.
+     */
+    private static void crystalTracker(int id, int type) { // blue, yellow, red, green crystal IDs in that order.
+        if (type == 46721 || type == 46771 || type == 29501 || type == 33656) {
+            crystalList.put(id, type);
+        } else {
+            crystalList.remove(id);
+        }
+    }
+
+    /**
+     * Determines the floor pattern in shatters king fight.
+     *
+     * @return Gives a mask id indicating the crystal colors in the king fight.
+     */
+    private static int floorPlanCrystals() {
+        int mask = 0;
+        for (Map.Entry<Integer, Integer> m : crystalList.entrySet()) {
+            if (m.getValue() == 46721) {
+                mask |= 1;
+            } else if (m.getValue() == 46771) {
+                mask |= 2;
+            } else if (m.getValue() == 29501) {
+                mask |= 4;
+            } else if (m.getValue() == 33656) {
+                mask |= 8;
+            }
+        }
+        return mask;
     }
 
     /**
@@ -234,7 +274,12 @@ public class DpsLogger {
         if (bullet.oryx3GuardDmg) {
             dmg.guardDmg += damageAmount;
             dmg.guardHits++;
-        } else if (bullet.chancellorDammahDmg) {
+        } else if (bullet.walledGardenReflectors) {
+            dmg.wallgardenReflectorDmg += damageAmount;
+            dmg.wallgardenReflectorHits++;
+        }
+
+        if (bullet.chancellorDammahDmg) {
             dmg.dammahDmg += damageAmount;
             dmg.dammahHits++;
         } else {
@@ -277,6 +322,8 @@ public class DpsLogger {
                 extra = String.format("[Guarded Hits:%d Dmg:%d]", m.getValue().guardHits, m.getValue().guardDmg);
             } else if (dammahCountered && m.getValue().dammahDmg > 0) {
                 extra = String.format("[Dammah Counter Hits:%d Dmg:%d]", m.getValue().dammahHits, m.getValue().dammahDmg);
+            } else if (m.getValue().wallgardenReflectorDmg > 0) {
+                extra = String.format("[Garden Counter Hits:%d Dmg:%d]", m.getValue().wallgardenReflectorHits, m.getValue().wallgardenReflectorDmg);
             }
             sb.append(String.format("%s %3d %10s DMG: %7d %6.3f%% %s %s\n", isMe, num, name, m.getValue().dmg, pers, extra, entityPlayer.showInv(serverFirstTime, serverTime)));
         }
@@ -414,6 +461,7 @@ public class DpsLogger {
         if (bullet == null || bullet.totalDmg == 0) return;
 
         bullet.oryx3GuardDmg = entity.objectType == 45363 && entity.getStat(125) != null && (entity.getStat(125).statValue == -935464302 || entity.getStat(125).statValue == -918686683);
+        bullet.walledGardenReflectors = entity.objectType == 29039 && entity.getStat(125) != null && (entity.getStat(125).statValue == -123818367 && floorPlanCrystals() == 12);
 //        bullet.chancellorDammahDmg = entity.objectType == 9635 && entity.getStat(125) != null && (entity.getStat(125).statValue == -851576207 || entity.getStat(125).statValue == -901909064 || entity.getStat(125).statValue == -834798588 || entity.getStat(125).statValue == -818020969);
 
         if (packet instanceof DamagePacket) {
@@ -434,6 +482,7 @@ public class DpsLogger {
         if (b.totalDmg > 0) {
             bullet.chancellorDammahDmg = entity.objectType == 9635 && !dammahCountered;
             b.oryx3GuardDmg = bullet.oryx3GuardDmg;
+            b.walledGardenReflectors = bullet.walledGardenReflectors;
             entity.bulletDamageList.add(b);
         }
     }
@@ -513,6 +562,8 @@ public class DpsLogger {
         public int hits;
         public int guardDmg;
         public int guardHits;
+        public int wallgardenReflectorDmg;
+        public int wallgardenReflectorHits;
         public int dammahDmg;
         public int dammahHits;
 
@@ -527,6 +578,7 @@ public class DpsLogger {
      */
     private static class Bullet {
         public boolean oryx3GuardDmg = false;
+        public boolean walledGardenReflectors = false;
         public boolean chancellorDammahDmg = false;
         Packet packet;
         int totalDmg;
@@ -593,7 +645,9 @@ public class DpsLogger {
             for (int inventory = 0; inventory < 4; inventory++) {
                 s += "<";
 
-                if (inv[inventory].size() == 1) {
+                if (inv[inventory].size() == 0) {
+                    s += "  ";
+                } else if (inv[inventory].size() == 1) {
                     s += String.format("%s %.1fsec %s\n", IdToName.name(inv[inventory].get(0).left().statValue), (float) (endServerTime - firstServertime) / 1000, "100% Equipped:1 ");
                 } else {
                     HashMap<Integer, Equipment> gear = new HashMap<>();
