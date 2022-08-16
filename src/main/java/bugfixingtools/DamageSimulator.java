@@ -54,11 +54,11 @@ public class DamageSimulator {
     private void readfile() throws Exception {
 //        String fileName = "dpsLogs/outdated/Oryx's_Sanctuary.dmgLog-2022-07-25-11.12.35.data";
 //        String fileName = "dpsLogs/outdated/Oryx's_Sanctuary.dmgLog-2022-07-25-16.30.50.data";
-//        String fileName = "dpsLogs/outdated/Oryx's Sanctuary-2022-08-08-01.47.43.data";
+        String fileName = "dpsLogs/outdated/Oryx's Sanctuary-2022-08-08-01.47.43.data";
 //        String fileName = "dpsLogs/outdated/Oryx's Sanctuary-2022-08-08-10.43.45.data";
 //        String fileName = "dpsLogs/outdated/The Shatters-2022-08-12-13.20.43.data";
 //        String fileName = "dpsLogs/Oryx's Sanctuary-2022-08-14-03.22.45.data";
-        String fileName = "dpsLogs/ppxkow.data";
+//        String fileName = "dpsLogs/ppxkow.data";
         File f = new File(fileName);
 
         BufferedReader br = new BufferedReader(new FileReader(f));
@@ -80,8 +80,8 @@ public class DamageSimulator {
                 Packet packet = PacketType.getPacket(type).factory();
                 packet.deserialize(pData);
 
-//                dpsLogger.packetCapture(packet, false);
-                packetCapture(packet);
+                dpsLogger.packetCapture(packet, false);
+//                packetCapture(packet);
             }
         }
 
@@ -90,8 +90,7 @@ public class DamageSimulator {
 //            if (!s.equals("")) System.out.println(s);
 //        }
 
-
-//        System.out.println(dpsLogger.stringDmg());
+        System.out.println(dpsLogger.stringDmg(dpsLogger.displayList(), ""));
     }
 
     private Entity getEntity(int id) {

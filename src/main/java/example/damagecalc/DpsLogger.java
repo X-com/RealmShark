@@ -30,15 +30,13 @@ public class DpsLogger {
     private boolean saveToFile = false;
     private int stringIndex = 0;
     private final ArrayList<Packet> logPackets = new ArrayList<>();
-    private final ArrayList<String> stringLogs = new ArrayList<>();
+    private final ArrayList<Entity[]> entityLogs = new ArrayList<>();
     private final HashMap<Integer, Entity> entityList = new HashMap<>();
     private final HashMap<Integer, Entity> entityHitList = new HashMap<>();
     private MapInfoPacket mapInfo;
     private Entity player;
     private RNG rng;
     private String firstPage;
-    private long serverTime = 0;
-    private long serverFirstTime = 0;
     private static boolean dammahCountered = false;
     private static HashMap<Integer, Integer> crystalList = new HashMap<>();
 
@@ -57,7 +55,6 @@ public class DpsLogger {
             entityList.clear();
             rng = new RNG(mapInfo.seed);
             dammahCountered = false;
-            serverFirstTime = serverTime = 0;
             if (filteredInstances(mapInfo.displayName)) {
                 mapInfo = null;
             }
@@ -68,7 +65,8 @@ public class DpsLogger {
         if (saveToFile) logPackets.add(packet);
         if (packet instanceof CreateSuccessPacket) {
             CreateSuccessPacket p = (CreateSuccessPacket) packet;
-            player = new Entity(p.objectId);
+            player = new Entity(p.objectId, "isMe");
+            entityList.put(player.id, player);
         } else if (packet instanceof PlayerShootPacket) {
             PlayerShootPacket p = (PlayerShootPacket) packet;
             Bullet bullet = new Bullet(p);
@@ -100,17 +98,12 @@ public class DpsLogger {
             }
         } else if (packet instanceof NewTickPacket) {
             NewTickPacket p = (NewTickPacket) packet;
-            serverTime = p.serverRealTimeMS;
-            if (serverFirstTime == 0) serverFirstTime = serverTime;
             for (int j = 0; j < p.status.length; j++) {
                 int id = p.status[j].objectId;
                 StatData[] stats = p.status[j].stats;
-                if (id == player.id) {
-                    player.setStats(stats, serverTime);
-                    continue;
-                }
                 Entity entity = getEntity(id);
-                entity.setStats(stats, serverTime);
+                entity.setTime(p.serverRealTimeMS);
+                entity.setStats(stats);
             }
             if (realTimeUpdate) updateStringLogs();
         } else if (packet instanceof UpdatePacket) {
@@ -119,13 +112,13 @@ public class DpsLogger {
                 int id = p.newObjects[j].status.objectId;
                 StatData[] stats = p.newObjects[j].status.stats;
                 if (id == player.id) {
-                    player.setStats(stats, serverTime);
+                    player.setStats(stats);
                     continue;
                 }
                 int objectType = p.newObjects[j].objectType;
                 Entity entity = getEntity(id);
                 entity.setType(objectType);
-                entity.setStats(stats, serverTime);
+                entity.setStats(stats);
                 crystalTracker(id, objectType);
             }
             for (int j = 0; j < p.drops.length; j++) {
@@ -224,11 +217,29 @@ public class DpsLogger {
      *
      * @return logged dps output as a string.
      */
-    public String stringDmg() {
+    public static String stringDmg(Entity[] displayList, String filter) {
         StringBuilder sb = new StringBuilder();
+        int displaySize = 10;
 
-        List<Entity> sortedList = Arrays.stream(entityList.values().toArray(new Entity[0])).sorted(Comparator.comparingInt(Entity::maxHp).reversed()).collect(Collectors.toList());
-        int count = 0;
+        for (int i = 0; i < displayList.length && i < displaySize; i++) {
+            Entity e = displayList[i];
+            sb.append(e.display(filter)).append("\n");
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * Generates display list of all entities that taken damage in the dungeon instance.
+     *
+     * @return Entities that taken damage sorted by max HP on death.
+     */
+    public Entity[] displayList() {
+        ArrayList<Entity> list = new ArrayList<>();
+        HashMap<Integer, Entity> damagerList = new HashMap<>();
+
+        List<Entity> sortedList = Arrays.stream(entityHitList.values().toArray(new Entity[0])).sorted(Comparator.comparingInt(Entity::maxHp).reversed()).collect(Collectors.toList());
+
         for (Entity entity : sortedList) {
             if (entity.bulletDamageList.isEmpty()) continue;
 
@@ -237,21 +248,31 @@ public class DpsLogger {
                 if (b.packet instanceof DamagePacket) {
                     DamagePacket p = (DamagePacket) b.packet;
                     int ownerId = p.objectId;
-
-                    addDamage(dmgList, b, p.damageAmount, ownerId);
+                    Entity owner = entityList.get(ownerId);
+                    if (owner == null) continue;
+                    if (owner.stats[31] == null) continue;
+                    damagerList.put(ownerId, owner);
+                    addDamage(dmgList, b, p.damageAmount, owner);
                 } else if (b.packet instanceof EnemyHitPacket) {
-                    addDamage(dmgList, b, b.totalDmg, player.id);
+                    addDamage(dmgList, b, b.totalDmg, player);
                 }
             }
 
-            if (count < 10) {
-                sb.append(String.format("%18s HP:%8d\n", entity, entity.maxHp()));
-                appendEntityDmgText(sb, player, entity.maxHp(), dmgList, entityList);
+            Stream<Map.Entry<Integer, Damage>> sortedDmgList = dmgList.entrySet().stream().sorted(comparingByValue());
+            int score = 0;
+            ArrayList<Damage> dList = new ArrayList<>();
+            for (Map.Entry<Integer, Damage> m : sortedDmgList.collect(Collectors.toList())) {
+                score++;
+                m.getValue().score = score;
+                dList.add(m.getValue());
             }
-            count++;
+
+            entity.setSortedDmgList(dList);
+            entity.setPlayerList(damagerList);
+            list.add(entity);
         }
 
-        return sb.toString();
+        return list.toArray(new Entity[0]);
     }
 
     /**
@@ -260,32 +281,26 @@ public class DpsLogger {
      * @param dmgList      List of all players
      * @param bullet       Bullet that hit the entity.
      * @param damageAmount Amount of damage the bullet did.
-     * @param ownerId      Owner of the bullet hitting the target.
+     * @param owner        Owner of the bullet hitting the target.
      */
-    private void addDamage(HashMap<Integer, Damage> dmgList, Bullet bullet, int damageAmount, int ownerId) {
+    private void addDamage(HashMap<Integer, Damage> dmgList, Bullet bullet, int damageAmount, Entity owner) {
         Damage dmg;
-        if (!dmgList.containsKey(ownerId)) {
-            dmg = new Damage();
-            dmgList.put(ownerId, dmg);
+        if (!dmgList.containsKey(owner.id)) {
+            dmg = new Damage(owner);
+            dmgList.put(owner.id, dmg);
         } else {
-            dmg = dmgList.get(ownerId);
+            dmg = dmgList.get(owner.id);
         }
 
-        if (bullet.oryx3GuardDmg) {
-            dmg.guardDmg += damageAmount;
-            dmg.guardHits++;
-        } else if (bullet.walledGardenReflectors) {
-            dmg.wallgardenReflectorDmg += damageAmount;
-            dmg.wallgardenReflectorHits++;
+        if (bullet.oryx3GuardDmg || bullet.walledGardenReflectors || bullet.chancellorDammahDmg) {
+            dmg.counterDmg += damageAmount;
+            dmg.counterHits++;
+            dmg.oryx3GuardDmg = bullet.oryx3GuardDmg;
+            dmg.walledGardenReflectors = bullet.walledGardenReflectors;
+            dmg.chancellorDammahDmg = bullet.chancellorDammahDmg;
         }
-
-        if (bullet.chancellorDammahDmg) {
-            dmg.dammahDmg += damageAmount;
-            dmg.dammahHits++;
-        } else {
-            dmg.dmg += damageAmount;
-            dmg.hits++;
-        }
+        dmg.dmg += damageAmount;
+        dmg.hits++;
     }
 
     /**
@@ -295,57 +310,6 @@ public class DpsLogger {
      */
     private static boolean qualifiedEntityAddToTotalDmg(Entity entity) {
         return entity.getStat(31) == null; // TODO: Implement boss filter later.
-    }
-
-    /**
-     * Appends sorted string output to sb and returns.
-     */
-    private void appendEntityDmgText(StringBuilder sb, Entity player, int entityHp, HashMap<Integer, Damage> dmgList, HashMap<Integer, Entity> entityList) {
-        int num = 0;
-        Stream<Map.Entry<Integer, Damage>> sorted2 = dmgList.entrySet().stream().sorted(comparingByValue());
-        for (Map.Entry<Integer, Damage> m : sorted2.collect(Collectors.toList())) {
-            String extra = "    ";
-            num++;
-            String isMe = m.getKey() == player.id ? "->" : "  ";
-            Entity entityPlayer;
-            if (m.getKey() == player.id) {
-                entityPlayer = player;
-            } else {
-                entityPlayer = entityList.get(m.getKey());
-            }
-            if (entityPlayer == null || entityPlayer.getStat(31) == null) continue;
-            String name = entityPlayer.getStat(31).stringStatValue;
-            int index = name.indexOf(',');
-            if (index != -1) name = name.substring(0, index);
-            float pers = ((float) m.getValue().dmg * 100 / (float) entityHp);
-            if (m.getValue().guardDmg > 0) {
-                extra = String.format("[Guarded Hits:%d Dmg:%d]", m.getValue().guardHits, m.getValue().guardDmg);
-            } else if (dammahCountered && m.getValue().dammahDmg > 0) {
-                extra = String.format("[Dammah Counter Hits:%d Dmg:%d]", m.getValue().dammahHits, m.getValue().dammahDmg);
-            } else if (m.getValue().wallgardenReflectorDmg > 0) {
-                extra = String.format("[Garden Counter Hits:%d Dmg:%d]", m.getValue().wallgardenReflectorHits, m.getValue().wallgardenReflectorDmg);
-            }
-            sb.append(String.format("%s %3d %10s DMG: %7d %6.3f%% %s %s\n", isMe, num, name, m.getValue().dmg, pers, extra, entityPlayer.showInv(serverFirstTime, serverTime)));
-        }
-        sb.append("\n");
-    }
-
-    /**
-     * Item list to string parser.
-     *
-     * @param entity A player entity with items equipped needing to be parsed.
-     * @return String of player equipped items.
-     */
-    private static String itemToString(Entity entity) {
-        StringBuilder s = new StringBuilder();
-        for (int k = 0; k < 256; k++) {
-            if (k >= 8 && k <= 11 && entity.getStat(k) != null) {
-                int itemID = entity.getStat(k).statValue;
-                s.append(IdToName.name(itemID));
-                if (k < 11) s.append(", ");
-            }
-        }
-        return s.toString();
     }
 
     /**
@@ -501,7 +465,7 @@ public class DpsLogger {
      * Clears all dps logs
      */
     public void clearTextLogs() {
-        stringLogs.clear();
+        entityLogs.clear();
         stringIndex = 1;
         TomatoGUI.setTextAreaAndLabelDPS("", "1/1", false);
     }
@@ -510,14 +474,15 @@ public class DpsLogger {
      * Find the next dps log to display in the dps calculator.
      */
     public void nextDisplay() {
-        if (stringIndex < (stringLogs.size() - 1)) {
+        if (stringIndex < (entityLogs.size() - 1)) {
             stringIndex++;
-            String s = stringLogs.get(stringIndex);
-            String l = (stringIndex + 1) + "/" + (stringLogs.size() + 1);
+            Entity[] e = entityLogs.get(stringIndex);
+            String s = stringDmg(e, "");
+            String l = (stringIndex + 1) + "/" + (entityLogs.size() + 1);
             TomatoGUI.setTextAreaAndLabelDPS(s, l, true);
-        } else if (stringIndex < stringLogs.size()) {
+        } else if (stringIndex < entityLogs.size()) {
             stringIndex++;
-            String l = (stringIndex + 1) + "/" + (stringLogs.size() + 1);
+            String l = (stringIndex + 1) + "/" + (entityLogs.size() + 1);
             TomatoGUI.setTextAreaAndLabelDPS(firstPage, l, false);
         }
     }
@@ -528,44 +493,52 @@ public class DpsLogger {
     public void previousDisplay() {
         if (stringIndex > 0) {
             stringIndex--;
-            String s = stringLogs.get(stringIndex);
-            String l = (stringIndex + 1) + "/" + (stringLogs.size() + 1);
+            Entity[] e = entityLogs.get(stringIndex);
+            String s = stringDmg(e, "");
+            String l = (stringIndex + 1) + "/" + (entityLogs.size() + 1);
             TomatoGUI.setTextAreaAndLabelDPS(s, l, true);
         }
     }
 
     private void addToStringLogs() {
-        boolean b = true;
-        String s = null;
-        if (stringIndex == stringLogs.size()) {
+        boolean selectable = true;
+        String text = null;
+        if (stringIndex == entityLogs.size()) {
             stringIndex++;
-            b = false;
-            s = "";
+            selectable = false;
+            text = firstPage = "";
         }
-        firstPage = stringDmg();
-        stringLogs.add(firstPage);
-        String l = (stringIndex + 1) + "/" + (stringLogs.size() + 1);
-        TomatoGUI.setTextAreaAndLabelDPS(s, l, b);
+        entityLogs.add(displayList());
+        String labelText = (stringIndex + 1) + "/" + (entityLogs.size() + 1);
+        TomatoGUI.setTextAreaAndLabelDPS(text, labelText, selectable);
     }
 
     /**
      * Update the text area of the dps calculator.
      */
     private void updateStringLogs() {
-        if (stringIndex != stringLogs.size()) return;
-        String firstPage = stringDmg();
+        if (stringIndex != entityLogs.size()) return;
+        String firstPage = stringDmg(displayList(), "");
         TomatoGUI.setTextAreaAndLabelDPS(firstPage, null, false);
     }
 
+    /**
+     * Class used to store damage and counter info.
+     */
     private static class Damage implements Comparable {
+        public Entity owner;
         public int dmg;
+        public int score;
         public int hits;
-        public int guardDmg;
-        public int guardHits;
-        public int wallgardenReflectorDmg;
-        public int wallgardenReflectorHits;
-        public int dammahDmg;
-        public int dammahHits;
+        public int counterDmg;
+        public int counterHits;
+        public boolean oryx3GuardDmg = false;
+        public boolean walledGardenReflectors = false;
+        public boolean chancellorDammahDmg = false;
+
+        public Damage(Entity o) {
+            owner = o;
+        }
 
         @Override
         public int compareTo(Object o) {
@@ -590,23 +563,52 @@ public class DpsLogger {
     }
 
     /**
+     * Class used to display player Equipment
+     */
+    private static class Equipment implements Comparable {
+        int id;
+        long time;
+        int swaps;
+
+        public Equipment(int id, long time, int swaps) {
+            this.id = id;
+            this.time = time;
+            this.swaps = swaps;
+        }
+
+        @Override
+        public int compareTo(Object o) {
+            return (int) (time - ((Equipment) o).time);
+        }
+    }
+
+    /**
      * Class used for entity info.
      */
     private static class Entity {
 
+        private boolean isMe = false;
         private final int id;
         private int objectType = -1;
         private final StatData[] stats = new StatData[256];
         private final Bullet[] bulletDmg = new Bullet[512];
         private final ArrayList<Bullet> bulletDamageList = new ArrayList<>();
-
         private final ArrayList<Pair<StatData, Long>>[] inv = new ArrayList[4];
+        private HashMap<Integer, Entity> playerList;
+        private List<Damage> damageList;
+        private long entityStartTime;
+        private long entityTime;
 
         public Entity(int id) {
             this.id = id;
             for (int i = 0; i < inv.length; i++) {
                 inv[i] = new ArrayList<>();
             }
+        }
+
+        public Entity(int objectId, String me) {
+            this(objectId);
+            isMe = true;
         }
 
         public void setBullet(short bulletId, Bullet bullet) {
@@ -617,10 +619,10 @@ public class DpsLogger {
             return bulletDmg[p];
         }
 
-        public void setStats(StatData[] stats, long serverTime) {
+        public void setStats(StatData[] stats) {
             for (StatData sd : stats) {
                 if (sd.statTypeNum >= 8 && sd.statTypeNum <= 11) {
-                    inv[sd.statTypeNum - 8].add(new Pair(sd, serverTime));
+                    inv[sd.statTypeNum - 8].add(new Pair(sd, entityTime));
                 }
                 this.stats[sd.statTypeNum] = sd;
             }
@@ -639,41 +641,38 @@ public class DpsLogger {
             return stats[0].statValue;
         }
 
-        public String showInv(long firstServertime, long endServerTime) {
+        public String showInv() {
             if (stats[31] == null) return "";
-            String s = "";
+            StringBuilder s = new StringBuilder();
             for (int inventory = 0; inventory < 4; inventory++) {
-                s += "<";
+                s.append("<");
 
                 if (inv[inventory].size() == 0) {
-                    s += "  ";
+                    s.append("  ");
                 } else if (inv[inventory].size() == 1) {
-                    s += String.format("%s %.1fsec %s\n", IdToName.name(inv[inventory].get(0).left().statValue), (float) (endServerTime - firstServertime) / 1000, "100% Equipped:1 ");
+                    s.append(String.format("%s %.1fsec %s\n", IdToName.name(inv[inventory].get(0).left().statValue), (float) (entityTime - entityStartTime) / 1000, "100% Equipped:1 "));
                 } else {
                     HashMap<Integer, Equipment> gear = new HashMap<>();
                     Pair<StatData, Long> pair2 = null;
                     long firstTime = 0;
-                    boolean sameItem = false;
                     for (int i = 1; i < inv[inventory].size(); i++) {
                         Pair<StatData, Long> pair1 = inv[inventory].get(i - 1);
                         pair2 = inv[inventory].get(i);
-                        if (pair1.left().statValue == pair2.left().statValue) sameItem = true;
-                        else sameItem = false;
                         long time1 = pair1.right();
-                        if (time1 == 0) time1 = firstServertime;
+                        if (time1 == 0) time1 = entityStartTime;
                         if (firstTime == 0) firstTime = time1;
-                        addGear(gear, time1, pair2.right(), pair1.left().statValue, sameItem);
+                        addGear(gear, time1, pair2.right(), pair1.left().statValue, pair1.left().statValue == pair2.left().statValue);
                     }
-                    long totalTime = endServerTime - firstTime;
-                    addGear(gear, pair2.right(), endServerTime, pair2.left().statValue, false);
+                    long totalTime = entityTime - firstTime;
+                    addGear(gear, pair2.right(), entityTime, pair2.left().statValue, false);
 
                     Stream<Map.Entry<Integer, Equipment>> sorted2 = gear.entrySet().stream().sorted(comparingByValue());
                     for (Map.Entry<Integer, Equipment> m : sorted2.collect(Collectors.toList())) {
-                        s += String.format("%s %.1fsec %.2f%% Equipped:%d ,", IdToName.name(m.getKey()), ((float) m.getValue().time / 1000), ((float) m.getValue().time * 100 / totalTime), m.getValue().swaps);
+                        s.append(String.format("%s %.1fsec %.2f%% Equipped:%d / ", IdToName.name(m.getKey()), ((float) m.getValue().time / 1000), ((float) m.getValue().time * 100 / totalTime), m.getValue().swaps));
                     }
                 }
-                s = s.substring(0, s.length() - 2);
-                s += "> ";
+                s = new StringBuilder(s.substring(0, s.length() - 3));
+                s.append("> ");
             }
             return s.substring(0, s.length() - 1);
         }
@@ -689,26 +688,74 @@ public class DpsLogger {
             }
         }
 
+        /**
+         * Item list to string parser.
+         *
+         * @param entity A player entity with items equipped needing to be parsed.
+         * @return String of player equipped items.
+         */
+        private String itemToString(Entity entity) {
+            StringBuilder s = new StringBuilder();
+            for (int k = 0; k < 256; k++) {
+                if (k >= 8 && k <= 11 && entity.getStat(k) != null) {
+                    int itemID = entity.getStat(k).statValue;
+                    s.append(IdToName.name(itemID));
+                    if (k < 11) s.append(", ");
+                }
+            }
+            return s.toString();
+        }
+
+        public void setTime(long time) {
+            entityTime = time;
+            if (entityStartTime == 0) entityStartTime = time;
+        }
+
+        public void setPlayerList(HashMap<Integer, Entity> playerList) {
+            this.playerList = playerList;
+        }
+
+        public HashMap<Integer, Entity> getPlayerList() {
+            return playerList;
+        }
+
+        public void setSortedDmgList(List<Damage> d) {
+            damageList = d;
+        }
+
+        public List<Damage> getDamageList() {
+            return damageList;
+        }
+
+        public String display(String filter) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(IdToName.name(objectType)).append(" HP: ").append(maxHp()).append("\n");
+            for (Damage dmg : damageList) {
+                if(!dmg.owner.isMe) continue;
+                String extra = "    ";
+                String isMe = dmg.owner.isMe ? "->" : "  ";
+                String name = dmg.owner.getStat(31).stringStatValue;
+                int index = name.indexOf(',');
+                if (index != -1) name = name.substring(0, index);
+                float pers = ((float) dmg.dmg * 100 / (float) maxHp());
+                if (dmg.oryx3GuardDmg) {
+                    extra = String.format("[Guarded Hits:%d Dmg:%d]", dmg.counterHits, dmg.counterDmg);
+                } else if (dammahCountered && dmg.chancellorDammahDmg) {
+                    extra = String.format("[Dammah Counter Hits:%d Dmg:%d]", dmg.counterHits, dmg.counterDmg);
+                } else if (dmg.walledGardenReflectors) {
+                    extra = String.format("[Garden Counter Hits:%d Dmg:%d]", dmg.counterHits, dmg.counterDmg);
+                }
+                String inv = dmg.owner.showInv();
+                inv = "";
+                sb.append(String.format("%s %3d %10s DMG: %7d %6.3f%% %s %s\n", isMe, dmg.score, name, dmg.dmg, pers, extra, inv));
+            }
+            sb.append("\n");
+            return sb.toString();
+        }
+
         @Override
         public String toString() {
             return IdToName.name(objectType);
-        }
-    }
-
-    private static class Equipment implements Comparable {
-        int id;
-        long time;
-        int swaps;
-
-        public Equipment(int id, long time, int swaps) {
-            this.id = id;
-            this.time = time;
-            this.swaps = swaps;
-        }
-
-        @Override
-        public int compareTo(Object o) {
-            return (int) (time - ((Equipment) o).time);
         }
     }
 }
