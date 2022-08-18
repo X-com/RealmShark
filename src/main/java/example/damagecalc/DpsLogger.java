@@ -560,6 +560,8 @@ public class DpsLogger {
 
         if (names != null) {
             filter.filteredStrings = names.split(" ");
+        } else {
+            filter.filteredStrings = new String[0];
         }
     }
 
@@ -781,7 +783,7 @@ public class DpsLogger {
             sb.append(IdToName.name(objectType)).append(" HP: ").append(maxHp()).append("\n");
             for (Damage dmg : damageList) {
                 String name = dmg.owner.getStat(31).stringStatValue;
-                if (filter.nameFilter) {
+                if (filter.nameFilter && filter.filteredStrings.length > 0) {
                     boolean found = false;
                     for (String n : filter.filteredStrings) {
                         if (name.toLowerCase().startsWith(n.toLowerCase())) {
