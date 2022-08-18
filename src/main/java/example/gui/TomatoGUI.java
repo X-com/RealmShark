@@ -3,15 +3,13 @@ package example.gui;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.*;
 import example.ExampleModTomato;
+import example.save.PropertiesManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.synth.SynthUI;
 import java.awt.*;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Properties;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /**
  * Example GUI for Tomato mod.
@@ -22,11 +20,12 @@ public class TomatoGUI {
     private static int fontSize = 12;
     private static int fontStyle = 0;
     private static String fontName = "Monospaced";
-    private static Properties properties;
     private static JTextArea textAreaChat;
     private static JTextArea textAreaKeypop;
     private static JTextArea textAreaDPS;
     private static JTextArea textAreaQuests;
+    private static JTextField textFilter;
+    private static JCheckBox textFilterToggle;
     private static JLabel statusLabel, dpsLabel;
     private static JFrame frame;
     private JMenuBar jMenuBar;
@@ -35,18 +34,6 @@ public class TomatoGUI {
     private Point center;
     private Image icon;
     private JButton next, prev;
-
-    /*
-     * Load the properties as the GUI loads to set the preset options by the user.
-     */
-    static {
-        properties = new Properties();
-        try {
-            FileReader reader = new FileReader("realmShark.properties");
-            properties.load(reader);
-        } catch (IOException ignored) {
-        }
-    }
 
     /**
      * Create main panel and initializes the GUI for the example Tomato.
@@ -66,14 +53,39 @@ public class TomatoGUI {
         next = new JButton("  Next  ");
         prev = new JButton("Previous");
         dpsLabel = new JLabel("1/1");
+        textFilter = new JTextField();
+        textFilter.addKeyListener(new KeyListener() {
+            public void keyTyped(KeyEvent e) {
+            }
+
+            public void keyPressed(KeyEvent e) {
+            }
+
+            public void keyReleased(KeyEvent e) {
+                PropertiesManager.setProperties("nameFilter", textFilter.getText());
+                ExampleModTomato.updateDpsWindow();
+            }
+        });
+        textFilterToggle = new JCheckBox();
+        textFilterToggle.setSelected(true);
+        textFilterToggle.addActionListener(event -> {
+            boolean selected = textFilterToggle.isSelected();
+            textFilter.setEnabled(selected);
+            PropertiesManager.setProperties("toggleFilter", selected ? "T" : "F");
+            ExampleModTomato.updateDpsWindow();
+        });
 
         dpsTopPanel = new JPanel();
         dpsTopPanel.setLayout(new BoxLayout(dpsTopPanel, BoxLayout.X_AXIS));
         dpsTopPanel.add(Box.createHorizontalGlue());
+        dpsTopPanel.add(textFilterToggle);
+        dpsTopPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+        dpsTopPanel.add(textFilter);
+        dpsTopPanel.add(Box.createRigidArea(new Dimension(10, 0)));
         dpsTopPanel.add(prev);
-        dpsTopPanel.add(Box.createRigidArea(new Dimension(20, 0)));
+        dpsTopPanel.add(Box.createRigidArea(new Dimension(10, 0)));
         dpsTopPanel.add(dpsLabel);
-        dpsTopPanel.add(Box.createRigidArea(new Dimension(20, 0)));
+        dpsTopPanel.add(Box.createRigidArea(new Dimension(10, 0)));
         dpsTopPanel.add(next);
         dpsTopPanel.add(Box.createHorizontalGlue());
 
@@ -102,6 +114,7 @@ public class TomatoGUI {
         icon = Toolkit.getDefaultToolkit().getImage(ExampleModTomato.imagePath);
         loadFontSizePreset();
         loadFontNamePreset();
+        loadFilterPreset();
         jMenuBar = menuBar.make();
         makeFrame();
 
@@ -130,12 +143,7 @@ public class TomatoGUI {
      * Loads the theme preset chosen by the user.
      */
     private void loadThemePreset() {
-        if (properties == null) {
-            LafManager.install(new DarculaTheme());
-            return;
-        }
-
-        String theme = properties.getProperty("theme");
+        String theme = PropertiesManager.getProperty("theme");
         if (theme == null) {
             LafManager.install(new DarculaTheme());
             return;
@@ -168,7 +176,7 @@ public class TomatoGUI {
      * Loads the font size preset chosen by the user.
      */
     private void loadFontSizePreset() {
-        String fontSize = properties.getProperty("fontSize");
+        String fontSize = PropertiesManager.getProperty("fontSize");
         int fs = TomatoGUI.fontSize;
         if (fontSize != null) {
             try {
@@ -184,13 +192,13 @@ public class TomatoGUI {
      * Loads the font size preset chosen by the user.
      */
     private void loadFontNamePreset() {
-        String fontName = properties.getProperty("fontName");
+        String fontName = PropertiesManager.getProperty("fontName");
         if (fontName == null) {
             fontName = TomatoGUI.fontName;
         } else {
             TomatoGUI.fontName = fontName;
         }
-        String fontStyle = properties.getProperty("fontStyle");
+        String fontStyle = PropertiesManager.getProperty("fontStyle");
         int fontStyleNum = TomatoGUI.fontStyle;
         if (fontStyle != null) {
             try {
@@ -199,6 +207,23 @@ public class TomatoGUI {
             }
         }
         fontNameTextAreas(fontName, fontStyleNum);
+    }
+
+    /**
+     * Loads the filter preset chosen by the user.
+     */
+    private void loadFilterPreset() {
+        String nameFilter = PropertiesManager.getProperty("nameFilter");
+        String toggleFilter = PropertiesManager.getProperty("toggleFilter");
+
+        if (nameFilter != null) {
+            textFilter.setText(nameFilter);
+        }
+        if (toggleFilter != null) {
+            boolean toggled = toggleFilter.equals("T");
+            textFilterToggle.setSelected(toggled);
+            textFilter.setEnabled(toggled);
+        }
     }
 
     /**
@@ -293,30 +318,5 @@ public class TomatoGUI {
      */
     public static void setStateOfSniffer(boolean running) {
         statusLabel.setText(" Network Monitor: " + (running ? "RUNNING" : "OFF"));
-    }
-
-    /**
-     * Sets a preset needed when reloading the program.
-     *
-     * @param name  Name of the property.
-     * @param value Value of the property.
-     */
-    public static void setProperties(String name, String value) {
-        properties.setProperty(name, value);
-        try {
-            properties.store(new FileWriter("realmShark.properties"), "Realm shark properties");
-        } catch (IOException ignored) {
-        }
-    }
-
-    /**
-     * Gets the property value by the name of the property.
-     *
-     * @param name Name of the property
-     * @return Value of the property.
-     */
-    public static String getProperty(String name) {
-        if (properties == null) return null;
-        return properties.getProperty(name);
     }
 }

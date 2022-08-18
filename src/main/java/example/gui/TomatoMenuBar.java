@@ -3,6 +3,7 @@ package example.gui;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.*;
 import example.ExampleModTomato;
+import example.save.PropertiesManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -12,10 +13,11 @@ import java.awt.event.ActionListener;
  * Menu bar builder class
  */
 public class TomatoMenuBar implements ActionListener {
-    private JMenuItem about, borders, clearChat, bandwidth, javav, clearDpsLogs, theme, fontMenu;
+    private JMenuItem about, borders, clearChat, bandwidth, javav, clearDpsLogs, theme, fontMenu, dpsEquipment;
     private JRadioButtonMenuItem fontSize8, fontSize12, fontSize16, fontSize24, fontSize48, fontSizeCustom;
     private JRadioButtonMenuItem themeDarcula, themeighContrastDark, themeHighContrastLight, themeIntelliJ, themeSolarizedDark, themeSolarizedLight;
     private JRadioButtonMenuItem fontNameMonospaced, fontNameDialog, fontNameDialogInput, fontNameSerif, fontNameSansSerif, fontNameSegoe;
+    private JRadioButtonMenuItem dpsEquipmentNone, dpsEquipmentSimple, dpsEquipmentFullSingleRow, dpsEquipmentFullMultiRow;
     private JCheckBoxMenuItem saveDpsToFile, fontStyleBold, fontStyleItalic;
     private JMenu file, edit, info;
     private JMenuBar jMenuBar;
@@ -48,6 +50,8 @@ public class TomatoMenuBar implements ActionListener {
         theme.addActionListener(this);
         fontMenu = new JMenu("Font");
         fontMenu.addActionListener(this);
+        dpsEquipment = new JMenu("DPS Equipment");
+        dpsEquipment.addActionListener(this);
 
         edit = new JMenu("Edit");
         edit.add(borders);
@@ -56,6 +60,7 @@ public class TomatoMenuBar implements ActionListener {
         edit.add(saveDpsToFile);
         edit.add(theme);
         edit.add(fontMenu);
+        edit.add(dpsEquipment);
         jMenuBar.add(edit);
 
         ButtonGroup groupTheme = new ButtonGroup();
@@ -93,6 +98,13 @@ public class TomatoMenuBar implements ActionListener {
         fontMenu.add(fontStyleItalic);
         setFontNameRadioButton();
 
+        ButtonGroup groupDpsEquipment = new ButtonGroup();
+        dpsEquipmentNone = addRadioButtonMenuItem(groupDpsEquipment, dpsEquipment, "None");
+        dpsEquipmentSimple = addRadioButtonMenuItem(groupDpsEquipment, dpsEquipment, "Simple");
+        dpsEquipmentFullSingleRow = addRadioButtonMenuItem(groupDpsEquipment, dpsEquipment, "Full Single-Row");
+        dpsEquipmentFullMultiRow = addRadioButtonMenuItem(groupDpsEquipment, dpsEquipment, "Full Multi-Row");
+        setEquipmentRadioButton();
+
         about = new JMenuItem("About");
         about.addActionListener(this);
         bandwidth = new JMenuItem("Net traffic");
@@ -114,7 +126,7 @@ public class TomatoMenuBar implements ActionListener {
      * Auto-starts the sniffer if the app was closed when it was running.
      */
     private void autoStartSnifferPreset() {
-        String snifAuto = TomatoGUI.getProperty("sniffer");
+        String snifAuto = PropertiesManager.getProperty("sniffer");
         if (snifAuto == null || !snifAuto.equals("T")) return;
 
         sniffer.setText("Stop Sniffer");
@@ -126,7 +138,7 @@ public class TomatoMenuBar implements ActionListener {
      * Selects the theme radio button from the preset.
      */
     private void setThemeRadioButton() {
-        String theme = TomatoGUI.getProperty("theme");
+        String theme = PropertiesManager.getProperty("theme");
 
         if (theme == null) {
             themeDarcula.setSelected(true);
@@ -160,7 +172,7 @@ public class TomatoMenuBar implements ActionListener {
      * Selects the font size radio button from the preset.
      */
     private void setFontSizeRadioButton() {
-        String fontSize = TomatoGUI.getProperty("fontSize");
+        String fontSize = PropertiesManager.getProperty("fontSize");
 
         if (fontSize == null) {
             fontSize12.setSelected(true);
@@ -199,8 +211,8 @@ public class TomatoMenuBar implements ActionListener {
      * Selects the font size radio button from the preset.
      */
     private void setFontNameRadioButton() {
-        String fontText = TomatoGUI.getProperty("fontName");
-        String fontStyle = TomatoGUI.getProperty("fontStyle");
+        String fontText = PropertiesManager.getProperty("fontName");
+        String fontStyle = PropertiesManager.getProperty("fontStyle");
         int fs = 0;
 
         if (fontText == null) {
@@ -245,6 +257,30 @@ public class TomatoMenuBar implements ActionListener {
         }
     }
 
+    private void setEquipmentRadioButton() {
+        String equipment = PropertiesManager.getProperty("equipment");
+
+        if (equipment == null) {
+            dpsEquipmentSimple.setSelected(true);
+            return;
+        }
+
+        switch (equipment) {
+            case "0":
+                dpsEquipmentNone.setSelected(true);
+                break;
+            case "2":
+                dpsEquipmentFullSingleRow.setSelected(true);
+                break;
+            case "3":
+                dpsEquipmentFullMultiRow.setSelected(true);
+            default:
+            case "1":
+                dpsEquipmentSimple.setSelected(true);
+                break;
+        }
+    }
+
     /**
      * Adds a radiobutton menu item for the user to select.
      *
@@ -267,7 +303,7 @@ public class TomatoMenuBar implements ActionListener {
      * @return Value of font size.
      */
     private String getFontSize() {
-        return TomatoGUI.getProperty("fontSize");
+        return PropertiesManager.getProperty("fontSize");
     }
 
     /**
@@ -276,7 +312,7 @@ public class TomatoMenuBar implements ActionListener {
      * @return Value of font name.
      */
     private String getFontName() {
-        return TomatoGUI.getProperty("fontName");
+        return PropertiesManager.getProperty("fontName");
     }
 
     /**
@@ -308,8 +344,16 @@ public class TomatoMenuBar implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == about) { // Opens about window
-            new TomatoPopupAbout().addPopup(frame);
+        if (e.getSource() == sniffer) { // Starts and stops the sniffer
+            if (sniffer.getText().contains("Start")) {
+                sniffer.setText("Stop Sniffer");
+                ExampleModTomato.startPacketSniffer();
+                TomatoGUI.setStateOfSniffer(true);
+                PropertiesManager.setProperties("sniffer", "T");
+            } else {
+                stopPacketSniffer();
+                PropertiesManager.setProperties("sniffer", "F");
+            }
         } else if (e.getSource() == borders) { // Removes the boarder of the window
             frame.dispose();
             frame.setUndecorated(!frame.isUndecorated());
@@ -318,45 +362,48 @@ public class TomatoMenuBar implements ActionListener {
             TomatoGUI.clearTextAreaChat();
         } else if (e.getSource() == clearDpsLogs) { // clears the dps logs
             ExampleModTomato.clearDpsLogs();
+        } else if (e.getSource() == saveDpsToFile) { // Toggle for saving dps logs
+            boolean save = saveDpsToFile.isSelected();
+            ExampleModTomato.saveDpsLogsToFile(save);
         } else if (e.getSource() == themeDarcula) { // theme
             LafManager.install(new DarculaTheme());
-            TomatoGUI.setProperties("theme", "darcula");
+            PropertiesManager.setProperties("theme", "darcula");
         } else if (e.getSource() == themeighContrastDark) { // theme
             LafManager.install(new HighContrastDarkTheme());
-            TomatoGUI.setProperties("theme", "contrastDark");
+            PropertiesManager.setProperties("theme", "contrastDark");
         } else if (e.getSource() == themeHighContrastLight) { // theme
             LafManager.install(new HighContrastLightTheme());
-            TomatoGUI.setProperties("theme", "contrastLight");
+            PropertiesManager.setProperties("theme", "contrastLight");
         } else if (e.getSource() == themeIntelliJ) { // theme
             LafManager.install(new IntelliJTheme());
-            TomatoGUI.setProperties("theme", "intelliJ");
+            PropertiesManager.setProperties("theme", "intelliJ");
         } else if (e.getSource() == themeSolarizedDark) { // theme
             LafManager.install(new SolarizedDarkTheme());
-            TomatoGUI.setProperties("theme", "solarizedDark");
+            PropertiesManager.setProperties("theme", "solarizedDark");
         } else if (e.getSource() == themeSolarizedLight) { // theme
             LafManager.install(new SolarizedLightTheme());
-            TomatoGUI.setProperties("theme", "solarizedLight");
+            PropertiesManager.setProperties("theme", "solarizedLight");
         } else if (e.getSource() == fontSize8) { // font size
             TomatoGUI.fontSizeTextAreas(8);
-            TomatoGUI.setProperties("fontSize", Integer.toString(8));
+            PropertiesManager.setProperties("fontSize", Integer.toString(8));
         } else if (e.getSource() == fontSize12) { // font size
             TomatoGUI.fontSizeTextAreas(12);
-            TomatoGUI.setProperties("fontSize", Integer.toString(12));
+            PropertiesManager.setProperties("fontSize", Integer.toString(12));
         } else if (e.getSource() == fontSize16) { // font size
             TomatoGUI.fontSizeTextAreas(16);
-            TomatoGUI.setProperties("fontSize", Integer.toString(16));
+            PropertiesManager.setProperties("fontSize", Integer.toString(16));
         } else if (e.getSource() == fontSize24) { // font size
             TomatoGUI.fontSizeTextAreas(24);
-            TomatoGUI.setProperties("fontSize", Integer.toString(24));
+            PropertiesManager.setProperties("fontSize", Integer.toString(24));
         } else if (e.getSource() == fontSize48) { // font size
             TomatoGUI.fontSizeTextAreas(48);
-            TomatoGUI.setProperties("fontSize", Integer.toString(48));
+            PropertiesManager.setProperties("fontSize", Integer.toString(48));
         } else if (e.getSource() == fontSizeCustom) { // font size
             String sizeText = JOptionPane.showInputDialog("Enter custom font size (between 1 and 1000)", getFontSize());
             int size = 0;
             try {
                 size = Integer.parseInt(sizeText);
-                TomatoGUI.setProperties("fontSize", Integer.toString(size));
+                PropertiesManager.setProperties("fontSize", Integer.toString(size));
             } catch (Exception ignored) {
             }
             if (size > 0 && size <= 1000) {
@@ -364,41 +411,42 @@ public class TomatoMenuBar implements ActionListener {
             }
         } else if (e.getSource() == fontNameMonospaced) { // font text
             TomatoGUI.fontNameTextAreas("Monospaced", getFontStyle());
-            TomatoGUI.setProperties("fontName", "Monospaced");
+            PropertiesManager.setProperties("fontName", "Monospaced");
         } else if (e.getSource() == fontNameSegoe) { // font text
             TomatoGUI.fontNameTextAreas("Segoe", getFontStyle());
-            TomatoGUI.setProperties("fontName", "Segoe");
+            PropertiesManager.setProperties("fontName", "Segoe");
         } else if (e.getSource() == fontNameDialog) { // font text
             TomatoGUI.fontNameTextAreas("Dialog", getFontStyle());
-            TomatoGUI.setProperties("fontName", "Dialog");
+            PropertiesManager.setProperties("fontName", "Dialog");
         } else if (e.getSource() == fontNameDialogInput) { // font text
             TomatoGUI.fontNameTextAreas("DialogInput", getFontStyle());
-            TomatoGUI.setProperties("fontName", "DialogInput");
+            PropertiesManager.setProperties("fontName", "DialogInput");
         } else if (e.getSource() == fontNameSerif) { // font text
             TomatoGUI.fontNameTextAreas("Serif", getFontStyle());
-            TomatoGUI.setProperties("fontName", "Serif");
+            PropertiesManager.setProperties("fontName", "Serif");
         } else if (e.getSource() == fontNameSansSerif) { // font text
             TomatoGUI.fontNameTextAreas("SansSerif", getFontStyle());
-            TomatoGUI.setProperties("fontName", "SansSerif");
+            PropertiesManager.setProperties("fontName", "SansSerif");
         } else if (e.getSource() == fontStyleBold) { // font style
             TomatoGUI.fontNameTextAreas(getFontName(), getFontStyle());
-            TomatoGUI.setProperties("fontStyle", Integer.toString(getFontStyle()));
+            PropertiesManager.setProperties("fontStyle", Integer.toString(getFontStyle()));
         } else if (e.getSource() == fontStyleItalic) { // font style
             TomatoGUI.fontNameTextAreas(getFontName(), getFontStyle());
-            TomatoGUI.setProperties("fontStyle", Integer.toString(getFontStyle()));
-        } else if (e.getSource() == saveDpsToFile) { // Toggle for saving dps logs
-            boolean save = saveDpsToFile.isSelected();
-            ExampleModTomato.saveDpsLogsToFile(save);
-        } else if (e.getSource() == sniffer) { // Starts and stops the sniffer
-            if (sniffer.getText().contains("Start")) {
-                sniffer.setText("Stop Sniffer");
-                ExampleModTomato.startPacketSniffer();
-                TomatoGUI.setStateOfSniffer(true);
-                TomatoGUI.setProperties("sniffer", "T");
-            } else {
-                stopPacketSniffer();
-                TomatoGUI.setProperties("sniffer", "F");
-            }
+            PropertiesManager.setProperties("fontStyle", Integer.toString(getFontStyle()));
+        } else if (e.getSource() == dpsEquipmentNone) { // dps equipment
+            PropertiesManager.setProperties("equipment", "0");
+            ExampleModTomato.updateDpsWindow();
+        } else if (e.getSource() == dpsEquipmentSimple) { // dps equipment
+            PropertiesManager.setProperties("equipment", "1");
+            ExampleModTomato.updateDpsWindow();
+        } else if (e.getSource() == dpsEquipmentFullSingleRow) { // dps equipment
+            PropertiesManager.setProperties("equipment", "2");
+            ExampleModTomato.updateDpsWindow();
+        } else if (e.getSource() == dpsEquipmentFullMultiRow) { // dps equipment
+            PropertiesManager.setProperties("equipment", "3");
+            ExampleModTomato.updateDpsWindow();
+        } else if (e.getSource() == about) { // Opens about window
+            new TomatoPopupAbout().addPopup(frame);
         } else if (e.getSource() == bandwidth) { // Opens bandwidth window
             TomatoBandwidth.make(frame);
         } else if (e.getSource() == javav) { // Opens bandwidth window
