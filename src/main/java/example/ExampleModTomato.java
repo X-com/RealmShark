@@ -186,6 +186,13 @@ public class ExampleModTomato {
     }
 
     /**
+     * Previous dungeon displayed by dps calculator.
+     */
+    public static void updateDpsWindow() {
+        dpsLogger.updateFilter();
+    }
+
+    /**
      * Quest packets to be processed.
      *
      * @param packet The event notifier packet.

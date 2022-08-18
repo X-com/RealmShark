@@ -1,6 +1,7 @@
 package example.damagecalc;
 
 import example.gui.TomatoGUI;
+import example.save.PropertiesManager;
 import packets.Packet;
 import packets.data.StatData;
 import packets.incoming.*;
@@ -28,7 +29,8 @@ import static java.util.Map.Entry.comparingByValue;
 public class DpsLogger {
 
     private boolean saveToFile = false;
-    private int stringIndex = 0;
+    private int displayIndex = 0;
+    private Entity[] firstPage;
     private final ArrayList<Packet> logPackets = new ArrayList<>();
     private final ArrayList<Entity[]> entityLogs = new ArrayList<>();
     private final HashMap<Integer, Entity> entityList = new HashMap<>();
@@ -36,9 +38,14 @@ public class DpsLogger {
     private MapInfoPacket mapInfo;
     private Entity player;
     private RNG rng;
-    private String firstPage;
     private static boolean dammahCountered = false;
     private static HashMap<Integer, Integer> crystalList = new HashMap<>();
+    private Filter filter;
+
+    // Load presets
+    {
+        setProfileFilter();
+    }
 
     /**
      * Packet processing method used to unwrap packets and log any damage and effects.
@@ -48,11 +55,12 @@ public class DpsLogger {
     public void packetCapture(Packet packet, boolean realTimeUpdate) {
         if (packet instanceof MapInfoPacket) {
             if (mapInfo != null) {
-                addToStringLogs();
+                addToLogs();
                 if (saveToFile) saveDpsLogsToFile();
             }
             mapInfo = (MapInfoPacket) packet;
             entityList.clear();
+            entityHitList.clear();
             rng = new RNG(mapInfo.seed);
             dammahCountered = false;
             if (filteredInstances(mapInfo.displayName)) {
@@ -105,7 +113,7 @@ public class DpsLogger {
                 entity.setTime(p.serverRealTimeMS);
                 entity.setStats(stats);
             }
-            if (realTimeUpdate) updateStringLogs();
+            if (realTimeUpdate) updateLogs();
         } else if (packet instanceof UpdatePacket) {
             UpdatePacket p = (UpdatePacket) packet;
             for (int j = 0; j < p.newObjects.length; j++) {
@@ -217,7 +225,8 @@ public class DpsLogger {
      *
      * @return logged dps output as a string.
      */
-    public static String stringDmg(Entity[] displayList, String filter) {
+    public static String stringDmg(Entity[] displayList, Filter filter) {
+        if (displayList == null) return "";
         StringBuilder sb = new StringBuilder();
         int displaySize = 10;
 
@@ -466,7 +475,7 @@ public class DpsLogger {
      */
     public void clearTextLogs() {
         entityLogs.clear();
-        stringIndex = 1;
+        displayIndex = 1;
         TomatoGUI.setTextAreaAndLabelDPS("", "1/1", false);
     }
 
@@ -474,16 +483,16 @@ public class DpsLogger {
      * Find the next dps log to display in the dps calculator.
      */
     public void nextDisplay() {
-        if (stringIndex < (entityLogs.size() - 1)) {
-            stringIndex++;
-            Entity[] e = entityLogs.get(stringIndex);
-            String s = stringDmg(e, "");
-            String l = (stringIndex + 1) + "/" + (entityLogs.size() + 1);
+        if (displayIndex < (entityLogs.size() - 1)) {
+            displayIndex++;
+            Entity[] e = entityLogs.get(displayIndex);
+            String s = stringDmg(e, filter);
+            String l = (displayIndex + 1) + "/" + (entityLogs.size() + 1);
             TomatoGUI.setTextAreaAndLabelDPS(s, l, true);
-        } else if (stringIndex < entityLogs.size()) {
-            stringIndex++;
-            String l = (stringIndex + 1) + "/" + (entityLogs.size() + 1);
-            TomatoGUI.setTextAreaAndLabelDPS(firstPage, l, false);
+        } else if (displayIndex < entityLogs.size()) {
+            displayIndex++;
+            String l = (displayIndex + 1) + "/" + (entityLogs.size() + 1);
+            TomatoGUI.setTextAreaAndLabelDPS(stringDmg(firstPage, filter), l, false);
         }
     }
 
@@ -491,35 +500,67 @@ public class DpsLogger {
      * Find the previous dps log to display in the dps calculator.
      */
     public void previousDisplay() {
-        if (stringIndex > 0) {
-            stringIndex--;
-            Entity[] e = entityLogs.get(stringIndex);
-            String s = stringDmg(e, "");
-            String l = (stringIndex + 1) + "/" + (entityLogs.size() + 1);
+        if (displayIndex > 0) {
+            displayIndex--;
+            Entity[] e = entityLogs.get(displayIndex);
+            String s = stringDmg(e, filter);
+            String l = (displayIndex + 1) + "/" + (entityLogs.size() + 1);
             TomatoGUI.setTextAreaAndLabelDPS(s, l, true);
         }
     }
 
-    private void addToStringLogs() {
+    private void addToLogs() {
         boolean selectable = true;
         String text = null;
-        if (stringIndex == entityLogs.size()) {
-            stringIndex++;
+        if (displayIndex == entityLogs.size()) {
+            displayIndex++;
             selectable = false;
-            text = firstPage = "";
+            text = "";
         }
+        firstPage = new Entity[0];
         entityLogs.add(displayList());
-        String labelText = (stringIndex + 1) + "/" + (entityLogs.size() + 1);
+        String labelText = (displayIndex + 1) + "/" + (entityLogs.size() + 1);
         TomatoGUI.setTextAreaAndLabelDPS(text, labelText, selectable);
     }
 
     /**
      * Update the text area of the dps calculator.
      */
-    private void updateStringLogs() {
-        if (stringIndex != entityLogs.size()) return;
-        String firstPage = stringDmg(displayList(), "");
-        TomatoGUI.setTextAreaAndLabelDPS(firstPage, null, false);
+    private void updateLogs() {
+        if (displayIndex != entityLogs.size()) return;
+        String firstPage = stringDmg(displayList(), filter);
+        TomatoGUI.setTextAreaAndLabelDPS(firstPage, null, displayIndex != entityLogs.size());
+    }
+
+    public void updateFilter() {
+        setProfileFilter();
+        Entity[] list;
+        if (entityLogs.size() > 0 && displayIndex < entityLogs.size()) list = entityLogs.get(displayIndex);
+        else list = firstPage;
+        TomatoGUI.setTextAreaAndLabelDPS(stringDmg(list, filter), null, displayIndex != entityLogs.size());
+    }
+
+    private void setProfileFilter() {
+        if (filter == null) filter = new Filter();
+        String equipment = PropertiesManager.getProperty("equipment");
+        String names = PropertiesManager.getProperty("nameFilter");
+        String toggleFilter = PropertiesManager.getProperty("toggleFilter");
+
+        if (equipment == null) {
+            filter.equipmentFilter = 1;
+        } else {
+            filter.equipmentFilter = Integer.parseInt(equipment);
+        }
+
+        if (toggleFilter != null) {
+            filter.nameFilter = toggleFilter.equals("T");
+        } else {
+            filter.nameFilter = false;
+        }
+
+        if (names != null) {
+            filter.filteredStrings = names.split(" ");
+        }
     }
 
     /**
@@ -641,9 +682,14 @@ public class DpsLogger {
             return stats[0].statValue;
         }
 
-        public String showInv() {
-            if (stats[31] == null) return "";
+        public String showInv(int equipmentFilter, Entity owner) {
+            if (stats[31] == null || equipmentFilter == 0) {
+                return "";
+            } else if (equipmentFilter == 1) {
+                return itemToString(owner);
+            }
             StringBuilder s = new StringBuilder();
+            if (equipmentFilter == 3) s.append("\n");
             for (int inventory = 0; inventory < 4; inventory++) {
                 s.append("<");
 
@@ -673,6 +719,7 @@ public class DpsLogger {
                 }
                 s = new StringBuilder(s.substring(0, s.length() - 3));
                 s.append("> ");
+                if (equipmentFilter == 3) s.append("\n");
             }
             return s.substring(0, s.length() - 1);
         }
@@ -696,13 +743,15 @@ public class DpsLogger {
          */
         private String itemToString(Entity entity) {
             StringBuilder s = new StringBuilder();
+            s.append("[");
             for (int k = 0; k < 256; k++) {
                 if (k >= 8 && k <= 11 && entity.getStat(k) != null) {
                     int itemID = entity.getStat(k).statValue;
                     s.append(IdToName.name(itemID));
-                    if (k < 11) s.append(", ");
+                    if (k < 11) s.append(" / ");
                 }
             }
+            s.append("]");
             return s.toString();
         }
 
@@ -727,14 +776,23 @@ public class DpsLogger {
             return damageList;
         }
 
-        public String display(String filter) {
+        public String display(Filter filter) {
             StringBuilder sb = new StringBuilder();
             sb.append(IdToName.name(objectType)).append(" HP: ").append(maxHp()).append("\n");
             for (Damage dmg : damageList) {
-                if(!dmg.owner.isMe) continue;
+                String name = dmg.owner.getStat(31).stringStatValue;
+                if (filter.nameFilter) {
+                    boolean found = false;
+                    for (String n : filter.filteredStrings) {
+                        if (name.toLowerCase().startsWith(n.toLowerCase())) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) continue;
+                }
                 String extra = "    ";
                 String isMe = dmg.owner.isMe ? "->" : "  ";
-                String name = dmg.owner.getStat(31).stringStatValue;
                 int index = name.indexOf(',');
                 if (index != -1) name = name.substring(0, index);
                 float pers = ((float) dmg.dmg * 100 / (float) maxHp());
@@ -745,8 +803,7 @@ public class DpsLogger {
                 } else if (dmg.walledGardenReflectors) {
                     extra = String.format("[Garden Counter Hits:%d Dmg:%d]", dmg.counterHits, dmg.counterDmg);
                 }
-                String inv = dmg.owner.showInv();
-                inv = "";
+                String inv = dmg.owner.showInv(filter.equipmentFilter, dmg.owner);
                 sb.append(String.format("%s %3d %10s DMG: %7d %6.3f%% %s %s\n", isMe, dmg.score, name, dmg.dmg, pers, extra, inv));
             }
             sb.append("\n");
@@ -757,5 +814,14 @@ public class DpsLogger {
         public String toString() {
             return IdToName.name(objectType);
         }
+    }
+
+    /**
+     * Filter options class
+     */
+    private class Filter {
+        int equipmentFilter;
+        String[] filteredStrings;
+        boolean nameFilter;
     }
 }

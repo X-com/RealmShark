@@ -45,13 +45,13 @@ public class DamageSimulator {
     }
 
     static ArrayList<BufferReader> injectData = new ArrayList<>();
-    DpsLogger dpsLogger = new DpsLogger();
+    public DpsLogger dpsLogger = new DpsLogger();
     HashMap<Integer, Entity> entityList = new HashMap<>();
     long serverTime = 0;
     long serverFirstTime = 0;
     private HashMap<Integer, Integer> crystalList = new HashMap<>();
 
-    private void readfile() throws Exception {
+    public void readfile() throws Exception {
 //        String fileName = "dpsLogs/outdated/Oryx's_Sanctuary.dmgLog-2022-07-25-11.12.35.data";
 //        String fileName = "dpsLogs/outdated/Oryx's_Sanctuary.dmgLog-2022-07-25-16.30.50.data";
         String fileName = "dpsLogs/outdated/Oryx's Sanctuary-2022-08-08-01.47.43.data";
@@ -90,7 +90,8 @@ public class DamageSimulator {
 //            if (!s.equals("")) System.out.println(s);
 //        }
 
-        System.out.println(dpsLogger.stringDmg(dpsLogger.displayList(), ""));
+//        dpsLogger.addToLogs();
+//        System.out.println(dpsLogger.stringDmg(dpsLogger.displayList(), null));
     }
 
     private Entity getEntity(int id) {
