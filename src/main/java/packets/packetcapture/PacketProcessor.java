@@ -1,7 +1,7 @@
 package packets.packetcapture;
 
-import example.gui.MissingNpcapGUI;
-import example.gui.TomatoBandwidth;
+import tomato.gui.MissingNpcapGUI;
+import tomato.gui.TomatoBandwidth;
 import packets.Packet;
 import packets.PacketType;
 import packets.packetcapture.encryption.RC4;

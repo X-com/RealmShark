@@ -1,4 +1,4 @@
-package example.save;
+package tomato.save;
 
 import java.io.FileReader;
 import java.io.FileWriter;

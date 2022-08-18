@@ -1,4 +1,4 @@
-package example.version;
+package tomato.version;
 /**
  * Don't edit this class. It's a gradle class to grab version from the build.gradle
  */

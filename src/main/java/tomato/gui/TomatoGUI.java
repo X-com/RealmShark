@@ -1,9 +1,9 @@
-package example.gui;
+package tomato.gui;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.*;
-import example.ExampleModTomato;
-import example.save.PropertiesManager;
+import tomato.Tomato;
+import tomato.save.PropertiesManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -63,7 +63,7 @@ public class TomatoGUI {
 
             public void keyReleased(KeyEvent e) {
                 PropertiesManager.setProperties("nameFilter", textFilter.getText());
-                ExampleModTomato.updateDpsWindow();
+                Tomato.updateDpsWindow();
             }
         });
         textFilterToggle = new JCheckBox();
@@ -72,7 +72,7 @@ public class TomatoGUI {
             boolean selected = textFilterToggle.isSelected();
             textFilter.setEnabled(selected);
             PropertiesManager.setProperties("toggleFilter", selected ? "T" : "F");
-            ExampleModTomato.updateDpsWindow();
+            Tomato.updateDpsWindow();
         });
 
         dpsTopPanel = new JPanel();
@@ -97,8 +97,8 @@ public class TomatoGUI {
         textAreaDPS.setEnabled(false);
         tabbedPane.addTab("DPS Logger", dpsPanel);
 
-        next.addActionListener(event -> ExampleModTomato.nextDpsLogDungeon());
-        prev.addActionListener(event -> ExampleModTomato.previousDpsLogDungeon());
+        next.addActionListener(event -> Tomato.nextDpsLogDungeon());
+        prev.addActionListener(event -> Tomato.previousDpsLogDungeon());
 
         center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
         menuBar = new TomatoMenuBar();
@@ -111,7 +111,7 @@ public class TomatoGUI {
         mainPanel.add(tabbedPane, BorderLayout.CENTER);
         mainPanel.add(statusLabel, BorderLayout.SOUTH);
 
-        icon = Toolkit.getDefaultToolkit().getImage(ExampleModTomato.imagePath);
+        icon = Toolkit.getDefaultToolkit().getImage(Tomato.imagePath);
         loadFontSizePreset();
         loadFontNamePreset();
         loadFilterPreset();

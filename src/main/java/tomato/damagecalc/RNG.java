@@ -1,4 +1,4 @@
-package example.damagecalc;
+package tomato.damagecalc;
 
 public class RNG {
     private long seed; // this value is given by MapInfoPacket:seed

@@ -1,8 +1,7 @@
 package packets.packetcapture.sniff.assembly;
 
-import example.gui.TomatoGUI;
-import example.gui.TomatoMenuBar;
-import packets.Packet;
+import tomato.gui.TomatoGUI;
+import tomato.gui.TomatoMenuBar;
 import packets.packetcapture.sniff.netpackets.TcpPacket;
 import bugfixingtools.HackyPacketLoggerForABug;
 import util.Util;

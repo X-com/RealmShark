@@ -1,8 +1,8 @@
-package example.gui;
+package tomato.gui;
 
 
-import example.ExampleModTomato;
-import example.version.Version;
+import tomato.Tomato;
+import tomato.version.Version;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,7 +70,7 @@ class TomatoPopupAbout extends JFrame implements FocusListener {
         textLabelCredits.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 10));
         textLabelCredits.setAlignmentX(Component.LEFT_ALIGNMENT);
         listCredit.add(textLabelCredits);
-        icon = new ImageIcon(ExampleModTomato.imagePath);
+        icon = new ImageIcon(Tomato.imagePath);
         icon = new ImageIcon(icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
         iconLabel = new JLabel();
         iconLabel.setIcon(icon);

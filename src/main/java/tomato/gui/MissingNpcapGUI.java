@@ -1,6 +1,4 @@
-package example.gui;
-
-import util.Pair;
+package tomato.gui;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,7 +1,7 @@
-package example.damagecalc;
+package tomato.damagecalc;
 
-import example.gui.TomatoGUI;
-import example.save.PropertiesManager;
+import tomato.gui.TomatoGUI;
+import tomato.save.PropertiesManager;
 import packets.Packet;
 import packets.data.StatData;
 import packets.incoming.*;

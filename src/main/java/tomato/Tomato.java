@@ -1,7 +1,7 @@
-package example;
+package tomato;
 
-import example.damagecalc.DpsLogger;
-import example.gui.TomatoGUI;
+import tomato.damagecalc.DpsLogger;
+import tomato.gui.TomatoGUI;
 import packets.Packet;
 import packets.PacketType;
 import packets.data.QuestData;
@@ -32,15 +32,15 @@ import java.util.stream.Stream;
  * received then the lambda function passed in as the second argument can
  * be used to trigger any functions listening to registered packets.
  */
-public class ExampleModTomato {
-    public static URL imagePath = ExampleModTomato.class.getResource("/icon/tomatoIcon.png");
+public class Tomato {
+    public static URL imagePath = Tomato.class.getResource("/icon/tomatoIcon.png");
     private static final Pattern popperName = Pattern.compile("[^ ]*\"player\":\"([A-Za-z]*)[^ ]*");
     private static PacketProcessor packetProcessor;
     private static final DpsLogger dpsLogger = new DpsLogger();
 
     public static void main(String[] args) {
         Util.setSaveLogs(true); // turns the logger to, save in to files.
-        ExampleModTomato.example();
+        Tomato.example();
     }
 
     /**
@@ -57,22 +57,22 @@ public class ExampleModTomato {
             Example 2: Subscribing to TEXT packets
          */
         // [ExampleModTomato::text] is the same as [(packet) - > text(packet)]
-        Register.INSTANCE.register(PacketType.TEXT, ExampleModTomato::textPacket);
+        Register.INSTANCE.register(PacketType.TEXT, Tomato::textPacket);
 
-        Register.INSTANCE.register(PacketType.NOTIFICATION, ExampleModTomato::notificationPacket);
+        Register.INSTANCE.register(PacketType.NOTIFICATION, Tomato::notificationPacket);
 
-        Register.INSTANCE.register(PacketType.CREATE_SUCCESS, ExampleModTomato::dpsLoggerPacket);
-        Register.INSTANCE.register(PacketType.ENEMYHIT, ExampleModTomato::dpsLoggerPacket);
-        Register.INSTANCE.register(PacketType.PLAYERSHOOT, ExampleModTomato::dpsLoggerPacket);
-        Register.INSTANCE.register(PacketType.DAMAGE, ExampleModTomato::dpsLoggerPacket);
-        Register.INSTANCE.register(PacketType.SERVERPLAYERSHOOT, ExampleModTomato::dpsLoggerPacket);
-        Register.INSTANCE.register(PacketType.UPDATE, ExampleModTomato::dpsLoggerPacket);
-        Register.INSTANCE.register(PacketType.NEWTICK, ExampleModTomato::dpsLoggerPacket);
-        Register.INSTANCE.register(PacketType.MAPINFO, ExampleModTomato::dpsLoggerPacket);
-        Register.INSTANCE.register(PacketType.TEXT, ExampleModTomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.CREATE_SUCCESS, Tomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.ENEMYHIT, Tomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.PLAYERSHOOT, Tomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.DAMAGE, Tomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.SERVERPLAYERSHOOT, Tomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.UPDATE, Tomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.NEWTICK, Tomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.MAPINFO, Tomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.TEXT, Tomato::dpsLoggerPacket);
 
-        Register.INSTANCE.register(PacketType.QUEST_FETCH_RESPONSE, ExampleModTomato::questPacket);
-        Register.INSTANCE.register(PacketType.QUEST_REDEEM, ExampleModTomato::questPacket);
+        Register.INSTANCE.register(PacketType.QUEST_FETCH_RESPONSE, Tomato::questPacket);
+        Register.INSTANCE.register(PacketType.QUEST_REDEEM, Tomato::questPacket);
 
         new TomatoGUI().create();
     }

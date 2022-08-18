@@ -1,6 +1,6 @@
 package bugfixingtools;
 
-import example.damagecalc.DpsLogger;
+import tomato.damagecalc.DpsLogger;
 import packets.Packet;
 import packets.PacketType;
 import packets.data.StatData;

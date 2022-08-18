@@ -1,4 +1,4 @@
-package example.gui;
+package tomato.gui;
 
 import java.awt.Component;
 import java.awt.event.*;

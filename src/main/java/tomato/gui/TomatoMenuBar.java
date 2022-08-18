@@ -1,9 +1,9 @@
-package example.gui;
+package tomato.gui;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.*;
-import example.ExampleModTomato;
-import example.save.PropertiesManager;
+import tomato.Tomato;
+import tomato.save.PropertiesManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -130,7 +130,7 @@ public class TomatoMenuBar implements ActionListener {
         if (snifAuto == null || !snifAuto.equals("T")) return;
 
         sniffer.setText("Stop Sniffer");
-        ExampleModTomato.startPacketSniffer();
+        Tomato.startPacketSniffer();
         TomatoGUI.setStateOfSniffer(true);
     }
 
@@ -347,7 +347,7 @@ public class TomatoMenuBar implements ActionListener {
         if (e.getSource() == sniffer) { // Starts and stops the sniffer
             if (sniffer.getText().contains("Start")) {
                 sniffer.setText("Stop Sniffer");
-                ExampleModTomato.startPacketSniffer();
+                Tomato.startPacketSniffer();
                 TomatoGUI.setStateOfSniffer(true);
                 PropertiesManager.setProperties("sniffer", "T");
             } else {
@@ -361,10 +361,10 @@ public class TomatoMenuBar implements ActionListener {
         } else if (e.getSource() == clearChat) { // clears the text chat
             TomatoGUI.clearTextAreaChat();
         } else if (e.getSource() == clearDpsLogs) { // clears the dps logs
-            ExampleModTomato.clearDpsLogs();
+            Tomato.clearDpsLogs();
         } else if (e.getSource() == saveDpsToFile) { // Toggle for saving dps logs
             boolean save = saveDpsToFile.isSelected();
-            ExampleModTomato.saveDpsLogsToFile(save);
+            Tomato.saveDpsLogsToFile(save);
         } else if (e.getSource() == themeDarcula) { // theme
             LafManager.install(new DarculaTheme());
             PropertiesManager.setProperties("theme", "darcula");
@@ -435,16 +435,16 @@ public class TomatoMenuBar implements ActionListener {
             PropertiesManager.setProperties("fontStyle", Integer.toString(getFontStyle()));
         } else if (e.getSource() == dpsEquipmentNone) { // dps equipment
             PropertiesManager.setProperties("equipment", "0");
-            ExampleModTomato.updateDpsWindow();
+            Tomato.updateDpsWindow();
         } else if (e.getSource() == dpsEquipmentSimple) { // dps equipment
             PropertiesManager.setProperties("equipment", "1");
-            ExampleModTomato.updateDpsWindow();
+            Tomato.updateDpsWindow();
         } else if (e.getSource() == dpsEquipmentFullSingleRow) { // dps equipment
             PropertiesManager.setProperties("equipment", "2");
-            ExampleModTomato.updateDpsWindow();
+            Tomato.updateDpsWindow();
         } else if (e.getSource() == dpsEquipmentFullMultiRow) { // dps equipment
             PropertiesManager.setProperties("equipment", "3");
-            ExampleModTomato.updateDpsWindow();
+            Tomato.updateDpsWindow();
         } else if (e.getSource() == about) { // Opens about window
             new TomatoPopupAbout().addPopup(frame);
         } else if (e.getSource() == bandwidth) { // Opens bandwidth window
@@ -462,7 +462,7 @@ public class TomatoMenuBar implements ActionListener {
      */
     public static void stopPacketSniffer() {
         sniffer.setText("Start Sniffer");
-        ExampleModTomato.stopPacketSniffer();
+        Tomato.stopPacketSniffer();
         TomatoGUI.setStateOfSniffer(false);
     }
 }
