@@ -29,7 +29,7 @@ public class ObjectData {
     @Override
     public String toString() {
         String name = IdToName.name(objectType);
-        return "\n    " + (name.equals("") ? ("objectType=" + objectType) : name) +
+        return "\n    " + (name.equals("") ? ("objectType=" + objectType) : ("objectType=" + objectType + " " + name)) +
                 status;
     }
 }

@@ -21,7 +21,7 @@ public class UpdatePacket extends Packet {
      */
     public byte levelType;
     /**
-     * Pos unknown
+     * The player pos if the player have moved, otherwise sends (0,0)
      */
     public WorldPosData pos;
     /**

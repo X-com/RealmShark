@@ -147,8 +147,8 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
                         // Missing
                        UNKNOWN134(-122, Outgoing, UnknownPacket134::new),
                         // Missing
-                       UNKNOWN137(-119, Outgoing, UnknownPacket137::new),
-                       UNKNOWN138(-118, Outgoing, UnknownPacket138::new),
+                             DASH(-119, Outgoing, DashPacket::new),
+                         DASH_ACK(-118, Outgoing, DashAckPacket::new),
                        UNKNOWN139(-117, Outgoing, UnknownPacket139::new),
                         // Missing
                        UNKNOWN145(-111, Outgoing, UnknownPacket145::new),

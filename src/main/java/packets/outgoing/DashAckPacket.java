@@ -6,7 +6,7 @@ import packets.reader.BufferReader;
 /**
  * Unknown packet
  */
-public class UnknownPacket138 extends Packet {
+public class DashAckPacket extends Packet {
     /**
      * The current client time.
      */
@@ -19,7 +19,7 @@ public class UnknownPacket138 extends Packet {
 
     @Override
     public String toString() {
-        return "UnknownPacket138{" +
+        return "DashAckPacket{" +
                 "\n   time=" + time;
     }
 }
