@@ -19,7 +19,7 @@ dependencies {
     implementation("com.github.weisj:darklaf-core:3.0.0")
 }
 
-mainClassName = 'example.ExampleModTomato'
+mainClassName = applicationName.toLowerCase() + '.' + applicationName
 
 
 jar {
@@ -33,9 +33,9 @@ jar {
 // Ugly solution to get version into source.
 task generateSources {
     doFirst {
-        def srcFile = new File(file("$buildDir/../src/main/java/example/version"), "Version.java")
+        def srcFile = new File(file("$buildDir/../src/main/java/" + applicationName.toLowerCase() + "/version"), "Version.java")
         srcFile.parentFile.mkdirs()
-        srcFile.write("""package example.version;
+        srcFile.write("""package """ + applicationName.toLowerCase() + """.version;
 /**
  * Don't edit this class. It's a gradle class to grab version from the build.gradle
  */
