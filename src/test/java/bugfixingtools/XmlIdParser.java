@@ -87,12 +87,15 @@ public class XmlIdParser {
                     NodeList clazzID = element.getElementsByTagName("Class");
                     NodeList groupID = element.getElementsByTagName("Group");
                     NodeList projectile = element.getElementsByTagName("Projectile");
+                    NodeList texture = element.getElementsByTagName("Texture");
 
                     String display = "";
                     String clazz = "";
                     String group = "";
                     String minDmg = "";
                     String maxDmg = "";
+                    String fileName = "";
+                    String indexName = "";
                     if (displayID.getLength() > 0) {
                         display = displayID.item(0).getTextContent();
                     }
@@ -122,13 +125,59 @@ public class XmlIdParser {
                             pTemp.append(minDmg).append(",").append(maxDmg).append(",").append(armorPiercing.item(0) != null ? "1," : "0,");
                         }
                     }
+
+                    StringBuilder tTemp = new StringBuilder();
+                    boolean imgFound = false;
+                    if (texture.getLength() == 1) {
+                        Node n = texture.item(0);
+                        if (n != null && n.getNodeType() == Node.ELEMENT_NODE) {
+                            Element e = (Element) n;
+                            NodeList file = e.getElementsByTagName("File");
+                            NodeList index = e.getElementsByTagName("Index");
+                            if (file.getLength() > 0) {
+                                fileName = file.item(0).getTextContent();
+                                imgFound = true;
+                            }
+                            if (index.getLength() > 0) {
+                                indexName = index.item(0).getTextContent();
+                                imgFound = true;
+                                if(indexName.startsWith("0x")) {
+                                    indexName = Integer.toString(Integer.parseInt(indexName.substring(2), 16));
+                                }
+                            }
+                            tTemp.append(fileName).append(",").append(indexName);
+                        }
+                    }
+//                    for (int i = 0; i < texture.getLength(); i++) {
+//                        Node n = texture.item(i);
+//                        if (n != null && n.getNodeType() == Node.ELEMENT_NODE) {
+//                            Element e = (Element) n;
+//                            NodeList file = e.getElementsByTagName("File");
+//                            NodeList index = e.getElementsByTagName("Index");
+//                            if (file.getLength() > 0) {
+//                                fileName = file.item(0).getTextContent();
+//                                imgFound = true;
+//                            }
+//                            if (index.getLength() > 0) {
+//                                indexName = index.item(0).getTextContent();
+//                                imgFound = true;
+//                            }
+//                            tTemp.append(fileName).append(",").append(indexName).append(",");
+//                        }
+//                    }
+
                     String projectileString = "";
                     if (projectilesFound) {
                         projectileString = pTemp.substring(0, pTemp.length() - 1);
                     }
-//                    if (hashList.containsKey(id)) {
-//                    }
-                    String s = String.format("%d:%s:%s:%s:%s:%s", id, display, clazz, group, projectileString, idID);
+
+                    String imgString = "";
+                    if (imgFound) {
+//                        imgString = tTemp.substring(0, pTemp.length() - 1);
+                        imgString = tTemp.toString();
+                    }
+
+                    String s = String.format("%d:%s:%s:%s:%s:%s:%s", id, display, clazz, group, projectileString, imgString, idID);
                     Util.print(name, s);
 //                    System.out.println(s);
 //                    hashList.put(id, idID);

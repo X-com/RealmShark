@@ -1,7 +1,6 @@
-package bugfixingtools;
+package util;
 
 import packets.packetcapture.sniff.netpackets.RawPacket;
-import util.Util;
 
 import java.util.Arrays;
 

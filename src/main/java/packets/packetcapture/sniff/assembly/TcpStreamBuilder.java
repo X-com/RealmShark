@@ -3,7 +3,7 @@ package packets.packetcapture.sniff.assembly;
 import tomato.gui.TomatoGUI;
 import tomato.gui.TomatoMenuBar;
 import packets.packetcapture.sniff.netpackets.TcpPacket;
-import bugfixingtools.HackyPacketLoggerForABug;
+import util.HackyPacketLoggerForABug;
 import util.Util;
 
 import java.util.HashMap;
