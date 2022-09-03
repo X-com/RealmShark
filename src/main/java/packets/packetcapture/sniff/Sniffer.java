@@ -24,9 +24,8 @@ import java.util.Arrays;
  * aka if proxies are used.
  */
 public class Sniffer {
-    private static boolean disableChecksum = true; // disabled given most routers checksum packets automatically.
+    private static final boolean disableChecksum = true; // disabled given most routers checksum packets automatically.
     private final int port = 2050; // 2050 is default rotmg server port.
-    private final String filter = "tcp port " + port;
     private final Sniffer thisObject;
     private final RingBuffer<RawPacket> ringBuffer;
     private final TcpStreamBuilder incoming;
@@ -38,11 +37,11 @@ public class Sniffer {
     /**
      * Constructor of a Windows sniffer.
      *
-     * @param p Object of parent class calling the sniffer.
+     * @param processor PProcessor instance used as the base.
      */
     public Sniffer(PProcessor processor) {
         thisObject = this;
-        ringBuffer = new RingBuffer(32);
+        ringBuffer = new RingBuffer<>(32);
         incoming = new TcpStreamBuilder(processor::resetIncoming, processor::incomingStream);
         outgoing = new TcpStreamBuilder(processor::resetOutgoing, processor::outgoingStream);
     }
@@ -55,7 +54,7 @@ public class Sniffer {
      * 2050 of type TCP) is found. The all other channels are halted and only the correct
      * interface is listened on.
      *
-     * @throws Errors... If any unexpected issues are found.
+     * @throws Error... If any unexpected issues are found.
      */
     public void startSniffer() throws ErrorException, RadioFrequencyModeNotSupportedException,
             ActivatedException, InterfaceNotSupportTimestampTypeException,
@@ -71,7 +70,7 @@ public class Sniffer {
         for (int i = 0; i < interfaceList.length; i++) {
             DefaultLiveOptions defaultLiveOptions = new DefaultLiveOptions();
             defaultLiveOptions.timeout(60000);
-            Pcap pcap = null;
+            Pcap pcap;
 
             try {
                 pcap = service.live(interfaceList[i], defaultLiveOptions);
@@ -80,8 +79,7 @@ public class Sniffer {
                 continue;
             }
 
-            pcap.setFilter(filter, true);
-
+            pcap.setFilter("tcp port " + port, true);
             pcaps[i] = pcap;
 
             startPacketSniffer(pcap);
@@ -99,15 +97,14 @@ public class Sniffer {
     private static void pause(int ms) {
         try {
             Thread.sleep(ms);
-        } catch (InterruptedException e) {
-        }
+        } catch (InterruptedException ignored) {}
     }
 
     /**
      * Start a packet sniffers on different threads
      * and close any sniffer not being used.
      *
-     * @param number Index of the network interface.
+     * @param pcap Current handle to the Pcap instance.
      */
     public void startPacketSniffer(Pcap pcap) {
         new Thread(new Runnable() {
@@ -145,9 +142,9 @@ public class Sniffer {
             }
             while (!stop) {
                 if (realmPcap != null) {
-                    for (int c = 0; c < pcaps.length; c++) {
-                        if (pcaps[c] != null && realmPcap != pcaps[c]) {
-                            pcaps[c].close();
+                    for (Pcap pcap : pcaps) {
+                        if (pcap != null && realmPcap != pcap) {
+                            pcap.close();
                         }
                     }
                     return;
@@ -171,7 +168,7 @@ public class Sniffer {
                     thisObject.wait();
                 }
                 while (!ringBuffer.isEmpty()) {
-                    RawPacket packet = null;
+                    RawPacket packet;
                     synchronized (ringBuffer) {
                         packet = ringBuffer.pop();
                     }
@@ -260,10 +257,15 @@ public class Sniffer {
         if (realmPcap != null) {
             realmPcap.close();
         } else {
-            for (Pcap c : pcaps) {
-                if (c != null) {
-                    c.close();
+            try {
+                for (Pcap c : pcaps) {
+                    if (c != null) {
+                        c.close();
+                    }
                 }
+            } catch (NullPointerException e) {
+                // Network tap is already closed
+                System.out.println("[X] Error stopping sniffer: sniffer not running.");
             }
         }
     }

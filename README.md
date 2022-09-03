@@ -1,13 +1,13 @@
 # RealmShark  
-### A packet sniffer for Realm of the Mad God in Java.
+### A library/GUI packet sniffer for Realm of the Mad God built with Java.
 
-RealmShark is a Java library/API created to read network packets at the kernel level without the the ability to modify, block or send packets. The library is EULA/copyright compliant because it does not use any game code or assets.  
+RealmShark is a Java library/program created to read network packets at the kernel level without the the ability to modify, block or send packets. The library is EULA/copyright compliant because it does not use any game code or assets.  
 
 Given RealmShark reads packets directly from the network adapter it can even be used to listen on a PC that is not running the game. It is an independent program from the game and is completely extendable/customizable.  
 
-Multiple instances of Realm of the Mad Gods are not supported using this sniffer. 
-As of now the sniffer can't filter packets from multiple instances of the game running at the same time.   
-The sniffer crashes if it can't distinguish the packets from different instances at the network layer.  
+Multiple instances of Realm of the Mad God are not supported using this sniffer.  
+As of now the sniffer cannot filter packets from multiple instances of the game running at the same time.   
+The sniffer crashes if it cannot distinguish the packets from different instances at the network layer.  
 In the future, OS specific functionality will be added to support multiple instances of clients.
 
 #### Credits:
@@ -29,17 +29,17 @@ For Windows:
 
 - Java download [image](https://user-images.githubusercontent.com/5974568/183230180-f9a66d31-2ed4-4073-8af2-cda12f271d01.png).
 - Npcap download [image](https://user-images.githubusercontent.com/5974568/183230181-b8eacef2-71f3-47f5-8d46-959eb1bb82bf.png).
-- Jar download [image](https://user-images.githubusercontent.com/5974568/183230231-b47f588a-08be-42f1-942f-8f0facf41aa0.png).
+- Jar download [image](https://user-images.githubusercontent.com/5974568/183230231-b47f588a-08be-42f1-942f-8f0facf41aa0.png).  
 
-3. Run the program by simply double clicking the downloaded Tomato-v*.jar file.
+3. Run the program by simply opening the downloaded Tomato-v*.jar file.  
 
 4. The RealmShark GUI should open. Start it by clicking File -> Start Sniffer. All chat in the game should appear in the Chat tab.
 
 If there are errors running the program described above, please look under Trouble shooting guide or [open an issue here,](https://github.com/X-com/RealmShark/issues) so it can be resolved.
 
-## Trouble shooting guide
+## Troubleshooting guide
 
-Windows trouble shooting guide:
+Windows troubleshooting guide:
 
 Some Windows 11 users have issues with Npcap 1.70. Try and uninstall 1.70 and install the 1.60 version. Link found here, [Npcap 1.60](https://www.mediafire.com/file/xkjmfz1v1b47e0a/npcap-1.60.exe/file).
 
@@ -71,15 +71,15 @@ If any other problem shows up. Please report them in the issues tracker found [h
 
 This is written for use with IntelliJ IDEA only. Other IDEs can also  be used in a similar manner.
 
-You will need a OpenJDK 8 SDK from [here.](https://jdk.java.net/18/) if not using Intellij IDEA. Intellij comes installed with JDK.
+You will need an OpenJDK 8 SDK install from [here.](https://jdk.java.net/18/) If you are using IntelliJ IDEA, IntelliJ can install the JDK automatically.
 
-Intellij IDEA can be found [here](https://www.jetbrains.com/idea/download/#section=windows). Download the free community edition.
+IntelliJ IDEA can be found [here](https://www.jetbrains.com/idea/download/#section=windows). Download the free community edition.
 
 Download the .zip or clone the repo via CLI:
 `git clone https://github.com/X-com/RealmShark && cd RealmShark`
 
 Open IntelliJ and click **File > New > Project from Existing Sources...**
-Navigate to the realm shark source folder and open build.gradle. Alternatively drag and drop the build.gradle into the Intellij window and then double click on it. Intellij will automatically install gradle and setup the project.
+Navigate to the realm shark source folder and open build.gradle. Alternatively drag and drop the build.gradle into the IntelliJ window and then double click on it. IntelliJ will automatically install gradle and setup the project.
 
 The application can now be built, ran and debugged from IntelliJ.
 
