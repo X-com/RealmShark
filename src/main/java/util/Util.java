@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 /**
- * Generic utility class to insert methods used randomly.
+ * Generic utility class for utility methods.
  */
 public class Util {
 
@@ -17,19 +17,19 @@ public class Util {
     private static HashMap<String, PrintWriter> printWriter = new HashMap<>();
 
     /**
-     * Fast method to get an integer out of the first 4 bytes of an array.
+     * Fast method to return an integer from the first 4 bytes of a byte array.
      *
-     * @param bytes Byte array needing an integer extracted from.
-     * @return Returns the integer from the first bytes of an array.
+     * @param bytes The byte array to extract the integer from.
+     * @return The integer converted from the first 4 bytes of an array.
      */
     public static int decodeInt(byte[] bytes) {
         return (Byte.toUnsignedInt(bytes[0]) << 24) | (Byte.toUnsignedInt(bytes[1]) << 16) | (Byte.toUnsignedInt(bytes[2]) << 8) | Byte.toUnsignedInt(bytes[3]);
     }
 
     /**
-     * Enable / disable log printouts.
+     * Enable / disable log print-outs.
      *
-     * @param logs boolean to enable logs.
+     * @param logs Set the saving of logs to true/false.
      */
     public static void setSaveLogs(boolean logs) {
         saveLogs = logs;
@@ -38,34 +38,39 @@ public class Util {
     /**
      * Error logger.
      *
-     * @param s String of the error log.
+     * @param message The error message.
      */
-    public static void print(String s) {
-        print("error/error", s);
+    public static void print(String message) {
+        print("error/error", message);
     }
 
     /**
      * Print logs to console or to files in a folderAndName.
      *
      * @param folderAndName The folder and the name to write the logs into.
-     * @param s      String of the log.
+     * @param s             String of the log.
      */
     public static void print(String folderAndName, String s) {
         if (!saveLogs) {
             System.out.println(s);
         } else {
-//            System.out.println(s);
+            // System.out.println(s);
             PrintWriter printWriterObject = printWriter.get(folderAndName);
             if (printWriterObject == null) {
                 try {
-                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss");
-                    LocalDateTime now = LocalDateTime.now();
-                    File f = new File(folderAndName + "-" + dtf.format(now) + ".data");
-                    if (!f.exists()) {
-                        f.getParentFile().mkdirs();
-                        f.createNewFile();
+                    DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss");
+                    LocalDateTime dateTime = LocalDateTime.now();
+                    String fileName = folderAndName + "-" + dateTimeFormat.format(dateTime) + ".data";
+                    File file = new File(fileName);
+                    if (!file.exists()) {
+                        if (!file.getParentFile().mkdirs()) {
+                            System.out.println("[X] Failed to create path for logfile '" + fileName + "'.");
+                        }
+                        if (!file.createNewFile()) {
+                            System.out.println("[X] Failed to create logfile '" + fileName + "'.");
+                        }
                     }
-                    FileWriter fileWriter = new FileWriter(f);
+                    FileWriter fileWriter = new FileWriter(file);
                     printWriterObject = new PrintWriter(fileWriter);
                     printWriter.put(folderAndName, printWriterObject);
                 } catch (IOException e) {
@@ -98,10 +103,10 @@ public class Util {
     }
 
     /**
-     * Method to turn byte array from a hex string.
+     * Receives a hex string and returns it in byte array format.
      *
-     * @param hex String of hex data with a pair of numbers represents a byte.
-     * @return Returns a byte array translated from the hex string.
+     * @param hex String of hex data where a pair of numbers represents a byte.
+     * @return Returns a byte array converted from the passed hex string.
      */
     public static byte[] hexStringToByteArray(String hex) {
         int l = hex.length();
@@ -135,7 +140,7 @@ public class Util {
     public static Object showAll(int[] list) {
         StringBuilder sb = new StringBuilder();
         for (int i : list) {
-            sb.append("\n" + i);
+            sb.append("\n").append(i);
         }
         return sb.toString();
     }
@@ -149,20 +154,20 @@ public class Util {
     public static Object showAll(byte[] list) {
         StringBuilder sb = new StringBuilder();
         for (int i : list) {
-            sb.append("\n" + i);
+            sb.append("\n").append(i);
         }
         return sb.toString();
     }
 
     /**
-     * Gets string format of the current time.
+     * Returns the current time in string format e.g. "03:34:10".
      *
-     * @return String of the current time in hour:min:sec
+     * @return The current time as a formatted string.
      */
     public static String getHourTime() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-        return dtf.format(now);
+        DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
+        LocalDateTime dateTime = LocalDateTime.now();
+        return dateTimeFormat.format(dateTime);
     }
 
     /**
@@ -173,5 +178,23 @@ public class Util {
      */
     public static InputStream resourceFilePath(String fileName) throws URISyntaxException {
         return IdToName.class.getClassLoader().getResourceAsStream(fileName);
+    }
+
+    /**
+     * Returns the OS version as 'win' or 'mac' as a string. Returns empty if the OS is unsupported.
+     *
+     * @return The name of the current operating system.
+     */
+    public static String getOperatingSystem() {
+        String os = System.getProperty("os.name");
+        if (os == null) {
+            System.out.println("[X] Failed to detect operating system using 'os.name'.");
+            return "";
+        } else if (!os.equals("win") && !os.equals("mac")) {
+            // Unsupported operating system such as most Linux distributions
+            return "";
+        } else {
+            return os;
+        }
     }
 }
