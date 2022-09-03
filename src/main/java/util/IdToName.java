@@ -8,6 +8,7 @@ import java.util.HashMap;
  * Id to name class. Used to convert incoming realm IDs to the resources names.
  */
 public class IdToName {
+    private final String l;
     private final int id;
     private final String idName;
     private final String display;
@@ -15,6 +16,8 @@ public class IdToName {
     private final String group;
     private final String projectile;
     private Projectile[] projectiles = null;
+    private final String texture;
+    private Texture[] textures = null;
     private static final HashMap<Integer, IdToName> ID = new HashMap<>();
 
     /**
@@ -25,14 +28,17 @@ public class IdToName {
      * @param display    Display name of the resource
      * @param clazz      Class of the resource
      * @param projectile Projectile min,max,armorPiercing,(repeated) listed
+     * @param texture    Texture name and index used to find the image.
      * @param group      Group of the resource
      */
-    public IdToName(int id, String idName, String display, String clazz, String projectile, String group) {
+    public IdToName(String l, int id, String idName, String display, String clazz, String projectile, String texture, String group) {
+        this.l = l;
         this.id = id;
         this.idName = idName;
         this.display = display;
         this.clazz = clazz;
         this.projectile = projectile;
+        this.texture = texture;
         this.group = group;
     }
 
@@ -47,7 +53,7 @@ public class IdToName {
      * Method to grab the full list of resource's from file and construct the hashmap.
      */
     private static void readList() {
-        String fileName = "ID4.list";
+        String fileName = "ID5.list";
 
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(Util.resourceFilePath(fileName), StandardCharsets.UTF_8));
@@ -60,15 +66,16 @@ public class IdToName {
                 String clazz = l[2];
                 String group = l[3];
                 String projectile = l[4];
-                String idName = l[5];
-                ID.put(id, new IdToName(id, idName, display, clazz, projectile, group));
+                String texture = l[5];
+                String idName = l[6];
+                ID.put(id, new IdToName(line, id, idName, display, clazz, projectile, texture, group));
             }
             br.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        ID.put(-1, new IdToName(-1, "Unloaded", "Unloaded", "", "", "Unloaded"));
+        ID.put(-1, new IdToName("", -1, "Unloaded", "Unloaded", "", "", "", "Unloaded"));
     }
 
     /**
@@ -151,9 +158,34 @@ public class IdToName {
     }
 
     /**
+     * Parses the texture string to the texture object.
+     *
+     * @param entity that should be texture parsed
+     * @return List of parsed textures
+     */
+    private static Texture[] parseTexture(IdToName entity) {
+        String[] l = entity.texture.split(",");
+        Texture[] t = new Texture[l.length / 2];
+        int index = 0;
+        try {
+            for (int i = 0; i < l.length; i += 2) {
+                String name = l[i];
+                int ix = Integer.parseInt(l[1 + i]);
+                t[index] = new Texture(name, ix);
+                index++;
+            }
+        } catch (Exception e) {
+            System.out.println(entity);
+        }
+
+        return t;
+    }
+
+    /**
      * Minimum damage of weapon.
      *
-     * @param id Id of the object.
+     * @param id           Id of the object.
+     * @param projectileId Bullet sub id
      * @return Minimum damage
      */
     public static int getIdProjectileMinDmg(int id, int projectileId) {
@@ -165,7 +197,8 @@ public class IdToName {
     /**
      * Maximum damage of weapon.
      *
-     * @param id Id of the object.
+     * @param id           Id of the object.
+     * @param projectileId Bullet sub id
      * @return Maximum damage
      */
     public static int getIdProjectileMaxDmg(int id, int projectileId) {
@@ -177,13 +210,40 @@ public class IdToName {
     /**
      * Maximum damage of weapon.
      *
-     * @param id Id of the object.
+     * @param id           Id of the object.
+     * @param projectileId Bullet sub id
      * @return Maximum damage
      */
     public static boolean getIdProjectileArmorPierces(int id, int projectileId) {
         IdToName i = ID.get(id);
         if (i.projectiles == null) i.projectiles = parseProjectile(i);
         return i.projectiles[projectileId].ap;
+    }
+
+    /**
+     * Texture file name.
+     *
+     * @param id  Id of the object.
+     * @param num Sub texture number
+     * @return File name of the texture
+     */
+    public static String getTextureName(int id, int num) {
+        IdToName i = ID.get(id);
+        if (i.textures == null) i.textures = parseTexture(i);
+        return i.textures[num].name;
+    }
+
+    /**
+     * Texture file index.
+     *
+     * @param id  Id of the object.
+     * @param num Sub texture number
+     * @return File index of the texture
+     */
+    public static int getTextureIndex(int id, int num) {
+        IdToName i = ID.get(id);
+        if (i.textures == null) i.textures = parseTexture(i);
+        return i.textures[num].index;
     }
 
     /**
@@ -199,5 +259,22 @@ public class IdToName {
             this.max = max;
             this.ap = ap;
         }
+    }
+
+    /**
+     * Simple class to store texture info
+     */
+    private static class Texture {
+        String name;
+        int index;
+
+        public Texture(String name, int index) {
+            this.name = name;
+            this.index = index;
+        }
+    }
+
+    public String toString() {
+        return l;
     }
 }
