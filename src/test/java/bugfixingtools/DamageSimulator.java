@@ -54,11 +54,13 @@ public class DamageSimulator {
     public void readfile() throws Exception {
 //        String fileName = "dpsLogs/outdated/Oryx's_Sanctuary.dmgLog-2022-07-25-11.12.35.data";
 //        String fileName = "dpsLogs/outdated/Oryx's_Sanctuary.dmgLog-2022-07-25-16.30.50.data";
-        String fileName = "dpsLogs/outdated/Oryx's Sanctuary-2022-08-08-01.47.43.data";
+//        String fileName = "dpsLogs/outdated/Oryx's Sanctuary-2022-08-08-01.47.43.data";
 //        String fileName = "dpsLogs/outdated/Oryx's Sanctuary-2022-08-08-10.43.45.data";
 //        String fileName = "dpsLogs/outdated/The Shatters-2022-08-12-13.20.43.data";
 //        String fileName = "dpsLogs/Oryx's Sanctuary-2022-08-14-03.22.45.data";
 //        String fileName = "dpsLogs/ppxkow.data";
+//        String fileName = "dpsLogs/s.rotmg-2022-09-01-01.03.12.data";
+        String fileName = "dpsLogs/s.rotmg-2022-09-01-01.17.21.data";
         File f = new File(fileName);
 
         BufferedReader br = new BufferedReader(new FileReader(f));
