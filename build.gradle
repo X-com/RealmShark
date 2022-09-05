@@ -6,8 +6,8 @@ plugins {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-project.version = 'v1.5'
-applicationName = 'Tomato'
+project.version = 'v0.1-beta'
+applicationName = 'Potato'
 
 repositories {
     mavenCentral()
@@ -17,6 +17,10 @@ dependencies {
     implementation 'com.ardikars.pcap:pcap-spi:1.4.1'
     implementation 'com.ardikars.pcap:pcap-jdk7:1.4.1'
     implementation("com.github.weisj:darklaf-core:3.0.0")
+    implementation 'com.google.code.gson:gson:2.7'
+    implementation 'net.java.dev.jna:jna:5.11.0'
+    implementation 'net.java.dev.jna:jna-platform:5.11.0'
+    implementation 'com.1stleg:jnativehook:2.0.2'
 }
 
 mainClassName = applicationName.toLowerCase() + '.' + applicationName
