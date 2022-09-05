@@ -4,12 +4,14 @@ import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.*;
 import tomato.Tomato;
 import tomato.save.PropertiesManager;
+import util.Pair;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 /**
  * Example GUI for Tomato mod.
@@ -28,6 +30,7 @@ public class TomatoGUI {
     private static JCheckBox textFilterToggle;
     private static JLabel statusLabel, dpsLabel;
     private static JFrame frame;
+    private static ParsePanelGUI parsePanel;
     private JMenuBar jMenuBar;
     private JPanel mainPanel, dpsPanel, dpsTopPanel;
     private TomatoMenuBar menuBar;
@@ -46,6 +49,9 @@ public class TomatoGUI {
 
         textAreaKeypop = new JTextArea();
         tabbedPane.addTab("Key-pops", createTextArea(textAreaKeypop));
+
+        parsePanel = new ParsePanelGUI();
+        tabbedPane.addTab("Parser", parsePanel);
 
         textAreaQuests = new JTextArea();
         tabbedPane.addTab("Daily Quests", createTextArea(textAreaQuests));
@@ -309,6 +315,15 @@ public class TomatoGUI {
      */
     public static void setTextAreaQuests(String s) {
         if (textAreaQuests != null) textAreaQuests.setText(s);
+    }
+
+    /**
+     * Sets the equipment of parse players.
+     *
+     * @param data Player data to set the equipment of parse players.
+     */
+    public static void setParsePlayers(ArrayList<Pair<String, int[]>> data) {
+        if (parsePanel != null) parsePanel.addPlayers(data);
     }
 
     /**

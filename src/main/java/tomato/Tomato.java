@@ -11,6 +11,7 @@ import packets.incoming.QuestFetchResponsePacket;
 import packets.incoming.TextPacket;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.register.Register;
+import tomato.security.Parse;
 import util.IdToName;
 import util.Util;
 
@@ -37,6 +38,7 @@ public class Tomato {
     private static final Pattern popperName = Pattern.compile("[^ ]*\"player\":\"([A-Za-z]*)[^ ]*");
     private static PacketProcessor packetProcessor;
     private static final DpsLogger dpsLogger = new DpsLogger();
+    private static final Parse parse = new Parse();
 
     public static void main(String[] args) {
         Util.setSaveLogs(true); // turns the logger to, save in to files.
@@ -73,6 +75,10 @@ public class Tomato {
 
         Register.INSTANCE.register(PacketType.QUEST_FETCH_RESPONSE, Tomato::questPacket);
         Register.INSTANCE.register(PacketType.QUEST_REDEEM, Tomato::questPacket);
+
+        Register.INSTANCE.register(PacketType.NEWTICK, parse::packetCapture);
+        Register.INSTANCE.register(PacketType.UPDATE, parse::packetCapture);
+        Register.INSTANCE.register(PacketType.CREATE_SUCCESS, parse::packetCapture);
 
         new TomatoGUI().create();
     }
