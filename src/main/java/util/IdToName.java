@@ -18,17 +18,19 @@ public class IdToName {
     private Projectile[] projectiles = null;
     private final String texture;
     private Texture[] textures = null;
-    private static final HashMap<Integer, IdToName> ID = new HashMap<>();
+    private static final HashMap<Integer, IdToName> objectID = new HashMap<>();
+    private static final HashMap<Integer, IdToName> tileID = new HashMap<>();
 
     /**
-     * Constructor for the resources.
+     * Constructor for the object resources.
      *
+     * @param l          Base string before parsing
      * @param id         Id of the resource
      * @param idName     Name of the resource
      * @param display    Display name of the resource
      * @param clazz      Class of the resource
      * @param projectile Projectile min,max,armorPiercing,(repeated) listed
-     * @param texture    Texture name and index used to find the image.
+     * @param texture    Texture name and index used to find the image
      * @param group      Group of the resource
      */
     public IdToName(String l, int id, String idName, String display, String clazz, String projectile, String texture, String group) {
@@ -43,17 +45,38 @@ public class IdToName {
     }
 
     /**
-     * Construct the list on start of using this class.
+     * Constructor for the tile resources.
+     *
+     * @param l       Base string before parsing
+     * @param id      Id of the resource
+     * @param idName  Name of the resource
+     * @param texture Texture name and index used to find the image
      */
-    static {
-        readList();
+    public IdToName(String l, int id, String idName, String texture) {
+        this.l = l;
+        this.id = id;
+        this.idName = idName;
+        this.texture = texture;
+
+        display = "";
+        clazz = "";
+        group = "";
+        projectile = "";
     }
 
     /**
-     * Method to grab the full list of resource's from file and construct the hashmap.
+     * Construct the list on start of using this class.
      */
-    private static void readList() {
-        String fileName = "ID5.list";
+    static {
+        readObjectList();
+        readTileList();
+    }
+
+    /**
+     * Method to grab the full list of object resource's from file and construct the hashmap.
+     */
+    private static void readObjectList() {
+        String fileName = "ObjectID5.list";
 
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(Util.resourceFilePath(fileName), StandardCharsets.UTF_8));
@@ -68,28 +91,65 @@ public class IdToName {
                 String projectile = l[4];
                 String texture = l[5];
                 String idName = l[6];
-                ID.put(id, new IdToName(line, id, idName, display, clazz, projectile, texture, group));
+                objectID.put(id, new IdToName(line, id, idName, display, clazz, projectile, texture, group));
             }
             br.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        ID.put(-1, new IdToName("", -1, "Unloaded", "Unloaded", "", "", "", "Unloaded"));
+        objectID.put(-1, new IdToName("", -1, "Unloaded", "Unloaded", "", "", "", "Unloaded"));
     }
 
     /**
-     * Method to grab the name of the resource.
+     * Method to grab the full list of tile resource's from file and construct the hashmap.
+     */
+    private static void readTileList() {
+        String fileName = "TileID1.list";
+
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(Util.resourceFilePath(fileName), StandardCharsets.UTF_8));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String[] l = line.split(":");
+                int id = Integer.parseInt(l[0]);
+                String texture = l[1];
+                String idName = l[2];
+                objectID.put(id, new IdToName(line, id, idName, texture));
+            }
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        tileID.put(-1, new IdToName("", -1, "Unknown", ""));
+    }
+
+    /**
+     * Method to grab the name of the object resource.
      * If display name is not present, use the regular name.
      *
      * @param id Id of the object.
      * @return Best descriptive name of the resource
      */
-    public static String name(int id) {
-        IdToName i = ID.get(id);
+    public static String objectName(int id) {
+        IdToName i = objectID.get(id);
         if (i == null) return "";
         if (i.display.equals("")) return i.idName;
         return i.display;
+    }
+
+    /**
+     * Method to grab the name of the tile resource.
+     * If display name is not present, use the regular name.
+     *
+     * @param id Id of the tile.
+     * @return Best descriptive name of the resource
+     */
+    public static String tileName(int id) {
+        IdToName i = objectID.get(id);
+        return i.idName;
     }
 
     /**
@@ -98,8 +158,8 @@ public class IdToName {
      * @param id Id of the object.
      * @return Regular name of the object.
      */
-    public static String getIdName(int id) {
-        IdToName i = ID.get(id);
+    public static String getOjbectIdName(int id) {
+        IdToName i = objectID.get(id);
         return i.idName;
     }
 
@@ -110,7 +170,7 @@ public class IdToName {
      * @return Display name of the object.
      */
     public static String getDisplayName(int id) {
-        IdToName i = ID.get(id);
+        IdToName i = objectID.get(id);
         return i.display;
     }
 
@@ -121,7 +181,7 @@ public class IdToName {
      * @return Class name of the object.
      */
     public static String getClazz(int id) {
-        IdToName i = ID.get(id);
+        IdToName i = objectID.get(id);
         return i.clazz;
     }
 
@@ -132,7 +192,7 @@ public class IdToName {
      * @return Group name of the object.
      */
     public static String getIdGroup(int id) {
-        IdToName i = ID.get(id);
+        IdToName i = objectID.get(id);
         return i.group;
     }
 
@@ -163,7 +223,7 @@ public class IdToName {
      * @param entity that should be texture parsed
      * @return List of parsed textures
      */
-    private static Texture[] parseTexture(IdToName entity) {
+    private static Texture[] parseObjectTexture(IdToName entity) {
         String[] l = entity.texture.split(",");
         Texture[] t = new Texture[l.length / 2];
         int index = 0;
@@ -189,7 +249,7 @@ public class IdToName {
      * @return Minimum damage
      */
     public static int getIdProjectileMinDmg(int id, int projectileId) {
-        IdToName i = ID.get(id);
+        IdToName i = objectID.get(id);
         if (i.projectiles == null) i.projectiles = parseProjectile(i);
         return i.projectiles[projectileId].min;
     }
@@ -202,7 +262,7 @@ public class IdToName {
      * @return Maximum damage
      */
     public static int getIdProjectileMaxDmg(int id, int projectileId) {
-        IdToName i = ID.get(id);
+        IdToName i = objectID.get(id);
         if (i.projectiles == null) i.projectiles = parseProjectile(i);
         return i.projectiles[projectileId].max;
     }
@@ -215,34 +275,60 @@ public class IdToName {
      * @return Maximum damage
      */
     public static boolean getIdProjectileArmorPierces(int id, int projectileId) {
-        IdToName i = ID.get(id);
+        IdToName i = objectID.get(id);
         if (i.projectiles == null) i.projectiles = parseProjectile(i);
         return i.projectiles[projectileId].ap;
     }
 
     /**
-     * Texture file name.
+     * Object texture file name.
      *
      * @param id  Id of the object.
      * @param num Sub texture number
      * @return File name of the texture
      */
-    public static String getTextureName(int id, int num) {
-        IdToName i = ID.get(id);
-        if (i.textures == null) i.textures = parseTexture(i);
+    public static String getObjectTextureName(int id, int num) {
+        IdToName i = objectID.get(id);
+        if (i.textures == null) i.textures = parseObjectTexture(i);
         return i.textures[num].name;
     }
 
     /**
-     * Texture file index.
+     * Object texture file index.
      *
      * @param id  Id of the object.
      * @param num Sub texture number
      * @return File index of the texture
      */
-    public static int getTextureIndex(int id, int num) {
-        IdToName i = ID.get(id);
-        if (i.textures == null) i.textures = parseTexture(i);
+    public static int getObjectTextureIndex(int id, int num) {
+        IdToName i = objectID.get(id);
+        if (i.textures == null) i.textures = parseObjectTexture(i);
+        return i.textures[num].index;
+    }
+
+    /**
+     * Tile texture file name.
+     *
+     * @param id  Id of the object.
+     * @param num Sub texture number
+     * @return File name of the texture
+     */
+    public static String getTileTextureName(int id, int num) {
+        IdToName i = objectID.get(id);
+        if (i.textures == null) i.textures = parseObjectTexture(i);
+        return i.textures[num].name;
+    }
+
+    /**
+     * Tile texture file index.
+     *
+     * @param id  Id of the object.
+     * @param num Sub texture number
+     * @return File index of the texture
+     */
+    public static int getTileTextureIndex(int id, int num) {
+        IdToName i = objectID.get(id);
+        if (i.textures == null) i.textures = parseObjectTexture(i);
         return i.textures[num].index;
     }
 

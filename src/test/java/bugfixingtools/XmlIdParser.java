@@ -36,7 +36,7 @@ public class XmlIdParser {
         System.out.println("clearconsole");
         Util.setSaveLogs(true);
         try {
-            Files.walk(Paths.get(ROOTDIR)).filter(Files::isRegularFile).filter(p -> p.toString().endsWith("xml")).forEach(XmlIdParser::xml);
+            Files.walk(Paths.get(ROOTDIR)).filter(Files::isRegularFile).filter(p -> p.toString().endsWith("xml")).forEach(XmlIdParser::xmlGround);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -141,7 +141,7 @@ public class XmlIdParser {
                             if (index.getLength() > 0) {
                                 indexName = index.item(0).getTextContent();
                                 imgFound = true;
-                                if(indexName.startsWith("0x")) {
+                                if (indexName.startsWith("0x")) {
                                     indexName = Integer.toString(Integer.parseInt(indexName.substring(2), 16));
                                 }
                             }
@@ -181,6 +181,105 @@ public class XmlIdParser {
                     Util.print(name, s);
 //                    System.out.println(s);
 //                    hashList.put(id, idID);
+                }
+            }
+
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void xmlGround(Path path) {
+        // Instantiate the Factory
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+
+        try {
+            // optional, but recommended
+            // process XML securely, avoid attacks like XML External Entities (XXE)
+            dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+
+            // parse XML file
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document doc;
+            try {
+                doc = db.parse(new File(path.toAbsolutePath().toString()));
+            } catch (SAXParseException e) {
+                return;
+            }
+            // optional, but recommended
+            doc.getDocumentElement().normalize();
+
+            // get <staff>
+            NodeList list = doc.getElementsByTagName("Ground");
+
+            for (int temp = 0; temp < list.getLength(); temp++) {
+
+                Node node = list.item(temp);
+
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+
+                    Element element = (Element) node;
+
+                    String idID = element.getAttribute("id");
+                    String typeID = element.getAttribute("type");
+                    int id = Integer.decode(typeID);
+
+                    NodeList texture = element.getElementsByTagName("Texture");
+                    NodeList textureRand = element.getElementsByTagName("RandomTexture");
+
+                    String fileName = "";
+                    String indexName = "";
+
+                    StringBuilder tTemp = new StringBuilder();
+                    boolean imgFound = false;
+                    if (texture.getLength() == 1) {
+                        Node n = texture.item(0);
+                        if (n != null && n.getNodeType() == Node.ELEMENT_NODE) {
+                            Element e = (Element) n;
+                            NodeList file = e.getElementsByTagName("File");
+                            NodeList index = e.getElementsByTagName("Index");
+                            if (file.getLength() > 0) {
+                                fileName = file.item(0).getTextContent();
+                                imgFound = true;
+                            }
+                            if (index.getLength() > 0) {
+                                indexName = index.item(0).getTextContent();
+                                imgFound = true;
+                                if (indexName.startsWith("0x")) {
+                                    indexName = Integer.toString(Integer.parseInt(indexName.substring(2), 16));
+                                }
+                            }
+                            tTemp.append(fileName).append(",").append(indexName);
+                        }
+                    }
+                    if (textureRand.getLength() >= 1) {
+                        Node n = texture.item(0);
+                        if (n != null && n.getNodeType() == Node.ELEMENT_NODE) {
+                            Element e = (Element) n;
+                            NodeList file = e.getElementsByTagName("File");
+                            NodeList index = e.getElementsByTagName("Index");
+                            if (file.getLength() > 0) {
+                                fileName = file.item(0).getTextContent();
+                                imgFound = true;
+                            }
+                            if (index.getLength() > 0) {
+                                indexName = index.item(0).getTextContent();
+                                imgFound = true;
+                                if (indexName.startsWith("0x")) {
+                                    indexName = Integer.toString(Integer.parseInt(indexName.substring(2), 16));
+                                }
+                            }
+                            tTemp.append(fileName).append(",").append(indexName);
+                        }
+                    }
+
+                    String imgString = "";
+                    if (imgFound) {
+                        imgString = tTemp.toString();
+                    }
+
+                    String s = String.format("%d:%s:%s", id, imgString, idID);
+                    Util.print(name, s);
                 }
             }
 

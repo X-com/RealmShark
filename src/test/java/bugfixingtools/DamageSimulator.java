@@ -451,7 +451,7 @@ public class DamageSimulator {
                 if (inv[inventory].size() == 0) {
                     s += "  ";
                 } else if (inv[inventory].size() == 1) {
-                    s += String.format("%s %.1fsec %s\n", IdToName.name(inv[inventory].get(0).left().statValue), (float) (endServerTime - firstServertime) / 1000, "100% Equipped:1 ");
+                    s += String.format("%s %.1fsec %s\n", IdToName.objectName(inv[inventory].get(0).left().statValue), (float) (endServerTime - firstServertime) / 1000, "100% Equipped:1 ");
                 } else {
                     HashMap<Integer, Equipment> gear = new HashMap<>();
                     Pair<StatData, Long> pair2 = null;
@@ -472,7 +472,7 @@ public class DamageSimulator {
 
                     Stream<Map.Entry<Integer, Equipment>> sorted2 = gear.entrySet().stream().sorted(comparingByValue());
                     for (Map.Entry<Integer, Equipment> m : sorted2.collect(Collectors.toList())) {
-                        s += String.format("%s %.1fsec %.2f%% Equipped:%d ,", IdToName.name(m.getKey()), ((float) m.getValue().time / 1000), ((float) m.getValue().time * 100 / totalTime), m.getValue().swaps);
+                        s += String.format("%s %.1fsec %.2f%% Equipped:%d ,", IdToName.objectName(m.getKey()), ((float) m.getValue().time / 1000), ((float) m.getValue().time * 100 / totalTime), m.getValue().swaps);
                     }
                 }
                 s = s.substring(0, s.length() - 2);
@@ -494,7 +494,7 @@ public class DamageSimulator {
 
         @Override
         public String toString() {
-            return IdToName.name(objectType);
+            return IdToName.objectName(objectType);
         }
     }
 

@@ -1,0 +1,3387 @@
+45061:abyssOfDemonsObjects8x8,3:Abyss Lava
+45060:abyssOfDemonsObjects8x8,64:Abyss Volcanic Tile
+45059:abyssOfDemonsObjects8x8,38:Abyss Fort Tile
+45058:abyssOfDemonsObjects8x8,38:Abyss Fort Tile Clean
+45057:abyssOfDemonsObjects8x8,42:Abyss Fort Tile Checkboard
+45069:abyssOfDemonsObjects8x8,43:Abyss Fort Tile Dual
+45070:abyssOfDemonsObjects8x8,44:Abyss Fort Tile Symbol
+45071:abyssOfDemonsObjects8x8,45:Abyss Fort Tile Dark
+45191:abyssOfDemonsObjects8x8,3:Abyss Lava Clean
+45194:abyssOfDemonsObjects8x8,3:Abyss Lava Path
+45192:abyssOfDemonsObjects8x8,3:Abyss Lava Blend
+45193:abyssOfDemonsObjects8x8,86:Abyss Fort Tile Lava
+45195:abyssOfDemonsObjects8x8,80:Abyss Fort Tile Glyph O
+45196:abyssOfDemonsObjects8x8,81:Abyss Fort Tile Glyph Z
+45197:abyssOfDemonsObjects8x8,82:Abyss Fort Tile Glyph S
+45198:abyssOfDemonsObjects8x8,83:Abyss Fort Tile Glyph N
+45199:abyssOfDemonsObjects8x8,84:Abyss Fort Tile Glyph D
+45200:abyssOfDemonsObjects8x8,85:Abyss Fort Tile Glyph X
+45684:alienInvasionObjects8x8,100:AI Malogia Ground 1
+45685:alienInvasionObjects8x8,101:AI Malogia Background
+45686:alienInvasionObjects8x8,101:AI Malogia Ground 2
+45687:alienInvasionObjects8x8,105:AI Untaris Ground 1
+45688:alienInvasionObjects8x8,106:AI Untaris Ground 2
+45689:alienInvasionObjects8x8,153:AI Untaris Ground Tarul
+45690:alienInvasionObjects8x8,144:AI Untaris Tarul Mouth TL 1
+45691:alienInvasionObjects8x8,147:AI Untaris Tarul Mouth TL 2
+45692:alienInvasionObjects8x8,150:AI Untaris Tarul Mouth TL 3
+45702:alienInvasionObjects8x8,145:AI Untaris Tarul Mouth T 1
+45703:alienInvasionObjects8x8,148:AI Untaris Tarul Mouth T 2
+45704:alienInvasionObjects8x8,151:AI Untaris Tarul Mouth T 3
+45693:alienInvasionObjects8x8,146:AI Untaris Tarul Mouth TR 1
+45694:alienInvasionObjects8x8,149:AI Untaris Tarul Mouth TR 2
+45695:alienInvasionObjects8x8,152:AI Untaris Tarul Mouth TR 3
+45705:alienInvasionObjects8x8,160:AI Untaris Tarul Mouth L 1
+45706:alienInvasionObjects8x8,163:AI Untaris Tarul Mouth L 2
+45707:alienInvasionObjects8x8,166:AI Untaris Tarul Mouth L 3
+45708:alienInvasionObjects8x8,161:AI Untaris Tarul Mouth C 1
+45709:alienInvasionObjects8x8,164:AI Untaris Tarul Mouth C 2
+45710:alienInvasionObjects8x8,167:AI Untaris Tarul Mouth C 3
+45711:alienInvasionObjects8x8,162:AI Untaris Tarul Mouth R 1
+45712:alienInvasionObjects8x8,165:AI Untaris Tarul Mouth R 2
+45713:alienInvasionObjects8x8,168:AI Untaris Tarul Mouth R 3
+45696:alienInvasionObjects8x8,176:AI Untaris Tarul Mouth BL 1
+45697:alienInvasionObjects8x8,179:AI Untaris Tarul Mouth BL 2
+45698:alienInvasionObjects8x8,182:AI Untaris Tarul Mouth BL 3
+45714:alienInvasionObjects8x8,177:AI Untaris Tarul Mouth B 1
+45715:alienInvasionObjects8x8,180:AI Untaris Tarul Mouth B 2
+45716:alienInvasionObjects8x8,183:AI Untaris Tarul Mouth B 3
+45699:alienInvasionObjects8x8,178:AI Untaris Tarul Mouth BR 1
+45700:alienInvasionObjects8x8,181:AI Untaris Tarul Mouth BR 2
+45701:alienInvasionObjects8x8,184:AI Untaris Tarul Mouth BR 3
+45732:alienInvasionObjects8x8,140:AI Untaris Background
+45717:alienInvasionObjects8x8,102:AI Forax Ground 1
+45718:alienInvasionObjects8x8,115:AI Forax Ground 2
+45719:alienInvasionObjects8x8,116:AI Forax Water
+45720:alienInvasionObjects8x8,117:AI Forax Water Dark
+45731:alienInvasionObjects8x8,102:AI Forax Background
+45721:alienInvasionObjects8x8,118:AI Katalund Ground 1
+45722:alienInvasionObjects8x8,119:AI Katalund Ground 2
+45723::AI Katalund Gas 1
+45724::AI Katalund Gas 2
+45725::AI Katalund Factory Ground
+45727::AI Katalund Factory Treadmill Up
+45728::AI Katalund Factory Treadmill Down
+45729::AI Katalund Factory Treadmill Left
+45730::AI Katalund Factory Treadmill Right
+45726::AI Katalund Background
+28892:ancientRuinsObjects8x8,27:Ancient Ruins Tile
+28893:ancientRuinsObjects8x8,27:Ancient Ruins Tile 2
+28894:ancientRuinsObjects8x8,9:Ancient Ruins Sandy Tile
+28895:ancientRuinsObjects8x8,19:Ancient Ruins Flower Tile
+28896:ancientRuinsObjects8x8,21:Ancient Ruins Big Square Tile
+28897:ancientRuinsObjects8x8,12:Ancient Ruins Small Squares Tile
+28898:ancientRuinsObjects8x8,23:Ancient Ruins Brick Tile
+28899:ancientRuinsObjects8x8,24:Ancient Ruins Plate Tile
+28900:ancientRuinsObjects8x8,5:Ancient Ruins Gold Tile
+28901:ancientRuinsObjects8x8,6:Ancient Ruins Pedestal Tile
+28902:ancientRuinsObjects8x8,32:Ancient Ruins Quicksand
+28903:ancientRuinsObjects8x8,32:Ancient Ruins Quicksand No Sink
+28904:ancientRuinsObjects8x8,18:Ancient Ruins Sand Tile
+37632:antinomyNexusObjects8x8,0:DN CW
+37633:antinomyNexusObjects8x8,1:DN CW d
+37634::DN CW t25
+37635::DN CW dt50
+37636:antinomyNexusObjects8x8,0:DN CW Nwk
+37637:antinomyNexusObjects8x8,1:DN CW d Nwk
+37638::DN CW t25 Nwk
+37639::DN CW dt50 Nwk
+37640:antinomyNexusObjects8x8,4:DN G l
+37641:antinomyNexusObjects8x8,7:DN G hl
+37642:antinomyNexusObjects8x8,10:DN G d
+37643:antinomyNexusObjects8x8,13:DN Dt
+37644:antinomyNexusObjects8x8,14:DN CDt
+37645:antinomyNexusObjects8x8,16:DN HW
+37646:antinomyNexusObjects8x8,17:DN HW d
+37647::DN D eGl
+37648::DN CD eGhl
+37649::DN CD eGd
+37650:antinomyNexusObjects8x8,32:DN CSq 1
+37651:antinomyNexusObjects8x8,33:DN CSq 2
+37652:antinomyNexusObjects8x8,34:DN CSq 3
+37653:antinomyNexusObjects8x8,35:DN CSq 4
+37654:antinomyNexusObjects8x8,36:DN CSq cr
+37655:antinomyNexusObjects8x8,48:DN CSq 1 d
+37656:antinomyNexusObjects8x8,49:DN CSq 2 d
+37657:antinomyNexusObjects8x8,50:DN CSq 3 d
+37658:antinomyNexusObjects8x8,51:DN CSq 4 d
+37659:antinomyNexusObjects8x8,36:DN CSq cr d
+37660::DN CRg 1
+37661::DN CRg 2
+37662:antinomyNexusObjects8x8,80:DN Br
+37663:antinomyNexusObjects8x8,81:DN Br vt
+37664:antinomyNexusObjects8x8,82:DN Br edcr
+37665:antinomyNexusObjects8x8,83:DN Br ed
+37666:antinomyNexusObjects8x8,84:DN Br ed vt
+37667:antinomyNexusObjects8x8,85:DN Br ed Ir
+37668:antinomyNexusObjects8x8,86:DN Br ed Ir vt
+37669:antinomyNexusObjects8x8,272:DN Sq 1
+37670:antinomyNexusObjects8x8,273:DN Sq 2
+37671:antinomyNexusObjects8x8,274:DN Sq 3
+37672:antinomyNexusObjects8x8,275:DN Sq 4
+37673:antinomyNexusObjects8x8,276:DN Sq cr
+37674:antinomyNexusObjects8x8,288:DN Sq 1 dk
+37675:antinomyNexusObjects8x8,289:DN Sq 2 dk
+37676:antinomyNexusObjects8x8,290:DN Sq 3 dk
+37677:antinomyNexusObjects8x8,291:DN Sq 4 dk
+37678:antinomyNexusObjects8x8,292:DN Sq cr dk
+37679::DN HRg 1
+37680::DN HRg 2
+37681:antinomyNexusObjects8x8,320:DN HSq 1
+37682:antinomyNexusObjects8x8,321:DN HSq 2
+37683:antinomyNexusObjects8x8,322:DN HSq 3
+37684:antinomyNexusObjects8x8,323:DN HSq 4
+37685:antinomyNexusObjects8x8,324:DN HSq cr
+37686:antinomyNexusObjects8x8,336:DN HSq 1 d
+37687:antinomyNexusObjects8x8,337:DN HSq 2 d
+37688:antinomyNexusObjects8x8,338:DN HSq 3 d
+37689:antinomyNexusObjects8x8,339:DN HSq 4 d
+37690:antinomyNexusObjects8x8,340:DN HSq cr d
+37691:antinomyNexusObjects8x8,352:DN Br Rd dk
+37692:antinomyNexusObjects8x8,355:DN Br Rd
+37693:antinomyNexusObjects8x8,2272:DN C Pt 00
+37694:antinomyNexusObjects8x8,2273:DN C Pt 10
+37695:antinomyNexusObjects8x8,2274:DN C Pt 01
+37696:antinomyNexusObjects8x8,2275:DN C Pt 11
+37697:antinomyNexusObjects8x8,2276:DN C Pt cr 00
+37698:antinomyNexusObjects8x8,2277:DN C Pt cr 10
+37699:antinomyNexusObjects8x8,2278:DN C Pt cr 01
+37700:antinomyNexusObjects8x8,2279:DN C Pt cr 11
+37701:antinomyNexusObjects8x8,2288:DN C Pt2 00
+37702:antinomyNexusObjects8x8,2289:DN C Pt2 10
+37703:antinomyNexusObjects8x8,2290:DN C Pt2 01
+37704:antinomyNexusObjects8x8,2291:DN C Pt2 11
+37705:antinomyNexusObjects8x8,2292:DN C Pt2 cr 00
+37706:antinomyNexusObjects8x8,2293:DN C Pt2 cr 10
+37707:antinomyNexusObjects8x8,2294:DN C Pt2 cr 01
+37708:antinomyNexusObjects8x8,2295:DN C Pt2 cr 11
+37709:antinomyNexusObjects8x8,2336:DN Pt 00
+37710:antinomyNexusObjects8x8,2337:DN Pt 10
+37711:antinomyNexusObjects8x8,2338:DN Pt 01
+37712:antinomyNexusObjects8x8,2339:DN Pt 11
+37713:antinomyNexusObjects8x8,2340:DN Pt cr 00
+37714:antinomyNexusObjects8x8,2341:DN Pt cr 10
+37715:antinomyNexusObjects8x8,2342:DN Pt cr 01
+37716:antinomyNexusObjects8x8,2343:DN Pt cr 11
+37717:antinomyNexusObjects8x8,2352:DN Pt2 00
+37718:antinomyNexusObjects8x8,2353:DN Pt2 10
+37719:antinomyNexusObjects8x8,2354:DN Pt2 01
+37720:antinomyNexusObjects8x8,2355:DN Pt2 11
+37721:antinomyNexusObjects8x8,2356:DN Pt2 cr 00
+37722:antinomyNexusObjects8x8,2357:DN Pt2 cr 10
+37723:antinomyNexusObjects8x8,2358:DN Pt2 cr 01
+37724:antinomyNexusObjects8x8,2359:DN Pt2 cr 11
+37725:antinomyNexusObjects8x8,2400:DN H Pt 00
+37726:antinomyNexusObjects8x8,2401:DN H Pt 10
+37727:antinomyNexusObjects8x8,2402:DN H Pt 01
+37728:antinomyNexusObjects8x8,2403:DN H Pt 11
+37729:antinomyNexusObjects8x8,2404:DN H Pt cr 00
+37730:antinomyNexusObjects8x8,2405:DN H Pt cr 10
+37731:antinomyNexusObjects8x8,2406:DN H Pt cr 01
+37732:antinomyNexusObjects8x8,2407:DN H Pt cr 11
+37733:antinomyNexusObjects8x8,2416:DN H Pt2 00
+37734:antinomyNexusObjects8x8,2417:DN H Pt2 10
+37735:antinomyNexusObjects8x8,2418:DN H Pt2 01
+37736:antinomyNexusObjects8x8,2419:DN H Pt2 11
+37737:antinomyNexusObjects8x8,2420:DN H Pt2 cr 00
+37738:antinomyNexusObjects8x8,2421:DN H Pt2 cr 10
+37739:antinomyNexusObjects8x8,2422:DN H Pt2 cr 01
+37740:antinomyNexusObjects8x8,2423:DN H Pt2 cr 11
+37741:antinomyNexusObjects8x8,2432:DN H Pt 00 dk
+37742:antinomyNexusObjects8x8,2433:DN H Pt 10 dk
+37743:antinomyNexusObjects8x8,2434:DN H Pt 01 dk
+37744:antinomyNexusObjects8x8,2435:DN H Pt 11 dk
+37745:antinomyNexusObjects8x8,2436:DN H Pt cr 00 dk
+37746:antinomyNexusObjects8x8,2437:DN H Pt cr 10 dk
+37747:antinomyNexusObjects8x8,2438:DN H Pt cr 01 dk
+37748:antinomyNexusObjects8x8,2439:DN H Pt cr 11 dk
+37749:antinomyNexusObjects8x8,2448:DN H Pt2 00 dk
+37750:antinomyNexusObjects8x8,2449:DN H Pt2 10 dk
+37751:antinomyNexusObjects8x8,2450:DN H Pt2 01 dk
+37752:antinomyNexusObjects8x8,2451:DN H Pt2 11 dk
+37753:antinomyNexusObjects8x8,2452:DN H Pt2 cr 00 dk
+37754:antinomyNexusObjects8x8,2453:DN H Pt2 cr 10 dk
+37755:antinomyNexusObjects8x8,2454:DN H Pt2 cr 01 dk
+37756:antinomyNexusObjects8x8,2455:DN H Pt2 cr 11 dk
+37757:antinomyNexusObjects8x8,0:DN CW Ins
+37758:antinomyNexusObjects8x8,4:DN G l Ins
+37759:antinomyNexusObjects8x8,7:DN G hl Ins
+37760:antinomyNexusObjects8x8,10:DN G d Ins
+37761:antinomyNexusObjects8x8,13:DN Dt Ins
+37762:antinomyNexusObjects8x8,14:DN CDt Ins
+37763:antinomyNexusObjects8x8,30:DN CDt2
+37764:antinomyNexusObjects8x8,26:DN G d2
+37765:antinomyNexusObjects8x8,1020:DN SwVd
+37766:antinomyNexusObjects8x8,2598:DN Rd Rk
+37767:antinomyNexusObjects8x8,16:DN HW Ins
+37768:antinomyNexusObjects8x8,17:DN HW d Ins
+25130:archbishopObjects8x8,156:Shade 1 O3 Sanctuary Rug L Edge L
+25131:archbishopObjects8x8,158:Shade 1 O3 Sanctuary Rug L Edge R
+25132:archbishopObjects8x8,141:Shade 1 O3 Sanctuary Rug L Edge U
+25133:archbishopObjects8x8,173:Shade 1 O3 Sanctuary Rug L Edge D
+25134:archbishopObjects8x8,140:Shade 1 O3 Sanctuary Rug L Corner UL
+25187:archbishopObjects8x8,142:Shade 1 O3 Sanctuary Rug L Corner UR
+25188:archbishopObjects8x8,172:Shade 1 O3 Sanctuary Rug L Corner DL
+25189:archbishopObjects8x8,174:Shade 1 O3 Sanctuary Rug L Corner DR
+25190:archbishopObjects8x8,155:Shade 1 O3 Sanctuary Rug L Inner UL
+25191:archbishopObjects8x8,154:Shade 1 O3 Sanctuary Rug L Inner UR
+25140:archbishopObjects8x8,139:Shade 1 O3 Sanctuary Rug L Inner DL
+25141:archbishopObjects8x8,138:Shade 1 O3 Sanctuary Rug L Inner DR
+25142:archbishopObjects8x8,143:Shade 1 O3 Sanctuary Rug L Emblem 1
+25143:archbishopObjects8x8,159:Shade 1 O3 Sanctuary Rug L Emblem 2
+25144:archbishopObjects8x8,175:Shade 1 O3 Sanctuary Rug L Emblem 3
+25145:archbishopObjects8x8,170:Shade 1 O3 Sanctuary Rug L Emblem 4
+25146:archbishopObjects8x8,171:Shade 1 O3 Sanctuary Rug L Emblem 5
+25147:archbishopObjects8x8,157:Shade 1 O3 Sanctuary Rug L Emblem 6
+25149:archbishopObjects8x8,204:Shade 2 O3 Sanctuary Rug L Edge L
+25150:archbishopObjects8x8,206:Shade 2 O3 Sanctuary Rug L Edge R
+25151:archbishopObjects8x8,189:Shade 2 O3 Sanctuary Rug L Edge U
+25152:archbishopObjects8x8,221:Shade 2 O3 Sanctuary Rug L Edge D
+25153:archbishopObjects8x8,188:Shade 2 O3 Sanctuary Rug L Corner UL
+25154:archbishopObjects8x8,190:Shade 2 O3 Sanctuary Rug L Corner UR
+25155:archbishopObjects8x8,220:Shade 2 O3 Sanctuary Rug L Corner DL
+25156:archbishopObjects8x8,222:Shade 2 O3 Sanctuary Rug L Corner DR
+25157:archbishopObjects8x8,203:Shade 2 O3 Sanctuary Rug L Inner UL
+25158:archbishopObjects8x8,202:Shade 2 O3 Sanctuary Rug L Inner UR
+25159:archbishopObjects8x8,187:Shade 2 O3 Sanctuary Rug L Inner DL
+25160:archbishopObjects8x8,186:Shade 2 O3 Sanctuary Rug L Inner DR
+25161:archbishopObjects8x8,191:Shade 2 O3 Sanctuary Rug L Emblem 1
+25162:archbishopObjects8x8,207:Shade 2 O3 Sanctuary Rug L Emblem 2
+25163:archbishopObjects8x8,223:Shade 2 O3 Sanctuary Rug L Emblem 3
+25164:archbishopObjects8x8,218:Shade 2 O3 Sanctuary Rug L Emblem 4
+25165:archbishopObjects8x8,219:Shade 2 O3 Sanctuary Rug L Emblem 5
+25166:archbishopObjects8x8,205:Shade 2 O3 Sanctuary Rug L Emblem 6
+25167:archbishopObjects8x8,211:leucoryx main tile light
+25168:archbishopObjects8x8,212:leucoryx main tile dark
+25169:archbishopObjects8x8,260:leucoryx main tile light connector
+25170:archbishopObjects8x8,256:leucoryx main tile light horizontal
+25171:archbishopObjects8x8,276:leucoryx main tile light vertical
+25172:archbishopObjects8x8,272:leucoryx main tile light A top row 1
+25173:archbishopObjects8x8,273:leucoryx main tile light A top row 2
+25174:archbishopObjects8x8,274:leucoryx main tile light A top row 3
+25175:archbishopObjects8x8,275:leucoryx main tile light A top row 4
+25176:archbishopObjects8x8,288:leucoryx main tile light B mid row 1
+25177:archbishopObjects8x8,289:leucoryx main tile light B mid row 2
+25178:archbishopObjects8x8,290:leucoryx main tile light B mid row 3
+25179:archbishopObjects8x8,291:leucoryx main tile light B mid row 4
+25180:archbishopObjects8x8,304:leucoryx main tile light C mid bot row 1
+25181:archbishopObjects8x8,305:leucoryx main tile light C mid bot row 2
+25182:archbishopObjects8x8,306:leucoryx main tile light C mid bot row 3
+25183:archbishopObjects8x8,307:leucoryx main tile light C mid bot row 4
+25184:archbishopObjects8x8,320:leucoryx main tile light D bot row 1
+25185:archbishopObjects8x8,321:leucoryx main tile light D bot row 2
+25186:archbishopObjects8x8,322:leucoryx main tile light D bot row 3
+25192:archbishopObjects8x8,278:leucoryx main tile dark A top row 2
+25193:archbishopObjects8x8,279:leucoryx main tile dark A top row 3
+25194:archbishopObjects8x8,280:leucoryx main tile dark A top row 4
+25195:archbishopObjects8x8,293:leucoryx main tile dark B mid row 1
+25196:archbishopObjects8x8,294:leucoryx main tile dark B mid row 2
+25197:archbishopObjects8x8,295:leucoryx main tile dark B mid row 3
+25198:archbishopObjects8x8,296:leucoryx main tile dark B mid row 4
+25199:archbishopObjects8x8,309:leucoryx main tile dark C mid bot row 1
+25200:archbishopObjects8x8,310:leucoryx main tile dark C mid bot row 2
+25201:archbishopObjects8x8,311:leucoryx main tile dark C mid bot row 3
+25202:archbishopObjects8x8,312:leucoryx main tile dark C mid bot row 4
+25203:archbishopObjects8x8,325:leucoryx main tile dark D bot row 1
+25204:archbishopObjects8x8,326:leucoryx main tile dark D bot row 2
+25205:archbishopObjects8x8,327:leucoryx main tile dark D bot row 3
+25206:archbishopObjects8x8,328:leucoryx main tile dark D bot row 4
+25207:archbishopObjects8x8,208:leucoryx stairs rug A left
+25208:archbishopObjects8x8,209:leucoryx stairs rug B mid
+25209:archbishopObjects8x8,210:leucoryx stairs rug C right
+25210:archbishopObjects8x8,160:leucoryx stairs tl light row 1 A
+25211:archbishopObjects8x8,161:leucoryx stairs tl light row 1 B
+25212:archbishopObjects8x8,162:leucoryx stairs tl light row 1 C
+25213:archbishopObjects8x8,176:leucoryx stairs tl light row 2 A
+25214:archbishopObjects8x8,177:leucoryx stairs tl light row 2 B
+25215:archbishopObjects8x8,178:leucoryx stairs tl light row 2 C
+25216:archbishopObjects8x8,192:leucoryx stairs tl light row 3 A
+25217:archbishopObjects8x8,193:leucoryx stairs tl light row 3 B
+25218:archbishopObjects8x8,194:leucoryx stairs tl light row 3 C
+25219:archbishopObjects8x8,163:leucoryx stairs tl dark row 1 A
+25220:archbishopObjects8x8,164:leucoryx stairs tl dark row 1 B
+25221:archbishopObjects8x8,165:leucoryx stairs tl dark row 1 C
+25222:archbishopObjects8x8,179:leucoryx stairs tl dark row 2 A
+25223:archbishopObjects8x8,180:leucoryx stairs tl dark row 2 B
+25224:archbishopObjects8x8,181:leucoryx stairs tl dark row 2 C
+25225:archbishopObjects8x8,195:leucoryx stairs tl dark row 3 A
+25226:archbishopObjects8x8,196:leucoryx stairs tl dark row 3 B
+25227:archbishopObjects8x8,197:leucoryx stairs tl dark row 3 C
+25228:archbishopObjects8x8,323:leucoryx main tile light D bot row 4
+25229:archbishopObjects8x8,265:leucoryx main tile dark connector
+25230:archbishopObjects8x8,261:leucoryx main tile dark horizontal
+25231:archbishopObjects8x8,281:leucoryx main tile dark vertical
+25232:archbishopObjects8x8,277:leucoryx main tile dark A top row 1
+25233:archbishopObjects8x8,218:leucoryx stairs shade 2 tl light row 1 A
+25234:archbishopObjects8x8,219:leucoryx stairs shade 2 tl light row 1 B
+25235:archbishopObjects8x8,220:leucoryx stairs shade 2 tl light row 1 C
+25236:archbishopObjects8x8,234:leucoryx stairs shade 2 tl light row 2 A
+25237:archbishopObjects8x8,235:leucoryx stairs shade 2 tl light row 2 B
+25238:archbishopObjects8x8,236:leucoryx stairs shade 2 tl light row 2 C
+25239:archbishopObjects8x8,250:leucoryx stairs shade 2 tl light row 3 A
+25240:archbishopObjects8x8,251:leucoryx stairs shade 2 tl light row 3 B
+25241:archbishopObjects8x8,252:leucoryx stairs shade 2 tl light row 3 C
+25242:archbishopObjects8x8,221:leucoryx stairs shade 2 tl dark row 1 A
+25243:archbishopObjects8x8,222:leucoryx stairs shade 2 tl dark row 1 B
+25244:archbishopObjects8x8,223:leucoryx stairs shade 2 tl dark row 1 C
+25245:archbishopObjects8x8,237:leucoryx stairs shade 2 tl dark row 2 A
+25246:archbishopObjects8x8,238:leucoryx stairs shade 2 tl dark row 2 B
+25247:archbishopObjects8x8,239:leucoryx stairs shade 2 tl dark row 2 C
+25248:archbishopObjects8x8,253:leucoryx stairs shade 2 tl dark row 3 A
+25249:archbishopObjects8x8,254:leucoryx stairs shade 2 tl dark row 3 B
+25250:archbishopObjects8x8,255:leucoryx stairs shade 2 tl dark row 3 C
+25251:archbishopObjects8x8,464:Gemsbok plain ground 0
+25252:archbishopObjects8x8,465:Gemsbok plain ground 1
+25253:archbishopObjects8x8,466:Gemsbok plain ground 2
+25254:archbishopObjects8x8,467:Gemsbok plain ground 3
+25255:archbishopObjects8x8,468:Gemsbok plain ground 4
+25256:archbishopObjects8x8,469:Gemsbok plain ground 5
+25257:archbishopObjects8x8,470:Gemsbok plain ground 6
+25258:archbishopObjects8x8,471:Gemsbok plain ground 7
+25259:archbishopObjects8x8,472:Gemsbok plain ground 8
+25260:archbishopObjects8x8,473:Gemsbok plain ground 9
+25261:archbishopObjects8x8,474:Gemsbok plain ground 10
+25262:archbishopObjects8x8,475:Gemsbok plain ground 11
+25263:archbishopObjects8x8,476:Gemsbok red rug 0
+25264:archbishopObjects8x8,477:Gemsbok red rug 1
+25265:archbishopObjects8x8,478:Gemsbok red rug 2
+25266:archbishopObjects8x8,479:Gemsbok red rug 3
+25267:archbishopObjects8x8,480:Gemsbok red rug 4
+25268:archbishopObjects8x8,481:Gemsbok red rug 5
+25269:archbishopObjects8x8,482:Gemsbok red rug 6
+25270:archbishopObjects8x8,483:Gemsbok red rug 7
+25271:archbishopObjects8x8,484:Gemsbok red rug 8
+25272:archbishopObjects8x8,485:Gemsbok red rug 9
+25273:archbishopObjects8x8,486:Gemsbok red rug 10
+25274:archbishopObjects8x8,487:Gemsbok red rug 11
+25275:archbishopObjects8x8,488:Gemsbok red rug 12
+25276:archbishopObjects8x8,489:Gemsbok blue rug 0
+25277:archbishopObjects8x8,490:Gemsbok blue rug 1
+25278:archbishopObjects8x8,491:Gemsbok blue rug 2
+25279:archbishopObjects8x8,492:Gemsbok blue rug 3
+25280:archbishopObjects8x8,493:Gemsbok blue rug 4
+25281:archbishopObjects8x8,494:Gemsbok blue rug 5
+25282:archbishopObjects8x8,495:Gemsbok blue rug 6
+25283:archbishopObjects8x8,496:Gemsbok blue rug 7
+25284:archbishopObjects8x8,497:Gemsbok blue rug 8
+25285:archbishopObjects8x8,498:Gemsbok blue rug 9
+25286:archbishopObjects8x8,499:Gemsbok blue rug 10
+25287:archbishopObjects8x8,500:Gemsbok blue rug 11
+25316:archbishopObjects8x8,501:Gemsbok blue rug 12
+25288:archbishopObjects8x8,502:Gemsbok gold pedestal 0
+25289:archbishopObjects8x8,503:Gemsbok gold pedestal 1
+25290:archbishopObjects8x8,504:Gemsbok gold pedestal 2
+25291:archbishopObjects8x8,505:Gemsbok gold pedestal 3
+25292:archbishopObjects8x8,506:Gemsbok gold pedestal 4
+25293:archbishopObjects8x8,507:Gemsbok gold pedestal 5
+25294:archbishopObjects8x8,508:Gemsbok gold pedestal 6
+25295:archbishopObjects8x8,509:Gemsbok gold pedestal 7
+25296:archbishopObjects8x8,510:Gemsbok gold pedestal 8
+25297:archbishopObjects8x8,511:Gemsbok gold pedestal 9
+25298:archbishopObjects8x8,512:Gemsbok gold pedestal 10
+25299:archbishopObjects8x8,513:Gemsbok gold pedestal 11
+25300:archbishopObjects8x8,514:Gemsbok gold pedestal 12
+25301:archbishopObjects8x8,515:Gemsbok gold pedestal 13
+25302:archbishopObjects8x8,516:Gemsbok gold pedestal 14
+25303:archbishopObjects8x8,517:Gemsbok gold pedestal 15
+25304:archbishopObjects8x8,518:Gemsbok light ground 0
+25305:archbishopObjects8x8,519:Gemsbok light ground 1
+25306:archbishopObjects8x8,520:Gemsbok light ground 2
+25307:archbishopObjects8x8,521:Gemsbok light ground 3
+25308:archbishopObjects8x8,522:Gemsbok light ground 4
+25309:archbishopObjects8x8,523:Gemsbok light ground 5
+25310:archbishopObjects8x8,524:Gemsbok light ground 6
+25311:archbishopObjects8x8,525:Gemsbok light ground 7
+25312:archbishopObjects8x8,526:Gemsbok light ground 8
+25313:archbishopObjects8x8,527:Gemsbok light ground 9
+25314:archbishopObjects8x8,528:Gemsbok light ground 10
+25315:archbishopObjects8x8,529:Gemsbok light ground 11
+25317:archbishopObjects8x8,530:Gemsbok light ground 12
+18432:autumnNexusObjects8x8,0:AN FG R
+18433:autumnNexusObjects8x8,1:AN FG B
+18434:autumnNexusObjects8x8,2:AN FG O
+18435:autumnNexusObjects8x8,3:AN FG G
+18436:autumnNexusObjects8x8,4:AN Rk
+18437:autumnNexusObjects8x8,10:AN BrRo1dk
+18438:autumnNexusObjects8x8,11:AN BrRo1
+18439:autumnNexusObjects8x8,16:AN FG R dk
+18440:autumnNexusObjects8x8,17:AN FG B dk
+18441:autumnNexusObjects8x8,18:AN FG O dk
+18442:autumnNexusObjects8x8,19:AN FG G dk
+18443:autumnNexusObjects8x8,20:AN Rk dk
+18444:autumnNexusObjects8x8,33:AN Rkpt
+18445:autumnNexusObjects8x8,43:AN WBr
+18446:autumnNexusObjects8x8,43:AN WBr Spd
+18447:autumnNexusObjects8x8,69:AN Rv
+18448:autumnNexusObjects8x8,70:AN FoWt
+18449:autumnNexusObjects8x8,71:AN WFP
+18450:autumnNexusObjects8x8,76:AN WFPdk
+18451:autumnNexusObjects8x8,85:AN BrRo2
+18452::AN StEtr
+18455:autumnNexusObjects8x8,115:AN WdT
+18456:autumnNexusObjects8x8,115:AN WdT Spd
+18453::AN RG Rug
+18457::HN StEtr
+18458::HN StEtr b
+18459::HN StEtr dk
+18460::HN StEtr b dk
+18461:autumnNexusObjects8x8,762:HN RcTile
+18462:autumnNexusObjects8x8,763:HN Rc Crs
+18463::HN RG Rug
+18464:autumnNexusObjects8x8,784:HN FG R
+18465:autumnNexusObjects8x8,785:HN FG B
+18466:autumnNexusObjects8x8,786:HN FG O
+18467:autumnNexusObjects8x8,787:HN FG G
+18468:autumnNexusObjects8x8,788:HN Rk
+18469:autumnNexusObjects8x8,821:HN BrRo2
+18470:autumnNexusObjects8x8,837:HN BrRo2 dk
+18471:autumnNexusObjects8x8,800:HN FG R dk
+18472:autumnNexusObjects8x8,801:HN FG B dk
+18473:autumnNexusObjects8x8,802:HN FG O dk
+18474:autumnNexusObjects8x8,803:HN FG G dk
+18475:autumnNexusObjects8x8,804:HN Rk dk
+18476:autumnNexusObjects8x8,817:HN Rkpt
+18477:autumnNexusObjects8x8,833:HN Rkdk
+18478:autumnNexusObjects8x8,919:HN WFP
+18479:autumnNexusObjects8x8,924:HN WFPdk
+18454:lofiEnvironment2,355:HN BlWt
+18480:autumnNexusObjects8x8,800:HN FG Nwk R dk
+18481:autumnNexusObjects8x8,801:HN FG Nwk B dk
+18482:autumnNexusObjects8x8,802:HN FG Nwk O dk
+18483:autumnNexusObjects8x8,803:HN FG Nwk G dk
+18484:autumnNexusObjects8x8,804:HN Rk Nwk dk
+18485:autumnNexusObjects8x8,843:HN Rkdk2
+18486:autumnNexusObjects8x8,903:HN BrRo2 li
+18487:autumnNexusObjects8x8,778:HN Rv
+18488::HN Rk Mst1
+18489::HN Rk Mst2
+18490:autumnNexusObjects8x8,804:HN Rk Mst3
+18491::HN Rk Mst3 Nwk
+18492:autumnNexusObjects8x8,1063:HN WH Pl G
+18493:autumnNexusObjects8x8,1062:HN WH Pl C
+18494:autumnNexusObjects8x8,1064:HN WH WFP
+18495:autumnNexusObjects8x8,1068:HN WH WFP dk
+18496:autumnNexusObjects8x8,1088:AN StP
+18497:autumnNexusObjects8x8,1093:AN StP2
+18498:autumnNexusObjects8x8,1098:AN StP3
+18499:autumnNexusObjects8x8,1104:AN StP4
+18500:autumnNexusObjects8x8,1123:AN WBrL
+18501:autumnNexusObjects8x8,1123:AN WBrL Spd
+18502:autumnNexusObjects8x8,1122:AN WdTL
+18503:autumnNexusObjects8x8,1122:AN WdTL Spd
+2545:cnidarianReefObjects8x8,0:CR Ground
+10014:crystalCaveObjects8x8,185:TopTile
+10015:crystalCaveObjects8x8,185:TopRightTile
+10016:crystalCaveObjects8x8,185:BotRightTile
+10017:crystalCaveObjects8x8,185:BotLeftTile
+10018:crystalCaveObjects8x8,185:TopLeftTile
+25641::Crystal Main Floor
+10081:crystalCaveObjects8x8,81:Crystal Main Dark
+10082:crystalCaveObjects8x8,80:Crystal Main Light
+25642:crystalCaveObjects8x8,99:Crystal Cave Shallow Water
+25643:crystalCaveObjects8x8,115:Crystal Cave Deep Water
+25644:crystalCaveObjects8x8,82:Crystal Lava
+25645::Crystal Main Floor Last Phase
+25646:crystalCaveObjects8x8,185:Crystal Main Floor Dungeon
+25647:crystalCaveObjects8x8,81:Crystal Dark Floor xpyz
+25648:crystalCaveObjects8x8,81:Crystal Dark Floor xpyn
+25649:crystalCaveObjects8x8,81:Crystal Dark Floor xzyn
+25650:crystalCaveObjects8x8,81:Crystal Dark Floor xnyn
+25651:crystalCaveObjects8x8,81:Crystal Dark Floor xnyz
+25652:crystalCaveObjects8x8,81:Crystal Dark Floor xnyp
+25653:crystalCaveObjects8x8,81:Crystal Dark Floor xzyp
+25654:crystalCaveObjects8x8,80:Crystal Light Floor
+25135:crystalCaveObjects8x8,49:Crystal Main Floor v1
+25136:lofiEnvironment,52:Telegraph Red
+25137:crystalCaveObjects8x8,181:Fungus Crystal Floor
+25138:crystalCaveObjects8x8,182:Bright Crystal Floor
+25139:crystalCaveObjects8x8,342:CC Wood
+25976:crystalCaveObjects8x8,185:BossTile
+43862::Library Carpet Red
+43863::Library Carpet Blue
+43864::Library Slabs Very Light
+43865::Library Slabs Light
+43866::Library Slabs Dark
+43867::Library Slabs Very Dark
+43868::Library Tile Dark
+43869::Library Bookshelf Top
+43870::Library Bookshelf Top Warning
+43871::Library Slabs Dark ST
+43872::Library Slabs Dark SL
+43873::Library Slabs Dark SB
+43874::Library Slabs Dark SR
+43875:cursedLibraryObjects8x8,67:Library Slabs Dark STL
+43876:cursedLibraryObjects8x8,68:Library Slabs Dark STR
+43877:cursedLibraryObjects8x8,69:Library Slabs Dark SBR
+43878:cursedLibraryObjects8x8,70:Library Slabs Dark SBL
+45201:deadwaterDocksObjects8x8,26:DWD Sand
+45202:deadwaterDocksObjects8x8,23:DWD Dark Sand
+45203:deadwaterDocksObjects8x8,16:DWD Water
+45306:deadwaterDocksObjects8x8,16:DWD Water Clean
+45305:deadwaterDocksObjects8x8,16:DWD Water Safe
+45204:deadwaterDocksObjects8x8,163:DWD Dark Water
+45205:deadwaterDocksObjects8x8,17:DWD Vertical Wood Edge L
+45206:deadwaterDocksObjects8x8,18:DWD Vertical Wood
+45207:deadwaterDocksObjects8x8,19:DWD Vertical Wood Edge R
+45285:deadwaterDocksObjects8x8,135:DWD Vertical Wood Hallway L
+45286:deadwaterDocksObjects8x8,136:DWD Vertical Wood Hallway M
+45287:deadwaterDocksObjects8x8,137:DWD Vertical Wood Hallway R
+45291:deadwaterDocksObjects8x8,116:DWD Vertical Wood Crystal
+45292:deadwaterDocksObjects8x8,120:DWD Vertical Wood Cracked
+45293:deadwaterDocksObjects8x8,124:DWD Vertical Wood Blood
+45253:deadwaterDocksObjects8x8,20:DWD Horizontal Wood Edge L
+45254:deadwaterDocksObjects8x8,21:DWD Horizontal Wood
+45255:deadwaterDocksObjects8x8,22:DWD Horizontal Wood Edge R
+45288:deadwaterDocksObjects8x8,138:DWD Horizontal Wood Hallway L
+45289:deadwaterDocksObjects8x8,139:DWD Horizontal Wood Hallway M
+45290:deadwaterDocksObjects8x8,140:DWD Horizontal Wood Hallway R
+45294:deadwaterDocksObjects8x8,165:DWD Stone
+45295:deadwaterDocksObjects8x8,166:DWD Stone Edge L
+45296:deadwaterDocksObjects8x8,167:DWD Stone Edge R
+45297:deadwaterDocksObjects8x8,168:DWD Stone Edge Corner
+45298:deadwaterDocksObjects8x8,169:DWD Stone Edge T
+45299:deadwaterDocksObjects8x8,170:DWD Stone Edge B
+45300:deadwaterDocksObjects8x8,171:DWD Stone Edge Inner TL
+45301:deadwaterDocksObjects8x8,172:DWD Stone Edge Inner TR
+45302:deadwaterDocksObjects8x8,173:DWD Stone Edge Inner BL
+45303:deadwaterDocksObjects8x8,174:DWD Stone Edge Inner BR
+45304:deadwaterDocksObjects8x8,165:DWD Stone Full
+45256:deadwaterDocksObjects8x8,145:DWD King Carpet M
+45257:deadwaterDocksObjects8x8,128:DWD King Carpet TL
+45258:deadwaterDocksObjects8x8,129:DWD King Carpet T
+45259:deadwaterDocksObjects8x8,130:DWD King Carpet TR
+45260:deadwaterDocksObjects8x8,144:DWD King Carpet L
+45261:deadwaterDocksObjects8x8,146:DWD King Carpet R
+45262:deadwaterDocksObjects8x8,160:DWD King Carpet BL
+45263:deadwaterDocksObjects8x8,161:DWD King Carpet B
+45264:deadwaterDocksObjects8x8,162:DWD King Carpet BR
+45265:deadwaterDocksObjects8x8,131:DWD King Carpet I BR
+45266:deadwaterDocksObjects8x8,132:DWD King Carpet I BL
+45267:deadwaterDocksObjects8x8,147:DWD King Carpet I TR
+45268:deadwaterDocksObjects8x8,148:DWD King Carpet I TL
+45271:deadwaterDocksObjects8x8,73:DWD King Carpet Stair L
+45272:deadwaterDocksObjects8x8,74:DWD King Carpet Stair M
+45273:deadwaterDocksObjects8x8,164:DWD King Carpet Stair R
+45274:deadwaterDocksObjects8x8,75:DWD King Wood
+45309:deadwaterDocksObjects8x8,75:DWD King Wood Crack
+45310:deadwaterDocksObjects8x8,188:DWD King Wood Cracked
+45056:deadwaterDocksObjects8x8,75:DWD King Wood NoWalk
+45307:deadwaterDocksObjects8x8,180:DWD Crystal Wood
+45308:deadwaterDocksObjects8x8,222:DWD Vault Tile
+45275:deadwaterDocksObjects8x8,76:DWD King Wood Stair
+45276:deadwaterDocksObjects8x8,31:DWD House Wood Entrance
+45277:deadwaterDocksObjects8x8,29:DWD House Wood
+45278:deadwaterDocksObjects8x8,63:DWD House Stone Entrance
+45279:deadwaterDocksObjects8x8,58:DWD House Stone
+45280:deadwaterDocksObjects8x8,57:DWD House Stone Bricks
+45269:deadwaterDocksObjects8x8,86:DWD King Wood Reflection BL
+45270:deadwaterDocksObjects8x8,87:DWD King Wood Reflection B
+45281:deadwaterDocksObjects8x8,88:DWD King Wood Reflection BR
+45282:deadwaterDocksObjects8x8,83:DWD King Wood Reflection TL
+45283:deadwaterDocksObjects8x8,84:DWD King Wood Reflection T
+45284:deadwaterDocksObjects8x8,85:DWD King Wood Reflection TR
+4249:epicHiveObjects8x8,0:EH Venom
+6813:epicHiveObjects8x8,0:EH UnderPartialFloor Venom
+4346:epicHiveObjects8x8,0:EH NoSpeedReduct Venom
+6824:epicHiveObjects8x8,0:EH BlendPriorityChange Venom
+4302:epicHiveObjects8x8,71:EH Unwalkable Venom
+6817:epicHiveObjects8x8,3:EH Secret Floor
+4312:lofiObj3,279:EH S Floor
+2275:lofiObj3,279:EH S Floor 2
+2301:epicHiveObjects8x8,112:EH S Floor 2 Bottom
+2302:epicHiveObjects8x8,113:EH S Floor 2 Left
+4250:epicHiveObjects8x8,1:EH Floor
+4268:epicHiveObjects8x8,34:EH Left Dark Floor
+4269:epicHiveObjects8x8,35:EH Right Dark Floor
+6832:epicHiveObjects8x8,1:EH Fake Floor
+49154:epicHiveObjects8x8,110:EH Teleporter Floor
+49155:epicHiveObjects8x8,111:EH Teleporter Floor 2
+49156:epicHiveObjects8x8,112:EH Teleporter Floor 3
+45679:fungalCavernObjects8x8,16:GC Grass
+45680:fungalCavernObjects8x8,17:GC Stone
+45681:crystalCaveObjects8x8,115:GC Worm Goop
+45682:fungalCavernObjects8x8,18:GC Mushroom Water
+45683:fungalCavernObjects8x8,19:GC Grass Light
+45733:fungalCavernObjects8x8,66:GC Wood Horizontal
+45734:fungalCavernObjects8x8,67:GC Wood Vertical
+3328:fungalCavernObjects8x8,84:FC Lava
+54784:grandBazaarObjects8x8,0:NB Gr
+54785:grandBazaarObjects8x8,1:NB Gr Yw
+54786:grandBazaarObjects8x8,16:NB Dt
+54812::NB Dt wt ed Gr
+54787:grandBazaarObjects8x8,18:NB Pbls dk
+54788:grandBazaarObjects8x8,19:NB Pbls
+54789:grandBazaarObjects8x8,32:NB Wt
+54790:grandBazaarObjects8x8,48:NB Mbr Stn
+54791:grandBazaarObjects8x8,64:NB Pv Rd
+54792:grandBazaarObjects8x8,74:NB Pv Rd ed cr
+54793:grandBazaarObjects8x8,76:NB Pv Rd ed
+54794:grandBazaarObjects8x8,78:NB Pv Rd ed cr vt
+54795:grandBazaarObjects8x8,80:NB Pv Rd Ms
+54796:grandBazaarObjects8x8,90:NB Pv Rd Ms ed cr
+54797:grandBazaarObjects8x8,92:NB Pv Rd Ms ed
+54798:grandBazaarObjects8x8,94:NB Pv Rd Ms ed cr vt
+54799:grandBazaarObjects8x8,96:NB Br Rd
+54813:grandBazaarObjects8x8,129:NB Br Rd nms
+54810:grandBazaarObjects8x8,105:NB Br Rd 2
+54811:grandBazaarObjects8x8,107:NB Br Rd 3
+54800:grandBazaarObjects8x8,128:NB Lvs
+54801:grandBazaarObjects8x8,144:NB Lvs dk hf
+54802:grandBazaarObjects8x8,160:NB Lvs dk
+54803::NB Rug 1
+54804::NB Rug 2
+54805::NB Rug 3
+54806::NB Rug 4
+54807::NB Rug 5
+54808::NB Rug 6
+54809::NB Rug 7
+54814:grandBazaarObjects8x8,512:NB BS St Fl
+54815:grandBazaarObjects8x8,518:NB BS St Fl bl
+54816:grandBazaarObjects8x8,525:NB BS Dt
+54817:grandBazaarObjects8x8,526:NB BS Cl
+54818:grandBazaarObjects8x8,527:NB BS Wt
+54819::NB BS Rug 1
+54820::NB BS Rug 2
+54821:grandBazaarObjects8x8,565:NB BS Wd Fl
+54822:grandBazaarObjects8x8,562:NB BS Wd Fl ed cr
+54823:grandBazaarObjects8x8,563:NB BS Wd Fl ed
+54824:grandBazaarObjects8x8,564:NB BS Wd Fl ed cr vt
+54825::NB Rug 8
+54826:grandBazaarObjects8x8,33:NB Wt Dk
+54827:grandBazaarObjects8x8,752:NB Br Rd 4 L
+54828:grandBazaarObjects8x8,753:NB Br Rd 4 R
+54829:grandBazaarObjects8x8,754:NB Br Rd 5 L
+54830:grandBazaarObjects8x8,755:NB Br Rd 5 R
+54831:grandBazaarObjects8x8,756:NB Br Rd 4 L nms
+54832:grandBazaarObjects8x8,757:NB Br Rd 4 R nms
+54833:grandBazaarObjects8x8,758:NB Br Rd 5 L nms
+54834:grandBazaarObjects8x8,759:NB Br Rd 5 R nms
+54835:grandBazaarObjects8x8,768:NB Br Rd 6 L
+54836:grandBazaarObjects8x8,769:NB Br Rd 6 R
+54837:grandBazaarObjects8x8,770:NB Br Rd 7 L
+54838:grandBazaarObjects8x8,771:NB Br Rd 7 R
+54839:grandBazaarObjects8x8,772:NB Br Rd 6 L nms
+54840:grandBazaarObjects8x8,773:NB Br Rd 6 R nms
+54841:grandBazaarObjects8x8,774:NB Br Rd 7 L nms
+54842:grandBazaarObjects8x8,775:NB Br Rd 7 R nms
+54843:grandBazaarObjects8x8,832:NB Cf Fl
+54844:grandBazaarObjects8x8,833:NB Cf Sq
+54845:grandBazaarObjects8x8,834:NB Cf Rct
+54846:grandBazaarObjects8x8,836:NB Cf Rct vrt
+54847:grandBazaarObjects8x8,838:NB Cf Stn 1
+54848:grandBazaarObjects8x8,840:NB Cf Stn 2
+54849:grandBazaarObjects8x8,843grandBazaarObjects8x8,843:NB Cf Stn 3
+54850:grandBazaarObjects8x8,844grandBazaarObjects8x8,844:NB Cf Stn Str
+54851::NB Rug 9
+54852::NB Rug 10
+54853:grandBazaarObjects8x8,864:NB Cbl
+54854:grandBazaarObjects8x8,880:NB Slb St
+54855:grandBazaarObjects8x8,896:NB Cf Fl 2
+54856:grandBazaarObjects8x8,899:NB Cf Fl 2 sq
+54857:grandBazaarObjects8x8,933:NB Wd Fl
+54858:grandBazaarObjects8x8,930:NB Wd Fl ed cr
+54859:grandBazaarObjects8x8,931:NB Wd Fl ed
+54860:grandBazaarObjects8x8,932:NB Wd Fl ed cr vt
+54861:grandBazaarObjects8x8,867:NB Cbl Ms
+54862:grandBazaarObjects8x8,1280:NB Gb Dn Chk 1
+54863:grandBazaarObjects8x8,1281:NB Gb Dn Chk 2
+54864:grandBazaarObjects8x8,1282:NB Gb Dn Chk 3
+54865:grandBazaarObjects8x8,1283:NB Gb Dn Chk 4
+54866:grandBazaarObjects8x8,1284:NB Gb Dn Chk 5
+54867:grandBazaarObjects8x8,1285:NB Gb Dn Chk 6
+54868:grandBazaarObjects8x8,1286:NB Gb Dn Chk 7
+54869:grandBazaarObjects8x8,1302:NB CC Wd Fl
+54870:grandBazaarObjects8x8,1303:NB CC Wd Fl sq
+54871:grandBazaarObjects8x8,880:NB Bl Rf E ed Slb St
+54872:grandBazaarObjects8x8,129:NB Bl Rf E tp Br Rd nms
+54873:grandBazaarObjects8x8,864:NB Bl Rf E NB Cbl
+54874:grandBazaarObjects8x8,129:NB Bl Rf E ed Br Rd nms
+54875:grandBazaarObjects8x8,0:NB Rd Rf S ed Gr
+54876:grandBazaarObjects8x8,867:NB Rd Rf W tp Cbl Ms
+54877:grandBazaarObjects8x8,864:NB Rd Rf E NB Cbl
+54878:grandBazaarObjects8x8,129:NB Rd Rf E ed Br Rd nms
+54879:grandBazaarObjects8x8,129:NB Rd Rf W tp Br Rd nms
+54880:grandBazaarObjects8x8,129:NB Rd Rf E Br Rd nms
+54881::NB Rd Rf W ed Gr Ptw
+54882::NB Rd Rf W tp Gr Ptw
+54883:grandBazaarObjects8x8,880:NB Bl Rf W ed Slb St
+54884:grandBazaarObjects8x8,880:NB Bl Rf W tp Slb St
+54885:grandBazaarObjects8x8,880:NB Bl Rf E tp Slb St
+54886:grandBazaarObjects8x8,880:NB Bl Rf E Slb St
+54887:grandBazaarObjects8x8,867:NB Rd Rf S Cbl Ms
+54888:grandBazaarObjects8x8,880:NB Rd Rf W ed Slb St
+54889:grandBazaarObjects8x8,880:NB Rd Rf W tp Slb St
+54890:grandBazaarObjects8x8,880:NB Rd Rf E tp Slb St
+54891:grandBazaarObjects8x8,880:NB Rd Rf E Slb St
+54892:grandBazaarObjects8x8,880:NB Rd Rf E ed Slb St
+54893:grandBazaarObjects8x8,933:NB Rd Rf S ed Wd Fl
+54894::NB Rd Rf S ed Br Rd 4 R
+54895::NB Rd Rf S ed Gr Ptw
+54896::NB Rd Rf S ed Br Rd 5 L
+54897::NB Rd Rf S ed Br Rd 5 R
+54898:grandBazaarObjects8x8,867:NB Rd Rf S ed Cbl Ms
+54899::NB Rd Rf W ed Br Rd 4 R
+54900:grandBazaarObjects8x8,80:NB Bl Rf S NB Pv Rd Ms
+54901:grandBazaarObjects8x8,0:NB Rd Rf S tp Gr
+54902:grandBazaarObjects8x8,933:NB Rd Rf S Wd Fl
+54903::NB Rd Rf S Br Rd 4 R
+54904::NB Rd Rf S Br Rd 4 L
+54905:grandBazaarObjects8x8,0:NB Rd Rf S Gr
+54906:grandBazaarObjects8x8,0:NB Rd Rf N Gr
+54907::NB Rd Rf N Br Rd 4 L
+54908:grandBazaarObjects8x8,64:NB Bl Rf S ed Pv Rd
+54909:grandBazaarObjects8x8,0:NB Rd Rf N tp Gr
+54910::NB Rd Rf N tp Br Rd 4 L
+54911:grandBazaarObjects8x8,933:NB Rd Rf S tp Wd Fl
+54912::NB Rd Rf S tp Br Rd 4 R
+54913::NB Rd Rf S tp Gr Ptw
+54914::NB Rd Rf S tp Br Rd 4 L
+54915:grandBazaarObjects8x8,0:NB Bl Rf S Gr
+54916:grandBazaarObjects8x8,64:NB Bl Rf S Pv Rd
+54917:grandBazaarObjects8x8,933:NB Rd Rf N Wd Fl
+54918::NB Rd Rf N Br Rd 4 R
+54919::NB Rd Rf N Gr Ptw
+54920:grandBazaarObjects8x8,80:NB Bl Rf S ed NB Pv Rd Ms
+54921:grandBazaarObjects8x8,933:NB Rd Rf N tp Wd Fl
+54922::NB Rd Rf N tp Br Rd 4 R
+54923::NB Rd Rf N ed Br Rd 4 L
+54924:grandBazaarObjects8x8,0:NB Rd Rf N ed Gr
+54925::NB Rd Rf N ed Br Rd 4 R
+54926:grandBazaarObjects8x8,933:NB Rd Rf N ed Wd Fl
+54927:grandBazaarObjects8x8,80:NB Bl Rf S tp NB Pv Rd Ms
+54928:grandBazaarObjects8x8,64:NB Bl Rf S tp Pv Rd
+54929:grandBazaarObjects8x8,80:NB Bl Rf N NB Pv Rd Ms
+54930:grandBazaarObjects8x8,80:NB Bl Rf N ed NB Pv Rd Ms
+54931:grandBazaarObjects8x8,0:NB Bl Rf S tp Gr
+54932:grandBazaarObjects8x8,64:NB Bl Rf N tp Pv Rd
+54933:grandBazaarObjects8x8,0:NB Bl Rf N tp Gr
+54934:grandBazaarObjects8x8,64:NB Bl Rf N ed Pv Rd
+54935:grandBazaarObjects8x8,0:NB Bl Rf N ed Gr
+54936:grandBazaarObjects8x8,64:NB Bl Rf N Pv Rd
+54937:grandBazaarObjects8x8,0:NB Bl Rf N Gr
+54938:grandBazaarObjects8x8,567:NB BS Sq 1
+54939:grandBazaarObjects8x8,568:NB BS Sq 2
+0:lofiEnvironment2,9:Black Water
+23:lofiEnvironment2,10:Black Water Light
+24:lofiEnvironment2,11:Castle Stone Floor Tile
+25:lofiEnvironment2,12:Castle Stone Floor Tile Dark
+26:lofiEnvironment2,13:Wood Panel Floor
+29795:lofiEnvironment2,13:Wood Panel Floor Speedy
+27:lofiEnvironment2,18:Wood Plank Floor
+46:lofiEnvironment2,23:OceanFloor
+47::SpiderDirt
+48::Spider Dirt Hole
+49:lofiEnvironment2,126:Metal Plates
+50:lofiEnvironment2,127:Metal Plate Stripes
+51:lofiEnvironment2,130:Purple Stone Dark
+197:lofiEnvironment2,131:Jungle Temple Floor
+198:lofiEnvironment2,132:Jungle Temple Floor 2
+199:lofiEnvironment2,133:Stone Slab Floor
+200::Grey Quad Shadows
+201:lofiEnvironment,188:Dark Water Flowing
+202::Tutorial Floor
+203:lofiEnvironment3,139:Bridge
+204:lofiEnvironment3,140:Tutorial Wood Floor
+205::Gothic Floor Slabs
+206:lofiEnvironment2,44:Gothic Floor Slabs 2
+207::Gothic Floor Slabs 3
+108::Gothic Big Tile
+73::Gothic Rug
+239::Guild Rug Green
+238:lofiEnvironment2,56:Wood Plank Floor Dark
+1:lofiEnvironment2,59:Dark Cobblestone
+2:lofiEnvironment2,60:Light Cobblestone
+29794:lofiEnvironment2,60:Light Cobblestone Speedy
+35::Bright Grass
+34::Bright Grass 2
+19::Grey Pathway Shadow
+3:lofiEnvironment2,61:Stone Floor Offset
+4:lofiEnvironment,4:Grey Open
+5:lofiEnvironment,5:Grey Closed
+6:lofiEnvironment,6:Grey Quad
+12:lofiEnvironment,12:Brown Lines
+7::Oryx Castle Rug
+20:lofiEnvironment,20:Brown Open
+21:lofiEnvironment,21:Brown Closed
+22:lofiEnvironment,22:Brown Quad
+28:lofiEnvironment,28:Dirt
+29:lofiEnvironment,29:Brown Column
+30:lofiEnvironment2,33:Brown Closed Broken 1
+31:lofiEnvironment2,34:Brown Closed Broken 2
+36:lofiEnvironment,36:Blue Open
+37:lofiEnvironment,37:Blue Closed
+38:lofiEnvironment,38:Blue Quad
+44:lofiEnvironment,44:Blue Quad2
+45:lofiEnvironment,45:Blue Column
+52:lofiEnvironment,52:Red Open
+53:lofiEnvironment,53:Red Closed
+54:lofiEnvironment,54:Red Quad
+60:lofiEnvironment,60:Red Small Checks
+64:lofiEnvironment,64:Purple Lines
+65:lofiEnvironment,65:Blue BigSmall Squares
+66:lofiEnvironment,66:Green Lines
+67:lofiEnvironment,67:Green BigSmall Squares
+70:lofiEnvironment,70:Light Grass
+71:lofiEnvironment,71:Yellow Grass
+72:lofiEnvironment,72:Grass
+80:lofiEnvironment,80:Grey Quad2
+81:lofiEnvironment,81:Grey Squares
+82:lofiEnvironment,82:Brown Quad2
+83:lofiEnvironment,83:Brown Squares
+84:lofiEnvironment,84:Purple Quad2
+85:lofiEnvironment,85:Purple Squares
+86:lofiEnvironment,86:Dark Grass
+87:lofiEnvironment,87:Blue Grass
+88:lofiEnvironment,88:Square
+96:lofiEnvironment,96:Rock
+29988:lofiEnvironment,96:Legacy Rock
+97:lofiEnvironment,97:Grey Circle Light
+98:lofiEnvironment,98:Undergrowth
+99:lofiEnvironment,99:Green Circle
+100:lofiEnvironment,100:Scorch
+101:lofiEnvironment,101:Grey Circle
+102:lofiEnvironment,102:Checker Board
+103:lofiEnvironment,103:Grey Checker Board
+104:lofiEnvironment,104:Brown Checker Board
+105:lofiEnvironment2,17:Red Checker Board
+106:lofiEnvironment2,96:Snowy Rock
+107:lofiEnvironment2,97:Ice
+112:lofiProjs,192:Lava
+114:lofiEnvironment,114:Water
+115:lofiEnvironment,114:Shallow Water
+116:lofiEnvironment2,144:White Floor 1
+117:lofiEnvironment2,145:White Floor 2
+118:lofiEnvironment2,146:White Floor 3
+119:lofiEnvironment2,147:White Floor 4
+120:lofiEnvironment2,148:White Floor 5
+121:lofiEnvironment2,149:Grey Pathway
+122:lofiEnvironment,114:Pool
+123:lofiEnvironment,114:Deep Pool
+166:lofiObj3,41:GhostGround ExLight
+124:lofiObj3,42:GhostGround Light
+125::GhostGround Mid
+126::GhostGround Dark
+127::Ghostship Rug
+160:lofiEnvironment2,48:White Alpha Square
+161:lofiEnvironment2,49:Purple Alpha Square
+162:lofiEnvironment2,50:Red Alpha Square
+163:lofiEnvironment2,51:Blue Alpha Square
+164:lofiEnvironment2,52:Green Alpha Square
+165:lofiEnvironment2,53:Yellow Alpha Square
+173:lofiEnvironment,173:Blue Floor
+188:lofiEnvironment,188:Dark Water
+501:lofiEnvironment,188:Dark Water Walkable
+189:lofiEnvironment,189:Light Sand
+190:lofiEnvironment,190:Dark Sand
+191:lofiEnvironment2,8:Quicksand
+192:lofiEnvironment,192:Wood Square
+195:lofiEnvironment,195:Broken Wood Square
+196:lofiEnvironment,196:Stone Square
+208:lofiEnvironment2,112:Road
+212:lofiEnvironment2,208:Grey Bloody
+213:lofiEnvironment2,240:Purple Stone
+214:lofiEnvironment2,241:Cracked Purple Stone
+224:lofiEnvironment2,3:Sandstone Tile
+225:lofiEnvironment2,6:Cracked Sandstone Tile
+226:lofiEnvironment2,6:Sand Covered Tile
+227:lofiEnvironment2,4:Missing Tile
+228:lofiEnvironment2,5:Gold Tile
+229:lofiEnvironment2,83:Dream Tile
+240:lofiEnvironment2,2:Dirt Hole
+253:lofiEnvironment,255:Composite
+254:lofiEnvironment,255:Space
+255:lofiEnvironment,255:Empty
+241:lofiEnvironment2,42:Grey Dirt
+242:lofiEnvironment,100:Scorch Blend
+243:lofiEnvironment,37:Oryx Room
+244:lofiEnvironment,112:Lava Blend
+245:lofiEnvironment3,204:Gold Sand
+246:lofiEnvironment3,205:Gold Sand Dark
+247:lofiEnvironment3,206:Sand Tile
+230::Purple Rug
+231::Castle Cobble
+232:lofiEnvironment3,220:Black
+250:lofiObj3,369:GhostWater
+251:lofiEnvironment3,224:WhirlPool Rt
+252:lofiEnvironment3,225:WhirlPool Lf
+235:lofiEnvironment3,226:WhirlPool Up
+236:lofiEnvironment3,227:WhirlPool Dn
+237:lofiObj3,270:Ghost Water Beach
+209:lofiObj3,275:Lab Broken Floor
+210::Lab Grate Floor
+133::Lab Floor Power
+211:lofiObj3,279:Lab Floor
+183:lofiObj3,279:Lab Floor NO WALK
+234:lofiObj3,379:Iron Ground
+233:lofiObj3,391:Light Moss
+248:lofiObj3,392:Light Moss 2
+249:lofiObj3,393:Dirt Cover
+177:lofiObj3,396:Tropical Water Deep
+178:lofiObj3,397:Tropical Water Mid
+179:lofiObj3,398:Tropical Water Surf
+180:lofiObj3,399:Beach Towel 1
+181:lofiObj3,400:Beach Towel 2
+182:lofiObj3,401:Bridge Light
+184:lofiObj3,437:Ice Slide
+185:lofiObj3,448:Snow
+128:lofiObj3,454:Snow Dark
+129:lofiObj3,448:Snow White
+130:lofiObj3,307:Lab Bad Vat No Slow
+131:lofiObj3,334:Lab Good Vat No Slow
+168:lofiEnvironment,113:Liquid Evil
+169::Lab Bad Vat Rug
+167::Lab Good Vat Rug
+170:lofiObj3,278:Lab Floor Power Nowalk
+171:lofiObj3,566:Track W End
+172:lofiObj3,567:Track N End
+136:lofiObj3,568:Track E End
+174:lofiObj3,569:Track S End
+175:lofiObj3,570:Track NW Corner
+186:lofiObj3,571:Track NE Corner
+187:lofiObj3,572:Track SE Corner
+137:lofiObj3,573:Track SW Corner
+132:lofiObj3,574:Track H Path
+144:lofiObj3,575:Track V Path
+145:lofiObj3,576:Trap Flame Hole
+146:lofiObj3,577:Tunnel Hole M
+147:lofiObj3,578:Tunnel Ground M
+148:lofiObj3,579:Track End
+149::Retro Water
+150:lofiObj3,662:Retro Dirt
+151:lofiEnvironment3,233:Candy Grass
+152:lofiObj3,664:Candy Water
+153:lofiObj3,665:Candy Cobble
+154:lofiObj3,668:Candy Beach
+155:lofiEnvironment3,234:Candy Grass Dark
+156:lofiEnvironment3,235:Candy Rock Ground
+158:lofiObj3,670:Candy Grahm Cracker
+159:lofiEnvironment3,234:Candy Grass Dark 2
+109:lofiObj3,671:Cemetery Grass
+110:lofiObj3,675:Cemetery Stone Path
+111:lofiObj3,671lofiObj3,671:Cemetery Grass No Walk
+58:lofiEnvironment2,144:White Floor 1 Fast Walk
+59:lofiObj3,673:Cemetery Grass Yellow
+61:lofiObj3,675:Cemetery Stone Path No Walk
+62:lofiObj3,737:Zombie Grass
+63:lofiObj3,736:Zombie Dirt
+74::Fall Grass Shadow
+75:lofiObj3,672:Cemetery Grass Flowers
+76:lofiObj3,750:Cemetery Grass Blue Walkable
+77:lofiObj3,750:Cemetery Grass Blue
+78:lofiObj3,749:Cemetery Dirt Pile
+79:lofiObj3,811:Fall Grass
+138:lofiObj3,822:Winter Frozen Rock
+139:lofiObj3,437:Ice no Blend
+140:lofiObj3,437:Ice no Walk
+141:lofiObj3,851:Japanese Tatami HL
+142:lofiObj3,852:Japanese Tatami HR
+143:lofiObj3,853:Japanese Tatami VT
+113:lofiObj3,854:Japanese Tatami VB
+13:lofiObj3,853:Japanese Tatami Square
+14:lofiObj3,855:Japanese Stone Path
+15::Japanese Moss
+32:lofiEnvironment2,286:Forrest Floor
+39::Forrest Floor Edge Rt
+40::Forrest Floor Edge Lf
+41::Forrest Floor Edge Bot
+42::Forrest Floor Edge Top
+55::Forrest Floor Corner TR
+43::Forrest Floor Corner TL
+56::Forrest Floor Corner BR
+57::Forrest Floor Corner BL
+68::Forrest Floor Inner TR
+69::Forrest Floor Inner TL
+89::Forrest Floor Inner BR
+90::Forrest Floor Inner BL
+91::Forrest Floor BlackTop
+94::Forrest Floor FullBlack
+95::Forest Dirt
+134:lofiObj3,923:Japanese Moss No Edge
+135:lofiObj3,369:GhostWater Slows
+157:lofiEnvironment2,300:Pet Yard Dirt
+10:lofiEnvironment2,335:Pet Yard Grass
+92:lofiEnvironment3,256:Dark Shadow Earth
+219:lofiEnvironment3,262:Earth Light
+194:lofiEnvironment3,266:Earthy Grass
+93:lofiEnvironment3,291:Earth Tile Dark
+176:lofiEnvironment3,290:Earth Tile
+193:lofiEnvironment3,295:Earth Tile 2
+221::Roman Rug
+222:lofiEnvironment3,321:Golden Earth Sand
+223:lofiEnvironment3,320:Red Earth Water
+220:lofiEnvironment3,336:Arena Dirt
+215:lofiEnvironment3,357:Arena Moss
+216:lofiEnvironment3,223:WhirlPool Start Lf
+217:lofiEnvironment3,222:WhirlPool Start Up
+218:lofiEnvironment3,222:WhirlPool Start Dn
+256:lofiEnvironment3,345:Arena Edge T
+257:lofiEnvironment3,346:Arena Edge TR
+258:lofiEnvironment3,347:Arena Edge R
+259:lofiEnvironment3,348:Arena Edge BR
+260:lofiEnvironment3,349:Arena Edge B
+261:lofiEnvironment3,350:Arena Edge BL
+262:lofiEnvironment3,351:Arena Edge L
+263:lofiEnvironment3,352:Arena Edge TL
+264:lofiEnvironment3,353:Arena Moss TL
+265:lofiEnvironment3,354:Arena Moss T
+266:lofiEnvironment3,355:Arena Moss TR
+267:lofiEnvironment3,356:Arena Moss L
+268:lofiEnvironment3,358:Arena Moss R
+269:lofiEnvironment3,359:Arena Moss BL
+270:lofiEnvironment3,360:Arena Moss B
+271:lofiEnvironment3,361:Arena Moss BR
+272:lofiEnvironment3,363:Arena Shadow Ground
+273:lofiEnvironment3,364:Arena Shadow Ground T
+274:lofiEnvironment3,365:Arena Shadow Ground L
+275:lofiEnvironment3,366:Arena Shadow Ground D
+276:lofiEnvironment3,367:Arena Shadow Ground R
+277:lofiEnvironment3,370:Arena Edge Grass
+278:lofiEnvironment3,380:Arena Shadow Ground TR
+279:lofiEnvironment3,381:Arena Shadow Ground BL
+280:lofiEnvironment3,382:Arena Shadow Ground BR
+281:lofiEnvironment3,383:Arena Shadow Ground TL
+282:lofiEnvironment3,371:Arena Edge Grass Outer BL
+283:lofiEnvironment3,372:Arena Edge Grass Outer BR
+284:lofiEnvironment3,373:Arena Edge Grass Outer TR
+285:lofiEnvironment3,374:Arena Edge Grass Outer TL
+286:lofiEnvironment3,324:Red Earth Water Deep
+287:lofiEnvironment2,9:Evil Water
+298:lofiEnvironment3,324:Group Floor Immovable Object
+300:lofiObj3,1019:New Grass
+301:lofiObj3,1070:shtrs broken stair 1
+302:lofiObj3,1071:shtrs broken stair 2
+303:lofiObj3,1072:shtrs broken stair 3
+314:lofiObj3,1073:shtrs broken stair 4
+315:lofiObj3,1074:shtrs broken stair 5
+316:lofiObj3,1075:shtrs broken stair 6
+317:lofiObj3,1076:shtrs broken stair 7
+318:lofiObj3,1077:shtrs broken stair 8
+319:lofiObj3,1078:shtrs broken stair 9
+330:lofiObj3,1127:shtrs Shattered Floor
+331:lofiObj3,1135:shtrs Disaster Floor
+332::shtrs Maze Floor 1
+333::shtrs Maze Floor 2
+334:lofiObj3,1095:shtrs Pure Evil
+335:lofiObj3,1139:shtrs Bridge
+346:lofiObj3,1155:Hot Lava
+347:lofiObj3,1095:Pure Evil
+8:lofiObj3,863:Dragon Tile Purple
+9:lofiObj3,866:Dragon Tile Red
+11:lofiObj3,874:Dragon Tile Green
+16:lofiObj3,877:Dragon Tile Blue
+17:lofiObj3,880:Dragon Tile Cream
+18:lofiObj3,881:Dragon Tile Cream 2
+29981:lofiEnvironment2,8:Flowing Sand1
+29982:lofiEnvironment2,8:Flowing Sand2
+29983:lofiEnvironment2,8:Flowing Sand3
+29984:lofiEnvironment2,8:Flowing Sand4
+29989:lofiEnvironment2,8:Not Flowing Sand
+29990:lofiObj3,881:lod Green Sand LR
+29991:lofiObj3,881:lod Green Sand RL
+29992:lofiObj3,881:lod Red Sand LR
+29993:lofiObj3,881:lod Red Sand RL
+29994:lofiObj3,881:lod Blue Sand LR
+29995:lofiObj3,881:lod Blue Sand RL
+29996:lofiObj3,881:lod Purple Sand LR
+29997:lofiObj3,881:lod Purple Sand RL
+33:lofiObj3,40:Red Quad Lava
+8865:lofiObj3,1106:Blue Quad Ice
+8864:lofiObj3,437:Ice Bomb Slippery
+8750:lofiObj3,1156:Nexus Shop Tile tg
+9614:lofiObj3,1171:Nexus Shop Tile Holiday
+9620:lofiEnvironment3,204:lod Golden Sand
+9621:lofiObj3,866:lod Red Tile
+9622:lofiObj3,863:lod Purple Tile
+9623:lofiObj3,877:lod Blue Tile
+9624:lofiObj3,874:lod Green Tile
+9625:lofiObj3,881:lod Cream Tile
+9631:lofiObj3,1414:TH Honey
+9632:lofiObj3,1415:TH Floor
+1418:lofiEnvironment,85:Encore EB TL
+1419:lofiEnvironment,85:Encore EB TR
+1420:lofiEnvironment,85:Encore EB BR
+1421:lofiEnvironment,85:Encore EB BL
+1422:d3LofiObjEmbed,61:Puppet Wood Tile
+496:lofiEnvironment2,355:Blood Water
+3431:d3LofiObjEmbed,75:Grey Quad Frozen
+3432:d3LofiObjEmbed,76:Brown Lines Frozen
+3433:d3LofiObjEmbed,91:Black Water Frozen
+3434:d3LofiObjEmbed,92:Black Water Light Frozen
+3435:d3LofiObjEmbed,89:Castle Stone Floor Tile Frozen
+3436:d3LofiObjEmbed,90:Castle Stone Floor Tile Dark Frozen
+3437::Oryx Castle Rug Frozen
+3438:d3LofiObjEmbed,85:Grey Circle Slide
+3439:d3LofiObjEmbed,84:Grey Quad Slide
+3440:d3LofiObjEmbed,86:Grey Open Slide
+3441:d3LofiObjEmbed,87:Grey Closed Slide
+3442:d3LofiObjEmbed,88:Grey Closed Frozen
+3443:d3LofiObjEmbed,94:Grey Squares Frozen
+288:d3LofiObjEmbed,29:Mysterious Crystal Rock
+289:d3LofiObjEmbed,30:Dragon Egg Grass
+3327:d2LofiObjEmbed,299:SHNoWalkTile
+6818:lofiEnvironment2,300:Pet Yard Dirt Special
+6819:lofiEnvironment,114:Water Special
+290:lofiEnvironment,114:Water Slow Move
+6820:lofiEnvironment3,233:BrokenHeartTile1
+6821:lofiEnvironment3,233:BrokenHeartTile2
+6822:lofiEnvironment3,233:BrokenHeartTile3
+6823:lofiEnvironment3,233:BrokenHeartTile4
+348:lofiEnvironment3,233:BrokenHeartTile5
+6825:lofiEnvironment3,233:BrokenHeartTile6
+6826:lofiEnvironment3,233:BrokenHeartTile7
+6827:lofiEnvironment3,233:BrokenHeartTile8
+25318::AppetizerClothTime
+4048:SakuraEnvironment8x8,5:Sakura Petals Pile
+4049:lofiEnvironment,96:Rock NoBP
+4050::Bright Grass 2 HIghBP
+4051::Onsen Water
+4052:SakuraEnvironment8x8,26:Onsen Floor
+4053:SakuraEnvironment8x8,51:Hanami Grass 1
+4054:SakuraEnvironment8x8,52:Hanami Grass 2
+4055::Onsen Water Test
+4056:SakuraEnvironment8x8,55:Hanami Grass 3
+4057::Onsen Water Dark
+4058::Onsen Water 2
+4059:SakuraEnvironment8x8,80:Hanami Grass 1 Dark
+4060:SakuraEnvironment8x8,81:Hanami Grass 2 Dark
+4061:SakuraEnvironment8x8,82:Hanami Grass 3 Dark
+4062:SakuraEnvironment8x8,83:Hanami Grass 1 Light
+4063:SakuraEnvironment8x8,84:Hanami Grass 2 Light
+4064:SakuraEnvironment8x8,85:Hanami Grass 3 Light
+4065:SakuraEnvironment8x8,86:Light Grass Dark
+4066:SakuraEnvironment8x8,87:New Grass Dark
+4067:SakuraEnvironment8x8,88:Sakura Petals Pile Dark
+4068::Stone Floor Offset Steam Top 1
+4069::Stone Floor Offset Steam Top 2
+4070::Rock Steam Top 1
+4071::Rock Steam Top 2
+4072:SakuraEnvironment8x8,26:Onsen Floor Steam Top 1
+4073:SakuraEnvironment8x8,26:Onsen Floor Steam Top 2
+4074::Onsen Water Steam Top 1
+4075::Onsen Water Steam Top 2
+4076::Onsen Water 2 Steam Top 1
+4077::Onsen Water 2 Steam Top 2
+4078::Onsen Water Dark Steam Top 1
+4079::Onsen Water Dark Steam Top 2
+4090::Black Steam Top 1 No Walk
+4091::Black Steam Top 1
+25148::HTT Lab Vat Green
+4299::HTT Lab Vat Transition 1
+4300::HTT Lab Vat Transition 2
+29986::HTT Lab Vat Blue
+29987:highTechTerrorObjects8x8,69:HTT Lab Vat Green Covered
+43742:d3LofiObjEmbed,320:Ice Slide Dark
+43744:d3LofiObjEmbed,320:Ice Slide Dark Safe
+4970:d3LofiObjEmbed,348:Tear Frost
+44047:innerWorkingsObjects8x8,25:TM NoWalk Server Tile
+44048:innerWorkingsObjects8x8,55:TM Surge Half Up Tile
+44049:innerWorkingsObjects8x8,56:TM Surge Half Down Tile
+44050:innerWorkingsObjects8x8,53:TM Surge Half Diagonal LR Tile
+44051:innerWorkingsObjects8x8,54:TM Surge Half Diagonal UL Tile
+44125:innerWorkingsObjects8x8,112:CHS Wood
+44126:innerWorkingsObjects8x8,113:CHS White 1
+44127:innerWorkingsObjects8x8,114:CHS White 2
+44128:innerWorkingsObjects8x8,115:CHS White 3
+44129:innerWorkingsObjects8x8,116:CHS White 4
+44130:innerWorkingsObjects8x8,117:CHS Black 1
+44131:innerWorkingsObjects8x8,118:CHS Black 2
+44132:innerWorkingsObjects8x8,119:CHS Black 3
+44133:innerWorkingsObjects8x8,120:CHS Black 4
+52224:interregnumNexusObjects8x8,0:IntN Sd
+52225:interregnumNexusObjects8x8,1798:IntN Sd 2
+52226:interregnumNexusObjects8x8,5:IntN Sq
+52227:interregnumNexusObjects8x8,16:IntN Fl Gr TL
+52228:interregnumNexusObjects8x8,17:IntN Fl Gr TR
+52229:interregnumNexusObjects8x8,18:IntN Fl Gr BL
+52230:interregnumNexusObjects8x8,19:IntN Fl Gr BR
+21424:interregnumNexusObjects8x8,2008:IntN Fl Gr TL Fade 1
+21425:interregnumNexusObjects8x8,2009:IntN Fl Gr TL Fade 2
+21426:interregnumNexusObjects8x8,2010:IntN Fl Gr TL Fade 3
+21427:interregnumNexusObjects8x8,2011:IntN Fl Gr TR Fade 1
+21428:interregnumNexusObjects8x8,2012:IntN Fl Gr TR Fade 2
+21429:interregnumNexusObjects8x8,2013:IntN Fl Gr TR Fade 3
+21430:interregnumNexusObjects8x8,2014:IntN Fl Gr BL Fade 1
+21431:interregnumNexusObjects8x8,2015:IntN Fl Gr BL Fade 2
+21432:interregnumNexusObjects8x8,2016:IntN Fl Gr BL Fade 3
+21433:interregnumNexusObjects8x8,2017:IntN Fl Gr BR Fade 1
+21434:interregnumNexusObjects8x8,2018:IntN Fl Gr BR Fade 2
+21435:interregnumNexusObjects8x8,2019:IntN Fl Gr BR Fade 3
+21456:interregnumNexusObjects8x8,2004:IntN Fl Gr TL2
+21457:interregnumNexusObjects8x8,2005:IntN Fl Gr TR2
+21458:interregnumNexusObjects8x8,2006:IntN Fl Gr BL2
+21459:interregnumNexusObjects8x8,2007:IntN Fl Gr BR2
+15825:interregnumNexusObjects8x8,2000:IntN Fl Gry TL
+15826:interregnumNexusObjects8x8,2001:IntN Fl Gry TR
+15827:interregnumNexusObjects8x8,2002:IntN Fl Gry BL
+15828:interregnumNexusObjects8x8,2003:IntN Fl Gry BR
+52231:interregnumNexusObjects8x8,80:IntN Sq Sd
+52232:invisible,0:IntN Inv Pt
+52233:interregnumNexusObjects8x8,96:IntN Abs Tl 1
+52234:interregnumNexusObjects8x8,97:IntN Abs Tl 2
+52235:interregnumNexusObjects8x8,106:IntN Abs Tl 3
+52236:interregnumNexusObjects8x8,107:IntN Abs Tl 4
+52237:interregnumNexusObjects8x8,98:IntN Abs Tl 5
+52238:interregnumNexusObjects8x8,102interregnumNexusObjects8x8,102:IntN Abs Tl 6
+52239:interregnumNexusObjects8x8,103interregnumNexusObjects8x8,103:IntN Abs Tl 7
+52240:interregnumNexusObjects8x8,104interregnumNexusObjects8x8,104:IntN Abs Tl 8
+52241:interregnumNexusObjects8x8,105interregnumNexusObjects8x8,105:IntN Abs Tl 9
+52242:interregnumNexusObjects8x8,108:IntN Abs Tl 10
+52243:interregnumNexusObjects8x8,112:IntN UDL Tl 1
+52244:interregnumNexusObjects8x8,116:IntN UDL Tl 2
+52245:interregnumNexusObjects8x8,117:IntN UDL Tl 3
+52246:interregnumNexusObjects8x8,118:IntN UDL Tl 4
+52247:interregnumNexusObjects8x8,122:IntN UDL Tl 5
+52248:interregnumNexusObjects8x8,125:IntN UDL Tl 6
+52250:interregnumNexusObjects8x8,128:IntN ML Tl 1
+52251:interregnumNexusObjects8x8,130:IntN ML Tl 2
+52252:interregnumNexusObjects8x8,132:IntN ML Tl 3
+52253:interregnumNexusObjects8x8,133:IntN ML Tl 4
+52254:interregnumNexusObjects8x8,134:IntN ML Tl 5
+52255:interregnumNexusObjects8x8,144:IntN CL Tl 1
+52256:interregnumNexusObjects8x8,145:IntN CL Tl 2
+52257:interregnumNexusObjects8x8,146:IntN CL Tl 3
+52258:interregnumNexusObjects8x8,147:IntN CL Tl 4
+52259:interregnumNexusObjects8x8,148:IntN CL Tl 5
+52260:interregnumNexusObjects8x8,149:IntN CL Tl 6
+52261:interregnumNexusObjects8x8,150:IntN CL Tl 7
+52262:interregnumNexusObjects8x8,151:IntN CL Tl 8
+52263:interregnumNexusObjects8x8,152:IntN CL Tl 9
+52264:interregnumNexusObjects8x8,153:IntN CL Tl 10
+52265:interregnumNexusObjects8x8,154:IntN CL Tl 11
+52266:interregnumNexusObjects8x8,155:IntN CL Tl 12
+52267:interregnumNexusObjects8x8,156:IntN CL Tl 13
+52268:interregnumNexusObjects8x8,157:IntN CL Tl 14
+52269:interregnumNexusObjects8x8,158:IntN CL Tl 15
+52270:interregnumNexusObjects8x8,159:IntN CL Tl 16
+52271:interregnumNexusObjects8x8,160:IntN CL Tl 17
+52272:interregnumNexusObjects8x8,161:IntN CL Tl 18
+52273:interregnumNexusObjects8x8,162:IntN CL Tl 19
+52274:interregnumNexusObjects8x8,163:IntN CL Tl 20
+52275:interregnumNexusObjects8x8,164:IntN CL Tl 21
+52276:interregnumNexusObjects8x8,176:IntN SP Tl 1
+52277:interregnumNexusObjects8x8,180:IntN SP Tl 2
+52278:interregnumNexusObjects8x8,186:IntN SP Tl 3
+52279:interregnumNexusObjects8x8,188:IntN SP Tl 4
+52280:interregnumNexusObjects8x8,192:IntN SN Tl 1
+52281:interregnumNexusObjects8x8,193:IntN SN Tl 2
+52282:interregnumNexusObjects8x8,194:IntN SN Tl 3
+52283:interregnumNexusObjects8x8,195:IntN SN Tl 4
+52284:interregnumNexusObjects8x8,196:IntN SN Tl 5
+52285:interregnumNexusObjects8x8,197:IntN SN Tl 6
+52286:interregnumNexusObjects8x8,198:IntN SN Tl 7
+52287:interregnumNexusObjects8x8,199:IntN SN Tl 8
+52288:interregnumNexusObjects8x8,200:IntN SN Tl 9
+52289:interregnumNexusObjects8x8,201:IntN SN Tl 10
+52290:interregnumNexusObjects8x8,202:IntN SN Tl 11
+52291:interregnumNexusObjects8x8,203:IntN SN Tl 12
+52292:interregnumNexusObjects8x8,204:IntN SN Tl 13
+52293:interregnumNexusObjects8x8,205:IntN SN Tl 14
+52294:interregnumNexusObjects8x8,206:IntN SN Tl 15
+52295:interregnumNexusObjects8x8,207:IntN SN Tl 16
+52296:interregnumNexusObjects8x8,208:IntN SN Tl 17
+52297:interregnumNexusObjects8x8,209:IntN SN Tl 18
+52298:interregnumNexusObjects8x8,210:IntN SN Tl 19
+52299:interregnumNexusObjects8x8,211:IntN SN Tl 20
+52300:interregnumNexusObjects8x8,212:IntN SN Tl 21
+52301:interregnumNexusObjects8x8,213:IntN SN Tl 22
+52302:interregnumNexusObjects8x8,214:IntN SN Tl 23
+52303:interregnumNexusObjects8x8,215:IntN SN Tl 24
+52304:interregnumNexusObjects8x8,216:IntN SN Tl 25
+52305:interregnumNexusObjects8x8,217:IntN SN Tl 26
+52306:interregnumNexusObjects8x8,218:IntN SN Tl 27
+52307:interregnumNexusObjects8x8,219:IntN SN Tl 28
+52308:interregnumNexusObjects8x8,220:IntN SN Tl 29
+52309:interregnumNexusObjects8x8,227:IntN SN Tl 30
+52310:interregnumNexusObjects8x8,230:IntN SN Tl 31
+52311:interregnumNexusObjects8x8,231:IntN SN Tl 32
+52329:interregnumNexusObjects8x8,232:IntN SN Tl 33
+52312:interregnumNexusObjects8x8,352:IntN Abs Tl 1 Sd
+52313:interregnumNexusObjects8x8,353:IntN Abs Tl 2 Sd
+52314:interregnumNexusObjects8x8,362:IntN Abs Tl 3 Sd
+52315:interregnumNexusObjects8x8,363:IntN Abs Tl 4 Sd
+52316:interregnumNexusObjects8x8,354:IntN Abs Tl 5 Sd
+52317:interregnumNexusObjects8x8,358interregnumNexusObjects8x8,358:IntN Abs Tl 6 Sd
+52318:interregnumNexusObjects8x8,359interregnumNexusObjects8x8,359:IntN Abs Tl 7 Sd
+52319:interregnumNexusObjects8x8,360interregnumNexusObjects8x8,360:IntN Abs Tl 8 Sd
+52320:interregnumNexusObjects8x8,361interregnumNexusObjects8x8,361:IntN Abs Tl 9 Sd
+52321:interregnumNexusObjects8x8,364:IntN Abs Tl 10 Sd
+52322:interregnumNexusObjects8x8,368:IntN UDL Tl 1 Sd
+52323:interregnumNexusObjects8x8,372:IntN UDL Tl 2 Sd
+52324:interregnumNexusObjects8x8,373:IntN UDL Tl 3 Sd
+52325:interregnumNexusObjects8x8,374:IntN UDL Tl 4 Sd
+52326:interregnumNexusObjects8x8,378:IntN UDL Tl 5 Sd
+52327:interregnumNexusObjects8x8,381:IntN UDL Tl 6 Sd
+52397:interregnumNexusObjects8x8,384:IntN ML Tl 1 Sd
+52398:interregnumNexusObjects8x8,386:IntN ML Tl 2 Sd
+52331:interregnumNexusObjects8x8,388:IntN ML Tl 3 Sd
+52332:interregnumNexusObjects8x8,389:IntN ML Tl 4 Sd
+52333:interregnumNexusObjects8x8,390:IntN ML Tl 5 Sd
+52334:interregnumNexusObjects8x8,400:IntN CL Tl 1 Sd
+52335:interregnumNexusObjects8x8,401:IntN CL Tl 2 Sd
+52336:interregnumNexusObjects8x8,402:IntN CL Tl 3 Sd
+52337:interregnumNexusObjects8x8,403:IntN CL Tl 4 Sd
+52338:interregnumNexusObjects8x8,404:IntN CL Tl 5 Sd
+52339:interregnumNexusObjects8x8,405:IntN CL Tl 6 Sd
+52340:interregnumNexusObjects8x8,406:IntN CL Tl 7 Sd
+52341:interregnumNexusObjects8x8,407:IntN CL Tl 8 Sd
+52342:interregnumNexusObjects8x8,408:IntN CL Tl 9 Sd
+52343:interregnumNexusObjects8x8,409:IntN CL Tl 10 Sd
+52344:interregnumNexusObjects8x8,410:IntN CL Tl 11 Sd
+52345:interregnumNexusObjects8x8,411:IntN CL Tl 12 Sd
+52346:interregnumNexusObjects8x8,412:IntN CL Tl 13 Sd
+52347:interregnumNexusObjects8x8,413:IntN CL Tl 14 Sd
+52348:interregnumNexusObjects8x8,414:IntN CL Tl 15 Sd
+52349:interregnumNexusObjects8x8,415:IntN CL Tl 16 Sd
+52350:interregnumNexusObjects8x8,416:IntN CL Tl 17 Sd
+52351:interregnumNexusObjects8x8,417:IntN CL Tl 18 Sd
+52352:interregnumNexusObjects8x8,418:IntN CL Tl 19 Sd
+52353:interregnumNexusObjects8x8,419:IntN CL Tl 20 Sd
+52354:interregnumNexusObjects8x8,420:IntN CL Tl 21 Sd
+52355:interregnumNexusObjects8x8,432:IntN SP Tl 1 Sd
+52356:interregnumNexusObjects8x8,436:IntN SP Tl 2 Sd
+52357:interregnumNexusObjects8x8,442:IntN SP Tl 3 Sd
+52358:interregnumNexusObjects8x8,444:IntN SP Tl 4 Sd
+52359:interregnumNexusObjects8x8,448:IntN SN Tl 1 Sd
+52360:interregnumNexusObjects8x8,449:IntN SN Tl 2 Sd
+52361:interregnumNexusObjects8x8,450:IntN SN Tl 3 Sd
+52362:interregnumNexusObjects8x8,451:IntN SN Tl 4 Sd
+52363:interregnumNexusObjects8x8,452:IntN SN Tl 5 Sd
+52364:interregnumNexusObjects8x8,453:IntN SN Tl 6 Sd
+52365:interregnumNexusObjects8x8,454:IntN SN Tl 7 Sd
+52366:interregnumNexusObjects8x8,455:IntN SN Tl 8 Sd
+52367:interregnumNexusObjects8x8,456:IntN SN Tl 9 Sd
+52368:interregnumNexusObjects8x8,457:IntN SN Tl 10 Sd
+52369:interregnumNexusObjects8x8,458:IntN SN Tl 11 Sd
+52370:interregnumNexusObjects8x8,459:IntN SN Tl 12 Sd
+52371:interregnumNexusObjects8x8,460:IntN SN Tl 13 Sd
+52372:interregnumNexusObjects8x8,461:IntN SN Tl 14 Sd
+52373:interregnumNexusObjects8x8,462:IntN SN Tl 15 Sd
+52374:interregnumNexusObjects8x8,463:IntN SN Tl 16 Sd
+52375:interregnumNexusObjects8x8,464:IntN SN Tl 17 Sd
+52376:interregnumNexusObjects8x8,465:IntN SN Tl 18 Sd
+52377:interregnumNexusObjects8x8,466:IntN SN Tl 19 Sd
+52378:interregnumNexusObjects8x8,467:IntN SN Tl 20 Sd
+52379:interregnumNexusObjects8x8,468:IntN SN Tl 21 Sd
+52380:interregnumNexusObjects8x8,469:IntN SN Tl 22 Sd
+52381:interregnumNexusObjects8x8,470:IntN SN Tl 23 Sd
+52382:interregnumNexusObjects8x8,471:IntN SN Tl 24 Sd
+52383:interregnumNexusObjects8x8,472:IntN SN Tl 25 Sd
+52384:interregnumNexusObjects8x8,473:IntN SN Tl 26 Sd
+52385:interregnumNexusObjects8x8,474:IntN SN Tl 27 Sd
+52386:interregnumNexusObjects8x8,475:IntN SN Tl 28 Sd
+52387:interregnumNexusObjects8x8,476:IntN SN Tl 29 Sd
+52388:interregnumNexusObjects8x8,483:IntN SN Tl 30 Sd
+52249:interregnumNexusObjects8x8,486:IntN SN Tl 31 Sd
+52328:interregnumNexusObjects8x8,487:IntN SN Tl 32 Sd
+52330:interregnumNexusObjects8x8,488:IntN SN Tl 33 Sd
+52389:interregnumNexusObjects8x8,1584:IntN Ind Sd
+52390:interregnumNexusObjects8x8,1584:IntN Ind Sd Rd
+52391:interregnumNexusObjects8x8,1589:IntN Ind Sq
+52392:interregnumNexusObjects8x8,1664:IntN Ind Sq Sd
+52393:interregnumNexusObjects8x8,1665:IntN Ind Wd 1
+52394:interregnumNexusObjects8x8,1666:IntN Ind Wd 2
+52395:interregnumNexusObjects8x8,1667:IntN Ind Wd 3
+52396:interregnumNexusObjects8x8,1668:IntN Ind Wd 4
+52399:interregnumNexusObjects8x8,5:IntN Sq 2xspd
+52400:interregnumNexusObjects8x8,80:IntN Sq Sd 2xspd
+45422:lairOfDraconisObjects8x8,35:LOD Black Tile
+45423:lairOfDraconisObjects8x8,38:LOD Blue Tile
+45424:lairOfDraconisObjects8x8,41:LOD Green Tile
+45425:lairOfDraconisObjects8x8,44:LOD Red Tile
+45426:lairOfDraconisObjects8x8,47:LOD Gold Tile
+45427:lairOfDraconisObjects8x8,52:LOD White Tile
+45428:lairOfDraconisObjects8x8,53:LOD White Tile Dark
+45429:lairOfDraconisObjects8x8,94:LOD Water
+45430:lairOfDraconisObjects8x8,96:LOD Mud
+45431:lairOfDraconisObjects8x8,97:LOD Really Hot Water
+45432:lairOfDraconisObjects8x8,192:LOD Not Petrol 1
+45433:lairOfDraconisObjects8x8,192:LOD Icey Ice
+45434:lairOfDraconisObjects8x8,72:LOD Ashes
+45435:lairOfDraconisObjects8x8,35:LOD Miasma Black
+45436:lairOfDraconisObjects8x8,35:LOD Miasma Black Right
+45437:lairOfDraconisObjects8x8,35:LOD Miasma Black Down
+45438:lairOfDraconisObjects8x8,35:LOD Miasma Black Left
+45439:lairOfDraconisObjects8x8,35:LOD Miasma Black Up
+45440:lairOfDraconisObjects8x8,35:LOD Miasma Black TR
+45441:lairOfDraconisObjects8x8,35:LOD Miasma Black BR
+45442:lairOfDraconisObjects8x8,35:LOD Miasma Black BL
+45443:lairOfDraconisObjects8x8,35:LOD Miasma Black TL
+45420:lairOfDraconisObjects8x8,35:LOD Miasma Black Inner BR
+45419:lairOfDraconisObjects8x8,35:LOD Miasma Black Inner BL
+45418:lairOfDraconisObjects8x8,35:LOD Miasma Black Inner TL
+45417:lairOfDraconisObjects8x8,35:LOD Miasma Black Inner TR
+45444:lairOfDraconisObjects8x8,35:LOD Miasma Blue
+45445:lairOfDraconisObjects8x8,35:LOD Miasma Blue Right
+45446:lairOfDraconisObjects8x8,35:LOD Miasma Blue Down
+45447:lairOfDraconisObjects8x8,35:LOD Miasma Blue Left
+45448:lairOfDraconisObjects8x8,35:LOD Miasma Blue Up
+45449:lairOfDraconisObjects8x8,35:LOD Miasma Blue TR
+45450:lairOfDraconisObjects8x8,35:LOD Miasma Blue BR
+45451:lairOfDraconisObjects8x8,35:LOD Miasma Blue BL
+45452:lairOfDraconisObjects8x8,35:LOD Miasma Blue TL
+45416:lairOfDraconisObjects8x8,35:LOD Miasma Blue Inner BR
+45415:lairOfDraconisObjects8x8,35:LOD Miasma Blue Inner BL
+45414:lairOfDraconisObjects8x8,35:LOD Miasma Blue Inner TL
+45413:lairOfDraconisObjects8x8,35:LOD Miasma Blue Inner TR
+45453:lairOfDraconisObjects8x8,35:LOD Miasma Red
+45454:lairOfDraconisObjects8x8,35:LOD Miasma Red Right
+45455:lairOfDraconisObjects8x8,35:LOD Miasma Red Down
+45456:lairOfDraconisObjects8x8,35:LOD Miasma Red Left
+45457:lairOfDraconisObjects8x8,35:LOD Miasma Red Up
+45458:lairOfDraconisObjects8x8,35:LOD Miasma Red TR
+45459:lairOfDraconisObjects8x8,35:LOD Miasma Red BR
+45460:lairOfDraconisObjects8x8,35:LOD Miasma Red BL
+45461:lairOfDraconisObjects8x8,35:LOD Miasma Red TL
+45412:lairOfDraconisObjects8x8,35:LOD Miasma Red Inner BR
+45411:lairOfDraconisObjects8x8,35:LOD Miasma Red Inner BL
+45410:lairOfDraconisObjects8x8,35:LOD Miasma Red Inner TL
+45409:lairOfDraconisObjects8x8,35:LOD Miasma Red Inner TR
+45462:lairOfDraconisObjects8x8,35:LOD Miasma Green
+45463:lairOfDraconisObjects8x8,35:LOD Miasma Green Left
+45464:lairOfDraconisObjects8x8,35:LOD Miasma Green Up
+45465:lairOfDraconisObjects8x8,35:LOD Miasma Green Right
+45466:lairOfDraconisObjects8x8,35:LOD Miasma Green Down
+45467:lairOfDraconisObjects8x8,35:LOD Miasma Green TR
+45468:lairOfDraconisObjects8x8,35:LOD Miasma Green BR
+45469:lairOfDraconisObjects8x8,35:LOD Miasma Green BL
+45470:lairOfDraconisObjects8x8,35:LOD Miasma Green TL
+45408:lairOfDraconisObjects8x8,35:LOD Miasma Green Inner BR
+45407:lairOfDraconisObjects8x8,35:LOD Miasma Green Inner BL
+45406:lairOfDraconisObjects8x8,35:LOD Miasma Green Inner TL
+45405:lairOfDraconisObjects8x8,35:LOD Miasma Green Inner TR
+45483::LOD Miasma Ivory
+45484::LOD Miasma Ivory Dark
+45471::LOD Miasma Ivory Right
+45472::LOD Miasma Ivory Down
+45473::LOD Miasma Ivory Left
+45474::LOD Miasma Ivory Up
+45475::LOD Miasma Ivory Right Light
+45476::LOD Miasma Ivory Down Light
+45477::LOD Miasma Ivory Left Light
+45478::LOD Miasma Ivory Up Light
+45479::LOD Miasma Ivory Inner BR
+45480::LOD Miasma Ivory Inner BL
+45481::LOD Miasma Ivory Inner TL
+45482::LOD Miasma Ivory Inner TR
+45485:lairOfDraconisObjects8x8,237:Pyyr Lava
+45082:lostHallsObjects8x8,0:LH Main Tile
+45083:lostHallsObjects8x8,409:LH Main Tile Bloody
+45084:lostHallsObjects8x8,3:LH Gem Tile
+45085:lostHallsObjects8x8,15:LH Hall Tile
+45093:lostHallsObjects8x8,41:LH Cult Main Tile
+45095:lostHallsObjects8x8,42:LH Cult Bloody Tile
+45208:lofiObj3,1095:LH Void Landmark N
+45209:lofiObj3,1095:LH Void Landmark E
+45210:lofiObj3,1095:LH Void Landmark S
+45211:lofiObj3,1095:LH Void Landmark W
+45212:lofiObj3,1095:LH Void Landmark C
+45213:lofiObj3,1095:LH Void Landmark Stop
+45130:lofiObj3,1095:LH Void Pure Evil Deep
+45131:lofiObj3,1095:LH Void Pure Evil Depths
+45346:lostHallsObjects8x8,0:LH Titan Tile
+45100:lostHallsObjects8x8,0:LH Spectral Tile A
+45101:lostHallsObjects8x8,0:LH Spectral Tile B
+45102:lostHallsObjects8x8,0:LH Spectral Tile C
+45103:lostHallsObjects8x8,0:LH Spectral Tile D
+45104:lostHallsObjects8x8,172:LH Sentry Tile
+45105:lostHallsObjects8x8,0:LH Spectral Tile 1
+45106:lostHallsObjects8x8,0:LH Spectral Tile 2
+45107:lostHallsObjects8x8,0:LH Spectral Tile 3
+45108:lostHallsObjects8x8,0:LH Spectral Tile 4
+45109:lostHallsObjects8x8,442:LH Void Platform
+45110:lostHallsObjects8x8,15:LH Hall Tile NoWalk
+45111:lostHallsObjects8x8,408:LH Water Tile
+45112:lostHallsObjects8x8,407:LH Ice Tile
+45086:lostHallsObjects8x8,406:LH Hole Tile
+45113:lostHallsObjects8x8,412:LH Hall Tile Bloody
+45114:lostHallsObjects8x8,403:LH Main Tile UL
+45115:lostHallsObjects8x8,404:LH Main Tile U
+45116:lostHallsObjects8x8,405:LH Main Tile UR
+45117:lostHallsObjects8x8,419:LH Main Tile L
+45118:lostHallsObjects8x8,421:LH Main Tile R
+45119:lostHallsObjects8x8,435:LH Main Tile BL
+45120:lostHallsObjects8x8,436:LH Main Tile B
+45121:lostHallsObjects8x8,437:LH Main Tile BR
+45087:lostHallsObjects8x8,400:LH Hole Tile UL
+45088:lostHallsObjects8x8,401:LH Hole Tile U
+45089:lostHallsObjects8x8,402:LH Hole Tile UR
+45090:lostHallsObjects8x8,416:LH Hole Tile L
+45091:lostHallsObjects8x8,417:LH Hole Tile C
+45092:lostHallsObjects8x8,418:LH Hole Tile R
+45094:lostHallsObjects8x8,432:LH Hole Tile BL
+45096:lostHallsObjects8x8,433:LH Hole Tile B
+45097:lostHallsObjects8x8,434:LH Hole Tile BR
+45098:lostHallsObjects8x8,414:LH Hole Edge Tile UL
+45099:lostHallsObjects8x8,415:LH Hole Edge Tile U
+45127:lostHallsObjects8x8,422:LH Hole Edge Tile UR
+45122:lostHallsObjects8x8,423:LH Hole Edge Tile L
+45123:lostHallsObjects8x8,424:LH Hole Edge Tile R
+45124:lostHallsObjects8x8,425:LH Hole Edge Tile BL
+45125:lostHallsObjects8x8,426:LH Hole Edge Tile B
+45126:lostHallsObjects8x8,427:LH Hole Edge Tile BR
+45128::LH Cult Top Tile H
+45129::LH Cult Top Tile V
+2128:magicWoodsObjects8x8,11:Magic Woods Grass
+2129:magicWoodsObjects8x8,12:Magic Woods White Flower Grass
+2130:magicWoodsObjects8x8,13:Magic Woods Red Flower Grass
+2131:magicWoodsObjects8x8,14:Magic Woods Yellow Flower Grass
+2132:magicWoodsObjects8x8,15:Magic Woods Water
+2133:magicWoodsObjects8x8,20:Magic Woods Dirt Unwalkable
+2134:magicWoodsObjects8x8,20:Magic Woods Dirt
+2139:magicWoodsObjects8x8,20:Magic Woods Dirt Wall
+2135:magicWoodsObjects8x8,15:Magic Woods Boss Water
+2136:magicWoodsObjects8x8,15:Enchanted Fountain Water
+2137:magicWoodsObjects8x8,15:Enchanted Fountain Water Center
+2138:magicWoodsObjects8x8,62:Fairy Fountain Stone
+28601:mountainTempleObjects8x8,87:Urushi Landmark A
+28600:lofiObj3,854:Japanese Landmark A
+43824::Jyari dark with Edge
+43823::Jyari light with Edge
+43799:mountainTempleObjects8x8,90:Japanese Pond 2 Dark
+43798:mountainTempleObjects8x8,89:Japanese Pond 2
+43797:mountainTempleObjects8x8,88:Japanese Rock Blue
+43796:mountainTempleObjects8x8,87:Japanese Urushi Floor Dark
+43788:mountainTempleObjects8x8,72:Japanese Pond Dark
+43787:mountainTempleObjects8x8,71:Japanese Pond
+43786::Japanese Pebbles Black
+43785:mountainTempleObjects8x8,68:Japanese Pebbles Black No Edge
+43784:mountainTempleObjects8x8,67:Japanese Urushi Floor
+43783:mountainTempleObjects8x8,66:Japanese Urushi Floor Light
+43782:mountainTempleObjects8x8,65:Japanese Rock Dark
+43781:mountainTempleObjects8x8,64:Japanese Rock
+43720:mountainTempleObjects8x8,8:Zen Sand Beige Corner BL dirty
+43721:mountainTempleObjects8x8,9:Zen Sand Beige Corner BL clean
+43722:mountainTempleObjects8x8,10:Zen Sand Beige Corner BR clean
+43723:mountainTempleObjects8x8,11:Zen Sand Beige Corner TR clean
+43724:mountainTempleObjects8x8,12:Zen Sand Beige Corner BR dirty
+43725:mountainTempleObjects8x8,13:Zen Sand Beige Horizontal Top dark
+43726:mountainTempleObjects8x8,14:Zen Sand Beige Horizontal Bot dark
+43727:mountainTempleObjects8x8,15:Zen Sand Beige no line
+43728:mountainTempleObjects8x8,16:Zen Sand Beige Corner TL clean
+43729:mountainTempleObjects8x8,17:Zen Sand Beige Corner TL dirty
+43730:mountainTempleObjects8x8,18:Zen Sand Beige Corner TR dirty
+43731:mountainTempleObjects8x8,19:Zen Sand Beige vertical left dark
+43732:mountainTempleObjects8x8,20:Zen Sand Beige vertical right dark
+43733:mountainTempleObjects8x8,23:Zen Sand Beige horizontal top dark V2
+43734:mountainTempleObjects8x8,24:Zen Sand Beige TL circle
+43735:mountainTempleObjects8x8,25:Zen Sand Beige TM circle
+43736:mountainTempleObjects8x8,26:Zen Sand Beige TR circle
+43743:mountainTempleObjects8x8,27:Zen Sand Beige ML circle
+43737:mountainTempleObjects8x8,28:Zen Sand Beige inner circle
+43738:mountainTempleObjects8x8,29:Zen Sand Beige MR circle
+43739:mountainTempleObjects8x8,30:Zen Sand Beige BL circle
+43740:mountainTempleObjects8x8,31:Zen Sand Beige BM circle
+43741:mountainTempleObjects8x8,32:Zen Sand Beige BR circle
+43746:mountainTempleObjects8x8,47:Engawa V TdL
+43747:mountainTempleObjects8x8,48:Engawa V BdL
+43748:mountainTempleObjects8x8,49:Engawa TL
+43749:mountainTempleObjects8x8,50:Engawa TR
+43750:mountainTempleObjects8x8,51:Engawa LdL
+43751:mountainTempleObjects8x8,52:Engawa RdL
+43752:mountainTempleObjects8x8,43:Jyari dark
+43753:mountainTempleObjects8x8,44:Jyari light
+15746:mountainTempleObjects8x8,361:MT Fire Pedestal
+15747:mountainTempleObjects8x8,362:MT Water Pedestal
+15748:mountainTempleObjects8x8,360:MT Earth Pedestal
+15749:mountainTempleObjects8x8,363:MT Air Pedestal
+19846:mountainTempleObjects8x8,364:MT Daichi Pedestal
+8236:oryxHordeObjects8x8,26:Ohorde Poison
+10253:oryxHordeObjects8x8,46:XMAS Dragon Tile Cream
+10254:oryxHordeObjects8x8,62:XMAS Dragon Tile Cream 2
+45363:oryxSanctuaryObjects8x8,33:O3 Sanctuary Rug Base
+45364:oryxSanctuaryObjects8x8,16:O3 Sanctuary Rug Edge L
+45377:oryxSanctuaryObjects8x8,22:O3 Sanctuary Rug Edge R
+45378:oryxSanctuaryObjects8x8,1:O3 Sanctuary Rug Edge U
+45379:oryxSanctuaryObjects8x8,65:O3 Sanctuary Rug Edge D
+45365:oryxSanctuaryObjects8x8,0:O3 Sanctuary Rug Corner UL
+45366:oryxSanctuaryObjects8x8,6:O3 Sanctuary Rug Corner UR
+45380:oryxSanctuaryObjects8x8,64:O3 Sanctuary Rug Corner DL
+45381:oryxSanctuaryObjects8x8,70:O3 Sanctuary Rug Corner DR
+45382:oryxSanctuaryObjects8x8,24:O3 Sanctuary Rug Inner UL
+45383:oryxSanctuaryObjects8x8,23:O3 Sanctuary Rug Inner UR
+45384:oryxSanctuaryObjects8x8,8:O3 Sanctuary Rug Inner DL
+45385:oryxSanctuaryObjects8x8,7:O3 Sanctuary Rug Inner DR
+45367:oryxSanctuaryObjects8x8,17:O3 Sanctuary Rug Emblem 1
+45368:oryxSanctuaryObjects8x8,18:O3 Sanctuary Rug Emblem 2
+45369:oryxSanctuaryObjects8x8,19:O3 Sanctuary Rug Emblem 3
+45370:oryxSanctuaryObjects8x8,20:O3 Sanctuary Rug Emblem 4
+45386:oryxSanctuaryObjects8x8,21:O3 Sanctuary Rug Emblem 5
+45371:oryxSanctuaryObjects8x8,34:O3 Sanctuary Rug Emblem 6
+45372:oryxSanctuaryObjects8x8,35:O3 Sanctuary Rug Emblem 7
+45373:oryxSanctuaryObjects8x8,36:O3 Sanctuary Rug Emblem 8
+45374:oryxSanctuaryObjects8x8,50:O3 Sanctuary Rug Emblem 9
+45375:oryxSanctuaryObjects8x8,51:O3 Sanctuary Rug Emblem 10
+45376:oryxSanctuaryObjects8x8,52:O3 Sanctuary Rug Emblem 11
+4303:oryxSanctuaryObjects8x8,25:O3 Sanctuary Rug G Edge L
+4304:oryxSanctuaryObjects8x8,31:O3 Sanctuary Rug G Edge R
+4305:oryxSanctuaryObjects8x8,10:O3 Sanctuary Rug G Edge U
+4306:oryxSanctuaryObjects8x8,74:O3 Sanctuary Rug G Edge D
+4307:oryxSanctuaryObjects8x8,9:O3 Sanctuary Rug G Corner UL
+44052:oryxSanctuaryObjects8x8,15:O3 Sanctuary Rug G Corner UR
+44053:oryxSanctuaryObjects8x8,73:O3 Sanctuary Rug G Corner DL
+44054:oryxSanctuaryObjects8x8,79:O3 Sanctuary Rug G Corner DR
+44055:oryxSanctuaryObjects8x8,56:O3 Sanctuary Rug G Inner UL
+44056:oryxSanctuaryObjects8x8,55:O3 Sanctuary Rug G Inner UR
+44057:oryxSanctuaryObjects8x8,40:O3 Sanctuary Rug G Inner DL
+44058:oryxSanctuaryObjects8x8,39:O3 Sanctuary Rug G Inner DR
+44059:oryxSanctuaryObjects8x8,27:O3 Sanctuary Rug G Emblem 1
+44060:oryxSanctuaryObjects8x8,28:O3 Sanctuary Rug G Emblem 2
+44061:oryxSanctuaryObjects8x8,43:O3 Sanctuary Rug G Emblem 3
+44062:oryxSanctuaryObjects8x8,44:O3 Sanctuary Rug G Emblem 4
+44063:oryxSanctuaryObjects8x8,45:O3 Sanctuary Rug G Emblem 5
+44064:oryxSanctuaryObjects8x8,59:O3 Sanctuary Rug G Emblem 6
+44065:oryxSanctuaryObjects8x8,60:O3 Sanctuary Rug G Emblem 7
+44066:oryxSanctuaryObjects8x8,61:O3 Sanctuary Rug G Emblem 8
+45139:oryxSanctuaryObjects8x8,320:O3 Sanctuary Treasure
+45140:oryxSanctuaryObjects8x8,321:O3 Sanctuary Vault
+44067:oryxSanctuaryObjects8x8,160:O3 Sanctuary Rug D Edge L
+44068:oryxSanctuaryObjects8x8,166:O3 Sanctuary Rug D Edge R
+44069:oryxSanctuaryObjects8x8,145:O3 Sanctuary Rug D Edge U
+44070:oryxSanctuaryObjects8x8,209:O3 Sanctuary Rug D Edge D
+44071:oryxSanctuaryObjects8x8,144:O3 Sanctuary Rug D Corner UL
+44072:oryxSanctuaryObjects8x8,150:O3 Sanctuary Rug D Corner UR
+44073:oryxSanctuaryObjects8x8,208:O3 Sanctuary Rug D Corner DL
+44074:oryxSanctuaryObjects8x8,214:O3 Sanctuary Rug D Corner DR
+44075:oryxSanctuaryObjects8x8,168:O3 Sanctuary Rug D Inner UL
+44076:oryxSanctuaryObjects8x8,167:O3 Sanctuary Rug D Inner UR
+44077:oryxSanctuaryObjects8x8,152:O3 Sanctuary Rug D Inner DL
+44078:oryxSanctuaryObjects8x8,151:O3 Sanctuary Rug D Inner DR
+44079:oryxSanctuaryObjects8x8,162:O3 Sanctuary Rug D Emblem 1
+44080:oryxSanctuaryObjects8x8,163:O3 Sanctuary Rug D Emblem 2
+44081:oryxSanctuaryObjects8x8,164:O3 Sanctuary Rug D Emblem 3
+44082:oryxSanctuaryObjects8x8,178:O3 Sanctuary Rug D Emblem 4
+44083:oryxSanctuaryObjects8x8,179:O3 Sanctuary Rug D Emblem 5
+44084:oryxSanctuaryObjects8x8,180:O3 Sanctuary Rug D Emblem 6
+44085:oryxSanctuaryObjects8x8,194:O3 Sanctuary Rug D Emblem 7
+44086:oryxSanctuaryObjects8x8,195:O3 Sanctuary Rug D Emblem 8
+44087:oryxSanctuaryObjects8x8,196:O3 Sanctuary Rug D Emblem 9
+295:oryxSanctuaryObjects8x8,528:O3 SDF 0 B
+43745:oryxSanctuaryObjects8x8,529:O3 SDF 1 B
+45421:oryxSanctuaryObjects8x8,530:O3 SDF 2 B
+15578:oryxSanctuaryObjects8x8,531:O3 SDF 3 B
+15579:oryxSanctuaryObjects8x8,532:O3 SDF 4 B
+6814:oryxSanctuaryObjects8x8,533:O3 SDF 5 B
+6815:oryxSanctuaryObjects8x8,534:O3 SDF 6 B
+6816:oryxSanctuaryObjects8x8,535:O3 SDF 7 B
+15581:oryxSanctuaryObjects8x8,536:O3 SDF 8 B
+15582:oryxSanctuaryObjects8x8,537:O3 SDF 9 B
+15583:oryxSanctuaryObjects8x8,538:O3 SDF 10 B
+43793:oryxSanctuaryObjects8x8,539:O3 SDF 11 B
+43794:oryxSanctuaryObjects8x8,540:O3 SDF 12 B
+43795:oryxSanctuaryObjects8x8,541:O3 SDF 13 B
+4308:oryxSanctuaryObjects8x8,542:O3 SDF 14 B
+4309:oryxSanctuaryObjects8x8,543:O3 SDF 15 B
+4310:oryxSanctuaryObjects8x8,544:O3 SDF 0 D
+4311:oryxSanctuaryObjects8x8,545:O3 SDF 1 D
+6828:oryxSanctuaryObjects8x8,546:O3 SDF 2 D
+6829:oryxSanctuaryObjects8x8,547:O3 SDF 3 D
+6830:oryxSanctuaryObjects8x8,548:O3 SDF 4 D
+6831:oryxSanctuaryObjects8x8,549:O3 SDF 5 D
+29985:oryxSanctuaryObjects8x8,550:O3 SDF 6 D
+29268:oryxSanctuaryObjects8x8,551:O3 SDF 7 D
+9615:oryxSanctuaryObjects8x8,552:O3 SDF 8 D
+9616:oryxSanctuaryObjects8x8,553:O3 SDF 9 D
+9617:oryxSanctuaryObjects8x8,554:O3 SDF 10 D
+9618:oryxSanctuaryObjects8x8,555:O3 SDF 11 D
+9619:oryxSanctuaryObjects8x8,556:O3 SDF 12 D
+308:oryxSanctuaryObjects8x8,557:O3 SDF 13 D
+309:oryxSanctuaryObjects8x8,558:O3 SDF 14 D
+310:oryxSanctuaryObjects8x8,559:O3 SDF 15 D
+311::O3 Sanctuary Rug D Edge L W
+312::O3 Sanctuary Rug D Edge R W
+313::O3 Sanctuary Rug D Edge U W
+43789::O3 Sanctuary Rug D Edge D W
+43790::O3 Sanctuary Rug D Corner UL W
+43791::O3 Sanctuary Rug D Corner UR W
+43792::O3 Sanctuary Rug D Corner DL W
+320::O3 Sanctuary Rug D Corner DR W
+321::O3 Sanctuary Rug D Inner UL W
+322::O3 Sanctuary Rug D Inner UR W
+323::O3 Sanctuary Rug D Inner DL W
+324::O3 Sanctuary Rug D Inner DR W
+325::O3 Sanctuary Rug Base W
+326::O3 Sanctuary Rug D Edge L D
+327::O3 Sanctuary Rug D Edge R D
+328::O3 Sanctuary Rug D Edge U D
+329::O3 Sanctuary Rug D Edge D D
+336::O3 Sanctuary Rug D Corner UL D
+337::O3 Sanctuary Rug D Corner UR D
+338::O3 Sanctuary Rug D Corner DL D
+339::O3 Sanctuary Rug D Corner DR D
+340::O3 Sanctuary Rug D Inner UL D
+341::O3 Sanctuary Rug D Inner UR D
+342::O3 Sanctuary Rug D Inner DL D
+343::O3 Sanctuary Rug D Inner DR D
+344::O3 Sanctuary Rug Base D
+345::O3 SDF 0 B W
+4080::O3 SDF 1 B W
+4081::O3 SDF 2 B W
+4082::O3 SDF 3 B W
+4083::O3 SDF 4 B W
+4084::O3 SDF 5 B W
+4085::O3 SDF 6 B W
+4086::O3 SDF 7 B W
+4087::O3 SDF 8 B W
+4088::O3 SDF 9 B W
+4089::O3 SDF 10 B W
+45347::O3 SDF 11 B W
+45348::O3 SDF 12 B W
+45349::O3 SDF 13 B W
+45350::O3 SDF 14 B W
+45351::O3 SDF 15 B W
+45352::O3 SDF 0 B D
+45353::O3 SDF 1 B D
+45354::O3 SDF 2 B D
+45355::O3 SDF 3 B D
+45356::O3 SDF 4 B D
+45357::O3 SDF 5 B D
+45358::O3 SDF 6 B D
+45359::O3 SDF 7 B D
+45360::O3 SDF 8 B D
+45361::O3 SDF 9 B D
+45362::O3 SDF 10 B D
+368::O3 SDF 11 B D
+369::O3 SDF 12 B D
+370::O3 SDF 13 B D
+371::O3 SDF 14 B D
+372::O3 SDF 15 B D
+44088:oryxSanctuaryObjects8x8,169:O3 Sanctuary Rug L Edge L
+44089:oryxSanctuaryObjects8x8,175:O3 Sanctuary Rug L Edge R
+44090:oryxSanctuaryObjects8x8,154:O3 Sanctuary Rug L Edge U
+44091:oryxSanctuaryObjects8x8,218:O3 Sanctuary Rug L Edge D
+44092:oryxSanctuaryObjects8x8,153:O3 Sanctuary Rug L Corner UL
+44093:oryxSanctuaryObjects8x8,159:O3 Sanctuary Rug L Corner UR
+44094:oryxSanctuaryObjects8x8,217:O3 Sanctuary Rug L Corner DL
+44095:oryxSanctuaryObjects8x8,223:O3 Sanctuary Rug L Corner DR
+44096:oryxSanctuaryObjects8x8,200:O3 Sanctuary Rug L Inner UL
+44097:oryxSanctuaryObjects8x8,199:O3 Sanctuary Rug L Inner UR
+44098:oryxSanctuaryObjects8x8,184:O3 Sanctuary Rug L Inner DL
+44099:oryxSanctuaryObjects8x8,183:O3 Sanctuary Rug L Inner DR
+44100:oryxSanctuaryObjects8x8,172:O3 Sanctuary Rug L Emblem 1
+44101:oryxSanctuaryObjects8x8,187:O3 Sanctuary Rug L Emblem 2
+44102:oryxSanctuaryObjects8x8,188:O3 Sanctuary Rug L Emblem 3
+44103:oryxSanctuaryObjects8x8,189:O3 Sanctuary Rug L Emblem 4
+44104:oryxSanctuaryObjects8x8,203:O3 Sanctuary Rug L Emblem 5
+44105:oryxSanctuaryObjects8x8,204:O3 Sanctuary Rug L Emblem 6
+44106:oryxSanctuaryObjects8x8,205:O3 Sanctuary Rug L Emblem 7
+44107:oryxSanctuaryObjects8x8,240:O3 Sanctuary Rug B Edge L
+44108:oryxSanctuaryObjects8x8,246:O3 Sanctuary Rug B Edge R
+44109:oryxSanctuaryObjects8x8,225:O3 Sanctuary Rug B Edge U
+44110:oryxSanctuaryObjects8x8,289:O3 Sanctuary Rug B Edge D
+44111:oryxSanctuaryObjects8x8,224:O3 Sanctuary Rug B Corner UL
+44112:oryxSanctuaryObjects8x8,230:O3 Sanctuary Rug B Corner UR
+44113:oryxSanctuaryObjects8x8,288:O3 Sanctuary Rug B Corner DL
+44114:oryxSanctuaryObjects8x8,294:O3 Sanctuary Rug B Corner DR
+44115:oryxSanctuaryObjects8x8,232:O3 Sanctuary Rug B Inner UL
+44116:oryxSanctuaryObjects8x8,231:O3 Sanctuary Rug B Inner UR
+44117:oryxSanctuaryObjects8x8,216:O3 Sanctuary Rug B Inner DL
+44118:oryxSanctuaryObjects8x8,215:O3 Sanctuary Rug B Inner DR
+44119:oryxSanctuaryObjects8x8,243:O3 Sanctuary Rug B Emblem 1
+44120:oryxSanctuaryObjects8x8,244:O3 Sanctuary Rug B Emblem 2
+44121:oryxSanctuaryObjects8x8,259:O3 Sanctuary Rug B Emblem 3
+44122:oryxSanctuaryObjects8x8,260:O3 Sanctuary Rug B Emblem 4
+44123:oryxSanctuaryObjects8x8,274:O3 Sanctuary Rug B Emblem 5
+44124:oryxSanctuaryObjects8x8,275:O3 Sanctuary Rug B Emblem 6
+45132:oryxSanctuaryObjects8x8,80:O3 Normal Tile Corner
+45387:oryxSanctuaryObjects8x8,81:O3 Normal Tile Horizontal 1
+45388:oryxSanctuaryObjects8x8,82:O3 Normal Tile Horizontal 2
+45389:oryxSanctuaryObjects8x8,83:O3 Normal Tile Horizontal 3
+45390:oryxSanctuaryObjects8x8,84:O3 Normal Tile Horizontal 4
+45391:oryxSanctuaryObjects8x8,85:O3 Normal Tile Horizontal 5
+45392:oryxSanctuaryObjects8x8,86:O3 Normal Tile Horizontal 6
+45393:oryxSanctuaryObjects8x8,87:O3 Normal Tile Horizontal 7
+45394:oryxSanctuaryObjects8x8,88:O3 Normal Tile Vertical 1
+45395:oryxSanctuaryObjects8x8,89:O3 Normal Tile Vertical 2
+45396:oryxSanctuaryObjects8x8,90:O3 Normal Tile Vertical 3
+45397:oryxSanctuaryObjects8x8,91:O3 Normal Tile Vertical 4
+45398:oryxSanctuaryObjects8x8,92:O3 Normal Tile Vertical 5
+45399:oryxSanctuaryObjects8x8,93:O3 Normal Tile Vertical 6
+45400:oryxSanctuaryObjects8x8,94:O3 Normal Tile Vertical 7
+45401:oryxSanctuaryObjects8x8,96:O3 Normal Tile Shade 1
+45402:oryxSanctuaryObjects8x8,97:O3 Normal Tile Shade 2
+45403:oryxSanctuaryObjects8x8,98:O3 Normal Tile Shade 3
+45404:oryxSanctuaryObjects8x8,99:O3 Normal Tile Shade 4
+45133:oryxSanctuaryObjects8x8,100:O3 Normal Tile Shade 5
+45134:oryxSanctuaryObjects8x8,101:O3 Normal Tile Shade 6
+45135:oryxSanctuaryObjects8x8,102:O3 Normal Tile Shade 7
+45136:oryxSanctuaryObjects8x8,103:O3 Normal Tile Shade 8
+45137:oryxSanctuaryObjects8x8,104:O3 Normal Tile Shade 9
+45138:oryxSanctuaryObjects8x8,112:O3 Normal Tile
+45141:oryxSanctuaryObjects8x8,1088:O3 Dark Tile Corner
+45142:oryxSanctuaryObjects8x8,1089:O3 Dark Tile Horizontal 1
+45143:oryxSanctuaryObjects8x8,1090:O3 Dark Tile Horizontal 2
+45144:oryxSanctuaryObjects8x8,1091:O3 Dark Tile Horizontal 3
+45145:oryxSanctuaryObjects8x8,1092:O3 Dark Tile Horizontal 4
+45146:oryxSanctuaryObjects8x8,1093:O3 Dark Tile Horizontal 5
+45147:oryxSanctuaryObjects8x8,1094:O3 Dark Tile Horizontal 6
+45148:oryxSanctuaryObjects8x8,1095:O3 Dark Tile Horizontal 7
+45149:oryxSanctuaryObjects8x8,1096:O3 Dark Tile Vertical 1
+45150:oryxSanctuaryObjects8x8,1097:O3 Dark Tile Vertical 2
+45151:oryxSanctuaryObjects8x8,1098:O3 Dark Tile Vertical 3
+45152:oryxSanctuaryObjects8x8,1099:O3 Dark Tile Vertical 4
+45153:oryxSanctuaryObjects8x8,1100:O3 Dark Tile Vertical 5
+45154:oryxSanctuaryObjects8x8,1101:O3 Dark Tile Vertical 6
+45155:oryxSanctuaryObjects8x8,1102:O3 Dark Tile Vertical 7
+45156:oryxSanctuaryObjects8x8,1104:O3 Dark Tile Shade 1
+45157:oryxSanctuaryObjects8x8,1105:O3 Dark Tile Shade 2
+45158:oryxSanctuaryObjects8x8,1106:O3 Dark Tile Shade 3
+45159:oryxSanctuaryObjects8x8,1107:O3 Dark Tile Shade 4
+45160:oryxSanctuaryObjects8x8,1108:O3 Dark Tile Shade 5
+45161:oryxSanctuaryObjects8x8,1109:O3 Dark Tile Shade 6
+45162:oryxSanctuaryObjects8x8,1110:O3 Dark Tile Shade 7
+45163:oryxSanctuaryObjects8x8,1111:O3 Dark Tile Shade 8
+45164:oryxSanctuaryObjects8x8,1112:O3 Dark Tile Shade 9
+45165:oryxSanctuaryObjects8x8,1120:O3 Dark Tile
+45166:oryxSanctuaryObjects8x8,1152:O3 Light Tile Corner
+45167:oryxSanctuaryObjects8x8,1153:O3 Light Tile Horizontal 1
+45168:oryxSanctuaryObjects8x8,1154:O3 Light Tile Horizontal 2
+45169:oryxSanctuaryObjects8x8,1155:O3 Light Tile Horizontal 3
+45170:oryxSanctuaryObjects8x8,1156:O3 Light Tile Horizontal 4
+45171:oryxSanctuaryObjects8x8,1157:O3 Light Tile Horizontal 5
+45172:oryxSanctuaryObjects8x8,1158:O3 Light Tile Horizontal 6
+45173:oryxSanctuaryObjects8x8,1159:O3 Light Tile Horizontal 7
+45174:oryxSanctuaryObjects8x8,1160:O3 Light Tile Vertical 1
+45175:oryxSanctuaryObjects8x8,1161:O3 Light Tile Vertical 2
+45176:oryxSanctuaryObjects8x8,1162:O3 Light Tile Vertical 3
+45177:oryxSanctuaryObjects8x8,1163:O3 Light Tile Vertical 4
+45178:oryxSanctuaryObjects8x8,1164:O3 Light Tile Vertical 5
+45179:oryxSanctuaryObjects8x8,1165:O3 Light Tile Vertical 6
+45180:oryxSanctuaryObjects8x8,1166:O3 Light Tile Vertical 7
+45181:oryxSanctuaryObjects8x8,1168:O3 Light Tile Shade 1
+45182:oryxSanctuaryObjects8x8,1169:O3 Light Tile Shade 2
+45183:oryxSanctuaryObjects8x8,1170:O3 Light Tile Shade 3
+45184:oryxSanctuaryObjects8x8,1171:O3 Light Tile Shade 4
+45185:oryxSanctuaryObjects8x8,1172:O3 Light Tile Shade 5
+45186:oryxSanctuaryObjects8x8,1173:O3 Light Tile Shade 6
+45187:oryxSanctuaryObjects8x8,1174:O3 Light Tile Shade 7
+45188:oryxSanctuaryObjects8x8,1175:O3 Light Tile Shade 8
+45189:oryxSanctuaryObjects8x8,1176:O3 Light Tile Shade 9
+45190:oryxSanctuaryObjects8x8,1184:O3 Light Tile
+45214:oryxSanctuaryObjects8x8,1216:O3 Stair Sanctuary S
+45215:oryxSanctuaryObjects8x8,1217:O3 Stair Sanctuary W
+45216:oryxSanctuaryObjects8x8,1218:O3 Stair Sanctuary N
+45217:oryxSanctuaryObjects8x8,1219:O3 Stair Sanctuary E
+45218:oryxSanctuaryObjects8x8,1220:O3 Stair Dark S
+45219:oryxSanctuaryObjects8x8,1221:O3 Stair Dark W
+45220:oryxSanctuaryObjects8x8,1222:O3 Stair Dark N
+45221:oryxSanctuaryObjects8x8,1223:O3 Stair Dark E
+45222:oryxSanctuaryObjects8x8,1224:O3 Stair Rug S
+45223:oryxSanctuaryObjects8x8,1225:O3 Stair Rug W
+45224:oryxSanctuaryObjects8x8,1226:O3 Stair Rug N
+45225:oryxSanctuaryObjects8x8,1227:O3 Stair Rug E
+45226:oryxSanctuaryObjects8x8,1228:O3 Stair Beisa S 1
+45227:oryxSanctuaryObjects8x8,1229:O3 Stair Beisa W 1
+45228:oryxSanctuaryObjects8x8,1230:O3 Stair Beisa N 1
+45229:oryxSanctuaryObjects8x8,1231:O3 Stair Beisa E 1
+45230:oryxSanctuaryObjects8x8,1232:O3 Stair Dammah S 1
+45231:oryxSanctuaryObjects8x8,1233:O3 Stair Dammah W 1
+45232:oryxSanctuaryObjects8x8,1234:O3 Stair Dammah N 1
+45233:oryxSanctuaryObjects8x8,1235:O3 Stair Dammah E 1
+45234:oryxSanctuaryObjects8x8,1236:O3 Stair Gemsbok S 1
+45235:oryxSanctuaryObjects8x8,1237:O3 Stair Gemsbok W 1
+45236:oryxSanctuaryObjects8x8,1238:O3 Stair Gemsbok N 1
+45237:oryxSanctuaryObjects8x8,1239:O3 Stair Gemsbok E 1
+45238:oryxSanctuaryObjects8x8,1240:O3 Stair Leucoryx S 1
+45239:oryxSanctuaryObjects8x8,1241:O3 Stair Leucoryx W 1
+45240:oryxSanctuaryObjects8x8,1242:O3 Stair Leucoryx N 1
+45241:oryxSanctuaryObjects8x8,1243:O3 Stair Leucoryx E 1
+45242:oryxSanctuaryObjects8x8,1244:O3 Stair Oryx S 1
+45243:oryxSanctuaryObjects8x8,1245:O3 Stair Oryx W 1
+45244:oryxSanctuaryObjects8x8,1246:O3 Stair Oryx N 1
+45245:oryxSanctuaryObjects8x8,1247:O3 Stair Oryx E 1
+45246:oryxSanctuaryObjects8x8,1260:O3 Stair Beisa S 2
+45247:oryxSanctuaryObjects8x8,1261:O3 Stair Beisa W 2
+45248:oryxSanctuaryObjects8x8,1262:O3 Stair Beisa N 2
+45249:oryxSanctuaryObjects8x8,1263:O3 Stair Beisa E 2
+45250:oryxSanctuaryObjects8x8,1264:O3 Stair Dammah S 2
+45251:oryxSanctuaryObjects8x8,1265:O3 Stair Dammah W 2
+45252:oryxSanctuaryObjects8x8,1266:O3 Stair Dammah N 2
+45081:oryxSanctuaryObjects8x8,1267:O3 Stair Dammah E 2
+45080:oryxSanctuaryObjects8x8,1268:O3 Stair Gemsbok S 2
+45079:oryxSanctuaryObjects8x8,1269:O3 Stair Gemsbok W 2
+45078:oryxSanctuaryObjects8x8,1270:O3 Stair Gemsbok N 2
+45077:oryxSanctuaryObjects8x8,1271:O3 Stair Gemsbok E 2
+45076:oryxSanctuaryObjects8x8,1272:O3 Stair Leucoryx S 2
+45075:oryxSanctuaryObjects8x8,1273:O3 Stair Leucoryx W 2
+45074:oryxSanctuaryObjects8x8,1274:O3 Stair Leucoryx N 2
+45073:oryxSanctuaryObjects8x8,1275:O3 Stair Leucoryx E 2
+45072:oryxSanctuaryObjects8x8,1276:O3 Stair Oryx S 2
+45066:oryxSanctuaryObjects8x8,1277:O3 Stair Oryx W 2
+45067:oryxSanctuaryObjects8x8,1278:O3 Stair Oryx N 2
+45068:oryxSanctuaryObjects8x8,1279:O3 Stair Oryx E 2
+2276:oryxSanctuaryObjects8x8,864:O3B Perimeter Light Base
+2277:oryxSanctuaryObjects8x8,865:O3B Perimeter Light C 1
+2278:oryxSanctuaryObjects8x8,866:O3B Perimeter Light C 2
+2279:oryxSanctuaryObjects8x8,867:O3B Perimeter Light C 3
+2280:oryxSanctuaryObjects8x8,868:O3B Perimeter Light O 1
+2281:oryxSanctuaryObjects8x8,869:O3B Perimeter Light O 2
+2282:oryxSanctuaryObjects8x8,870:O3B Perimeter Light C 4
+2283:oryxSanctuaryObjects8x8,871:O3B Perimeter Light Edge V
+2284:oryxSanctuaryObjects8x8,872:O3B Perimeter Light Edge H
+2285:oryxSanctuaryObjects8x8,873:O3B Perimeter Light Edge C
+2286:oryxSanctuaryObjects8x8,880:O3B Perimeter Dark Base
+2288:oryxSanctuaryObjects8x8,881:O3B Perimeter Dark C 1
+2289:oryxSanctuaryObjects8x8,882:O3B Perimeter Dark C 2
+2290:oryxSanctuaryObjects8x8,883:O3B Perimeter Dark C 3
+2291:oryxSanctuaryObjects8x8,884:O3B Perimeter Dark O 1
+2292:oryxSanctuaryObjects8x8,885:O3B Perimeter Dark O 2
+2293:oryxSanctuaryObjects8x8,886:O3B Perimeter Dark C 4
+2294:oryxSanctuaryObjects8x8,887:O3B Perimeter Dark Edge V
+2295:oryxSanctuaryObjects8x8,888:O3B Perimeter Dark Edge H
+2287:oryxSanctuaryObjects8x8,889:O3B Perimeter Dark Edge C
+2296:oryxSanctuaryObjects8x8,1078:O3B Cosmic Black
+2297:oryxSanctuaryObjects8x8,1082:O3B Cosmic Faint
+2298:oryxSanctuaryObjects8x8,1083:O3B Cosmic Visible
+2299:oryxSanctuaryObjects8x8,1084:O3B Cosmic Stars
+2300:oryxSanctuaryObjects8x8,704:O3B Pattern Base Light
+4251:oryxSanctuaryObjects8x8,705:O3B Pattern Base Medium
+4252:oryxSanctuaryObjects8x8,706:O3B Pattern Base Dark
+4253:oryxSanctuaryObjects8x8,707:O3B Pattern Triangle BR L
+4254:oryxSanctuaryObjects8x8,708:O3B Pattern Triangle BL L
+4255:oryxSanctuaryObjects8x8,709:O3B Pattern Triangle TR L
+4256:oryxSanctuaryObjects8x8,710:O3B Pattern Triangle TL L
+4257:oryxSanctuaryObjects8x8,711:O3B Pattern Triangle TL M
+4258:oryxSanctuaryObjects8x8,712:O3B Pattern Triangle TR M
+4259:oryxSanctuaryObjects8x8,713:O3B Pattern Triangle BL M
+4260:oryxSanctuaryObjects8x8,714:O3B Pattern Triangle BR M
+4261:oryxSanctuaryObjects8x8,715:O3B Pattern Triangle BR D
+4262:oryxSanctuaryObjects8x8,716:O3B Pattern Triangle BL D
+4263:oryxSanctuaryObjects8x8,717:O3B Pattern Triangle TR D
+4264:oryxSanctuaryObjects8x8,718:O3B Pattern Triangle TL D
+4265:oryxSanctuaryObjects8x8,896:O3B Pattern Special L 1
+4266:oryxSanctuaryObjects8x8,897:O3B Pattern Special L 2
+4267:oryxSanctuaryObjects8x8,898:O3B Pattern Special L 3
+4270:oryxSanctuaryObjects8x8,899:O3B Pattern Special L 4
+4271:oryxSanctuaryObjects8x8,900:O3B Pattern Special L 5
+4272:oryxSanctuaryObjects8x8,901:O3B Pattern Special L 6
+4273:oryxSanctuaryObjects8x8,902:O3B Pattern Special L 7
+4274:oryxSanctuaryObjects8x8,912:O3B Pattern Special D 1
+4275:oryxSanctuaryObjects8x8,913:O3B Pattern Special D 2
+4276:oryxSanctuaryObjects8x8,914:O3B Pattern Special D 3
+4277:oryxSanctuaryObjects8x8,915:O3B Pattern Special D 4
+4278:oryxSanctuaryObjects8x8,916:O3B Pattern Special D 5
+4279:oryxSanctuaryObjects8x8,917:O3B Pattern Special D 6
+4280:oryxSanctuaryObjects8x8,918:O3B Pattern Special D 7
+4281:oryxSanctuaryObjects8x8,919:O3B Pattern Special D 8
+4282:oryxSanctuaryObjects8x8,920:O3B Pattern Special D 9
+4283:oryxSanctuaryObjects8x8,921:O3B Pattern Special D 10
+4284:oryxSanctuaryObjects8x8,922:O3B Pattern Special D 11
+4285:oryxSanctuaryObjects8x8,923:O3B Pattern Special D 12
+4286:oryxSanctuaryObjects8x8,924:O3B Pattern Special D 13
+4287:oryxSanctuaryObjects8x8,925:O3B Pattern Special D 14
+4288:oryxSanctuaryObjects8x8,926:O3B Pattern Special D 15
+4289:oryxSanctuaryObjects8x8,927:O3B Pattern Special D 16
+4290:oryxSanctuaryObjects8x8,928:O3B Pattern Special D 17
+4291:oryxSanctuaryObjects8x8,929:O3B Pattern Special D 18
+4292:oryxSanctuaryObjects8x8,930:O3B Pattern Special D 19
+4293:oryxSanctuaryObjects8x8,931:O3B Pattern Special D 20
+4294:oryxSanctuaryObjects8x8,932:O3B Pattern Special D 21
+4295:oryxSanctuaryObjects8x8,933:O3B Pattern Special D 22
+4296:oryxSanctuaryObjects8x8,934:O3B Pattern Special D 23
+4297:oryxSanctuaryObjects8x8,935:O3B Pattern Special D 24
+4298:oryxSanctuaryObjects8x8,936:O3B Pattern Special D 25
+45065:oryxSanctuaryObjects8x8,1078:O3 Cosmic Black
+45064:oryxSanctuaryObjects8x8,1082:O3 Cosmic Faint
+45063:oryxSanctuaryObjects8x8,1083:O3 Cosmic Visible
+45062:oryxSanctuaryObjects8x8,1084:O3 Cosmic Stars
+29796:oryxSanctuaryObjects8x8,1078:O3 Cosmic Black NW
+29797:oryxSanctuaryObjects8x8,1082:O3 Cosmic Faint NW
+29798:oryxSanctuaryObjects8x8,1083:O3 Cosmic Visible NW
+29799:oryxSanctuaryObjects8x8,1084:O3 Cosmic Stars NW
+43800:oryxSanctuaryObjects8x8,16:O3 Sanctuary Rug Edge L NW
+43801:oryxSanctuaryObjects8x8,22:O3 Sanctuary Rug Edge R NW
+43802:oryxSanctuaryObjects8x8,1:O3 Sanctuary Rug Edge U NW
+43803:oryxSanctuaryObjects8x8,65:O3 Sanctuary Rug Edge D NW
+43804:oryxSanctuaryObjects8x8,33:O3 Sanctuary Rug Base NW
+43805:oryxSanctuaryObjects8x8,1184:O3 Light Tile NW
+43806:oryxSanctuaryObjects8x8,1160:O3 Light Tile Vertical 1 NW
+43807:oryxSanctuaryObjects8x8,1161:O3 Light Tile Vertical 2 NW
+43808:oryxSanctuaryObjects8x8,1153:O3 Light Tile Horizontal 1 NW
+43809:oryxSanctuaryObjects8x8,1154:O3 Light Tile Horizontal 2 NW
+43810:oryxSanctuaryObjects8x8,1099:O3 Dark Tile Vertical 4 NW
+43811:oryxSanctuaryObjects8x8,1100:O3 Dark Tile Vertical 5 NW
+43812:oryxSanctuaryObjects8x8,1101:O3 Dark Tile Vertical 6 NW
+43813:oryxSanctuaryObjects8x8,1120:O3 Dark Tile NW
+43814:oryxSanctuaryObjects8x8,1089:O3 Dark Tile Horizontal 1 NW
+291:parasiteDenObjects8x8,80:pD Colony Slot
+292:parasiteDenObjects8x8,208:pD Creepasite
+293:parasiteDenObjects8x8,209:pD Creepasite 2
+294:parasiteDenObjects8x8,97:pD Creepasite Light
+307:parasiteDenObjects8x8,97:pD Creepasite Light Top
+296:parasiteDenObjects8x8,198:pD Barrel Slot
+297:parasiteDenObjects8x8,224:pD Cobble
+304:parasiteDenObjects8x8,226:pD Cobble Pebble
+305:parasiteDenObjects8x8,255:pD Wall Blend
+306:parasiteDenObjects8x8,199:pD Boss Floor
+46011:lofiEnvironment3,414:Infested Water
+46012:lofiEnvironment3,413:Infested Water Dark
+349:pirateCaveObjects8x8,4:PC Sand
+350:pirateCaveObjects8x8,3:PC Water
+361:pirateCaveObjects8x8,90:PC Dark Water
+351:pirateCaveObjects8x8,5:PC X 1
+352:pirateCaveObjects8x8,6:PC X 2
+353:pirateCaveObjects8x8,7:PC X 3
+354:pirateCaveObjects8x8,8:PC X 4
+355:pirateCaveObjects8x8,9:PC Vertical Wood Edge L
+356:pirateCaveObjects8x8,10:PC Vertical Wood
+357:pirateCaveObjects8x8,11:PC Vertical Wood Edge R
+358:pirateCaveObjects8x8,12:PC Horizontal Wood Edge L
+359:pirateCaveObjects8x8,13:PC Horizontal Wood
+360:pirateCaveObjects8x8,14:PC Horizontal Wood Edge R
+362:pirateCaveObjects8x8,82:PC Vertical Wood Cracked 1
+363:pirateCaveObjects8x8,83:PC Vertical Wood Cracked 2
+364:pirateCaveObjects8x8,84:PC Vertical Wood Cracked 3
+365:pirateCaveObjects8x8,85:PC Vertical Wood Cracked 4
+366:pirateCaveObjects8x8,86:PC Vertical Wood Blood 1
+367:pirateCaveObjects8x8,87:PC Vertical Wood Blood 2
+378:pirateCaveObjects8x8,88:PC Vertical Wood Blood 3
+379:pirateCaveObjects8x8,89:PC Vertical Wood Blood 4
+380:pirateCaveObjects8x8,146:PC Horizontal Wood Cracked 1
+381:pirateCaveObjects8x8,147:PC Horizontal Wood Cracked 2
+383:pirateCaveObjects8x8,148:PC Horizontal Wood Cracked 3
+373:pirateCaveObjects8x8,149:PC Horizontal Wood Cracked 4
+374:pirateCaveObjects8x8,150:PC Horizontal Wood Blood 1
+375:pirateCaveObjects8x8,151:PC Horizontal Wood Blood 2
+376:pirateCaveObjects8x8,152:PC Horizontal Wood Blood 3
+377:pirateCaveObjects8x8,153:PC Horizontal Wood Blood 4
+382::PC King Carpet
+384:pirateCaveObjects8x8,16:PC Dark Vertical Wood
+385:pirateCaveObjects8x8,17:PC Dark Vertical Wood Cracked 1
+386:pirateCaveObjects8x8,18:PC Dark Vertical Wood Cracked 2
+387:pirateCaveObjects8x8,158:PC Bright Water
+388:pirateCaveObjects8x8,91:PC Sand Alt
+15580:santaWorkshopObjects8x8,3:SW Dark Wood Floor Bottom
+15584:santaWorkshopObjects8x8,4:SW Light Wood Floor Bottom
+15652:santaWorkshopObjects8x8,6:SW Light Wood Red
+15653:santaWorkshopObjects8x8,7:SW Light Wood Green
+15577:santaWorkshopObjects8x8,5:SW Light Wood Golden
+1305::SpiderDirt Unwalkable
+1306:lofiEnvironment2,2:Spider Dirt Hole Unwalkable
+1307:secludedThicketObjects8x8,10:Jungle Temple Floor TL
+1308:secludedThicketObjects8x8,10:Jungle Temple Floor TR
+1309:secludedThicketObjects8x8,10:Jungle Temple Floor BR
+1310:secludedThicketObjects8x8,10:Jungle Temple Floor BL
+1311:lofiEnvironment2,9:ST Evil Water
+1312:secludedThicketObjects8x8,5:Jungle Temple Floor Gold 1
+1313:secludedThicketObjects8x8,6:Jungle Temple Floor Gold 2
+1314:secludedThicketObjects8x8,7:Jungle Temple Floor Gold 3
+1315:secludedThicketObjects8x8,8:Jungle Temple Floor Gold Blue
+1316:secludedThicketObjects8x8,9:Jungle Temple Floor Gold Green
+1317:secludedThicketObjects8x8,11:Jungle Temple Floor Red 1
+1318:secludedThicketObjects8x8,12:Jungle Temple Floor Red 2
+1319:secludedThicketObjects8x8,13:Jungle Temple Floor Red 3
+1320:secludedThicketObjects8x8,14:Jungle Temple Floor Red Blue
+1321:secludedThicketObjects8x8,15:Jungle Temple Floor Red Green
+1322:secludedThicketObjects8x8,16:Jungle Temple Floor Red Red
+8751:spiderDenObjects8x8,60:Spider Dirt
+8752:spiderDenObjects8x8,60:Spider Dirt Web
+8753:spiderDenObjects8x8,60:Spider Dirt Clean
+8754:spiderDenObjects8x8,100:SP Tile
+8755:spiderDenObjects8x8,96:SP Hall Tile
+8756::SP Closed Grate
+8766:spiderDenObjects8x8,106:SP Grate
+8757::SP Guard Grate NW
+8758::SP Guard Grate N
+8759::SP Guard Grate NE
+8760::SP Guard Grate W
+8761::SP Guard Grate M
+8762::SP Guard Grate E
+8763::SP Guard Grate SW
+8764::SP Guard Grate S
+8765::SP Guard Grate SE
+25319::Crawling Spider Dirt
+25320::Crawling Spider Dirt Web
+25321::Crawling Spider Dirt Clean
+25322:spiderDenObjects8x8,304:Woodland Floor
+25352:spiderDenObjects8x8,312:Woodland Floor Decor
+25323::Woodland Floor Edge Rt
+25324::Woodland Floor Edge Lf
+25325::Woodland Floor Edge Bot
+25326::Woodland Floor Edge Top
+25327::Woodland Floor Corner TR
+25328::Woodland Floor Corner TL
+25329::Woodland Floor Corner BR
+25330::Woodland Floor Corner BL
+25331::Woodland Floor Inner TR
+25332::Woodland Floor Inner TL
+25333::Woodland Floor Inner BR
+25334::Woodland Floor Inner BL
+25380::Woodland Medium Floor Edge Rt
+25381::Woodland Medium Floor Edge Lf
+25382::Woodland Medium Floor Edge Bot
+25383::Woodland Medium Floor Edge Top
+25384::Woodland Medium Floor Corner TR
+25385::Woodland Medium Floor Corner TL
+25386::Woodland Medium Floor Corner BR
+25387::Woodland Medium Floor Corner BL
+25388::Woodland Medium Floor Inner TR
+25389::Woodland Medium Floor Inner TL
+25390::Woodland Medium Floor Inner BR
+25391::Woodland Medium Floor Inner BL
+25392::Woodland Bright Floor Edge Rt
+25393::Woodland Bright Floor Edge Lf
+25394::Woodland Bright Floor Edge Bot
+25395::Woodland Bright Floor Edge Top
+25396::Woodland Bright Floor Corner TR
+25397::Woodland Bright Floor Corner TL
+25398::Woodland Bright Floor Corner BR
+25399::Woodland Bright Floor Corner BL
+25400::Woodland Bright Floor Inner TR
+25401::Woodland Bright Floor Inner TL
+25402::Woodland Bright Floor Inner BR
+25403::Woodland Bright Floor Inner BL
+25335:lofiEnvironment3,220:Woodland Floor BlackTop
+25336::Woodland Floor FullBlack
+25337:spiderDenObjects8x8,305:Woodland Dirt
+25338:spiderDenObjects8x8,308:Woodland Leaves
+25353:spiderDenObjects8x8,308:Woodland Dark Leaves
+25354:spiderDenObjects8x8,428:Woodland Medium Leaves
+25355:spiderDenObjects8x8,444:Woodland Bright Leaves
+25339:spiderDenObjects8x8,435:Woodland Leaves Edge Rt
+25340:spiderDenObjects8x8,436:Woodland Leaves Edge Lf
+25341:spiderDenObjects8x8,438:Woodland Leaves Edge Bot
+25342:spiderDenObjects8x8,433:Woodland Leaves Edge Top
+25343:spiderDenObjects8x8,441:Woodland Leaves Corner TR
+25344:spiderDenObjects8x8,440:Woodland Leaves Corner TL
+25345:spiderDenObjects8x8,443:Woodland Leaves Corner BR
+25346:spiderDenObjects8x8,442:Woodland Leaves Corner BL
+25347:spiderDenObjects8x8,434:Woodland Leaves Inner TR
+25348:spiderDenObjects8x8,432:Woodland Leaves Inner TL
+25349:spiderDenObjects8x8,439:Woodland Leaves Inner BR
+25350:spiderDenObjects8x8,437:Woodland Leaves Inner BL
+25356:spiderDenObjects8x8,435:Woodland Medium Leaves Edge Rt
+25357:spiderDenObjects8x8,436:Woodland Medium Leaves Edge Lf
+25358:spiderDenObjects8x8,438:Woodland Medium Leaves Edge Bot
+25359:spiderDenObjects8x8,433:Woodland Medium Leaves Edge Top
+25360:spiderDenObjects8x8,441:Woodland Medium Leaves Corner TR
+25361:spiderDenObjects8x8,440:Woodland Medium Leaves Corner TL
+25362:spiderDenObjects8x8,443:Woodland Medium Leaves Corner BR
+25363:spiderDenObjects8x8,442:Woodland Medium Leaves Corner BL
+25364:spiderDenObjects8x8,434:Woodland Medium Leaves Inner TR
+25365:spiderDenObjects8x8,432:Woodland Medium Leaves Inner TL
+25366:spiderDenObjects8x8,439:Woodland Medium Leaves Inner BR
+25367:spiderDenObjects8x8,437:Woodland Medium Leaves Inner BL
+25368:spiderDenObjects8x8,435:Woodland Bright Leaves Edge Rt
+25369:spiderDenObjects8x8,436:Woodland Bright Leaves Edge Lf
+25370:spiderDenObjects8x8,438:Woodland Bright Leaves Edge Bot
+25371:spiderDenObjects8x8,433:Woodland Bright Leaves Edge Top
+25372:spiderDenObjects8x8,441:Woodland Bright Leaves Corner TR
+25373:spiderDenObjects8x8,440:Woodland Bright Leaves Corner TL
+25374:spiderDenObjects8x8,443:Woodland Bright Leaves Corner BR
+25375:spiderDenObjects8x8,442:Woodland Bright Leaves Corner BL
+25376:spiderDenObjects8x8,434:Woodland Bright Leaves Inner TR
+25377:spiderDenObjects8x8,432:Woodland Bright Leaves Inner TL
+25378:spiderDenObjects8x8,439:Woodland Bright Leaves Inner BR
+25379:spiderDenObjects8x8,437:Woodland Bright Leaves Inner BL
+25351:spiderDenObjects8x8,307:Woodland Water
+299:spiderDenObjects8x8,397:Puke Water
+8767:spriteWorldObjects8x8,16:Sprite Square White
+8768:spriteWorldObjects8x8,26:Sprite Square Right
+8769:spriteWorldObjects8x8,27:Sprite Square Left
+8770:spriteWorldObjects8x8,28:Sprite Square Down
+8771:spriteWorldObjects8x8,29:Sprite Square Up
+8772:spriteWorldObjects8x8,16:Sprite Square White Plain
+8828:spriteWorldObjects8x8,16:Sprite Square White Fertile
+8773:spriteWorldObjects8x8,17:Sprite Square Red
+8774:spriteWorldObjects8x8,18:Sprite Square Orange
+8775:spriteWorldObjects8x8,19:Sprite Square Yellow
+8776:spriteWorldObjects8x8,20:Sprite Square Lime
+8777:spriteWorldObjects8x8,21:Sprite Square Green
+8778:spriteWorldObjects8x8,22:Sprite Square Cyan
+8779:spriteWorldObjects8x8,23:Sprite Square Blue
+8780:spriteWorldObjects8x8,24:Sprite Square Purple
+8781:spriteWorldObjects8x8,25:Sprite Square Black
+8782:spriteWorldObjects8x8,14:Sprite Square White TL
+8783:spriteWorldObjects8x8,15:Sprite Square White TR
+8784:spriteWorldObjects8x8,30:Sprite Square White BL
+8785:spriteWorldObjects8x8,31:Sprite Square White BR
+8786:spriteWorldObjects8x8,10:Sprite Square Black TL
+8787:spriteWorldObjects8x8,11:Sprite Square Black TR
+8788:spriteWorldObjects8x8,12:Sprite Square Black BL
+8789:spriteWorldObjects8x8,13:Sprite Square Black BR
+8790:spriteWorldObjects8x8,32:Sprite Square Red TL
+8791:spriteWorldObjects8x8,33:Sprite Square Red TR
+8792:spriteWorldObjects8x8,48:Sprite Square Red BL
+8793:spriteWorldObjects8x8,49:Sprite Square Red BR
+8794:spriteWorldObjects8x8,34:Sprite Square Orange TL
+8795:spriteWorldObjects8x8,35:Sprite Square Orange TR
+8796:spriteWorldObjects8x8,50:Sprite Square Orange BL
+8797:spriteWorldObjects8x8,51:Sprite Square Orange BR
+8798:spriteWorldObjects8x8,36:Sprite Square Yellow TL
+8799:spriteWorldObjects8x8,37:Sprite Square Yellow TR
+8800:spriteWorldObjects8x8,52:Sprite Square Yellow BL
+8801:spriteWorldObjects8x8,53:Sprite Square Yellow BR
+8802:spriteWorldObjects8x8,38:Sprite Square Lime TL
+8803:spriteWorldObjects8x8,39:Sprite Square Lime TR
+8804:spriteWorldObjects8x8,54:Sprite Square Lime BL
+8805:spriteWorldObjects8x8,55:Sprite Square Lime BR
+8806:spriteWorldObjects8x8,40:Sprite Square Green TL
+8807:spriteWorldObjects8x8,41:Sprite Square Green TR
+8808:spriteWorldObjects8x8,56:Sprite Square Green BL
+8809:spriteWorldObjects8x8,57:Sprite Square Green BR
+8810:spriteWorldObjects8x8,42:Sprite Square Cyan TL
+8811:spriteWorldObjects8x8,43:Sprite Square Cyan TR
+8812:spriteWorldObjects8x8,58:Sprite Square Cyan BL
+8813:spriteWorldObjects8x8,59:Sprite Square Cyan BR
+8814:spriteWorldObjects8x8,44:Sprite Square Blue TL
+8815:spriteWorldObjects8x8,45:Sprite Square Blue TR
+8816:spriteWorldObjects8x8,60:Sprite Square Blue BL
+8817:spriteWorldObjects8x8,61:Sprite Square Blue BR
+8818:spriteWorldObjects8x8,46:Sprite Square Purple TL
+8819:spriteWorldObjects8x8,47:Sprite Square Purple TR
+8820:spriteWorldObjects8x8,62:Sprite Square Purple BL
+8821:spriteWorldObjects8x8,63:Sprite Square Purple BR
+8822:spriteWorldObjects8x8,128:Sprite Frame TL
+8823:spriteWorldObjects8x8,129:Sprite Frame TR
+8824:spriteWorldObjects8x8,130:Sprite Frame BL
+8825:spriteWorldObjects8x8,131:Sprite Frame BR
+8826:spriteWorldObjects8x8,132:Sprite Frame Vertical
+8827:spriteWorldObjects8x8,133:Sprite Frame Horizontal
+5744:stPatricksObjects8x8,35:Patty Grass 1
+5745:stPatricksObjects8x8,34:Patty Grass 2
+5746:stPatricksObjects8x8,33:Patty Grass 3
+5747:stPatricksObjects8x8,25:Patty Rainbow Road 1
+5748:stPatricksObjects8x8,26:Patty Rainbow Road 2
+5749:stPatricksObjects8x8,27:Patty Rainbow Road 3
+5750:stPatricksObjects8x8,28:Patty Rainbow Road 4
+5751:stPatricksObjects8x8,29:Patty Rainbow Road Rotated 1
+5752:stPatricksObjects8x8,30:Patty Rainbow Road Rotated 2
+5753:stPatricksObjects8x8,31:Patty Rainbow Road Rotated 3
+5754:stPatricksObjects8x8,32:Patty Rainbow Road Rotated 4
+5755:stPatricksObjects8x8,33:Patty Grass 3 No Walk
+14336:summerNexusObjects8x8,12:SN Bh Sd
+14337:summerNexusObjects8x8,13:SN Bh Sd Dk
+14338:summerNexusObjects8x8,14:SN Bh Sd Sf
+14339:summerNexusObjects8x8,15:SN Bh Gs
+14340:summerNexusObjects8x8,21:SN Dt
+14341:summerNexusObjects8x8,22:SN Dt Dk
+14342:summerNexusObjects8x8,23:SN Gs
+14343:summerNexusObjects8x8,24:SN Gs L
+14344:summerNexusObjects8x8,25:SN Gs Dk
+14345::SN Rv
+14346:summerNexusObjects8x8,32:SN Dry Gs
+14347:summerNexusObjects8x8,33:SN Dry Gs 2
+14348:summerNexusObjects8x8,34:SN S W
+14349:summerNexusObjects8x8,35:SN S W Dk
+14350::SN Dt GEd
+14351::SN Dt Dk GEd
+14352::SN Dt GLEd
+14353::SN Dt Dk GLEd
+14354::SN Dt GDEd
+14355::SN Dt Dk GDEd
+14356:summerNexusObjects8x8,37:SN S W Dk D
+14357:summerNexusObjects8x8,176:SN Bh Sd TldL
+14358:summerNexusObjects8x8,192:SN Bh Sd TldR
+14359::SN Bh St Pr TL
+14360::SN Bh St Pr TM
+14361::SN Bh St Pr TR
+14362::SN Bh St Pr ML
+14363::SN Bh St Pr MM
+14364::SN Bh St Pr MR
+14365::SN Bh St Pr BL
+14366::SN Bh St Pr BM
+14367::SN Bh St Pr BR
+14368::SN Wen Br t
+14369:summerNexusObjects8x8,325:SN Wen Br
+14370:summerNexusObjects8x8,326:SN Wen Br LE
+14371:summerNexusObjects8x8,327:SN Wen Br TLE
+14372:summerNexusObjects8x8,328:SN Wen Br TLIE
+14373:summerNexusObjects8x8,330:SN Wen Br RE
+14374:summerNexusObjects8x8,331:SN Wen Br TE
+14375:summerNexusObjects8x8,332:SN Wen Br BE
+14376:summerNexusObjects8x8,333:SN Wen Br TRE
+14377:summerNexusObjects8x8,334:SN Wen Br BRE
+14378:summerNexusObjects8x8,335:SN Wen Br BLE
+14379:summerNexusObjects8x8,336:SN Wen Br TRIE
+14380:summerNexusObjects8x8,337:SN Wen Br BLIE
+14381:summerNexusObjects8x8,338:SN Wen Br BRIE
+14382::SN Wen Br SP TL
+14383::SN Wen Br SP TM
+14384::SN Wen Br SP TR
+14385::SN Wen Br SP ML
+14386::SN Wen Br SP MM
+14387::SN Wen Br SP MR
+14388::SN Wen Br SP BL
+14389::SN Wen Br SP BM
+14390::SN Wen Br SP BR
+14391:summerNexusObjects8x8,343:SN Wen Br Sh
+14392:summerNexusObjects8x8,15:SN Bh Gs NO
+14393:summerNexusObjects8x8,47:SN L Gs Y
+14394::SN Dt GLYEd
+14395::SN Dt Dk GLYEd
+14396:summerNexusObjects8x8,368:SN Bh R
+14397::SN L Dt GLYEd
+14398::SN L Dt GLEd
+14399::SN F Wen Br WR ML
+14400::SN F Wen Br WR MM
+14401::SN F Wen Br WR MR
+14402::SN F Wen Br WR BL
+14403::SN F Wen Br WR BM
+14404::SN F Wen Br WR BR
+14405::SN Dt WR TM
+14406::SN Dt WR BM
+14407::SN Dt WR ML
+14408::SN Dt WR MR
+14409::SN Dt WR MM
+14410::SN Dry Gs WR
+14411::SN Dry Gs 2 WR
+14412:summerNexusObjects8x8,415:SN L Gs Gr
+14413::SN Fr Ed TL
+14414::SN Fr Ed TM
+14415::SN Fr Ed TR
+14416::SN Fr Ed ML
+14417::SN Fr Ed MR
+14418::SN Fr Ed BL
+14419::SN Fr Ed BM
+14420::SN Fr Ed BR
+14421::SN Fr Ed IC TL
+14422::SN Fr Ed IC TR
+14423::SN Fr Ed IC BL
+14424::SN Fr Ed IC BR
+14425::SN Fr Ed ST1 TL
+14426::SN Fr Ed ST1 TM
+14427::SN Fr Ed ST1 TR
+14428::SN Fr Ed ST1 ML
+14429::SN Fr Ed ST1 MR
+14430::SN Fr Ed ST1 BL
+14431::SN Fr Ed ST1 BM
+14432::SN Fr Ed ST1 BR
+14433::SN Fr Ed ST1 IC TL
+14434::SN Fr Ed ST1 IC TR
+14435::SN Fr Ed ST1 IC BL
+14436::SN Fr Ed ST1 IC BR
+14437::SN Fr Ed ST2 TL
+14438::SN Fr Ed ST2 TM
+14439::SN Fr Ed ST2 TR
+14440::SN Fr Ed ST2 ML
+14441::SN Fr Ed ST2 MR
+14442::SN Fr Ed ST2 BL
+14443::SN Fr Ed ST2 BM
+14444::SN Fr Ed ST2 BR
+14445::SN Fr Ed ST2 IC TL
+14446::SN Fr Ed ST2 IC TR
+14447::SN Fr Ed ST2 IC BL
+14448::SN Fr Ed ST2 IC BR
+14449:summerNexusObjects8x8,496:SN Fr Gs Tp
+14450:summerNexusObjects8x8,23:SN Fr Gs Tp ST
+14451::SN Fr Gs Tp H
+14452::SN Fr Gs Tp H ST
+14453:summerNexusObjects8x8,26:SN Rv NEge
+14454:summerNexusObjects8x8,524:SN Rv NEge L
+14455::SN Fr Ed NT TL
+14456::SN Fr Ed NT TM
+14457::SN Fr Ed NT TR
+14458::SN Fr Ed NT ML
+14459::SN Fr Ed NT MR
+14460::SN Fr Ed NT BL
+14461::SN Fr Ed NT BM
+14462::SN Fr Ed NT BR
+14463::SN Fr Ed NT IC TL
+14464::SN Fr Ed NT IC TR
+14465::SN Fr Ed NT IC BL
+14466::SN Fr Ed NT IC BR
+14467::SN BlTp
+14468::SN WenBM
+14469::SN WenBP
+14470::SN WenBTE
+14471::SN WenBBE
+14472::SN WenBPTE
+14473::SN WenBPBE
+14474:summerNexusObjects8x8,780:SNS Bh Sd
+14475:summerNexusObjects8x8,781:SNS Bh Sd Dk
+14476:summerNexusObjects8x8,782:SNS Bh Sd Sf
+14477:summerNexusObjects8x8,783:SNS Bh Gs
+14478:summerNexusObjects8x8,789:SNS Dt
+14479:summerNexusObjects8x8,790:SNS Dt Dk
+14480:summerNexusObjects8x8,791:SNS Gs
+14481:summerNexusObjects8x8,792:SNS Gs L
+14482:summerNexusObjects8x8,793:SNS Gs Dk
+14483::SNS Rv
+14484:summerNexusObjects8x8,800:SNS Dry Gs
+14485:summerNexusObjects8x8,801:SNS Dry Gs 2
+14486:summerNexusObjects8x8,802:SNS S W
+14487:summerNexusObjects8x8,803:SNS S W Dk
+14488::SNS Dt GEd
+14489::SNS Dt Dk GEd
+14490::SNS Dt GLEd
+14491::SNS Dt Dk GLEd
+14492::SNS Dt GDEd
+14493::SNS Dt Dk GDEd
+14494:summerNexusObjects8x8,805:SNS S W Dk D
+14495:summerNexusObjects8x8,944:SNS Bh Sd TldL
+14496:summerNexusObjects8x8,960:SNS Bh Sd TldR
+14497::SNS Bh St Pr TL
+14498::SNS Bh St Pr TM
+14499::SNS Bh St Pr TR
+14500::SNS Bh St Pr ML
+14501::SNS Bh St Pr MM
+14502::SNS Bh St Pr MR
+14503::SNS Bh St Pr BL
+14504::SNS Bh St Pr BM
+14505::SNS Bh St Pr BR
+14506::SNS Wen Br t
+14507:summerNexusObjects8x8,1093:SNS Wen Br
+14508:summerNexusObjects8x8,1094:SNS Wen Br LE
+14509:summerNexusObjects8x8,1095:SNS Wen Br TLE
+14510:summerNexusObjects8x8,1096:SNS Wen Br TLIE
+14511:summerNexusObjects8x8,1098:SNS Wen Br RE
+14512:summerNexusObjects8x8,1099:SNS Wen Br TE
+14513:summerNexusObjects8x8,1100:SNS Wen Br BE
+14514:summerNexusObjects8x8,1101:SNS Wen Br TRE
+14515:summerNexusObjects8x8,1102:SNS Wen Br BRE
+14516:summerNexusObjects8x8,1103:SNS Wen Br BLE
+14517:summerNexusObjects8x8,1104:SNS Wen Br TRIE
+14518:summerNexusObjects8x8,1105:SNS Wen Br BLIE
+14519:summerNexusObjects8x8,1106:SNS Wen Br BRIE
+14520::SNS Wen Br SP TL
+14521::SNS Wen Br SP TM
+14522::SNS Wen Br SP TR
+14523::SNS Wen Br SP ML
+14524::SNS Wen Br SP MM
+14525::SNS Wen Br SP MR
+14526::SNS Wen Br SP BL
+14527::SNS Wen Br SP BM
+14528::SNS Wen Br SP BR
+14529:summerNexusObjects8x8,1111:SNS Wen Br Sh
+14530:summerNexusObjects8x8,783:SNS Bh Gs NO
+14531:summerNexusObjects8x8,815:SNS L Gs Y
+14532::SNS Dt GLYEd
+14533::SNS Dt Dk GLYEd
+14534:summerNexusObjects8x8,1136:SNS Bh R
+14535::SNS L Dt GLYEd
+14536::SNS L Dt GLEd
+14537::SNS F Wen Br WR ML
+14538::SNS F Wen Br WR MM
+14539::SNS F Wen Br WR MR
+14540::SNS F Wen Br WR BL
+14541::SNS F Wen Br WR BM
+14542::SNS F Wen Br WR BR
+14543::SNS Dt WR TM
+14544::SNS Dt WR BM
+14545::SNS Dt WR ML
+14546::SNS Dt WR MR
+14547::SNS Dt WR MM
+14548::SNS Dry Gs WR
+14549::SNS Dry Gs 2 WR
+14550:summerNexusObjects8x8,1183:SNS L Gs Gr
+14551::SNS Fr Ed TL
+14552::SNS Fr Ed TM
+14553::SNS Fr Ed TR
+14554::SNS Fr Ed ML
+14555::SNS Fr Ed MR
+14556::SNS Fr Ed BL
+14557::SNS Fr Ed BM
+14558::SNS Fr Ed BR
+14559::SNS Fr Ed IC TL
+14560::SNS Fr Ed IC TR
+14561::SNS Fr Ed IC BL
+14562::SNS Fr Ed IC BR
+14563::SNS Fr Ed ST1 TL
+14564::SNS Fr Ed ST1 TM
+14565::SNS Fr Ed ST1 TR
+14566::SNS Fr Ed ST1 ML
+14567::SNS Fr Ed ST1 MR
+14568::SNS Fr Ed ST1 BL
+14569::SNS Fr Ed ST1 BM
+14570::SNS Fr Ed ST1 BR
+14571::SNS Fr Ed ST1 IC TL
+14572::SNS Fr Ed ST1 IC TR
+14573::SNS Fr Ed ST1 IC BL
+14574::SNS Fr Ed ST1 IC BR
+14575::SNS Fr Ed ST2 TL
+14576::SNS Fr Ed ST2 TM
+14577::SNS Fr Ed ST2 TR
+14578::SNS Fr Ed ST2 ML
+14579::SNS Fr Ed ST2 MR
+14580::SNS Fr Ed ST2 BL
+14581::SNS Fr Ed ST2 BM
+14582::SNS Fr Ed ST2 BR
+14583::SNS Fr Ed ST2 IC TL
+14584::SNS Fr Ed ST2 IC TR
+14585::SNS Fr Ed ST2 IC BL
+14586::SNS Fr Ed ST2 IC BR
+14587:summerNexusObjects8x8,1264:SNS Fr Gs Tp
+14588:summerNexusObjects8x8,791:SNS Fr Gs Tp ST
+14589::SNS Fr Gs Tp H
+14590::SNS Fr Gs Tp H ST
+14591:summerNexusObjects8x8,794:SNS Rv NEge
+14592:summerNexusObjects8x8,1292:SNS Rv NEge L
+14593::SNS Fr Ed NT TL
+14594::SNS Fr Ed NT TM
+14595::SNS Fr Ed NT TR
+14596::SNS Fr Ed NT ML
+14597::SNS Fr Ed NT MR
+14598::SNS Fr Ed NT BL
+14599::SNS Fr Ed NT BM
+14600::SNS Fr Ed NT BR
+14601::SNS Fr Ed NT IC TL
+14602::SNS Fr Ed NT IC TR
+14603::SNS Fr Ed NT IC BL
+14604::SNS Fr Ed NT IC BR
+14605:summerNexusObjects8x8,1328:SNS Pl
+14606:summerNexusObjects8x8,1329:SNS Br
+14607:summerNexusObjects8x8,1330:SNS W Pl F
+14608::SNS G Rg
+14609::SNS OC Rg
+14610:summerNexusObjects8x8,1339:SNS SS F
+14611:summerNexusObjects8x8,1346:SNS W P F
+14612:summerNexusObjects8x8,1351:SNS W P F Dk
+14613::SNS R Rg
+14614:summerNexusObjects8x8,1360:SNS s Bh Sd
+14615:summerNexusObjects8x8,1361:SNS s Bh Sd Dk
+14616:summerNexusObjects8x8,1362:SNS s Gs
+14617:summerNexusObjects8x8,1363:SNS s Gs L
+14618:summerNexusObjects8x8,1364:SNS s L Gs Y
+14619:summerNexusObjects8x8,1365:SNS s Bh Gs
+14620:summerNexusObjects8x8,1366:SNS s Wen Br
+14621:summerNexusObjects8x8,1367:SNS s Wen Br LE
+14622:summerNexusObjects8x8,1368:SNS s S W
+14623:summerNexusObjects8x8,1369:SNS s S W Dk
+14624:summerNexusObjects8x8,1370:SNS s S W Dk D
+14625:summerNexusObjects8x8,1371:SNS s SS F
+14626:summerNexusObjects8x8,1378:SNS s W P F
+14627:summerNexusObjects8x8,1383:SNS s W P F Dk
+14628:summerNexusObjects8x8,1386:SNS s Dry Gs
+14629:summerNexusObjects8x8,1387:SNS s Dt
+14630:summerNexusObjects8x8,1388:SNS s W Pl F
+14631:summerNexusObjects8x8,1389:SNS s Wen Br TE
+14632:summerNexusObjects8x8,1328:SNS s Pl
+14633::SNS s Dt Dk GLYEd
+14634::SNS WenBM
+14635::SNS WenBP
+14636::SNS WenBTE
+14637::SNS WenBBE
+14638::SNS WenBPTE
+14639::SNS WenBPBE
+14640:summerNexusObjects8x8,1548:SNN Bh Sd
+14641:summerNexusObjects8x8,1549:SNN Bh Sd Dk
+14642:summerNexusObjects8x8,1550:SNN Bh Sd Sf
+14643:summerNexusObjects8x8,1551:SNN Bh Gs NO
+14644:summerNexusObjects8x8,1557:SNN Dt
+14645:summerNexusObjects8x8,1558:SNN Dt Dk
+14646:summerNexusObjects8x8,1559:SNN Gs
+14647:summerNexusObjects8x8,1560:SNN Gs L
+14648:summerNexusObjects8x8,1561:SNN Gs Dk
+14649::SNN Rv
+14650:summerNexusObjects8x8,1568:SNN Dry Gs
+14651:summerNexusObjects8x8,1569:SNN Dry Gs 2
+14652:summerNexusObjects8x8,1570:SNN S W
+14653:summerNexusObjects8x8,1571:SNN S W Dk
+14654::SNN Dt GEd
+14655::SNN Dt Dk GEd
+14656::SNN Dt GLEd
+14657::SNN Dt Dk GLEd
+14658::SNN Dt GDEd
+14659::SNN Dt Dk GDEd
+14660:summerNexusObjects8x8,1573:SNN S W Dk D
+14661:summerNexusObjects8x8,1712:SNN Bh Sd TldL
+14662:summerNexusObjects8x8,1728:SNN Bh Sd TldR
+14663::SNN Bh St Pr TL
+14664::SNN Bh St Pr TM
+14665::SNN Bh St Pr TR
+14666::SNN Bh St Pr ML
+14667::SNN Bh St Pr MM
+14668::SNN Bh St Pr MR
+14669::SNN Bh St Pr BL
+14670::SNN Bh St Pr BM
+14671::SNN Bh St Pr BR
+14672::SNN Wen Br t
+14673:summerNexusObjects8x8,1861:SNN Wen Br
+14674:summerNexusObjects8x8,1862:SNN Wen Br LE
+14675:summerNexusObjects8x8,1863:SNN Wen Br TLE
+14676:summerNexusObjects8x8,1864:SNN Wen Br TLIE
+14677:summerNexusObjects8x8,1866:SNN Wen Br RE
+14678:summerNexusObjects8x8,1867:SNN Wen Br TE
+14679:summerNexusObjects8x8,1868:SNN Wen Br BE
+14680:summerNexusObjects8x8,1869:SNN Wen Br TRE
+14681:summerNexusObjects8x8,1870:SNN Wen Br BRE
+14682:summerNexusObjects8x8,1871:SNN Wen Br BLE
+14683:summerNexusObjects8x8,1872:SNN Wen Br TRIE
+14684:summerNexusObjects8x8,1873:SNN Wen Br BLIE
+14685:summerNexusObjects8x8,1874:SNN Wen Br BRIE
+14686::SNN Wen Br SP TL
+14687::SNN Wen Br SP TM
+14688::SNN Wen Br SP TR
+14689::SNN Wen Br SP ML
+14690::SNN Wen Br SP MM
+14691::SNN Wen Br SP MR
+14692::SNN Wen Br SP BL
+14693::SNN Wen Br SP BM
+14694::SNN Wen Br SP BR
+14695:summerNexusObjects8x8,1879:SNN Wen Br Sh
+14696:summerNexusObjects8x8,1551:SNN Bh Gs
+14697:summerNexusObjects8x8,1583:SNN L Gs Y
+14698::SNN Dt GLYEd
+14699::SNN Dt Dk GLYEd
+14700:summerNexusObjects8x8,1904:SNN Bh R
+14701::SNN L Dt GLYEd
+14702::SNN L Dt GLEd
+14703::SNN F Wen Br WR ML
+14704::SNN F Wen Br WR MM
+14705::SNN F Wen Br WR MR
+14706::SNN F Wen Br WR BL
+14707::SNN F Wen Br WR BM
+14708::SNN F Wen Br WR BR
+14709::SNN Dt WR TM
+14710::SNN Dt WR BM
+14711::SNN Dt WR ML
+14712::SNN Dt WR MR
+14713::SNN Dt WR MM
+14714::SNN Dry Gs WR
+14715::SNN Dry Gs 2 WR
+14716:summerNexusObjects8x8,1951:SNN L Gs Gr
+14717::SNN Fr Ed TL
+14718::SNN Fr Ed TM
+14719::SNN Fr Ed TR
+14720::SNN Fr Ed ML
+14721::SNN Fr Ed MR
+14722::SNN Fr Ed BL
+14723::SNN Fr Ed BM
+14724::SNN Fr Ed BR
+14725::SNN Fr Ed IC TL
+14726::SNN Fr Ed IC TR
+14727::SNN Fr Ed IC BL
+14728::SNN Fr Ed IC BR
+14729::SNN Fr Ed ST1 TL
+14730::SNN Fr Ed ST1 TM
+14731::SNN Fr Ed ST1 TR
+14732::SNN Fr Ed ST1 ML
+14733::SNN Fr Ed ST1 MR
+14734::SNN Fr Ed ST1 BL
+14735::SNN Fr Ed ST1 BM
+14736::SNN Fr Ed ST1 BR
+14737::SNN Fr Ed ST1 IC TL
+14738::SNN Fr Ed ST1 IC TR
+14739::SNN Fr Ed ST1 IC BL
+14740::SNN Fr Ed ST1 IC BR
+14741::SNN Fr Ed ST2 TL
+14742::SNN Fr Ed ST2 TM
+14743::SNN Fr Ed ST2 TR
+14744::SNN Fr Ed ST2 ML
+14745::SNN Fr Ed ST2 MR
+14746::SNN Fr Ed ST2 BL
+14747::SNN Fr Ed ST2 BM
+14748::SNN Fr Ed ST2 BR
+14749::SNN Fr Ed ST2 IC TL
+14750::SNN Fr Ed ST2 IC TR
+14751::SNN Fr Ed ST2 IC BL
+14752::SNN Fr Ed ST2 IC BR
+14753:summerNexusObjects8x8,2032:SNN Fr Gs Tp
+14754:summerNexusObjects8x8,1559:SNN Fr Gs Tp ST
+14755::SNN Fr Gs Tp H
+14756::SNN Fr Gs Tp H ST
+14757:summerNexusObjects8x8,1562:SNN Rv NEge
+14758:summerNexusObjects8x8,2060:SNN Rv NEge L
+14759::SNN Fr Ed NT TL
+14760::SNN Fr Ed NT TM
+14761::SNN Fr Ed NT TR
+14762::SNN Fr Ed NT ML
+14763::SNN Fr Ed NT MR
+14764::SNN Fr Ed NT BL
+14765::SNN Fr Ed NT BM
+14766::SNN Fr Ed NT BR
+14767::SNN Fr Ed NT IC TL
+14768::SNN Fr Ed NT IC TR
+14769::SNN Fr Ed NT IC BL
+14770::SNN Fr Ed NT IC BR
+14771:summerNexusObjects8x8,2096:SNN Pl
+14772:summerNexusObjects8x8,2097:SNN Br
+14773:summerNexusObjects8x8,2098:SNN W Pl F
+14774::SNN G Rg
+14775::SNN OC Rg
+14776:summerNexusObjects8x8,2107:SNN SS F
+14777:summerNexusObjects8x8,2114:SNN W P F
+14778:summerNexusObjects8x8,2119:SNN W P F Dk
+14779::SNN R Rg
+14780:lofiEnvironment2,13:SNN lWPF
+14781:lofiEnvironment2,13:SNN lWPFS
+14782:lofiEnvironment2,18:SNN lWPkF
+14783:lofiEnvironment2,133:SNN lSSF
+14784::SNN lGR
+14785::SNN lOCR
+14786::SNN lRR
+14787:summerNexusObjects8x8,1329:SNN lBr
+14788:summerNexusObjects8x8,1328:SNN lPl
+14789:summerNexusObjects8x8,783:SNN lBh Gs
+14790:summerNexusObjects8x8,1363:SNN lGsL
+14791:summerNexusObjects8x8,1364:SNS lLGsY
+14792:summerNexusObjects8x8,780:SNN lBhSd
+14793:summerNexusObjects8x8,1366:SNN lsWenBr
+14794:summerNexusObjects8x8,1100:SNN lWenBrBE
+14795:summerNexusObjects8x8,1093:SNN lWenBr
+14796:summerNexusObjects8x8,1368:SNN lsSW
+14797:summerNexusObjects8x8,2157:SNN s Wen Br TE
+14798:summerNexusObjects8x8,1328:SNN s Pl
+14799::SNN s Dt Dk GLYEd
+14800:summerNexusObjects8x8,2096:SNN Pl d
+14801:summerNexusObjects8x8,1183:SNN lLGsGr
+14802:summerNexusObjects8x8,780:SNN lBhSd2
+14803:summerNexusObjects8x8,781:SNN lBhSdDk
+14804::SNN WenBM
+14805::SNN WenBP
+14806::SNN WenBTE
+14807::SNN WenBBE
+14808::SNN WenBPTE
+14809::SNN WenBPBE
+14810:summerNexusObjects8x8,2223:SNN lWPF2
+14811:summerNexusObjects8x8,2215:SNN lWPkF2
+14812:summerNexusObjects8x8,2224:SNN lPl2
+14813:summerNexusObjects8x8,1366:SNS sWenBr2
+14814:summerNexusObjects8x8,1367:SNS sWenBrLE2
+14815:summerNexusObjects8x8,1391:SNS sWenBrRE2
+14816:summerNexusObjects8x8,1360:SNN sBhSd
+14817:summerNexusObjects8x8,1365:SNN sBhGs
+14818:summerNexusObjects8x8,2209:SNN slGsL
+14819:summerNexusObjects8x8,2211:SNS sLGsY2
+14820:summerNexusObjects8x8,2316:SNR Bh Sd
+14821:summerNexusObjects8x8,2317:SNR Bh Sd Dk
+14822:summerNexusObjects8x8,2318:SNR Bh Sd Sf
+14823:summerNexusObjects8x8,2319:SNR Bh Gs
+14824:summerNexusObjects8x8,2325:SNR Dt
+14825:summerNexusObjects8x8,2326:SNR Dt Dk
+14826:summerNexusObjects8x8,2327:SNR Gs
+14827:summerNexusObjects8x8,2328:SNR Gs L
+14828:summerNexusObjects8x8,2329:SNR Gs Dk
+14829::SNR Rv
+14830:summerNexusObjects8x8,2336:SNR Dry Gs
+14831:summerNexusObjects8x8,2337:SNR Dry Gs 2
+14832:summerNexusObjects8x8,2338:SNR S W
+14833:summerNexusObjects8x8,2339:SNR S W Dk
+14834::SNR Dt GEd
+14835::SNR Dt Dk GEd
+14836::SNR Dt GLEd
+14837::SNR Dt Dk GLEd
+14838::SNR Dt GDEd
+14839::SNR Dt Dk GDEd
+14840:summerNexusObjects8x8,2341:SNR S W Dk D
+14841:summerNexusObjects8x8,2480:SNR Bh Sd TldL
+14842:summerNexusObjects8x8,2496:SNR Bh Sd TldR
+14843::SNR Bh St Pr TL
+14844::SNR Bh St Pr TM
+14845::SNR Bh St Pr TR
+14846::SNR Bh St Pr ML
+14847::SNR Bh St Pr MM
+14848::SNR Bh St Pr MR
+14849::SNR Bh St Pr BL
+14850::SNR Bh St Pr BM
+14851::SNR Bh St Pr BR
+14852::SNR Wen Br t
+14853:summerNexusObjects8x8,2629:SNR Wen Br
+14854:summerNexusObjects8x8,2630:SNR Wen Br LE
+14855:summerNexusObjects8x8,2631:SNR Wen Br TLE
+14856:summerNexusObjects8x8,2632:SNR Wen Br TLIE
+14857:summerNexusObjects8x8,2634:SNR Wen Br RE
+14858:summerNexusObjects8x8,2635:SNR Wen Br TE
+14859:summerNexusObjects8x8,2636:SNR Wen Br BE
+14860:summerNexusObjects8x8,2637:SNR Wen Br TRE
+14861:summerNexusObjects8x8,2638:SNR Wen Br BRE
+14862:summerNexusObjects8x8,2639:SNR Wen Br BLE
+14863:summerNexusObjects8x8,2640:SNR Wen Br TRIE
+14864:summerNexusObjects8x8,2641:SNR Wen Br BLIE
+14865:summerNexusObjects8x8,2642:SNR Wen Br BRIE
+14866::SNR Wen Br SP TL
+14867::SNR Wen Br SP TM
+14868::SNR Wen Br SP TR
+14869::SNR Wen Br SP ML
+14870::SNR Wen Br SP MM
+14871::SNR Wen Br SP MR
+14872::SNR Wen Br SP BL
+14873::SNR Wen Br SP BM
+14874::SNR Wen Br SP BR
+14875:summerNexusObjects8x8,2647:SNR Wen Br Sh
+14876:summerNexusObjects8x8,2319:SNR Bh Gs NO
+14877:summerNexusObjects8x8,2351:SNR L Gs Y
+14878::SNR Dt GLYEd
+14879::SNR Dt Dk GLYEd
+14880:summerNexusObjects8x8,2672:SNR Bh R
+14881::SNR L Dt GLYEd
+14882::SNR L Dt GLEd
+14883::SNR F Wen Br WR ML
+14884::SNR F Wen Br WR MM
+14885::SNR F Wen Br WR MR
+14886::SNR F Wen Br WR BL
+14887::SNR F Wen Br WR BM
+14888::SNR F Wen Br WR BR
+14889::SNR Dt WR TM
+14890::SNR Dt WR BM
+14891::SNR Dt WR ML
+14892::SNR Dt WR MR
+14893::SNR Dt WR MM
+14894::SNR Dry Gs WR
+14895::SNR Dry Gs 2 WR
+14896:summerNexusObjects8x8,2719:SNR L Gs Gr
+14897::SNR Fr Ed TL
+14898::SNR Fr Ed TM
+14899::SNR Fr Ed TR
+14900::SNR Fr Ed ML
+14901::SNR Fr Ed MR
+14902::SNR Fr Ed BL
+14903::SNR Fr Ed BM
+14904::SNR Fr Ed BR
+14905::SNR Fr Ed IC TL
+14906::SNR Fr Ed IC TR
+14907::SNR Fr Ed IC BL
+14908::SNR Fr Ed IC BR
+14909::SNR Fr Ed ST1 TL
+14910::SNR Fr Ed ST1 TM
+14911::SNR Fr Ed ST1 TR
+14912::SNR Fr Ed ST1 ML
+14913::SNR Fr Ed ST1 MR
+14914::SNR Fr Ed ST1 BL
+14915::SNR Fr Ed ST1 BM
+14916::SNR Fr Ed ST1 BR
+14917::SNR Fr Ed ST1 IC TL
+14918::SNR Fr Ed ST1 IC TR
+14919::SNR Fr Ed ST1 IC BL
+14920::SNR Fr Ed ST1 IC BR
+14921::SNR Fr Ed ST2 TL
+14922::SNR Fr Ed ST2 TM
+14923::SNR Fr Ed ST2 TR
+14924::SNR Fr Ed ST2 ML
+14925::SNR Fr Ed ST2 MR
+14926::SNR Fr Ed ST2 BL
+14927::SNR Fr Ed ST2 BM
+14928::SNR Fr Ed ST2 BR
+14929::SNR Fr Ed ST2 IC TL
+14930::SNR Fr Ed ST2 IC TR
+14931::SNR Fr Ed ST2 IC BL
+14932::SNR Fr Ed ST2 IC BR
+14933:summerNexusObjects8x8,2800:SNR Fr Gs Tp
+14934:summerNexusObjects8x8,2327:SNR Fr Gs Tp ST
+14935::SNR Fr Gs Tp H
+14936::SNR Fr Gs Tp H ST
+14937:summerNexusObjects8x8,2330:SNR Rv NEge
+14938:summerNexusObjects8x8,2828:SNR Rv NEge L
+14939::SNR Fr Ed NT TL
+14940::SNR Fr Ed NT TM
+14941::SNR Fr Ed NT TR
+14942::SNR Fr Ed NT ML
+14943::SNR Fr Ed NT MR
+14944::SNR Fr Ed NT BL
+14945::SNR Fr Ed NT BM
+14946::SNR Fr Ed NT BR
+14947::SNR Fr Ed NT IC TL
+14948::SNR Fr Ed NT IC TR
+14949::SNR Fr Ed NT IC BL
+14950::SNR Fr Ed NT IC BR
+14951:summerNexusObjects8x8,2864:SNR Pl
+14952:summerNexusObjects8x8,2865:SNR Br
+14953:summerNexusObjects8x8,2866:SNR W Pl F
+14954::SNR G Rg
+14955::SNR OC Rg
+14956:summerNexusObjects8x8,2875:SNR SS F
+14957:summerNexusObjects8x8,2882:SNR W P F
+14958:summerNexusObjects8x8,2887:SNR W P F Dk
+14959::SNR R Rg
+14960:summerNexusObjects8x8,2896:SNR s Bh Sd
+14961:summerNexusObjects8x8,2897:SNR s Bh Sd Dk
+14962:summerNexusObjects8x8,2898:SNR s Gs
+14963:summerNexusObjects8x8,2899:SNR s Gs L
+14964:summerNexusObjects8x8,2900:SNR s L Gs Y
+14965:summerNexusObjects8x8,2901:SNR s Bh Gs
+14966:summerNexusObjects8x8,2902:SNR s Wen Br
+14967:summerNexusObjects8x8,2903:SNR s Wen Br LE
+14968:summerNexusObjects8x8,2904:SNR s S W
+14969:summerNexusObjects8x8,2905:SNR s S W Dk
+14970:summerNexusObjects8x8,2906:SNR s S W Dk D
+14971:summerNexusObjects8x8,2907:SNR s SS F
+14972:summerNexusObjects8x8,2914:SNR s W P F
+14973:summerNexusObjects8x8,2919:SNR s W P F Dk
+14974:summerNexusObjects8x8,2922:SNR s Dry Gs
+14975:summerNexusObjects8x8,2923:SNR s Dt
+14976:summerNexusObjects8x8,2924:SNR s W Pl F
+14977:summerNexusObjects8x8,2925:SNR s Wen Br TE
+14978:summerNexusObjects8x8,2864:SNR s Pl
+14979::SNR s Dt Dk GLYEd
+14980::SNR WenBM
+14981::SNR WenBP
+14982::SNR WenBTE
+14983::SNR WenBBE
+14984::SNR WenBPTE
+14985::SNR WenBPBE
+14986:summerNexusObjects8x8,1330:SNS WPlFs
+14987:lofiEnvironment2,13:SNN lWPFs
+14988:summerNexusObjects8x8,2223:SNN lWPF2s
+14989:summerNexusObjects8x8,2098:SNN WPlFs
+43984:theMachineObjects8x8,0:Machine Bright 1
+43985:theMachineObjects8x8,1:Machine Bright 2
+43986:theMachineObjects8x8,2:Machine Bright 3
+43987:theMachineObjects8x8,3:Machine Bright 4
+43988:theMachineObjects8x8,4:Machine Bright 5
+43989:theMachineObjects8x8,16:Machine Bright 6
+43990:theMachineObjects8x8,17:Machine Bright 7
+43991:theMachineObjects8x8,18:Machine Bright 8
+43992:theMachineObjects8x8,19:Machine Bright 9
+43993:theMachineObjects8x8,20:Machine Bright 10
+43994:theMachineObjects8x8,32:Machine Mid 1
+43995:theMachineObjects8x8,33:Machine Mid 2
+43996:theMachineObjects8x8,34:Machine Mid 3
+43997:theMachineObjects8x8,35:Machine Mid 4
+43998:theMachineObjects8x8,36:Machine Mid 5
+43999:theMachineObjects8x8,48:Machine Mid 6
+44000:theMachineObjects8x8,49:Machine Mid 7
+44001:theMachineObjects8x8,50:Machine Mid 8
+44002:theMachineObjects8x8,51:Machine Mid 9
+44003:theMachineObjects8x8,52:Machine Mid 10
+44004:theMachineObjects8x8,64:Machine Dim 1
+44005:theMachineObjects8x8,65:Machine Dim 2
+44006:theMachineObjects8x8,66:Machine Dim 3
+44007:theMachineObjects8x8,67:Machine Dim 4
+44008:theMachineObjects8x8,68:Machine Dim 5
+44009:theMachineObjects8x8,80:Machine Dim 6
+44010:theMachineObjects8x8,81:Machine Dim 7
+44011:theMachineObjects8x8,82:Machine Dim 8
+44012:theMachineObjects8x8,83:Machine Dim 9
+44013:theMachineObjects8x8,84:Machine Dim 10
+44014:theMachineObjects8x8,11:Machine Server Tile
+44015:theMachineObjects8x8,14:Machine Surge Server Tile
+44016:theMachineObjects8x8,5:Machine Surge Bright 1
+44017:theMachineObjects8x8,6:Machine Surge Bright 2
+44018:theMachineObjects8x8,7:Machine Surge Bright 3
+44019:theMachineObjects8x8,8:Machine Surge Bright 4
+44020:theMachineObjects8x8,9:Machine Surge Bright 5
+44021:theMachineObjects8x8,21:Machine Surge Bright 6
+44022:theMachineObjects8x8,22:Machine Surge Bright 7
+44023:theMachineObjects8x8,23:Machine Surge Bright 8
+44024:theMachineObjects8x8,24:Machine Surge Bright 9
+44025:theMachineObjects8x8,25:Machine Surge Bright 10
+44026:theMachineObjects8x8,37:Machine Surge Mid 1
+44027:theMachineObjects8x8,38:Machine Surge Mid 2
+44028:theMachineObjects8x8,39:Machine Surge Mid 3
+44029:theMachineObjects8x8,40:Machine Surge Mid 4
+44030:theMachineObjects8x8,41:Machine Surge Mid 5
+44031:theMachineObjects8x8,53:Machine Surge Mid 6
+44032:theMachineObjects8x8,54:Machine Surge Mid 7
+44033:theMachineObjects8x8,55:Machine Surge Mid 8
+44034:theMachineObjects8x8,56:Machine Surge Mid 9
+44035:theMachineObjects8x8,57:Machine Surge Mid 10
+44036:theMachineObjects8x8,69:Machine Surge Dim 1
+44037:theMachineObjects8x8,70:Machine Surge Dim 2
+44038:theMachineObjects8x8,71:Machine Surge Dim 3
+44039:theMachineObjects8x8,72:Machine Surge Dim 4
+44040:theMachineObjects8x8,73:Machine Surge Dim 5
+44041:theMachineObjects8x8,85:Machine Surge Dim 6
+44042:theMachineObjects8x8,86:Machine Surge Dim 7
+44043:theMachineObjects8x8,87:Machine Surge Dim 8
+44044:theMachineObjects8x8,88:Machine Surge Dim 9
+44045:theMachineObjects8x8,89:Machine Surge Dim 10
+44046:theMachineObjects8x8,96:Exposed Code
+4301:theShattersObjects8x8,88:Shatters Pure Evil Unwalkable
+29917:theShattersObjects8x8,88:Shatters Pure Evil
+29918:theShattersObjects8x8,16:Shatters Village Grass
+29919:theShattersObjects8x8,82:Shatters Cobble
+29920:theShattersObjects8x8,153:Shatters Hall Siding
+29800::Shatters Royal Red
+29801:theShattersObjects8x8,88:Shatters Pure Evil Safe
+29802::Shatters Wooden Floor
+29803:theShattersObjects8x8,124:Shatters Dirt
+29804:theShattersObjects8x8,160:Shatters Drawbridge Inner
+29805:theShattersObjects8x8,162:Shatters Drawbridge Left
+29806:theShattersObjects8x8,163:Shatters Drawbridge Right
+29807::Shatters Bridge Tile
+29916:theShattersObjects8x8,134:Shatters Bridge Tile Damaged
+29808::Shatters Bridge Tile HL
+29809::Shatters Bridge Tile HR
+29810::Shatters Bridge Tile VT
+29811::Shatters Bridge Tile VB
+29812::Shatters Bridge Tile TL
+29813::Shatters Bridge Tile TR
+29814::Shatters Bridge Tile BL
+29815::Shatters Bridge Tile BR
+29816::Shatters Bridge Cracked TL
+29817::Shatters Bridge Cracked TR
+29818::Shatters Bridge Cracked BL
+29819::Shatters Bridge Cracked BR
+29820:theShattersObjects8x8,149:Shatters Bridge Rim V
+29821:theShattersObjects8x8,151:Shatters Bridge Rim H
+29822::Shatters Bridge Decor
+29823::Shatters Bridge Gate Tile
+29915:theShattersObjects8x8,130:Shatters Bridge Gate Tile Damaged
+29825:theShattersObjects8x8,192:Shatters Village Grass Bright
+29826:theShattersObjects8x8,200:Shatters Village Grass Dark
+29827:theShattersObjects8x8,196:Shatters Dirt Bright
+29828:theShattersObjects8x8,204:Shatters Dirt Dark
+29829:theShattersObjects8x8,13:Shatters Carpet Solid
+29830:theShattersObjects8x8,32:Shatters Crest Decal 1
+29831:theShattersObjects8x8,33:Shatters Crest Decal 2
+29832:theShattersObjects8x8,34:Shatters Crest Decal 3
+29833:theShattersObjects8x8,35:Shatters Crest Decal 4
+29834:theShattersObjects8x8,36:Shatters Crest Decal 5
+29835:theShattersObjects8x8,37:Shatters Crest Decal 6
+29836:theShattersObjects8x8,38:Shatters Crest Decal 7
+29837:theShattersObjects8x8,39:Shatters Crest Decal 8
+29838:theShattersObjects8x8,40:Shatters Crest Decal 9
+29839:theShattersObjects8x8,41:Shatters Crest Decal 10
+29840:theShattersObjects8x8,42:Shatters Crest Decal 11
+29841:theShattersObjects8x8,43:Shatters Crest Decal 12
+29842:theShattersObjects8x8,44:Shatters Crest Decal 13
+29843:theShattersObjects8x8,45:Shatters Crest Decal 14
+29844:theShattersObjects8x8,46:Shatters Crest Decal 15
+29845:theShattersObjects8x8,47:Shatters Crest Decal 16
+29846:theShattersObjects8x8,14:Shatters Carpet Tear Cobble TL
+29847:theShattersObjects8x8,15:Shatters Carpet Tear Cobble TR
+29848:theShattersObjects8x8,30:Shatters Carpet Tear Cobble BL
+29849:theShattersObjects8x8,31:Shatters Carpet Tear Cobble BR
+29850:theShattersObjects8x8,9:Shatters Carpet Tear Royal TL
+29851:theShattersObjects8x8,10:Shatters Carpet Tear Royal TR
+29852:theShattersObjects8x8,11:Shatters Carpet Tear Royal BL
+29853:theShattersObjects8x8,12:Shatters Carpet Tear Royal BR
+29854:theShattersObjects8x8,96:Shatters Carpet Corner Cobble TL
+29855:theShattersObjects8x8,97:Shatters Carpet Corner Cobble TR
+29856:theShattersObjects8x8,98:Shatters Carpet Corner Cobble BL
+29857:theShattersObjects8x8,99:Shatters Carpet Corner Cobble BR
+29858:theShattersObjects8x8,100:Shatters Carpet Side Cobble Top
+29859:theShattersObjects8x8,101:Shatters Carpet Side Cobble Bottom
+29860:theShattersObjects8x8,102:Shatters Carpet Side Cobble Left
+29861:theShattersObjects8x8,103:Shatters Carpet Side Cobble Right
+29862:theShattersObjects8x8,104:Shatters Carpet Inner Corner Cobble TL
+29863:theShattersObjects8x8,105:Shatters Carpet Inner Corner Cobble TR
+29864:theShattersObjects8x8,106:Shatters Carpet Inner Corner Cobble BL
+29865:theShattersObjects8x8,107:Shatters Carpet Inner Corner Cobble BR
+28905:theShattersObjects8x8,524:Shatters Carpet Chapel Solid
+29866:theShattersObjects8x8,224:Shatters Carpet Corner Chapel TL
+29867:theShattersObjects8x8,225:Shatters Carpet Corner Chapel TR
+29868:theShattersObjects8x8,226:Shatters Carpet Corner Chapel BL
+29869:theShattersObjects8x8,227:Shatters Carpet Corner Chapel BR
+29870:theShattersObjects8x8,228:Shatters Carpet Side Chapel Top
+29871:theShattersObjects8x8,229:Shatters Carpet Side Chapel Bottom
+29872:theShattersObjects8x8,230:Shatters Carpet Side Chapel Left
+29873:theShattersObjects8x8,231:Shatters Carpet Side Chapel Right
+29874:theShattersObjects8x8,232:Shatters Carpet Inner Corner Chapel TL
+29875:theShattersObjects8x8,233:Shatters Carpet Inner Corner Chapel TR
+29876:theShattersObjects8x8,234:Shatters Carpet Inner Corner Chapel BL
+29877:theShattersObjects8x8,235:Shatters Carpet Inner Corner Chapel BR
+29878:theShattersObjects8x8,93:Shatters Carpet Tear Cobble L1
+29879:theShattersObjects8x8,109:Shatters Carpet Tear Cobble L2
+29880:theShattersObjects8x8,94:Shatters Carpet Tear Cobble R1
+29881:theShattersObjects8x8,110:Shatters Carpet Tear Cobble R2
+29882:theShattersObjects8x8,92:Shatters Carpet Shreds Cobble L1
+29883:theShattersObjects8x8,108:Shatters Carpet Shreds Cobble L2
+29884:theShattersObjects8x8,95:Shatters Carpet Shreds Cobble R1
+29885:theShattersObjects8x8,111:Shatters Carpet Shreds Cobble R2
+29886:theShattersObjects8x8,236:Shatters Carpet Inner Corner Chapel Blank TL
+29887:theShattersObjects8x8,252:Shatters Carpet Inner Corner Chapel Blank BL
+29888:theShattersObjects8x8,237:Shatters Carpet Inner Corner Chapel Blank TR
+29889:theShattersObjects8x8,253:Shatters Carpet Inner Corner Chapel Blank BR
+29890:theShattersObjects8x8,238:Shatters Carpet Shreds Chapel TL
+29891:theShattersObjects8x8,239:Shatters Carpet Shreds Chapel TR
+29892:theShattersObjects8x8,254:Shatters Carpet Shreds Chapel BL
+29893:theShattersObjects8x8,255:Shatters Carpet Shreds Chapel BR
+29894:theShattersObjects8x8,172:Shatters Dirt Coast
+29895::Shatters Brick
+29896:theShattersObjects8x8,221:Shatters Brick Damaged
+29897::Shatters Unwalkable Gauntlet Floor
+29898:theShattersObjects8x8,224:Shatters Unwalkable Corner Gauntlet TL
+29899:theShattersObjects8x8,225:Shatters Unwalkable Corner Gauntlet TR
+29900:theShattersObjects8x8,226:Shatters Unwalkable Corner Gauntlet BL
+29901:theShattersObjects8x8,227:Shatters Unwalkable Corner Gauntlet BR
+29902:theShattersObjects8x8,228:Shatters Unwalkable Side Gauntlet Top
+29903:theShattersObjects8x8,229:Shatters Unwalkable Side Gauntlet Bottom
+29904:theShattersObjects8x8,230:Shatters Unwalkable Side Gauntlet Left
+29905:theShattersObjects8x8,231:Shatters Unwalkable Side Gauntlet Right
+29906:theShattersObjects8x8,237:Shatters Unwalkable Tear Gauntlet L1
+29907:theShattersObjects8x8,253:Shatters Unwalkable Tear Gauntlet L2
+29908:theShattersObjects8x8,238:Shatters Unwalkable Tear Gauntlet R1
+29909:theShattersObjects8x8,254:Shatters Unwalkable Tear Gauntlet R2
+29910:theShattersObjects8x8,236:Shatters Unwalkable Shreds Gauntlet L1
+29911:theShattersObjects8x8,252:Shatters Unwalkable Shreds Gauntlet L2
+29912:theShattersObjects8x8,239:Shatters Unwalkable Shreds Gauntlet R1
+29913:theShattersObjects8x8,255:Shatters Unwalkable Shreds Gauntlet R2
+29914:theShattersObjects8x8,13:Shatters Carpet Unwalkable
+29921:theShattersObjects8x8,86:Shatters Covered Magi
+29922:theShattersObjects8x8,268:Shatters Carpet Inner Corner Blank TL
+29923:theShattersObjects8x8,269:Shatters Carpet Inner Corner Blank TR
+29924:theShattersObjects8x8,270:Shatters Carpet Inner Corner Blank BL
+29925:theShattersObjects8x8,271:Shatters Carpet Inner Corner Blank BR
+29926:theShattersObjects8x8,256:Shatters Crest Major U1
+29927:theShattersObjects8x8,257:Shatters Crest Major U2
+29928:theShattersObjects8x8,258:Shatters Crest Major U3
+29929:theShattersObjects8x8,259:Shatters Crest Major U4
+29930:theShattersObjects8x8,260:Shatters Crest Major U5
+29931:theShattersObjects8x8,272:Shatters Crest Major U6
+29932:theShattersObjects8x8,273:Shatters Crest Major U7
+29933:theShattersObjects8x8,274:Shatters Crest Major U8
+29934:theShattersObjects8x8,275:Shatters Crest Major U9
+29935:theShattersObjects8x8,276:Shatters Crest Major U10
+29936:theShattersObjects8x8,288:Shatters Crest Major U11
+29937:theShattersObjects8x8,289:Shatters Crest Major U12
+29938:theShattersObjects8x8,290:Shatters Crest Major U13
+29939:theShattersObjects8x8,291:Shatters Crest Major U14
+29940:theShattersObjects8x8,292:Shatters Crest Major U15
+29941:theShattersObjects8x8,304:Shatters Crest Major U16
+29942:theShattersObjects8x8,305:Shatters Crest Major U17
+29943:theShattersObjects8x8,306:Shatters Crest Major U18
+29944:theShattersObjects8x8,307:Shatters Crest Major U19
+29945:theShattersObjects8x8,308:Shatters Crest Major U20
+29946:theShattersObjects8x8,320:Shatters Crest Major U21
+29947:theShattersObjects8x8,321:Shatters Crest Major U22
+29948:theShattersObjects8x8,322:Shatters Crest Major U23
+29949:theShattersObjects8x8,323:Shatters Crest Major U24
+29950:theShattersObjects8x8,324:Shatters Crest Major U25
+29951:theShattersObjects8x8,336:Shatters Crest Major R1
+29952:theShattersObjects8x8,337:Shatters Crest Major R2
+29953:theShattersObjects8x8,338:Shatters Crest Major R3
+29954:theShattersObjects8x8,339:Shatters Crest Major R4
+29955:theShattersObjects8x8,340:Shatters Crest Major R5
+29956:theShattersObjects8x8,352:Shatters Crest Major R6
+29957:theShattersObjects8x8,353:Shatters Crest Major R7
+29958:theShattersObjects8x8,354:Shatters Crest Major R8
+29959:theShattersObjects8x8,355:Shatters Crest Major R9
+29960:theShattersObjects8x8,356:Shatters Crest Major R10
+29961:theShattersObjects8x8,368:Shatters Crest Major R11
+29962:theShattersObjects8x8,369:Shatters Crest Major R12
+29963:theShattersObjects8x8,370:Shatters Crest Major R13
+29964:theShattersObjects8x8,371:Shatters Crest Major R14
+29965:theShattersObjects8x8,372:Shatters Crest Major R15
+29966:theShattersObjects8x8,384:Shatters Crest Major R16
+29967:theShattersObjects8x8,385:Shatters Crest Major R17
+29968:theShattersObjects8x8,386:Shatters Crest Major R18
+29969:theShattersObjects8x8,387:Shatters Crest Major R19
+29970:theShattersObjects8x8,388:Shatters Crest Major R20
+29971:theShattersObjects8x8,400:Shatters Crest Major R21
+29972:theShattersObjects8x8,401:Shatters Crest Major R22
+29973:theShattersObjects8x8,402:Shatters Crest Major R23
+29974:theShattersObjects8x8,403:Shatters Crest Major R24
+29975:theShattersObjects8x8,404:Shatters Crest Major R25
+29976:theShattersObjects8x8,416:Shatters Crest Major L1
+29977:theShattersObjects8x8,417:Shatters Crest Major L2
+29978:theShattersObjects8x8,418:Shatters Crest Major L3
+29979:theShattersObjects8x8,419:Shatters Crest Major L4
+29980:theShattersObjects8x8,420:Shatters Crest Major L5
+29824:theShattersObjects8x8,432:Shatters Crest Major L6
+29269:theShattersObjects8x8,433:Shatters Crest Major L7
+29270:theShattersObjects8x8,434:Shatters Crest Major L8
+29271:theShattersObjects8x8,435:Shatters Crest Major L9
+29272:theShattersObjects8x8,436:Shatters Crest Major L10
+29273:theShattersObjects8x8,448:Shatters Crest Major L11
+29274:theShattersObjects8x8,449:Shatters Crest Major L12
+29275:theShattersObjects8x8,450:Shatters Crest Major L13
+29276:theShattersObjects8x8,451:Shatters Crest Major L14
+29277:theShattersObjects8x8,452:Shatters Crest Major L15
+29278:theShattersObjects8x8,464:Shatters Crest Major L16
+29279:theShattersObjects8x8,465:Shatters Crest Major L17
+29280:theShattersObjects8x8,466:Shatters Crest Major L18
+29281:theShattersObjects8x8,467:Shatters Crest Major L19
+29282:theShattersObjects8x8,468:Shatters Crest Major L20
+29283:theShattersObjects8x8,480:Shatters Crest Major L21
+29284:theShattersObjects8x8,481:Shatters Crest Major L22
+29285:theShattersObjects8x8,482:Shatters Crest Major L23
+29286:theShattersObjects8x8,483:Shatters Crest Major L24
+29287:theShattersObjects8x8,484:Shatters Crest Major L25
+29288:theShattersObjects8x8,244:Shatters Castle Brick Floor
+29289:theShattersObjects8x8,248:Shatters Castle Brick Damaged
+29290:theShattersObjects8x8,261:Shatters Castle Brick Blood
+29291:theShattersObjects8x8,265:Shatters Castle Brick Void
+29292::Shatters Castle Dark Stone
+29293:theShattersObjects8x8,421:Shatters Village Grass Foliage
+29294::Shatters Carpet Cobble Smart
+29295:theShattersObjects8x8,458:Shatters Treasure Siding
+29296:theShattersObjects8x8,462:Shatters Treasure Floor
+29297:theShattersObjects8x8,473:Shatters Keep Floor
+29298:theShattersObjects8x8,462:Shatters Treasure Floor Blank
+29299::Shatters Study Checkerboard
+29300:theShattersObjects8x8,505:Shatters Bookshelf Floor
+29301:theShattersObjects8x8,505:Shatters Gravel
+29302::Shatters Grate TL
+29303::Shatters Grate TR
+29304::Shatters Grate BL
+29305::Shatters Grate BR
+28906:theShattersObjects8x8,518:Shatters Village Grass Corrupt
+28907:theShattersObjects8x8,514:Shatters Dirt Corrupt
+28908:theShattersObjects8x8,516:Shatters Cobble Corrupt
+28909:theShattersObjects8x8,520:Shatters Bridge Tile Corrupt
+28910:theShattersObjects8x8,507:Shatters Wooden Floor Corrupt
+28911:theShattersObjects8x8,509:Shatters Drawbridge Inner Vertical
+28912:theShattersObjects8x8,510:Shatters Drawbridge Top
+28913:theShattersObjects8x8,526:Shatters Drawbridge Bottom
+28914:theShattersObjects8x8,26:Shatters Wooden Floor Vines
+28915:theShattersObjects8x8,28:Shatters Wooden Floor Damaged
+28916::Shatters Bridge Tile Gauntlet
+28917:theShattersObjects8x8,473:Shatters Lockup Stone
+28918:theShattersObjects8x8,672:Shatters Carpet Corner Royal TL
+28919:theShattersObjects8x8,673:Shatters Carpet Corner Royal TR
+28920:theShattersObjects8x8,674:Shatters Carpet Corner Royal BL
+28921:theShattersObjects8x8,675:Shatters Carpet Corner Royal BR
+28922:theShattersObjects8x8,679:Shatters Carpet Side Royal Top
+28923:theShattersObjects8x8,678:Shatters Carpet Side Royal Bottom
+28924:theShattersObjects8x8,676:Shatters Carpet Side Royal Left
+28925:theShattersObjects8x8,677:Shatters Carpet Side Royal Right
+28926:theShattersObjects8x8,687:Shatters Carpet Inner Corner Royal TL
+28927:theShattersObjects8x8,686:Shatters Carpet Inner Corner Royal TR
+28928:theShattersObjects8x8,685:Shatters Carpet Inner Corner Royal BL
+28929:theShattersObjects8x8,684:Shatters Carpet Inner Corner Royal BR
+28930:theShattersObjects8x8,683:Shatters Carpet Side Royal Trim Top
+28931:theShattersObjects8x8,682:Shatters Carpet Side Royal Trim Bottom
+28932:theShattersObjects8x8,680:Shatters Carpet Side Royal Trim Left
+28933:theShattersObjects8x8,681:Shatters Carpet Side Royal Trim Right
+28934:theShattersObjects8x8,689:Shatters Carpet Stairs Left
+28935:theShattersObjects8x8,690:Shatters Carpet Stairs Mid
+28936:theShattersObjects8x8,691:Shatters Carpet Stairs Right
+28937:theShattersObjects8x8,692:Shatters Throne Red Floor
+28938:theShattersObjects8x8,693:Shatters Throne Gold Floor
+28939:theShattersObjects8x8,694:Shatters Throne Gold Stairs
+28940:theShattersObjects8x8,695:Shatters Throne Gold Tile Light
+28941:theShattersObjects8x8,696:Shatters Throne Gold Tile Dark
+28942:theShattersObjects8x8,697:Shatters Throne Gold Trim Vertical
+28943:theShattersObjects8x8,698:Shatters Throne Gold Trim Horizontal
+28944:theShattersObjects8x8,699:Shatters Throne Gem Green
+28945:theShattersObjects8x8,700:Shatters Throne Gem Yellow
+28946:theShattersObjects8x8,701:Shatters Throne Gem Blue
+28947:theShattersObjects8x8,702:Shatters Throne Gem Red
+28948:theShattersObjects8x8,458:Shatters Throne Siding
+28949:theShattersObjects8x8,462:Shatters Throne Treasure
+28950:theShattersObjects8x8,82:Shatters Cobble Blank
+28951:theShattersObjects8x8,220:Shatters Brick Blank
+15616:thirdDimensionObjects8x8,188:tD Square Ether
+15617:thirdDimensionObjects8x8,189:tD Cronus Ether
+15632:thirdDimensionObjects8x8,150:tD Gold TL
+15633:thirdDimensionObjects8x8,151:tD Gold T
+15634:thirdDimensionObjects8x8,152:tD Gold TR
+15635:thirdDimensionObjects8x8,168:tD Gold R
+15636:thirdDimensionObjects8x8,184:tD Gold BR
+15637:thirdDimensionObjects8x8,183:tD Gold B
+15638:thirdDimensionObjects8x8,182:tD Gold BL
+15639:thirdDimensionObjects8x8,166:tD Gold L
+15640:thirdDimensionObjects8x8,167:tD Gold C
+15641:thirdDimensionObjects8x8,147:tD Red TL
+15642:thirdDimensionObjects8x8,148:tD Red T
+15643:thirdDimensionObjects8x8,149:tD Red TR
+15644:thirdDimensionObjects8x8,165:tD Red R
+15645:thirdDimensionObjects8x8,181:tD Red BR
+15646:thirdDimensionObjects8x8,180:tD Red B
+15647:thirdDimensionObjects8x8,179:tD Red BL
+15648:thirdDimensionObjects8x8,163:tD Red L
+15649:thirdDimensionObjects8x8,164:tD Red C
+15650:thirdDimensionObjects8x8,144:tD Cyan TL
+15651:thirdDimensionObjects8x8,145:tD Cyan T
+15659:thirdDimensionObjects8x8,146:tD Cyan TR
+15660:thirdDimensionObjects8x8,162:tD Cyan R
+15654:thirdDimensionObjects8x8,178:tD Cyan BR
+15655:thirdDimensionObjects8x8,177:tD Cyan B
+15656:thirdDimensionObjects8x8,176:tD Cyan BL
+15657:thirdDimensionObjects8x8,160:tD Cyan L
+15658:thirdDimensionObjects8x8,161:tD Cyan C
+15618:thirdDimensionObjects8x8,154:tD Tile TL
+15619:thirdDimensionObjects8x8,175:tD Tile T
+15620:thirdDimensionObjects8x8,155:tD Tile TR
+15621:thirdDimensionObjects8x8,174:tD Tile R
+15622:thirdDimensionObjects8x8,171:tD Tile BR
+15623:thirdDimensionObjects8x8,158:tD Tile B
+15624:thirdDimensionObjects8x8,170:tD Tile BL
+15625:thirdDimensionObjects8x8,159:tD Tile L
+15626:thirdDimensionObjects8x8,173:tD Tile TL Corner
+15627:thirdDimensionObjects8x8,172:tD Tile TR Corner
+15628:thirdDimensionObjects8x8,156:tD Tile BR Corner
+15629:thirdDimensionObjects8x8,157:tD Tile BL Corner
+15630:thirdDimensionObjects8x8,238:tD Tile C
+12094:thirdDimensionObjects8x8,220:tD Telegraph
+15631::tD Cronus Telegraph
+19299:thirdDimensionObjects8x8,238:tD Tile
+19300:thirdDimensionObjects8x8,190:tD Void
+15661:thirdDimensionObjects8x8,190:tD Void Walk
+15662:thirdDimensionObjects8x8,97:tD Inner Diagonal TL
+15666:thirdDimensionObjects8x8,244:tD Diagonal T
+15667:thirdDimensionObjects8x8,229:tD Diagonal B
+15668:thirdDimensionObjects8x8,245:tD Diagonal L
+15669:thirdDimensionObjects8x8,228:tD Diagonal R
+497:thirdDimensionObjects8x8,82:tD Diagonal TL Ground
+498:thirdDimensionObjects8x8,83:tD Diagonal TR Ground
+499:thirdDimensionObjects8x8,98:tD Diagonal BL Ground
+500:thirdDimensionObjects8x8,99:tD Diagonal BR Ground
+15663:thirdDimensionObjects8x8,96:tD Inner Diagonal TR
+15664:thirdDimensionObjects8x8,81:tD Inner Diagonal BL
+15665:thirdDimensionObjects8x8,80:tD Inner Diagonal BR
+19303::tD NoWalk
+9626:toxicSewersObjects8x8,36:DS Floor Tile
+9634:toxicSewersObjects8x8,36:DS Floor Tile M
+9635:toxicSewersObjects8x8,32:DS Floor Tile TL
+9636:toxicSewersObjects8x8,33:DS Floor Tile T
+9637:toxicSewersObjects8x8,34:DS Floor Tile TR
+9638:toxicSewersObjects8x8,35:DS Floor Tile L
+9639:toxicSewersObjects8x8,37:DS Floor Tile R
+9640:toxicSewersObjects8x8,38:DS Floor Tile BL
+9641:toxicSewersObjects8x8,39:DS Floor Tile B
+9642:toxicSewersObjects8x8,40:DS Floor Tile BR
+9627:toxicSewersObjects8x8,30:DS Sludge Tile
+9628:toxicSewersObjects8x8,30:DS Sludge Tile N
+9633:toxicSewersObjects8x8,30:DS Sludge Tile S
+9629:toxicSewersObjects8x8,30:DS Sludge Tile E
+9630:toxicSewersObjects8x8,30:DS Sludge Tile W
+9643:toxicSewersObjects8x8,30:DS Sludge Tile M
+9644:toxicSewersObjects8x8,30:DS Sludge Tile Clean
+15585:undeadLairObjects8x8,16:UDL Normal Tile
+15586:undeadLairObjects8x8,22:UDL Outside Hallway Tile
+15587:undeadLairObjects8x8,67:UDL Inside Hallway Tile
+15588:undeadLairObjects8x8,23:UDL Broken Tile
+15589:undeadLairObjects8x8,25:UDL Blood Tile
+15590:undeadLairObjects8x8,28:UDL Faces Tile
+4347:xmasNexusObjects8x8,16:XN Finish Line
+4348:xmasNexusObjects8x8,32:XN MTrailNW
+4349:xmasNexusObjects8x8,33:XN MTrailNL
+4350:xmasNexusObjects8x8,34:XN MTrailNR
+4351:xmasNexusObjects8x8,35:XN MTrailNE
+4352:xmasNexusObjects8x8,36:XN MTrailEU
+4353:xmasNexusObjects8x8,37:XN MTrailED
+4354:xmasNexusObjects8x8,38:XN MTrailSE
+4355:xmasNexusObjects8x8,39:XN MTrailSR
+4356:xmasNexusObjects8x8,40:XN MTrailSL
+4357:xmasNexusObjects8x8,41:XN MTrailSW
+4358:xmasNexusObjects8x8,42:XN MTrailWD
+4359:xmasNexusObjects8x8,43:XN MTrailWU
+4360:xmasNexusObjects8x8,44:XN MTrailE Loop
+4361:xmasNexusObjects8x8,45:XN MTrail SW Loop
+4362:xmasNexusObjects8x8,48:XN ChTrailNW
+4363:xmasNexusObjects8x8,49:XN ChTrailN
+4364:xmasNexusObjects8x8,50:XN ChTrailNE
+4365:xmasNexusObjects8x8,51:XN ChTrailW
+4366:xmasNexusObjects8x8,52:XN ChTrailE
+4367:xmasNexusObjects8x8,53:XN ChTrailSW
+4368:xmasNexusObjects8x8,54:XN ChTrailS
+4369:xmasNexusObjects8x8,55:XN ChTrailSE
+4370:xmasNexusObjects8x8,56:XN HTrailS01
+4371:xmasNexusObjects8x8,57:XN HTrailS02
+4372:xmasNexusObjects8x8,58:XN HTrailS03
+4373:xmasNexusObjects8x8,59:XN HTrailT11
+4374:xmasNexusObjects8x8,60:XN HTrailT21
+4375:xmasNexusObjects8x8,61:XN HTrailS22
+4376:xmasNexusObjects8x8,62:XN HTrailS31
+4377:xmasNexusObjects8x8,63:XN HTrailS32
+4378:xmasNexusObjects8x8,64:XN MooseTrail01
+4379:xmasNexusObjects8x8,65:XN MooseTrail02
+4380:xmasNexusObjects8x8,66:XN BearTrail01
+4381:xmasNexusObjects8x8,67:XN BearTrail02
+4382:xmasNexusObjects8x8,68:XN IceShoreNW
+4383:xmasNexusObjects8x8,69:XN IceShoreN
+4384:xmasNexusObjects8x8,70:XN IceShoreNE
+4385:xmasNexusObjects8x8,71:XN IceShoreW
+4386:xmasNexusObjects8x8,72:XN IceShoreE
+4387:xmasNexusObjects8x8,73:XN IceShoreSW
+4388:xmasNexusObjects8x8,74:XN IceShoreS
+4389:xmasNexusObjects8x8,75:XN IceShoreSE
+4390:xmasNexusObjects8x8,76:XN IceLake Island01
+4391:xmasNexusObjects8x8,77:XN IceLake Island02
+4392:xmasNexusObjects8x8,78:XN IceLake Island03
+4393:xmasNexusObjects8x8,79:XN IceLake Island04
+4394:xmasNexusObjects8x8,80:XN StreamNW
+4395:xmasNexusObjects8x8,81:XN StreamN
+4396:xmasNexusObjects8x8,82:XN StreamNE
+4397:xmasNexusObjects8x8,83:XN StreamW
+4398:xmasNexusObjects8x8,84:XN StreamE
+4399:xmasNexusObjects8x8,85:XN StreamSW
+4400:xmasNexusObjects8x8,86:XN StreamS
+4401:xmasNexusObjects8x8,87:XN StreamSE
+4402:xmasNexusObjects8x8,88:XN IceStick
+4403:xmasNexusObjects8x8,89:XN IceLeaves01
+4404:xmasNexusObjects8x8,90:XN IceLeaf
+4405:xmasNexusObjects8x8,91:XN IceLeaves02
+4406:santaWorkshopObjects8x8,4:XN Nexus Speedy
+4407:xmasNexusObjects8x8,92:XN Ice Speedy
+4415:d3LofiObjEmbed,92:XN Shallow Water
+4416:d3LofiObjEmbed,91:XN Deep Water
+4408:santaWorkshopObjects8x8,3:XN Dark Wood NoWalk
+4409:lofiObj3,448:XN Snow NoWalk
+4410:xmasNexusObjects8x8,129:XN ICLight
+4411:xmasNexusObjects8x8,128:XN ICDark
+4412:xmasNexusObjects8x8,93:XN Snowy Rock
+4413:xmasNexusObjects8x8,94:XN Snow Dark
+4414:xmasNexusObjects8x8,95:XN Snow Darkest

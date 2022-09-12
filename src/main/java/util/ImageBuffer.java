@@ -4,7 +4,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -28,8 +27,8 @@ public class ImageBuffer {
     public static BufferedImage getImage(int id) throws IOException {
         if (id <= 0) return null;
         if (images.containsKey(id)) return images.get(id);
-        String name = IdToName.getTextureName(id, 0);
-        int index = IdToName.getTextureIndex(id, 0);
+        String name = IdToName.getObjectTextureName(id, 0);
+        int index = IdToName.getObjectTextureIndex(id, 0);
         int[] spriteData = spriteJson.getSprite(name, index);
         BufferedImage sprite = getSprite(spriteData);
         images.put(id, sprite);

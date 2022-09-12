@@ -698,7 +698,7 @@ public class DpsLogger {
                 if (inv[inventory].size() == 0) {
                     s.append("  ");
                 } else if (inv[inventory].size() == 1) {
-                    s.append(String.format("%s %.1fsec %s\n", IdToName.name(inv[inventory].get(0).left().statValue), (float) (entityTime - entityStartTime) / 1000, "100% Equipped:1 "));
+                    s.append(String.format("%s %.1fsec %s\n", IdToName.objectName(inv[inventory].get(0).left().statValue), (float) (entityTime - entityStartTime) / 1000, "100% Equipped:1 "));
                 } else {
                     HashMap<Integer, Equipment> gear = new HashMap<>();
                     Pair<StatData, Long> pair2 = null;
@@ -716,7 +716,7 @@ public class DpsLogger {
 
                     Stream<Map.Entry<Integer, Equipment>> sorted2 = gear.entrySet().stream().sorted(comparingByValue());
                     for (Map.Entry<Integer, Equipment> m : sorted2.collect(Collectors.toList())) {
-                        s.append(String.format("%s %.1fsec %.2f%% Equipped:%d / ", IdToName.name(m.getKey()), ((float) m.getValue().time / 1000), ((float) m.getValue().time * 100 / totalTime), m.getValue().swaps));
+                        s.append(String.format("%s %.1fsec %.2f%% Equipped:%d / ", IdToName.objectName(m.getKey()), ((float) m.getValue().time / 1000), ((float) m.getValue().time * 100 / totalTime), m.getValue().swaps));
                     }
                 }
                 s = new StringBuilder(s.substring(0, s.length() - 3));
@@ -749,7 +749,7 @@ public class DpsLogger {
             for (int k = 0; k < 256; k++) {
                 if (k >= 8 && k <= 11 && entity.getStat(k) != null) {
                     int itemID = entity.getStat(k).statValue;
-                    s.append(IdToName.name(itemID));
+                    s.append(IdToName.objectName(itemID));
                     if (k < 11) s.append(" / ");
                 }
             }
@@ -780,7 +780,7 @@ public class DpsLogger {
 
         public String display(Filter filter) {
             StringBuilder sb = new StringBuilder();
-            sb.append(IdToName.name(objectType)).append(" HP: ").append(maxHp()).append("\n");
+            sb.append(IdToName.objectName(objectType)).append(" HP: ").append(maxHp()).append("\n");
             for (Damage dmg : damageList) {
                 String name = dmg.owner.getStat(31).stringStatValue;
                 if (filter.nameFilter && filter.filteredStrings.length > 0) {
@@ -814,7 +814,7 @@ public class DpsLogger {
 
         @Override
         public String toString() {
-            return IdToName.name(objectType);
+            return IdToName.objectName(objectType);
         }
     }
 

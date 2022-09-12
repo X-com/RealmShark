@@ -65,6 +65,19 @@ public class SpriteJson implements JsonDeserializer<SpriteJson> {
     }
 
     /**
+     * Retrieves sprite most common color.
+     *
+     * @param name  Name of the sprite group.
+     * @param index Index of the sprite in the group.
+     * @return Integer
+     */
+    public int getSpriteColor(String name, int index) {
+        HashMap<Integer, Sprite> list = sprites.get(name);
+        Sprite sprite = list.get(index);
+        return sprite.mostCommonColor.asInt();
+    }
+
+    /**
      * Returns all sprite data parsed by the json.
      *
      * @return Hash of the sprite data.
@@ -218,6 +231,10 @@ public class SpriteJson implements JsonDeserializer<SpriteJson> {
                 StringBuilder sb = new StringBuilder();
                 sb.append(String.format("(r:%d, g:%d, b:%d, a:%d)", r, g, b, a));
                 return sb.toString();
+            }
+
+            public int asInt() {
+                return a * 0xff000000 + r * 0xff0000 + g * 0xff00 + b;
             }
         }
 

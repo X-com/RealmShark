@@ -151,7 +151,7 @@ public class Parse {
 
         @Override
         public String toString() {
-            return IdToName.name(objectType);
+            return IdToName.objectName(objectType);
         }
     }
 }

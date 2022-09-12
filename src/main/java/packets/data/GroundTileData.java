@@ -35,6 +35,6 @@ public class GroundTileData {
 
     @Override
     public String toString() {
-        return "\n    Tile: " + IdToName.name(type) + " " + type + " (" + x + ", "+ y + ")";
+        return "\n    Tile: " + IdToName.tileName(type) + " " + type + " (" + x + ", " + y + ")";
     }
 }

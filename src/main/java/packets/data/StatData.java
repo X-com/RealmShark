@@ -69,7 +69,7 @@ public class StatData {
         } else if (statTypeNum == 96) {
             valueExtended += " " + ConditionNewBits.effectsToString(statValue);
         } else if (statTypeNum >= 8 && statTypeNum <= 19) {
-            valueExtended += " " + IdToName.name(statValue);
+            valueExtended += " " + IdToName.objectName(statValue);
         }
         return "\n      " + statType + " = " + statValue + valueExtended;
     }

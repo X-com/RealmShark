@@ -159,7 +159,7 @@ public class Tomato {
                 Matcher m = popperName.matcher(msg);
                 if (m.matches()) {
                     String playerName = m.group(1);
-                    TomatoGUI.appendTextAreaKeypop(String.format("%s [%s]: %s\n", Util.getHourTime(), playerName, IdToName.name(nPacket.pictureType)));
+                    TomatoGUI.appendTextAreaKeypop(String.format("%s [%s]: %s\n", Util.getHourTime(), playerName, IdToName.objectName(nPacket.pictureType)));
                 }
             } else if (nPacket.effect == NotificationEffectType.ServerMessage) {
                 String msg = nPacket.message;
@@ -235,7 +235,7 @@ public class Tomato {
                         memCount = 1;
                     } else if (memId != id) {
                         if (memCount > 1) sbReqs.append(memCount).append("x ");
-                        sbReqs.append(IdToName.name(memId));
+                        sbReqs.append(IdToName.objectName(memId));
                         if (i < qd.requirements.length - 1) sbReqs.append(", ");
                         memId = id;
                         memCount = 1;
@@ -244,11 +244,11 @@ public class Tomato {
                     }
                 }
                 if (memCount > 1) sbReqs.append(memCount).append("x ");
-                sbReqs.append(IdToName.name(memId));
+                sbReqs.append(IdToName.objectName(memId));
                 StringBuilder sbRew = new StringBuilder();
                 for (int i = 0; i < qd.rewards.length; i++) {
                     int id = qd.rewards[i];
-                    sbRew.append(IdToName.name(id));
+                    sbRew.append(IdToName.objectName(id));
                     if (i < qd.rewards.length - 1) sbRew.append(", ");
                 }
 
