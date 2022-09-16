@@ -4,22 +4,32 @@ import packets.Packet;
 import packets.data.ObjectData;
 import packets.incoming.*;
 import packets.outgoing.*;
+import packets.packetcapture.PacketProcessor;
+import packets.packetcapture.register.Register;
 
+import java.awt.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
 public class PacketRead {
 
+    public static void main(String[] args) {
+        Register.INSTANCE.registerAll(PacketRead::readAll);
+        PacketProcessor packetProcessor = new PacketProcessor();
+        packetProcessor.start();
+    }
+
     public static void readAll(Packet packet) {
         // spammy
-        if (packet instanceof NewTickPacket) return;
         if (packet instanceof PingPacket) return;
         if (packet instanceof PongPacket) return;
         if (packet instanceof MovePacket) return;
         if (packet instanceof PlayerShootPacket) return;
         if (packet instanceof ServerPlayerShootPacket) return;
         // common
-//        if (packet instanceof ShowEffectPacket) return;
+        if (packet instanceof ShowEffectPacket) return;
         if (packet instanceof InvResultPacket) return;
         if (packet instanceof UpdateAckPacket) return;
         if (packet instanceof TextPacket) return;
@@ -36,7 +46,6 @@ public class PacketRead {
         // load packet
         if (packet instanceof QuestObjectIdPacket) return;
         if (packet instanceof LoadPacket) return;
-        if (packet instanceof MapInfoPacket) return;
         if (packet instanceof HelloPacket) return;
         if (packet instanceof ReconnectPacket) return;
         if (packet instanceof ExaltationUpdatePacket) return;
@@ -45,7 +54,7 @@ public class PacketRead {
         if (packet instanceof ForgeUnlockedBlueprints) return;
         if (packet instanceof QuestFetchResponsePacket) return;
         // usage
-//        if (packet instanceof UseItemPacket) return;
+        if (packet instanceof UseItemPacket) return;
         if (packet instanceof UsePortalPacket) return;
         if (packet instanceof ClientStatPacket) return;
         if (packet instanceof DashPacket) return;
@@ -57,11 +66,24 @@ public class PacketRead {
         if (packet instanceof GotoAckPacket) return;
         // RealmHeroesLeftPacket
         if (packet instanceof RealmHeroesLeftPacket) return;
+        if (packet instanceof CreateSuccessPacket) return;
 
 //        if (packet instanceof CreateSuccessPacket) return;
 
+        if (packet instanceof NewTickPacket) {
+            newtick((NewTickPacket) packet);
+            return;
+        }
+
+
+        if (packet instanceof MapInfoPacket) {
+            mapinfo((MapInfoPacket) packet);
+            return;
+        }
+
         if (packet instanceof UpdatePacket) {
 //            crystalTPRange((UpdatePacket) packet);
+            realmIdentifier((UpdatePacket) packet);
             return;
         }
         if (packet instanceof VaultContentPacket) {
@@ -72,6 +94,44 @@ public class PacketRead {
         //RealmHeroesLeftPacket
 
         System.out.println(packet);
+    }
+
+    static boolean log = false;
+    static long time = 0;
+    static long timeStored = 0;
+    static long timeIndex = 0;
+    static long timeAdd = 180000;
+
+
+    private static void newtick(NewTickPacket packet) {
+//        if (packet.serverRealTimeMS - time > 10000) {
+//            System.out.println("10 sec");
+//        }dwd
+        time = packet.serverRealTimeMS;
+        if(timeIndex == 0) timeIndex = (int) (time / 180000) - 1;
+
+        if (timeStored < time) {
+            Toolkit.getDefaultToolkit().beep();
+            timeStored = timeIndex * timeAdd + 10000;
+            timeIndex++;
+            System.out.println(timeIndex);
+        }
+    }
+
+    private static void mapinfo(MapInfoPacket packet) {
+        if (packet.displayName.equals("{s.rotmg}")) {
+            log = true;
+        } else {
+            log = false;
+        }
+    }
+
+    private static void realmIdentifier(UpdatePacket packet) {
+        if (log && packet.pos.x != 0 && packet.pos.y != 0) {
+            DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss");
+            LocalDateTime dateTime = LocalDateTime.now();
+            System.out.printf("%s x:%f y:%f %d -map\n", dateTimeFormat.format(dateTime), packet.pos.x, packet.pos.y, time);
+        }
     }
 
     private static void countPots(VaultContentPacket p) {
