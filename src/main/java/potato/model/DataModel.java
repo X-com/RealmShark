@@ -3,6 +3,7 @@ package potato.model;
 import packets.data.GroundTileData;
 import packets.data.ObjectData;
 import packets.data.ObjectStatusData;
+import packets.data.WorldPosData;
 import potato.control.MouseKeyController;
 import potato.control.ScreenLocatorController;
 import potato.control.ServerHTTP;
@@ -32,16 +33,20 @@ public class DataModel {
     private long serverTime;
     private long realmClosingTime;
     private int heroesLeft = 0;
-    private boolean startCastleTimer = false;
     private boolean inRealm = true;
 
     private int mapIndex = 0;
     private ArrayList<HeroLocations>[] mapCoords;
     private HashMap<Integer, ObjectData> entitys = new HashMap<>();
     private int[][] mapTiles = new int[2048][2048];
+    HashSet<Integer>[] mapTileData;
+    private boolean newRealmCheck = false;
+    private long seed;
+    private String realmName;
 
     public DataModel() {
         mapCoords = Bootloader.loadMapCoords();
+        mapTileData = Bootloader.loadTiles();
         serverHTTP = new ServerHTTP(this);
         renderer = new RenderViewer(mapCoords);
         locator = new ScreenLocatorController(renderer, this);
@@ -257,18 +262,16 @@ public class DataModel {
             } else if (od.objectType == IdData.DEMON) { // Phoenix Lord / 1729 Phoenix Reborn
                 entitys.put(od.status.objectId, od);
             }
-            if (!hashTester.containsKey(od.objectType)) {
-                hashTester.put(od.objectType, od);
-
-                if (od.status.stats.length == 4) {
-                    System.out.println(od);
-                    System.out.println(od.status.stats.length);
-                }
-            }
+//            if (!hashTester.containsKey(od.objectType)) {
+//                hashTester.put(od.objectType, od);
+//
+//                if (od.status.stats.length == 4) {
+//                    System.out.println(od);
+//                    System.out.println(od.status.stats.length);
+//                }
+//            }
         }
-        if (wallAdded &&
-
-                isGhostLoc()) {
+        if (wallAdded && isGhostLoc()) {
             HeroLocations h = findClosestHero(x, y, nearHeroes);
             if (h.dist < 1000) {
                 h.setType(HeroType.GHOST);
@@ -279,7 +282,7 @@ public class DataModel {
 
     }
 
-    HashMap<Integer, ObjectData> hashTester = new HashMap<>();
+//    HashMap<Integer, ObjectData> hashTester = new HashMap<>();
 
     private boolean isCyclopsLoc(int x, int y) {
         for (int i = -2; i <= 2; i++) {
@@ -370,7 +373,7 @@ public class DataModel {
         if (text.contains("oryx_closed_realm")) {
 //                System.out.println("-----------" + serverTime + "------------");
             realmClosingTime = serverTime;
-            startCastleTimer = true;
+            renderer.realmClosed();
         }
     }
 
@@ -452,10 +455,12 @@ public class DataModel {
         System.out.println("selecting map: " + (mapIndex + 1));
     }
 
-    public void setInRealm(boolean b) {
-        inRealm = b;
-        renderer.setInRealm(true);
-        renderer.stuffRender(true);
+    public void setInRealm(String name, long s) {
+        inRealm = true;
+        zoom = 6;
+        newRealmCheck = true;
+        seed = s;
+        realmName = name;
     }
 
     public void setHeroesLeft(int i) {
@@ -469,6 +474,7 @@ public class DataModel {
         heroesLeft = 0;
         renderer.setHeroesLeft(0);
         entitys.clear();
+
         for (int i = 0; i < mapCoords[mapIndex].size(); i++) {
             mapCoords[mapIndex].get(i).setMarker(0, true);
         }
@@ -477,5 +483,43 @@ public class DataModel {
                 mapTiles[i][j] = 0;
             }
         }
+    }
+
+    private int findMapIndex(GroundTileData[] tiles) {
+        int[] maps = new int[13];
+        for (GroundTileData t : tiles) {
+            int num = t.x + t.y * 2048 + t.type * 4194304;
+            for (int map = 0; map < mapTileData.length; map++) {
+                if (mapTileData[map].contains(num)) {
+                    maps[map]++;
+                }
+            }
+        }
+        int largest = 0;
+        int largestIndex = 0;
+        for (int i = 0; i < 13; i++) {
+            System.out.printf("Index:%d Count:%d\n", i+1, maps[i]);
+            if (maps[i] > largest) {
+                largest = maps[i];
+                largestIndex = i;
+            }
+        }
+        return largestIndex;
+    }
+
+    public void newRealm(GroundTileData[] tiles, WorldPosData pos) {
+        if (!newRealmCheck) return;
+        mapIndex = findMapIndex(tiles);
+
+        for (int j = 0; j < mapCoords[mapIndex].size(); j++) {
+            mapCoords[mapIndex].get(j).reset();
+        }
+        renderer.editMapIndex(mapIndex);
+
+        renderer.setInRealm(true);
+        renderer.setZoom(zoom, (int) pos.x, (int) pos.y);
+        renderer.stuffRender(true);
+
+        newRealmCheck = false;
     }
 }

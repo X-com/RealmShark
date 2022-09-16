@@ -11,17 +11,10 @@ import java.util.Map;
 public class HeroLocations {
     public float dist; // Hacky workaround to store distance.
 
-    private static final float MISSING_DIST = 16;
-
     private int index;
     private String indexString;
-    private boolean newCoord = false;
     private int x;
     private int y;
-    private int scaledX;
-    private int scaledY;
-    private int fileX;
-    private int fileY;
     private int drawX;
     private int drawY;
     private Color color;
@@ -36,7 +29,6 @@ public class HeroLocations {
         this.x = x;
         this.y = y;
         this.color = Color.green;
-        newCoord = true;
     }
 
     public float squareDistTo(int x, int y) {
@@ -84,11 +76,11 @@ public class HeroLocations {
     }
 
     public int getMarker() {
-        return locationType.index() + locationState.index * 16;
+        return locationType.getIndex() + locationState.getIndex() * 16;
     }
 
     public int getDrawIndex() {
-        return (locationType.index() - 1) * 3 + (locationState.index - 1);
+        return (locationType.getIndex() - 1) * 3 + (locationState.getIndex() - 1);
     }
 
     public void setMarker(int marker, boolean ignoreTimer) {
@@ -152,40 +144,4 @@ public class HeroLocations {
         locationState = HeroState.MARK_UNVISITED;
         drawIndex = -1;
     }
-
-//    public void entityKilled(HeroType type) {
-//        if (type != locationType) System.out.println("marking missmached");
-//        locationState = HeroState.MARK_DEAD;
-//
-//        switch (type) {
-//            case ENT:
-//                break;
-//            case LICH:
-//                break;
-//            case GHOST:
-//                break;
-//            case CYCLOPS:
-//                return;
-//            case PHENIX:
-//                break;
-//            case OASIS:
-//                break;
-//            case DEMON:
-//                break;
-//        }
-//    }
-
-//    public void entityActivated(HeroType type) {
-//        if (type != locationType) System.out.println("marking missmached");
-//        locationState = HeroState.MARK_ACTIVE;
-//
-//        switch (type) {
-//            case ENT:
-//                break;
-//            case LICH:
-//                break;
-//            case GHOST:
-//                break;
-//        }
-//    }
 }

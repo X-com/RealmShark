@@ -16,12 +16,14 @@ public class PacketController {
         if (packet instanceof MapInfoPacket) {
             MapInfoPacket p = (MapInfoPacket) packet;
             if (p.displayName.equals("{s.rotmg}")) {
-                model.setInRealm(true);
+                model.setInRealm(p.realmName, p.seed);
             } else {
                 model.reset();
             }
         } else if (packet instanceof UpdatePacket) {
             UpdatePacket p = (UpdatePacket) packet;
+
+            model.newRealm(p.tiles, p.pos);
 
             if (p.pos.x != 0 && p.pos.y != 0) {
                 model.setPlayerCoords((int) p.pos.x, (int) p.pos.y);
@@ -31,14 +33,12 @@ public class PacketController {
         } else if (packet instanceof RealmHeroesLeftPacket) {
             RealmHeroesLeftPacket p = (RealmHeroesLeftPacket) packet;
             model.setHeroesLeft(p.realmHeroesLeft);
-//            if (!startCastleTimer) heroesLeft = String.format("(%d) Heroes %d", imageIndex, p.realmHeroesLeft);
         } else if (packet instanceof NewTickPacket) {
             NewTickPacket p = (NewTickPacket) packet;
             model.setServerTime(p.serverRealTimeMS);
             model.newTickUpdates(p.status);
         } else if (packet instanceof TextPacket) {
             TextPacket p = (TextPacket) packet;
-//            System.out.println(p.text);
             model.updateText(p.text, p.objectId);
         }
     }

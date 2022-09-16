@@ -5,10 +5,14 @@ import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.register.Register;
 import potato.control.PacketController;
 import potato.model.DataModel;
+import tomato.Tomato;
 import util.Util;
+
+import java.net.URL;
 
 // TODO: add tp cooldown
 public class Potato extends Thread {
+    static public URL imagePath = Tomato.class.getResource("/icon/potatoIcon.png");
     DataModel dataModel;
     PacketController controller;
 

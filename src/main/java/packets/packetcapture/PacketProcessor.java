@@ -140,6 +140,13 @@ public class PacketProcessor extends Thread implements PProcessor {
         }
     }
 
+    /**
+     * Closes the sniffer for shutdown.
+     */
+    public void closeSniffer() {
+        sniffer.closeSniffers();
+    }
+
     @Override
     public void resetIncoming() {
         incomingPacketConstructor.reset();

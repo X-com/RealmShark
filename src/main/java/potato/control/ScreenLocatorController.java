@@ -11,6 +11,10 @@ public class ScreenLocatorController {
     boolean running;
     RenderViewer renderer; // TODO remove
     DataModel model;
+    int storeX;
+    int storeY;
+    int storeW;
+    int storeH;
 
     public ScreenLocatorController(RenderViewer renderer, DataModel model) {
         this.renderer = renderer;
@@ -28,7 +32,7 @@ public class ScreenLocatorController {
         int h = 0;
 
         while (true) {
-            int color = 0;
+            int color;
             try {
                 color = createScreenCapture.getRGB(w, h);
             } catch (ArrayIndexOutOfBoundsException e) {
@@ -113,14 +117,24 @@ public class ScreenLocatorController {
             h++;
         }
         height--;
-//            System.out.printf("X:%d Y:%d W:%d H:%d\n", x, y, width, height);
-        model.setSize(width, height);
-        renderer.setSizeLoc(x, y, width, height);
-        renderer.show();
+        if (x != storeX || y != storeY || width != storeW || height != storeH) {
+            System.out.printf("X:%d Y:%d W:%d H:%d\n", x, y, width, height);
+            model.setSize(width, height);
+            renderer.setSizeLoc(x, y, width, height);
+            renderer.show();
+            storeX = x;
+            storeY = y;
+            storeW = width;
+            storeH = height;
+        }
     }
 
     private void notFound() {
         renderer.remove();
+        storeX = 0;
+        storeY = 0;
+        storeW = 0;
+        storeH = 0;
     }
 
     public void locateLoop() {

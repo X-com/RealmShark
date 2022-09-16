@@ -6,7 +6,7 @@ public enum HeroState {
     MARK_ACTIVE(2),
     MARK_DEAD(3);
 
-    int index;
+    private int index;
 
     HeroState(int i) {
         index = i;
@@ -19,5 +19,9 @@ public enum HeroState {
             }
         }
         return null;
+    }
+
+    public int getIndex() {
+        return index;
     }
 }

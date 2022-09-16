@@ -234,7 +234,7 @@ public class SpriteJson implements JsonDeserializer<SpriteJson> {
             }
 
             public int asInt() {
-                return a * 0xff000000 + r * 0xff0000 + g * 0xff00 + b;
+                return a << 24 | r << 16 | g << 8 | b;
             }
         }
 

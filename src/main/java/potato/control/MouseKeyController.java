@@ -10,6 +10,7 @@ import org.jnativehook.mouse.NativeMouseWheelEvent;
 import org.jnativehook.mouse.NativeMouseWheelListener;
 import potato.model.DataModel;
 import potato.view.RenderViewer;
+import util.FocusedWindow;
 
 import java.awt.*;
 import java.util.logging.Level;
@@ -82,7 +83,38 @@ public class MouseKeyController implements NativeMouseWheelListener, NativeMouse
     public void nativeMouseWheelMoved(NativeMouseWheelEvent e) {
 //        System.out.println("Mosue Wheel Moved: " + e.getWheelRotation() + " modifier: " + e.getModifiers());
         if ((e.getModifiers() % 512) == 0) {
-            model.editZoom(e.getWheelRotation());
+//            GetForegroundWindow();
+            if (FocusedWindow.getWindowFocus().equals("RotMG Exalt.exe")) {
+                model.editZoom(e.getWheelRotation());
+            }
+//        } else if ((e.getModifiers() % 512) == 32) {
+//            RenderViewer.imageSize[RenderViewer.zoom] += e.getWheelRotation();
+////            RenderViewer.imageM[RenderViewer.zoom] -= (e.getWheelRotation() * 0.0005);
+//            System.out.println("imageSize: " + RenderViewer.imageSize[RenderViewer.zoom]);
+//
+////            RenderViewer.imageOffsetX = (int) (RenderViewer.imageM[RenderViewer.zoom] * RenderViewer.playerX + RenderViewer.imageK[RenderViewer.zoom]);
+////            RenderViewer.imageOffsetY = (int) (RenderViewer.imageM[RenderViewer.zoom] * RenderViewer.playerY + RenderViewer.imageK[RenderViewer.zoom]);
+//        } else if ((e.getModifiers() % 512) == 2) {
+//            RenderViewer.imageM[RenderViewer.zoom] += (e.getWheelRotation() * 0.001);
+//            System.out.println("imageM: " + RenderViewer.imageM[RenderViewer.zoom]);
+//
+//            RenderViewer.imageOffsetX = (int) (RenderViewer.imageM[RenderViewer.zoom] * RenderViewer.playerX + RenderViewer.imageK[RenderViewer.zoom]);
+//            RenderViewer.imageOffsetY = (int) (RenderViewer.imageM[RenderViewer.zoom] * RenderViewer.playerY + RenderViewer.imageK[RenderViewer.zoom]);
+//        } else if ((e.getModifiers() % 512) == 1) {
+//            RenderViewer.imageK[RenderViewer.zoom] += e.getWheelRotation();
+//            System.out.println("imageK: " + RenderViewer.imageK[RenderViewer.zoom]);
+//
+//            RenderViewer.imageOffsetX = (int) (RenderViewer.imageM[RenderViewer.zoom] * RenderViewer.playerX + RenderViewer.imageK[RenderViewer.zoom]);
+//            RenderViewer.imageOffsetY = (int) (RenderViewer.imageM[RenderViewer.zoom] * RenderViewer.playerY + RenderViewer.imageK[RenderViewer.zoom]);
+//        } else if ((e.getModifiers() % 512) == 48) {
+//            RenderViewer.imageK[RenderViewer.zoom] += e.getWheelRotation();
+//            RenderViewer.imageM[RenderViewer.zoom] -= (e.getWheelRotation() * 0.001);
+//            System.out.println("imageK: " + RenderViewer.imageK[RenderViewer.zoom]);
+//            System.out.println("imageM: " + RenderViewer.imageM[RenderViewer.zoom]);
+//
+//            RenderViewer.imageOffsetX = (int) (RenderViewer.imageM[RenderViewer.zoom] * RenderViewer.playerX + RenderViewer.imageK[RenderViewer.zoom]);
+//            RenderViewer.imageOffsetY = (int) (RenderViewer.imageM[RenderViewer.zoom] * RenderViewer.playerY + RenderViewer.imageK[RenderViewer.zoom]);
+//        } else if ((e.getModifiers() % 512) == 16) {
         } else if (e.getModifiers() == 3) {
             model.editMapIndex(e.getWheelRotation());
             serverHTTP.stopSynch();

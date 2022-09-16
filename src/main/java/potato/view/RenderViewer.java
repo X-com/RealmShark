@@ -4,45 +4,53 @@ import com.sun.jna.Native;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinUser;
+import potato.Potato;
 import potato.model.Bootloader;
 import potato.model.HeroLocations;
-import tomato.Tomato;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class RenderViewer {
-    int width = 300;
-    int height = 300;
-    JFrame menuFrame;
-    JWindow frame;
-    JPanel panel;
-    AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f);
-    static public URL imagePath = Tomato.class.getResource("/icon/potatoIcon.png");
-    static private Image icon = Toolkit.getDefaultToolkit().getImage(imagePath);
+    private static int width = 300;
+    private static int height = 300;
+    private JFrame menuFrame;
+    private JWindow frame;
+    private JPanel panel;
+    private AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f);
+    private Composite originalComposite;
+    private static Image icon = Toolkit.getDefaultToolkit().getImage(Potato.imagePath);
 
     private final int[] zooms = {0, 70, 172, 340, 670, 1560, 15300};
-    private final float[] m = {0, 0.02949208f, 0.0720917f, 0.1447f, 0.286f, 2f / 3f, 6.66f};
+    private final float[] m = {0, 0.0294f, 0.072f, 0.1447f, 0.286f, 2f / 3f, 6.66f};
     private final int[] k = {0, 6, 12, 22, 44, 100, 820};
     private final int[] circleSize = {5, 7, 8, 9, 10, 16, 130};
     private final int[] fontSize = {0, 8, 8, 8, 10, 16, 130};
-    private int offsetX = 0;
-    private int offsetY = 0;
-    private int zoom;
+
+    public static final int[] imageSize = {308, 366, 452, 600, 925, 1725, 14788};
+    public static final float[] imageM = {0, -0.03f, -0.071f, -0.144f, -0.3f, -0.691f, -7.222f};
+    public static final int[] imageK = {22, 24, 24, 24, 24, 20, 175};
+    public static int imageOffsetX = 0;
+    public static int imageOffsetY = 0;
+
+    private static int offsetX = 0;
+    private static int offsetY = 0;
+    public static int zoom;
     private BufferedImage[] images;
     private ArrayList<HeroLocations>[] mapCoords;
     private int mapIndex = 0;
-    private int playerX;
-    private int playerY;
+    public static int playerX;
+    public static int playerY;
     private int heroesLeft;
     private boolean inRealm = true;
     private String castleTimer = "";
-    private boolean toggleMap = false;
+    private boolean toggleMap = true;
     private boolean toggleDots = true;
-    private boolean showMap = false;
+    private boolean showMap = true;
     private boolean showHeroes = true;
     private boolean showDots = true;
     private boolean startCastleTimer = false;
@@ -55,7 +63,8 @@ public class RenderViewer {
         this.mapCoords = mapCoords;
         images = Bootloader.loadMaps();
         heroIcon = Bootloader.loadHeroIcons();
-        smallWindow();
+//        smallWindow();
+        makeTrayIcon();
 
         frame = new JWindow();
         frame.setAlwaysOnTop(true);
@@ -73,6 +82,56 @@ public class RenderViewer {
         frame.setLocation(-1, -1);
         frame.setVisible(true);
         setTransparent(frame);
+    }
+
+    private void makeTrayIcon() {
+        if (!SystemTray.isSupported()) {
+            System.out.println("System tray is not supported");
+            return;
+        }
+        //get the systemTray of the system
+        SystemTray systemTray = SystemTray.getSystemTray();
+
+        //get default toolkit
+        //Toolkit toolkit = Toolkit.getDefaultToolkit();
+        //get image
+        //Toolkit.getDefaultToolkit().getImage("src/resources/busylogo.jpg");
+        Image image = Toolkit.getDefaultToolkit().getImage(Potato.imagePath);
+
+        //popupmenu
+        PopupMenu trayPopupMenu = new PopupMenu();
+
+        //1t menuitem for popupmenu
+        MenuItem action = new MenuItem("Options");
+        action.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "Options not added yet.");
+            }
+        });
+        trayPopupMenu.add(action);
+
+        //2nd menuitem of popupmenu
+        MenuItem close = new MenuItem("Close");
+        close.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        trayPopupMenu.add(close);
+
+        //setting tray icon
+        TrayIcon trayIcon = new TrayIcon(image, "Potato", trayPopupMenu);
+        //adjust to default size as per system recommendation
+        trayIcon.setImageAutoSize(true);
+
+        try {
+            systemTray.add(trayIcon);
+        } catch (AWTException awtException) {
+            awtException.printStackTrace();
+        }
+        System.out.println("end of main");
     }
 
     private void smallWindow() {
@@ -103,10 +162,10 @@ public class RenderViewer {
     }
 
     public void render(Graphics2D g) {
+        if (originalComposite == null) originalComposite = g.getComposite();
         if (showMap) {
-            Composite originalComposite = g.getComposite();
             g.setComposite(composite);
-            g.drawImage(images[mapIndex], -offsetX, -offsetY, width + zooms[zoom], height + zooms[zoom], null);
+            g.drawImage(images[mapIndex], imageOffsetX, imageOffsetY, imageSize[zoom], imageSize[zoom], null);
             g.setComposite(originalComposite);
         }
         g.setStroke(new BasicStroke(1));
@@ -133,7 +192,9 @@ public class RenderViewer {
         int drawIndex = h.getDrawIndexNum();
         if (drawIndex < 0) {
             g.setColor(h.getColor());
+            g.setComposite(composite);
             g.drawOval(h.getDrawX() - circleSize[zoom], h.getDrawY() - circleSize[zoom], circleSize[zoom] * 2, circleSize[zoom] * 2);
+            g.setComposite(originalComposite);
             setTextCenter(g, h.getIndexString(), h.getDrawX(), h.getDrawY());
         } else {
             g.drawImage(heroIcon[drawIndex], h.getDrawX() - circleSize[zoom], h.getDrawY() - circleSize[zoom], circleSize[zoom] * 2, circleSize[zoom] * 2, null);
@@ -185,6 +246,8 @@ public class RenderViewer {
     public void setPlayerCoords(int x, int y) {
         offsetX = (int) (m[zoom] * x + k[zoom]);
         offsetY = (int) (m[zoom] * y + k[zoom]);
+        imageOffsetX = (int) (imageM[zoom] * x + imageK[zoom]);
+        imageOffsetY = (int) (imageM[zoom] * y + imageK[zoom]) + 4;
         playerX = x;
         playerY = y;
         calcCoords();
@@ -240,6 +303,8 @@ public class RenderViewer {
 
     public void setZoom(int i, int x, int y) {
         this.zoom = i;
+        imageOffsetX = (int) (imageM[zoom] * playerX + imageK[zoom]);
+        imageOffsetY = (int) (imageM[zoom] * playerY + imageK[zoom]) + 4;
         offsetX = (int) (m[zoom] * x + k[zoom]);
         offsetY = (int) (m[zoom] * y + k[zoom]);
         calcCoords();
@@ -248,5 +313,9 @@ public class RenderViewer {
     public void editMapIndex(int i) {
         mapIndex = i;
         calcCoords();
+    }
+
+    public void realmClosed() {
+        startCastleTimer = true;
     }
 }

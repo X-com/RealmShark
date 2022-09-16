@@ -6,7 +6,7 @@ plugins {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-project.version = 'v0.2-beta'
+project.version = 'v0.3-beta'
 applicationName = 'Potato'
 
 repositories {

@@ -56,7 +56,7 @@ public enum HeroType {
         return missingDist;
     }
 
-    public int index() {
+    public int getIndex() {
         return index;
     }
 }

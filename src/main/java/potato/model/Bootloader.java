@@ -3,20 +3,18 @@ package potato.model;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.stream.Stream;
 
 public class Bootloader {
 
     private static final String[] type = {"demon", "phoenix", "cyclops", "ghost", "oasis", "ent", "lich", "parasite", "coffin", "snake", "cross", "house"};
-    private static final int[] colorStates = {0xff00ff00, 0xffff0000, 0xffffffff}; // red, green, white
+    private static final int[] colorStates = {0x9000ff00, 0x90ff0000, 0x90ffffff}; // red, green, white
 
     public static BufferedImage[] loadMaps() {
         BufferedImage[] img = new BufferedImage[13];
@@ -35,7 +33,7 @@ public class Bootloader {
         ArrayList<HeroLocations>[] coords = new ArrayList[13];
         try {
             for (int i = 1; i <= 13; i++) {
-                File f = new File("assets/map/map" + i + ".txt");
+                File f = new File("assets/map/heroData" + i + ".txt");
                 BufferedReader br = new BufferedReader(new FileReader(f));
                 coords[i - 1] = new ArrayList<>();
                 String line;
@@ -87,6 +85,32 @@ public class Bootloader {
         }
 
         return list;
+    }
+
+    public static HashSet<Integer>[] loadTiles() {
+        HashSet<Integer>[] maps = new HashSet[13];
+        try {
+            for (int i = 1; i <= 13; i++) {
+                File f = new File("assets/map/tileData" + i + ".png");
+                if (!f.exists()) {
+                    System.out.println("File missing: " + f);
+                    return null;
+                }
+                BufferedImage bi = ImageIO.read(f);
+                maps[i - 1] = new HashSet<>();
+                for (int x = 0; x < bi.getWidth(); x++) {
+                    for (int y = 0; y < bi.getHeight(); y++) {
+                        int num = bi.getRGB(x, y);
+                        if (num != 0) {
+                            maps[i - 1].add(x + y * 2048 + num * 4194304);
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return maps;
     }
 
     private static Image maskImage(BufferedImage base, int color) {
