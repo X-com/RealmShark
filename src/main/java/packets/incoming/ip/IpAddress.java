@@ -4,6 +4,8 @@ import packets.Packet;
 import packets.reader.BufferReader;
 import util.Util;
 
+import java.util.Arrays;
+
 /**
  * Emits this class when IP changes happen on incoming packets.
  */
@@ -29,5 +31,12 @@ public class IpAddress extends Packet {
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
+    }
+
+    @Override
+    public String toString() {
+        return "IpAddress{" +
+                "\n   srcAddress=" + Arrays.toString(srcAddress) +
+                "\n   srcAddressAsInt=" + srcAddressAsInt;
     }
 }
