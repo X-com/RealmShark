@@ -19,8 +19,9 @@ public interface PProcessor {
      * Incoming stream from the TCP payload.
      *
      * @param data TCP packet payload byte data containing the stream.
+     * @param srcAddr
      */
-    void incomingStream(byte[] data);
+    void incomingStream(byte[] data, byte[] srcAddr);
 
     /**
      * Outgoing stream from the TCP payload.

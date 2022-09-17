@@ -42,8 +42,8 @@ public class Sniffer {
     public Sniffer(PProcessor processor) {
         thisObject = this;
         ringBuffer = new RingBuffer<>(32);
-        incoming = new TcpStreamBuilder(processor::resetIncoming, processor::incomingStream);
-        outgoing = new TcpStreamBuilder(processor::resetOutgoing, processor::outgoingStream);
+        incoming = new TcpStreamBuilder(processor::resetIncoming, (data, srcAddr) -> processor.incomingStream(data, srcAddr));
+        outgoing = new TcpStreamBuilder(processor::resetOutgoing, (data, srcAddr) -> processor.outgoingStream(data));
     }
 
     /**

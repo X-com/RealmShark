@@ -81,7 +81,7 @@ public class TcpStreamBuilder {
             idNumber = packetSeqed.getIp4Packet().getIdentification();
             if (packet.getPayload() != null) {
                 sequenseNumber += packetSeqed.getPayloadSize();
-                stream.stream(packetSeqed.getPayload());
+                stream.stream(packetSeqed.getPayload(), packetSeqed.getIp4Packet().getSrcAddr());
             }
         }
     }

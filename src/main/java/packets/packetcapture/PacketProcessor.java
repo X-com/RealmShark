@@ -1,5 +1,6 @@
 package packets.packetcapture;
 
+import packets.incoming.ip.IpAddress;
 import tomato.gui.MissingNpcapGUI;
 import tomato.gui.TomatoBandwidth;
 import packets.Packet;
@@ -28,6 +29,7 @@ public class PacketProcessor extends Thread implements PProcessor {
     private final PacketConstructor outgoingPacketConstructor;
     private final Sniffer sniffer;
     private final PacketLogger logger;
+    private final byte[] srcAddr;
 
     /**
      * Basic constructor of packetProcessor
@@ -38,6 +40,7 @@ public class PacketProcessor extends Thread implements PProcessor {
         incomingPacketConstructor = new PacketConstructor(this, new RC4(RotMGRC4Keys.INCOMING_STRING));
         outgoingPacketConstructor = new PacketConstructor(this, new RC4(RotMGRC4Keys.OUTGOING_STRING));
         logger = new PacketLogger();
+        srcAddr = new byte[4];
     }
 
     /**
@@ -73,11 +76,13 @@ public class PacketProcessor extends Thread implements PProcessor {
     /**
      * Incoming byte data received from incoming TCP packets.
      *
-     * @param data Incoming byte stream
+     * @param data    Incoming byte stream
+     * @param srcAddr Source IP of incoming packets.
      */
     @Override
-    public void incomingStream(byte[] data) {
+    public void incomingStream(byte[] data, byte[] srcAddr) {
         logger.addIncoming(data.length);
+        ipEmitter(srcAddr);
         incomingPacketConstructor.build(data);
         TomatoBandwidth.setInfo(logger.toString()); // update info GUI if open
     }
@@ -92,6 +97,21 @@ public class PacketProcessor extends Thread implements PProcessor {
         logger.addOutgoing(data.length);
         outgoingPacketConstructor.build(data);
         TomatoBandwidth.setInfo(logger.toString()); // update info GUI if open
+    }
+
+    /**
+     * Emits IP changes as incoming packet.
+     *
+     * @param srcIp Source IP of incoming packets.
+     */
+    private void ipEmitter(byte[] srcIp) {
+        for (int i = 0; i < srcAddr.length; i++) {
+            if (srcAddr[i] != srcIp[i]) {
+                System.arraycopy(srcIp, 0, srcAddr, 0, srcAddr.length);
+                Register.INSTANCE.emit(new IpAddress(srcIp));
+                return;
+            }
+        }
     }
 
     /**
