@@ -6,7 +6,7 @@ plugins {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-project.version = 'v0.3-beta'
+project.version = 'v0.4.2-beta'
 applicationName = 'Potato'
 
 repositories {
@@ -14,13 +14,14 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.ardikars.pcap:pcap-spi:1.4.1'
-    implementation 'com.ardikars.pcap:pcap-jdk7:1.4.1'
-    implementation("com.github.weisj:darklaf-core:3.0.0")
-    implementation 'com.google.code.gson:gson:2.7'
-    implementation 'net.java.dev.jna:jna:5.11.0'
-    implementation 'net.java.dev.jna:jna-platform:5.11.0'
-    implementation 'com.1stleg:jnativehook:2.0.2'
+    implementation 'com.ardikars.pcap:pcap-spi:1.4.2'
+    implementation 'com.ardikars.pcap:pcap-jdk7:1.4.2'
+    implementation('com.github.weisj:darklaf-core:3.0.1')
+    implementation 'com.google.code.gson:gson:2.9.1'
+    implementation 'net.java.dev.jna:jna:5.12.1'
+    implementation 'net.java.dev.jna:jna-platform:5.12.1'
+    implementation 'com.1stleg:jnativehook:2.1.0'
+    implementation 'org.java-websocket:Java-WebSocket:1.5.3'
 }
 
 mainClassName = applicationName.toLowerCase() + '.' + applicationName

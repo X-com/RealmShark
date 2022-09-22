@@ -22,16 +22,19 @@ public class PacketRead {
     }
 
     public static void readAll(Packet packet) {
+
         // spammy
+        if (packet instanceof NewTickPacket) return;
+        if (packet instanceof UpdatePacket) return;
         if (packet instanceof PingPacket) return;
         if (packet instanceof PongPacket) return;
         if (packet instanceof MovePacket) return;
         if (packet instanceof PlayerShootPacket) return;
         if (packet instanceof ServerPlayerShootPacket) return;
+        if (packet instanceof UpdateAckPacket) return;
         // common
         if (packet instanceof ShowEffectPacket) return;
         if (packet instanceof InvResultPacket) return;
-        if (packet instanceof UpdateAckPacket) return;
         if (packet instanceof TextPacket) return;
         if (packet instanceof ChangeAllyShootPacket) return;
         if (packet instanceof EnemyShootPacket) return;
@@ -71,19 +74,19 @@ public class PacketRead {
 //        if (packet instanceof CreateSuccessPacket) return;
 
         if (packet instanceof NewTickPacket) {
-            newtick((NewTickPacket) packet);
+//            newtick((NewTickPacket) packet);
             return;
         }
 
 
         if (packet instanceof MapInfoPacket) {
-            mapinfo((MapInfoPacket) packet);
+//            mapinfo((MapInfoPacket) packet);
             return;
         }
 
         if (packet instanceof UpdatePacket) {
 //            crystalTPRange((UpdatePacket) packet);
-            realmIdentifier((UpdatePacket) packet);
+//            realmIdentifier((UpdatePacket) packet);
             return;
         }
         if (packet instanceof VaultContentPacket) {
@@ -108,7 +111,7 @@ public class PacketRead {
 //            System.out.println("10 sec");
 //        }dwd
         time = packet.serverRealTimeMS;
-        if(timeIndex == 0) timeIndex = (int) (time / 180000) - 1;
+        if (timeIndex == 0) timeIndex = (int) (time / 180000) - 1;
 
         if (timeStored < time) {
             Toolkit.getDefaultToolkit().beep();

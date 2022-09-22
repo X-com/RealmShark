@@ -35,7 +35,6 @@ public class TileSaver {
 
     public static void main(String[] args) {
 //        new TileSaver().test();
-        // (7.2)
 //        packetProcessor = new PacketProcessor();
 //        Register.INSTANCE.registerAll(TileSaver::readAll);
 //        packetProcessor.start();
@@ -44,7 +43,7 @@ public class TileSaver {
 //        new TileSaver().makeImageThingy();
         try {
 //            for(int i = 1; i <= 13; i++)
-            new TileSaver().makeImageThingy2(7);
+            new TileSaver().makeImageThingy2(4);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -246,7 +245,7 @@ public class TileSaver {
 
         if (i >= 3 && i <= 7) expand(bi, mapArray[i]);
 
-        int detectSize = 15;
+        int detectSize = 12;
         for (int x = 0; x < bi.getWidth() && fillX == 0; x++) {
             for (int y = 0; y < bi.getHeight() && fillX == 0; y++) {
                 if (mapArray[i][x][y] == 96 && mapGland[i][x][y] == 0) {

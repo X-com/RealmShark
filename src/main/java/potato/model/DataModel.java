@@ -4,9 +4,9 @@ import packets.data.GroundTileData;
 import packets.data.ObjectData;
 import packets.data.ObjectStatusData;
 import packets.data.WorldPosData;
-import potato.control.MouseKeyController;
+import potato.control.MouseController;
 import potato.control.ScreenLocatorController;
-import potato.control.ServerHTTP;
+import potato.control.ServerSynch;
 import potato.data.HeroState;
 import potato.data.HeroType;
 import potato.data.IdData;
@@ -19,8 +19,8 @@ import java.util.HashSet;
 public class DataModel {
 
     RenderViewer renderer;
-    ServerHTTP serverHTTP;
-    MouseKeyController mouseKey;
+    ServerSynch server;
+    MouseController mouse;
     ScreenLocatorController locator;
 
     private final int CLOSEST_HERO_LIMIT = 3000;
@@ -43,14 +43,17 @@ public class DataModel {
     private boolean newRealmCheck = false;
     private long seed;
     private String realmName;
+    private int locationIp;
+    private String locationName;
+    private int myId;
 
     public DataModel() {
         mapCoords = Bootloader.loadMapCoords();
         mapTileData = Bootloader.loadTiles();
-        serverHTTP = new ServerHTTP(this);
+        server = new ServerSynch(this);
         renderer = new RenderViewer(mapCoords);
         locator = new ScreenLocatorController(renderer, this);
-        mouseKey = new MouseKeyController(this, renderer, serverHTTP);
+        mouse = new MouseController(this, renderer, server);
 
         locator.locateLoop();
         renderer.renderLoop();
@@ -373,7 +376,7 @@ public class DataModel {
         if (text.contains("oryx_closed_realm")) {
 //                System.out.println("-----------" + serverTime + "------------");
             realmClosingTime = serverTime;
-            renderer.realmClosed();
+            renderer.realmClosed(serverTime);
         }
     }
 
@@ -393,21 +396,16 @@ public class DataModel {
         renderer.setServerTime(l);
     }
 
-    public void synchUpdate(int mapIndex, int[] markers) {
-        this.mapIndex = mapIndex;
-        for (int i = 0; i < mapCoords[mapIndex].size(); i++) {
-            mapCoords[mapIndex].get(i).setMarker(markers[i], false);
+    public void initSynch(int mapIndex, int[] markers) {
+        renderer.editMapIndex(mapIndex);
+        for (int i = 0; i < mapCoords[this.mapIndex].size(); i++) {
+            mapCoords[this.mapIndex].get(i).setMarker(markers[i], false);
         }
+        renderer.stuffRender(true);
     }
 
-    public void uploadMap() {
-        System.out.println("upload");
-//        serverHTTP.uploadMap(mapIndex, mapCoords());
-    }
-
-    public void synch() {
-        System.out.println("synch");
-        serverHTTP.synch();
+    public void heroSynch(int heroId, int heroState) {
+        mapCoords[this.mapIndex].get(heroId).setMarker(heroState, false);
     }
 
     public void editZoom(int i) {
@@ -418,49 +416,55 @@ public class DataModel {
 
     public void markVisited(HeroLocations h) {
         if (h.setState(HeroState.MARK_VISITED)) {
-            serverHTTP.uploadSingleDot(mapIndex, h.getIndex(), h.getMarker());
+            System.out.println("upload visited");
+            server.uploadSingleHero(myId, h.getIndex(), h.getState());
         }
     }
 
     public void markActive(HeroLocations h) {
         if (h.setState(HeroState.MARK_ACTIVE)) {
-            serverHTTP.uploadSingleDot(mapIndex, h.getIndex(), h.getMarker());
+            server.uploadSingleHero(myId, h.getIndex(), h.getState());
         }
     }
 
     public void markDead(HeroLocations h) {
         if (h.setState(HeroState.MARK_DEAD)) {
-            serverHTTP.uploadSingleDot(mapIndex, h.getIndex(), h.getMarker());
+            server.uploadSingleHero(myId, h.getIndex(), h.getState());
         }
     }
 
-    public void editMapIndex(int i) {
-        if (i == 1) {
-            if (mapIndex > 0) {
-                mapIndex--;
-            } else {
-                mapIndex = 12;
-            }
-        } else if (i == -1) {
-            if (mapIndex < 12) {
-                mapIndex++;
-            } else {
-                mapIndex = 0;
-            }
-        }
-        for (int j = 0; j < mapCoords[mapIndex].size(); j++) {
-            mapCoords[mapIndex].get(j).reset();
-        }
-        renderer.editMapIndex(mapIndex);
-        System.out.println("selecting map: " + (mapIndex + 1));
-    }
+//    public void editMapIndex(int i) {
+//        if (i == 1) {
+//            if (mapIndex > 0) {
+//                mapIndex--;
+//            } else {
+//                mapIndex = 12;
+//            }
+//        } else if (i == -1) {
+//            if (mapIndex < 12) {
+//                mapIndex++;
+//            } else {
+//                mapIndex = 0;
+//            }
+//        }
+//        for (int j = 0; j < mapCoords[mapIndex].size(); j++) {
+//            mapCoords[mapIndex].get(j).reset();
+//        }
+//        renderer.editMapIndex(mapIndex);
+//        System.out.println("selecting map: " + (mapIndex + 1));
+//    }
 
     public void setInRealm(String name, long s) {
         inRealm = true;
         zoom = 6;
         newRealmCheck = true;
         seed = s;
+        setRealmName(name);
+    }
+
+    public void setRealmName(String name) {
         realmName = name;
+        renderer.realmName(name);
     }
 
     public void setHeroesLeft(int i) {
@@ -468,6 +472,7 @@ public class DataModel {
     }
 
     public void reset() {
+        server.stopSynch(myId);
         inRealm = false;
         renderer.setInRealm(false);
         renderer.stuffRender(false);
@@ -498,7 +503,7 @@ public class DataModel {
         int largest = 0;
         int largestIndex = 0;
         for (int i = 0; i < 13; i++) {
-            System.out.printf("Index:%d Count:%d\n", i+1, maps[i]);
+            System.out.printf("Index:%d Count:%d\n", i + 1, maps[i]);
             if (maps[i] > largest) {
                 largest = maps[i];
                 largestIndex = i;
@@ -510,16 +515,30 @@ public class DataModel {
     public void newRealm(GroundTileData[] tiles, WorldPosData pos) {
         if (!newRealmCheck) return;
         mapIndex = findMapIndex(tiles);
+        server.startSynch(myId, locationIp, seed, mapIndex, (int) pos.x, (int) pos.y);
 
-        for (int j = 0; j < mapCoords[mapIndex].size(); j++) {
-            mapCoords[mapIndex].get(j).reset();
-        }
-        renderer.editMapIndex(mapIndex);
+//        for (int j = 0; j < mapCoords[mapIndex].size(); j++) {
+//            mapCoords[mapIndex].get(j).reset();
+//        }
+//        renderer.editMapIndex(mapIndex);
+//
+//        renderer.stuffRender(true);
 
         renderer.setInRealm(true);
         renderer.setZoom(zoom, (int) pos.x, (int) pos.y);
-        renderer.stuffRender(true);
 
         newRealmCheck = false;
+    }
+
+    public void ipChanged(String name, int ip) {
+        if (!name.equals("") && !name.equals(locationName)) {
+            locationName = name;
+            renderer.serverNameAndCooldown(name);
+        }
+        locationIp = ip;
+    }
+
+    public void setMyId(int id) {
+        myId = id;
     }
 }

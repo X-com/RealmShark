@@ -8,13 +8,14 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class ScreenLocatorController {
-    boolean running;
-    RenderViewer renderer; // TODO remove
-    DataModel model;
-    int storeX;
-    int storeY;
-    int storeW;
-    int storeH;
+    private boolean running;
+    private RenderViewer renderer; // TODO remove
+    private DataModel model;
+    private int storeX;
+    private int storeY;
+    private int storeW;
+    private int storeH;
+    private static boolean scaling = false;
 
     public ScreenLocatorController(RenderViewer renderer, DataModel model) {
         this.renderer = renderer;
@@ -24,7 +25,7 @@ public class ScreenLocatorController {
     private void calcMapSizeLoc() {
         int frameColor = -8553091;
         int boarderColor = -13224394;
-        Rectangle rect = NativeWindowScreenCapture.getWindowRect("RotMGExalt");
+        Rectangle rect = NativeWindowScreenCapture.getWindowRect("RotMGExalt", false);
         BufferedImage createScreenCapture = NativeWindowScreenCapture.getWindowImageUndisturbed(rect);
 //            System.out.println(createScreenCapture);
         if (createScreenCapture == null) return;
@@ -118,7 +119,7 @@ public class ScreenLocatorController {
         }
         height--;
         if (x != storeX || y != storeY || width != storeW || height != storeH) {
-            System.out.printf("X:%d Y:%d W:%d H:%d\n", x, y, width, height);
+//            System.out.printf("X:%d Y:%d W:%d H:%d\n", x, y, width, height);
             model.setSize(width, height);
             renderer.setSizeLoc(x, y, width, height);
             renderer.show();
@@ -153,5 +154,9 @@ public class ScreenLocatorController {
                 }
             }
         }).start();
+    }
+
+    public static void setScaling(boolean b) {
+        scaling = b;
     }
 }

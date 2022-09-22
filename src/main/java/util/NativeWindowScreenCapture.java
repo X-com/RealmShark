@@ -88,12 +88,18 @@ public class NativeWindowScreenCapture {
      * Returns a rectangle indicating where the image is on the screen as.
      *
      * @param windowName Window name.
+     * @param scaling    Enables windows scaling option for users using scaling on Windows.
      * @return Rectangle of where it is on screen (left, top, width, height)
      */
-    public static Rectangle getWindowRect(String windowName) {
+    public static Rectangle getWindowRect(String windowName, boolean scaling) {
         int hWnd = User32.instance.FindWindowA(null, windowName);
         WindowInfo w = getWindowInfo(hWnd);
-        double scale = getScaleFactor(hWnd);
+        double scale;
+        if (scaling) {
+            scale = getScaleFactor(hWnd);
+        } else {
+            scale = 1;
+        }
         return new Rectangle((int) (w.rect.left / scale), (int) (w.rect.top / scale), (int) ((w.rect.right - w.rect.left) / scale), (int) ((w.rect.bottom - w.rect.top) / scale));
 //        return new Rectangle(w.rect.left, w.rect.top, w.rect.right - w.rect.left, w.rect.bottom - w.rect.top);
     }

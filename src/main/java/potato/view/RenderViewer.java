@@ -4,26 +4,21 @@ import com.sun.jna.Native;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinUser;
-import potato.Potato;
 import potato.model.Bootloader;
 import potato.model.HeroLocations;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class RenderViewer {
     private static int width = 300;
     private static int height = 300;
-    private JFrame menuFrame;
-    private JWindow frame;
-    private JPanel panel;
-    private AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f);
+    private final JWindow frame;
+    private final JPanel panel;
+    private final AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f);
     private Composite originalComposite;
-    private static Image icon = Toolkit.getDefaultToolkit().getImage(Potato.imagePath);
 
     private final int[] zooms = {0, 70, 172, 340, 670, 1560, 15300};
     private final float[] m = {0, 0.0294f, 0.072f, 0.1447f, 0.286f, 2f / 3f, 6.66f};
@@ -40,31 +35,33 @@ public class RenderViewer {
     private static int offsetX = 0;
     private static int offsetY = 0;
     public static int zoom;
-    private BufferedImage[] images;
-    private ArrayList<HeroLocations>[] mapCoords;
+    private final BufferedImage[] images;
+    private final ArrayList<HeroLocations>[] mapCoords;
     private int mapIndex = 0;
     public static int playerX;
     public static int playerY;
     private int heroesLeft;
     private boolean inRealm = true;
     private String castleTimer = "";
-    private boolean toggleMap = true;
-    private boolean toggleDots = true;
-    private boolean showMap = true;
-    private boolean showHeroes = true;
-    private boolean showDots = true;
+    private static boolean userShowMap = true;
+    private static boolean userShowHeroes = true;
+    private static boolean userShowCoords = true;
+    private static boolean showMap = false;
+    private static boolean showHeroes = false;
+    private boolean showHeroCount = false;
     private boolean startCastleTimer = false;
     private long realmClosingTime = 0;
+    private String serverName = "";
+    private String realmName = "";
+    private long tpCooldown;
 
     private boolean running;
-    private Image[] heroIcon;
+    private final Image[] heroIcon;
 
     public RenderViewer(ArrayList<HeroLocations>[] mapCoords) {
         this.mapCoords = mapCoords;
         images = Bootloader.loadMaps();
         heroIcon = Bootloader.loadHeroIcons();
-//        smallWindow();
-        makeTrayIcon();
 
         frame = new JWindow();
         frame.setAlwaysOnTop(true);
@@ -84,81 +81,12 @@ public class RenderViewer {
         setTransparent(frame);
     }
 
-    private void makeTrayIcon() {
-        if (!SystemTray.isSupported()) {
-            System.out.println("System tray is not supported");
-            return;
-        }
-        //get the systemTray of the system
-        SystemTray systemTray = SystemTray.getSystemTray();
-
-        //get default toolkit
-        //Toolkit toolkit = Toolkit.getDefaultToolkit();
-        //get image
-        //Toolkit.getDefaultToolkit().getImage("src/resources/busylogo.jpg");
-        Image image = Toolkit.getDefaultToolkit().getImage(Potato.imagePath);
-
-        //popupmenu
-        PopupMenu trayPopupMenu = new PopupMenu();
-
-        //1t menuitem for popupmenu
-        MenuItem action = new MenuItem("Options");
-        action.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Options not added yet.");
-            }
-        });
-        trayPopupMenu.add(action);
-
-        //2nd menuitem of popupmenu
-        MenuItem close = new MenuItem("Close");
-        close.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
-        trayPopupMenu.add(close);
-
-        //setting tray icon
-        TrayIcon trayIcon = new TrayIcon(image, "Potato", trayPopupMenu);
-        //adjust to default size as per system recommendation
-        trayIcon.setImageAutoSize(true);
-
-        try {
-            systemTray.add(trayIcon);
-        } catch (AWTException awtException) {
-            awtException.printStackTrace();
-        }
-        System.out.println("end of main");
-    }
-
-    private void smallWindow() {
-        menuFrame = new JFrame("Potato") {
-            @Override
-            public void dispose() {
-                super.dispose();
-                System.exit(0);
-            }
-        };
-        menuFrame.setIconImage(icon);
-        menuFrame.setSize(100, 100);
-        menuFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        menuFrame.setVisible(true);
-    }
-
     private void setTransparent(Component w) {
-        WinDef.HWND hwnd = getHWnd(w);
+        WinDef.HWND hwnd = new WinDef.HWND();
+        hwnd.setPointer(Native.getComponentPointer(w));
         int wl = User32.INSTANCE.GetWindowLong(hwnd, WinUser.GWL_EXSTYLE);
         wl = wl | WinUser.WS_EX_LAYERED | WinUser.WS_EX_TRANSPARENT;
         User32.INSTANCE.SetWindowLong(hwnd, WinUser.GWL_EXSTYLE, wl);
-    }
-
-    private WinDef.HWND getHWnd(Component w) {
-        WinDef.HWND hwnd = new WinDef.HWND();
-        hwnd.setPointer(Native.getComponentPointer(w));
-        return hwnd;
     }
 
     public void render(Graphics2D g) {
@@ -168,24 +96,38 @@ public class RenderViewer {
             g.drawImage(images[mapIndex], imageOffsetX, imageOffsetY, imageSize[zoom], imageSize[zoom], null);
             g.setComposite(originalComposite);
         }
-        g.setStroke(new BasicStroke(1));
-        g.setFont(new Font("Monospaced", Font.PLAIN, fontSize[zoom]));
-        if (showDots && inRealm) {
+        if (showHeroes && inRealm) {
+            g.setStroke(new BasicStroke(1));
+            g.setFont(new Font("Monospaced", Font.PLAIN, fontSize[zoom]));
             for (HeroLocations h : mapCoords[mapIndex]) {
                 drawHeroes(g, h);
             }
+            if (startCastleTimer) {
+                g.setColor(Color.lightGray);
+                g.setFont(new Font("Arial Black", Font.PLAIN, 20));
+                g.drawString(castleTimer, 5, 20);
+            } else if (showHeroCount) {
+                g.setColor(Color.lightGray);
+                g.setFont(new Font("Arial Black", Font.PLAIN, 20));
+                g.drawString(String.format("(%d) Heroes:%d", mapIndex + 1, heroesLeft), 5, 20);
+            }
         }
-        g.setColor(Color.lightGray);
-        if (startCastleTimer) {
-            g.setFont(new Font("Arial Black", Font.PLAIN, 20));
-            g.drawString(castleTimer, 5, 20);
-        } else if (showHeroes) {
-            g.setFont(new Font("Arial Black", Font.PLAIN, 20));
-            g.drawString(String.format("(%d) Heroes:%d", mapIndex + 1, heroesLeft), 5, 20);
+        if (userShowCoords) {
+            g.setColor(Color.lightGray);
+            g.setFont(new Font("Arial Black", Font.PLAIN, 10));
+            g.drawString(String.format("x:%d y:%d  %s  %s  %s", playerX, playerY, serverName, realmName, cooldown()), 5, height - 5);
         }
-        g.setFont(new Font("Arial Black", Font.PLAIN, 10));
-        g.drawString(String.format("x:%d y:%d", playerX, playerY), 5, height - 5);
         g.dispose();
+    }
+
+    private String cooldown() {
+        if (tpCooldown == 0) return "";
+        long t = (tpCooldown - System.currentTimeMillis()) / 1000;
+        if (t < 0) {
+            tpCooldown = 0;
+            return "";
+        }
+        return String.format("(tp:%ds)", t);
     }
 
     public void drawHeroes(Graphics2D g, HeroLocations h) {
@@ -213,9 +155,9 @@ public class RenderViewer {
     }
 
     public void stuffRender(boolean b) {
-        showDots = b && toggleDots;
-        showMap = b && toggleMap;
-        showHeroes = b;
+        showHeroes = b && userShowHeroes;
+        showMap = b && userShowMap;
+        showHeroCount = b;
     }
 
     public void renderLoop() {
@@ -289,16 +231,21 @@ public class RenderViewer {
         }
     }
 
-    public void toggleMap() {
-        toggleMap = !toggleMap;
-        showMap = toggleMap;
-        System.out.println("Toggle map: " + toggleMap);
+    public static void showMap(boolean show) {
+        userShowMap = show;
+        showMap = show;
+        System.out.println("Show map: " + show);
     }
 
-    public void toggleDots() {
-        toggleDots = !toggleDots;
-        showDots = toggleDots;
-        System.out.println("Toggle dots: " + toggleDots);
+    public static void showHeroes(boolean show) {
+        userShowHeroes = show;
+        showHeroes = show;
+        System.out.println("Show heroes: " + show);
+    }
+
+    public static void showCoords(boolean show) {
+        userShowCoords = show;
+        System.out.println("Show coords: " + show);
     }
 
     public void setZoom(int i, int x, int y) {
@@ -315,7 +262,22 @@ public class RenderViewer {
         calcCoords();
     }
 
-    public void realmClosed() {
+    public void realmClosed(long time) {
         startCastleTimer = true;
+        realmClosingTime = time;
+    }
+
+    public void serverNameAndCooldown(String name) {
+        if (!serverName.equals("")) tpCooldown = System.currentTimeMillis() + 125000;
+        serverName = name;
+    }
+
+    public void realmName(String name) {
+        int i = name.indexOf('.');
+        if (i > 0) {
+            realmName = name.substring(i + 1);
+        } else {
+            realmName = name;
+        }
     }
 }

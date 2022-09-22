@@ -20,12 +20,12 @@ public class MouseKeyController implements NativeMouseWheelListener, NativeMouse
 
     DataModel model;
     RenderViewer renderer;
-    ServerHTTP serverHTTP;
+    ServerSynch server;
 
-    public MouseKeyController(DataModel model, RenderViewer renderer, ServerHTTP serverHTTP) {
+    public MouseKeyController(DataModel model, RenderViewer renderer, ServerSynch serverHTTP) {
         this.model = model;
         this.renderer = renderer;
-        this.serverHTTP = serverHTTP;
+        this.server = serverHTTP;
         try {
             globalKeyMouseRegister();
             System.out.println("clearconsole");
@@ -45,29 +45,26 @@ public class MouseKeyController implements NativeMouseWheelListener, NativeMouse
     @Override
     public void nativeKeyTyped(NativeKeyEvent e) {
 //        System.out.println("e.getRawCode(): " + e.getRawCode() + " mod: " + e.getModifiers());
-        if ((e.getModifiers() % 512) == 3) {
-            if (e.getRawCode() == 66) {
-                model.uploadMap();
-            } else if (e.getRawCode() == 77) {
-                renderer.toggleMap();
-            } else if (e.getRawCode() == 78) {
-                renderer.toggleDots();
-            }
-        }
+//        if ((e.getModifiers() % 512) == 3) {
+//            if (e.getRawCode() == 66) {
+//                model.uploadMap();
+//            }
+//        }
     }
 
     @Override
     public void nativeMouseClicked(NativeMouseEvent e) {
 //        System.out.println("Click: " + e.getButton() + " mod: " + e.getModifiers() + " " + (e.getModifiers() % 512));
-        if ((e.getModifiers() % 512) == 1 && e.getButton() == 1) { // mark active
+//        if ((e.getModifiers() % 512) == 1 && e.getButton() == 1) { // mark active
 //            HeroLocations h = model.findClosestHero();
 //            model.markActive(h);
-        } else if ((e.getModifiers() % 512) == 1 && e.getButton() == 2) { // mark dead
+//        } else if ((e.getModifiers() % 512) == 1 && e.getButton() == 2) { // mark dead
 //            HeroLocations h = model.findClosestHero();
 //            model.markDead(h);
-        } else if ((e.getModifiers() % 512) == 3 && e.getButton() == 3) {
-            model.synch();
-        }
+//        } else if ((e.getModifiers() % 512) == 0 && e.getButton() == 3) {
+//            model.synch();
+//            model.uploadMap();
+//        }
     }
 
     @Override
@@ -116,8 +113,8 @@ public class MouseKeyController implements NativeMouseWheelListener, NativeMouse
 //            RenderViewer.imageOffsetY = (int) (RenderViewer.imageM[RenderViewer.zoom] * RenderViewer.playerY + RenderViewer.imageK[RenderViewer.zoom]);
 //        } else if ((e.getModifiers() % 512) == 16) {
         } else if (e.getModifiers() == 3) {
-            model.editMapIndex(e.getWheelRotation());
-            serverHTTP.stopSynch();
+//            model.editMapIndex(e.getWheelRotation());
+            server.stopSynch(0);
         }
     }
 

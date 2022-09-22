@@ -22,6 +22,7 @@ public class HeroLocations {
     private HeroType locationType = HeroType.UNVISITED;
     private HeroState locationState = HeroState.MARK_UNVISITED;
     private int drawIndex = -1;
+    public static int largest = 0;
 
     public HeroLocations(int index, int x, int y) {
         this.index = index;
@@ -51,7 +52,6 @@ public class HeroLocations {
 
     public void setType(HeroType type) {
         locationType = type;
-        locationState = HeroState.MARK_VISITED;
         drawIndex = getDrawIndex();
         resetTimer = System.currentTimeMillis() + 2200;
     }
@@ -75,7 +75,7 @@ public class HeroLocations {
         return true;
     }
 
-    public int getMarker() {
+    public int getState() {
         return locationType.getIndex() + locationState.getIndex() * 16;
     }
 

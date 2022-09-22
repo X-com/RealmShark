@@ -5,6 +5,7 @@ import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.register.Register;
 import potato.control.PacketController;
 import potato.model.DataModel;
+import potato.view.GUIBase;
 import tomato.Tomato;
 import util.Util;
 
@@ -22,6 +23,7 @@ public class Potato extends Thread {
     }
 
     public void run() {
+        new GUIBase();
         dataModel = new DataModel();
         controller = new PacketController(dataModel);
 
@@ -30,6 +32,9 @@ public class Potato extends Thread {
         Register.INSTANCE.register(PacketType.NEWTICK, controller::packets);
         Register.INSTANCE.register(PacketType.REALM_HERO_LEFT_MSG, controller::packets);
         Register.INSTANCE.register(PacketType.TEXT, controller::packets);
+        Register.INSTANCE.register(PacketType.QUESTOBJID, controller::packets);
+        Register.INSTANCE.register(PacketType.IP_ADDRESS, controller::packets);
+        Register.INSTANCE.register(PacketType.CREATE_SUCCESS, controller::packets);
 
         PacketProcessor packetProcessor = new PacketProcessor();
         packetProcessor.start();
