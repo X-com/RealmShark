@@ -1,14 +1,16 @@
 package potato.control;
 
-import com.github.kwhat.jnativehook.GlobalScreen;
-import com.github.kwhat.jnativehook.NativeHookException;
-import com.github.kwhat.jnativehook.mouse.NativeMouseWheelEvent;
-import com.github.kwhat.jnativehook.mouse.NativeMouseWheelListener;
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
+import org.jnativehook.mouse.NativeMouseWheelEvent;
+import org.jnativehook.mouse.NativeMouseWheelListener;
 import potato.model.DataModel;
 import potato.view.RenderViewer;
 import util.FocusedWindow;
 
 import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MouseController implements NativeMouseWheelListener {
 
@@ -33,11 +35,12 @@ public class MouseController implements NativeMouseWheelListener {
 //        logger.setLevel(Level.OFF);
 //        logger.setUseParentHandlers(false);
         try {
+            System.out.println("Registered mouse");
             GlobalScreen.registerNativeHook();
-        }
-        catch (NativeHookException ex) {
+        } catch (NativeHookException ex) {
             System.err.println("There was a problem registering the native hook.");
             System.err.println(ex.getMessage());
+            ex.printStackTrace();
 
             System.exit(1);
         }
@@ -47,19 +50,11 @@ public class MouseController implements NativeMouseWheelListener {
 
     @Override
     public void nativeMouseWheelMoved(NativeMouseWheelEvent e) {
-        System.out.println(FocusedWindow.getWindowFocus() + " mod:" + e.getModifiers() + " zoomed:" + e.getWheelRotation());
+        System.out.println(FocusedWindow.getWindowFocus());
         if ((e.getModifiers() % 512) == 0) {
             if (FocusedWindow.getWindowFocus().equals("RotMG Exalt.exe")) {
                 model.editZoom(e.getWheelRotation());
             }
-        }
-    }
-
-    public void dispose() {
-        try {
-            GlobalScreen.unregisterNativeHook();
-        } catch (NativeHookException e) {
-            e.printStackTrace();
         }
     }
 }

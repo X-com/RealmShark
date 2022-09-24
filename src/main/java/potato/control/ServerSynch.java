@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ServerSynch {
     static private final String urlString = "ws://217.27.177.69:6000";
-    private DataModel model;
+    private final DataModel model;
     private WebSocket webSocket;
 
     boolean synchRequests = false;

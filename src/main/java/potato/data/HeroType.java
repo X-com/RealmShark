@@ -26,9 +26,9 @@ public enum HeroType {
      *   Lich
      */
 
-    private int index;
-    private int[] typeID;
-    private float missingDist;
+    private final int index;
+    private final int[] typeID;
+    private final float missingDist;
 
     HeroType(int i, float d, int[] t) {
         this.index = i;

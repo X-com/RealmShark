@@ -24,13 +24,14 @@ public class PacketController {
         } else if (packet instanceof NewTickPacket) {
             NewTickPacket p = (NewTickPacket) packet;
             model.setServerTime(p.serverRealTimeMS);
+            model.serverTickTime(p.serverLastTimeRTTMS);
             model.newTickUpdates(p.status);
         } else if (packet instanceof RealmHeroesLeftPacket) {
             RealmHeroesLeftPacket p = (RealmHeroesLeftPacket) packet;
             model.setHeroesLeft(p.realmHeroesLeft);
         } else if (packet instanceof TextPacket) {
             TextPacket p = (TextPacket) packet;
-            model.updateText(p.text, p.objectId);
+            model.updateText(p.text);
         } else if (packet instanceof QuestObjectIdPacket) {
             QuestObjectIdPacket p = (QuestObjectIdPacket) packet;
             System.out.println(p);

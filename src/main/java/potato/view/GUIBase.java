@@ -1,25 +1,27 @@
 package potato.view;
 
 import potato.Potato;
-import potato.control.ScreenLocatorController;
+import potato.model.DataModel;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class GUIBase {
 
-    private JFrame menuFrame;
-    private static Image icon = Toolkit.getDefaultToolkit().getImage(Potato.imagePath);
+    private static final Image icon = Toolkit.getDefaultToolkit().getImage(Potato.imagePath);
+    private final DataModel dataModel;
 
-    public GUIBase() {
+    public GUIBase(DataModel dataModel) {
+        this.dataModel = dataModel;
         makeTrayIcon();
     }
 
     private void smallWindow() {
-        menuFrame = new JFrame("Potato") {
+        JFrame menuFrame = new JFrame("Potato") {
             @Override
             public void dispose() {
                 super.dispose();
+                dataModel.dispose();
                 System.exit(0);
             }
         };
@@ -44,7 +46,7 @@ public class GUIBase {
         PopupMenu trayPopupMenu = new PopupMenu();
         MenuItem hideMap = new MenuItem("Hide Map");
         MenuItem hideHeroes = new MenuItem("Hide Heroes");
-        MenuItem hideCoords = new MenuItem("Hide Coords");
+        MenuItem hideCoords = new MenuItem("Hide Info");
         hideMap.addActionListener(e -> {
             if (hideMap.getLabel().startsWith("Hide")) {
                 RenderViewer.showMap(false);
@@ -65,11 +67,11 @@ public class GUIBase {
         });
         hideCoords.addActionListener(e -> {
             if (hideCoords.getLabel().startsWith("Hide")) {
-                RenderViewer.showCoords(false);
-                hideCoords.setLabel("Show Coords");
+                RenderViewer.showInfo(false);
+                hideCoords.setLabel("Show Info");
             } else {
-                RenderViewer.showCoords(true);
-                hideCoords.setLabel("Hide Coords");
+                RenderViewer.showInfo(true);
+                hideCoords.setLabel("Hide Info");
             }
         });
         trayPopupMenu.add(hideMap);
@@ -78,17 +80,17 @@ public class GUIBase {
 
         trayPopupMenu.addSeparator();
 
-        MenuItem windowScaling = new MenuItem("Enable Scaling");
-        windowScaling.addActionListener(e -> {
-            if (windowScaling.getLabel().startsWith("Enable")) {
-                ScreenLocatorController.setScaling(true);
-                windowScaling.setLabel("Disable Scaling");
-            } else {
-                ScreenLocatorController.setScaling(false);
-                windowScaling.setLabel("Enable Scaling");
-            }
-        });
-        trayPopupMenu.add(windowScaling);
+//        MenuItem windowScaling = new MenuItem("Enable Scaling");
+//        windowScaling.addActionListener(e -> {
+//            if (windowScaling.getLabel().startsWith("Enable")) {
+//                ScreenLocatorController.setScaling(true);
+//                windowScaling.setLabel("Disable Scaling");
+//            } else {
+//                ScreenLocatorController.setScaling(false);
+//                windowScaling.setLabel("Enable Scaling");
+//            }
+//        });
+//        trayPopupMenu.add(windowScaling);
 
         MenuItem options = new MenuItem("Options");
         options.addActionListener(e -> JOptionPane.showMessageDialog(null, "Options not added yet."));

@@ -23,8 +23,8 @@ public class Potato extends Thread {
     }
 
     public void run() {
-        new GUIBase();
         dataModel = new DataModel();
+        new GUIBase(dataModel);
         controller = new PacketController(dataModel);
 
         Register.INSTANCE.register(PacketType.MAPINFO, controller::packets);

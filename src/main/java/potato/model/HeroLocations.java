@@ -11,13 +11,13 @@ import java.util.Map;
 public class HeroLocations {
     public float dist; // Hacky workaround to store distance.
 
-    private int index;
-    private String indexString;
-    private int x;
-    private int y;
+    private final int index;
+    private final String indexString;
+    private final int x;
+    private final int y;
     private int drawX;
     private int drawY;
-    private Color color;
+    private final Color color;
     private long resetTimer = 0;
     private HeroType locationType = HeroType.UNVISITED;
     private HeroState locationState = HeroState.MARK_UNVISITED;

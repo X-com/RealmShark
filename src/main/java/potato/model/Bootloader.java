@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 public class Bootloader {
 
     private static final String[] type = {"demon", "phoenix", "cyclops", "ghost", "oasis", "ent", "lich", "parasite", "coffin", "snake", "cross", "house"};
-    private static final int[] colorStates = {0x9000ff00, 0x90ff0000, 0x90ffffff}; // red, green, white
+    private static final int[] colorStates = {0x9000ff00, 0x90ff0000, 0x40ffffff}; // red, green, white
 
     public static BufferedImage[] loadMaps() {
         BufferedImage[] img = new BufferedImage[13];
@@ -76,7 +76,7 @@ public class Bootloader {
                     }
                     for (int colorIndex = 0; colorIndex < 3; colorIndex++) {
                         int index = typeIndex * 3 + colorIndex;
-                        if (index >= 0) list[index] = maskImage(base, colorStates[colorIndex]);
+                        if (index >= 0 && base != null) list[index] = maskImage(base, colorStates[colorIndex]);
                     }
                 }
             });
