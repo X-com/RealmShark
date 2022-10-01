@@ -1,0 +1,25 @@
+journalctl -u nodePotato.service // read the jurnal of the program
+
+sudo systemctl start nodePotato.service // start things
+sudo systemctl enable display.service // enable it
+
+cd /lib/systemd/system/ // find the file
+which nodemon // find the path of a program
+
+npm install -g nodemon // install nodemon
+/home/pi/.nvm/versions/node/v16.17.1/bin/nodemon --watch /home/pi/potatoServer/ /home/pi/potatoServer/main.js // autorun
+
+ tail -f log.txt // monitoring the txt file
+
+
+
+
+[Unit]
+Description=Potato Server
+After=network.target
+[Service]
+Environment=Display=:0
+ExecStart=/home/pi/.nvm/versions/node/v16.17.1/bin/node /home/pi/.nvm/versions/node/v16.17.1/bin/nodemon --watch /home/pi/potatoServer/ /home/pi/potatoServer/main.js
+Restart=always
+[Install]
+WantedBy=multi-user.target
