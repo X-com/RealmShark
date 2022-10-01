@@ -2,6 +2,8 @@ package potato.control;
 
 import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 import com.github.kwhat.jnativehook.mouse.NativeMouseWheelEvent;
 import com.github.kwhat.jnativehook.mouse.NativeMouseWheelListener;
 import potato.model.DataModel;
@@ -10,7 +12,7 @@ import util.FocusedWindow;
 
 import java.awt.*;
 
-public class MouseController implements NativeMouseWheelListener {
+public class MouseController implements NativeMouseWheelListener, NativeKeyListener {
 
     DataModel model;
     RenderViewer renderer;
@@ -34,8 +36,7 @@ public class MouseController implements NativeMouseWheelListener {
 //        logger.setUseParentHandlers(false);
         try {
             GlobalScreen.registerNativeHook();
-        }
-        catch (NativeHookException ex) {
+        } catch (NativeHookException ex) {
             System.err.println("There was a problem registering the native hook.");
             System.err.println(ex.getMessage());
 
@@ -43,16 +44,31 @@ public class MouseController implements NativeMouseWheelListener {
         }
 
         GlobalScreen.addNativeMouseWheelListener(this);
+        GlobalScreen.addNativeKeyListener(this);
     }
 
     @Override
     public void nativeMouseWheelMoved(NativeMouseWheelEvent e) {
-        System.out.println(FocusedWindow.getWindowFocus() + " mod:" + e.getModifiers() + " zoomed:" + e.getWheelRotation());
+//        System.out.println(FocusedWindow.getWindowFocus() + " mod:" + e.getModifiers() + " zoomed:" + e.getWheelRotation());
         if ((e.getModifiers() % 512) == 0) {
             if (FocusedWindow.getWindowFocus().equals("RotMG Exalt.exe")) {
                 model.editZoom(e.getWheelRotation());
             }
         }
+    }
+
+    @Override
+    public void nativeKeyPressed(NativeKeyEvent e) {
+//        System.out.println(FocusedWindow.getWindowFocus() + " mod:" + e.getModifiers() + " " + e.getRawCode() + " " + e.getKeyCode());
+//        if (e.getKeyCode() == NativeKeyEvent.VC_9) {
+//            if (FocusedWindow.getWindowFocus().equals("RotMG Exalt.exe")) {
+//                model.editZoom(1);
+//            }
+//        } else if (e.getKeyCode() == NativeKeyEvent.VC_0) {
+//            if (FocusedWindow.getWindowFocus().equals("RotMG Exalt.exe")) {
+//                model.editZoom(-1);
+//            }
+//        }
     }
 
     public void dispose() {

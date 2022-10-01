@@ -34,7 +34,6 @@ public class DataModel {
     private int imageOffsetY;
 
     private long serverTime;
-    private long realmClosingTime;
     private int heroesLeft = 0;
     private boolean inRealm = true;
 
@@ -51,10 +50,11 @@ public class DataModel {
     private int mapIndex = 0;
     private String realmName = "";
     private String serverName = "";
-    private String tpString = "";
+    private String tpCooldownString = "";
+    private long castleTimer;
     private String castleTimerString = "";
     private int serverIp;
-    private int tpCooldown;
+    private long tpCooldown;
 
     private final int[] circleSize = {5, 7, 8, 9, 10, 16, 130};
     private final int[] fontSize = {0, 8, 8, 8, 10, 16, 130};
@@ -389,7 +389,7 @@ public class DataModel {
 
     public void updateText(String text) {
         if (text.contains("oryx_closed_realm")) {
-            realmClosingTime = serverTime + 130000;
+            castleTimer = serverTime + 130000;
         }
     }
 
@@ -422,10 +422,10 @@ public class DataModel {
 
     public void setServerTime(long l) {
         serverTime = l;
-        if (realmClosingTime != 0) {
-            long remTime = realmClosingTime - serverTime;
+        if (castleTimer != 0) {
+            long remTime = (castleTimer - serverTime) / 1000;
             if (remTime <= 0) {
-                realmClosingTime = 0;
+                castleTimer = 0;
                 castleTimerString = "";
                 return;
             }
@@ -435,13 +435,13 @@ public class DataModel {
 
     public void serverTickTime(int l) {
         if (tpCooldown == 0) return;
-        tpCooldown -= l;
-        if (tpCooldown < 0) {
+        int remTime = (int) ((tpCooldown - System.currentTimeMillis()) / 1000);
+        if (remTime < 0) {
             tpCooldown = 0;
-            tpString = "";
+            tpCooldownString = "";
             return;
         }
-        tpString = String.format("(tp:%ds)", tpCooldown);
+        tpCooldownString = String.format("(tp:%ds)", remTime);
     }
 
     public void initSynch(int mapIndex, int[] markers) {
@@ -563,8 +563,9 @@ public class DataModel {
 
     public void ipChanged(String name, int ip) {
         if (!name.equals("") && !name.equals(serverName)) {
-            if (!serverName.equals("")) tpCooldown = 120000;
+            if (!serverName.equals("")) tpCooldown = System.currentTimeMillis() + 124000;
             serverName = name;
+            castleTimer = 0;
         }
         serverIp = ip;
     }
@@ -582,7 +583,7 @@ public class DataModel {
     }
 
     public String getTpCooldown() {
-        return tpString;
+        return tpCooldownString;
     }
 
     public ArrayList<HeroLocations> getMapCoords() {
@@ -638,7 +639,7 @@ public class DataModel {
     }
 
     public boolean renderCastleTimer() {
-        return realmClosingTime != 0;
+        return castleTimer != 0;
     }
 
     public int getFrameHeight() {
@@ -653,5 +654,6 @@ public class DataModel {
         locator.dispose();
         mouse.dispose();
         renderer.dispose();
+        server.dispose();
     }
 }

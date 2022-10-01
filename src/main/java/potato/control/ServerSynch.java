@@ -123,4 +123,8 @@ public class ServerSynch {
             if (model != null) model.initSynch(mapIndex, markers);
         }
     }
+
+    public void dispose() {
+        unsub(0);
+    }
 }
