@@ -34,7 +34,7 @@ public class OpenGL {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        window = glfwCreateWindow(1000, 1000, "OpenGL window", NULL, NULL);
+        window = glfwCreateWindow(500, 500, "OpenGL window", NULL, NULL);
         if (window == NULL) {
             glfwTerminate();
             throw new RuntimeException("Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.");
@@ -54,10 +54,10 @@ public class OpenGL {
 
     void vertex() {
         float[] vertices = new float[]{
-                -1, -1, 0, 0,
-                1, -1, 1, 0,
-                1, 1, 1, 1,
-                -1, 1, 0, 1
+                -1, -1, 0, 1,
+                1, -1, 1, 1,
+                1, 1, 1, 0,
+                -1, 1, 0, 0,
         };
 
         int[] indexes = new int[]{
