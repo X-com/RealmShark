@@ -33,20 +33,19 @@ public class TileSaver {
     int blueGradeless = 0x2588c5;
     static PacketProcessor packetProcessor;
 
-    public static void main(String[] args) {
-//        new TileSaver().test();
-//        packetProcessor = new PacketProcessor();
-//        Register.INSTANCE.registerAll(TileSaver::readAll);
-//        packetProcessor.start();
+    public static void main(String[] args) throws IOException {
+        // 1 2 3 4 5 6 7 8 9 10 11 12 13
+//        new TileSaver().saveTiles();
 
+//        for(int i = 1; i <= 13; i++)
+//            new TileSaver().makeTileData(i);
 //        new TileSaver().merger();
-//        new TileSaver().makeImageThingy();
-        try {
-//            for(int i = 1; i <= 13; i++)
-            new TileSaver().makeImageThingy2(4);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+        for(int i = 1; i <= 13; i++)
+            new TileSaver().makeImageThingy2(i, false);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 //        try {
 //            while (true) {
 //                try {
@@ -61,25 +60,23 @@ public class TileSaver {
 //        }
     }
 
-    public void test() {
-//        mapArray2[0][11][10] = 0xf0000000;
-//        mapArray2[0][9][10] = 0x21000000;
-//        mapArray2[0][10][11] = 0xf0000000;
-//        mapArray2[0][10][9] = 0x4000000;
-//        addGradientColor(0, 10, 10, blue, 10);
-
-//        System.out.println(findAlpha(0, 10, 10));
+    public void saveTiles() {
+        packetProcessor = new PacketProcessor();
+        Register.INSTANCE.registerAll(TileSaver::readAll);
+        packetProcessor.start();
     }
 
-    private void makeImageThingy() throws IOException {
+    private void makeTileData(int i) throws IOException {
+        i--;
+        loadTiles(i);
 //        BufferedImage bi= ImageIO.read(new File("image.jpg"));
 
 //        loadTiles();
 //        HashMap<Integer, Integer>[] list = loadTiles2();
         BufferedImage bi = new BufferedImage(2048, 2048, BufferedImage.TYPE_INT_ARGB);
 
-        ArrayList<Integer> exists = new ArrayList<>();
-        int doMaps = 13;
+//        ArrayList<Integer> exists = new ArrayList<>();
+//        int doMaps = 13;
 //        for (int i = 0; i < doMaps; i++) {
 //            for (int id : list[i].values()) {
 //                if (!exists.contains(id)) {
@@ -108,9 +105,9 @@ public class TileSaver {
 //            }
 //        }
 
-        for (int i = 0; i < 13; i++) {
-            for (int x = 0; x < bi.getWidth(); x++) {
-                for (int y = 0; y < bi.getHeight(); y++) {
+//        for (int i = 0; i < 13; i++) {
+        for (int x = 0; x < bi.getWidth(); x++) {
+            for (int y = 0; y < bi.getHeight(); y++) {
 //                    int color = 0x00000000;
 
 //                    if (mapArray[i][x][y] != 0) {
@@ -135,14 +132,14 @@ public class TileSaver {
 //                        c++;
 //                        continue;
 //                    }
-                    bi.setRGB(x, y, mapArray[i][x][y]);
-                }
+                bi.setRGB(x, y, mapArray[i][x][y]);
             }
-            ImageIO.write(bi, "PNG", new File("tiles/tileData" + (i + 1) + ".png"));
         }
+        ImageIO.write(bi, "PNG", new File("tiles/tileData" + (i + 1) + ".png"));
     }
+//    }
 
-    private void makeImageThingy2(int i) throws IOException {
+    private void makeImageThingy2(int i, boolean real) throws IOException {
         i--;
 
 //        HashMap<Integer, Integer>[] list = loadTiles2();
@@ -202,35 +199,61 @@ public class TileSaver {
         }
 //        }
 
+        if (!real) {
 //        for (int i = 0; i < doMaps; i++) {
-        for (int x = 0; x < bi.getWidth(); x++) {
-            for (int y = 0; y < bi.getHeight(); y++) {
-                if (mapArray3[i][1][x][y] == 188) {
-                    if (checkAround2(i, x, y)) {
+            for (int x = 0; x < bi.getWidth(); x++) {
+                for (int y = 0; y < bi.getHeight(); y++) {
+                    if (mapArray3[i][1][x][y] == 188) {
+                        if (checkAround2(i, x, y)) {
 //                            mapArray2[i][x][y] = darkBlue;
-                        addGradientColor(mapArray[i], i, x, y, darkBlue, 10);
+                            addGradientColor(mapArray[i], i, x, y, blue, 10);
+                        }
                     }
                 }
             }
-        }
 //        }
 
-        while (true) {
-            if (doGland(i, bi)) break;
+            while (true) {
+                if (doGland(i, bi)) break;
+            }
         }
-
 //        for (int i = 0; i < doMaps; i++) {
         for (int x = 0; x < bi.getWidth(); x++) {
             for (int y = 0; y < bi.getHeight(); y++) {
-//                int id = mapArray[i][x][y];
+                if (real) {
+                    int id = mapArray[i][x][y];
 //                    if (id != 96) continue;
-//                if (id == 45082) continue;
-//                if (id == 4062) continue;
-//                if (id == 4060) continue;
-//                bi.setRGB(x, y, colors[id]);
+                    if (id == 4062) continue;
+                    if (id == 4060) continue;
+                    if (id == 4406) continue;
+                    if (id == 14370) continue;
+                    if (id == 14373) continue;
+                    if (id == 14377) continue;
+                    if (id == 14378) continue;
+                    if (id == 25137) continue;
+                    if (id == 25138) continue;
+                    if (id == 28908) continue;
+                    if (id == 29300) continue;
+                    if (id == 29301) continue;
+                    if (id == 29302) continue;
+                    if (id == 29303) continue;
+                    if (id == 29304) continue;
+                    if (id == 29305) continue;
+                    if (id == 29820) continue;
+                    if (id == 29823) continue;
+                    if (id == 29289) continue;
+                    if (id == 29297) continue;
+                    if (id == 29821) continue;
+                    if (id == 29919) continue;
+                    if (id == 45082) continue;
+                    if (id == 45679) continue;
+                    if (id == 45680) continue;
+                    if (id == 45683) continue;
+                    bi.setRGB(x, y, colors[id]);
+                }
 //                    if(x+70 >= bi.getWidth()) continue;
 //                    if(y+80 >= bi.getHeight()) continue;
-                bi.setRGB(x, y, mapArray2[i][x][y]);
+                if (!real) bi.setRGB(x, y, mapArray2[i][x][y]);
             }
         }
 //            ImageIO.write(bi, "PNG", new File("assets/map/map" + (i + 1) + ".png"));
@@ -254,7 +277,7 @@ public class TileSaver {
                         for (int y2 = -detectSize; y2 <= detectSize && found; y2++) {
                             if (mapArray[i][x + x2][y + y2] != 96) {
                                 found = false;
-                            }else if(mapGland[i][x][y] != 0) {
+                            } else if (mapGland[i][x][y] != 0) {
                                 found = false;
                             }
                         }
@@ -655,6 +678,10 @@ public class TileSaver {
                 }
                 System.out.println("done");
             } else {
+                for (int[] row : mapTiles) {
+                    Arrays.fill(row, 0);
+                }
+                count = 0;
                 runTiles = true;
             }
         }

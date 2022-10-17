@@ -1,5 +1,6 @@
 package potato.model;
 
+import potato.view.OpenGLPotato;
 import packets.data.GroundTileData;
 import packets.data.ObjectData;
 import packets.data.ObjectStatusData;
@@ -10,28 +11,21 @@ import potato.control.ServerSynch;
 import potato.data.HeroState;
 import potato.data.HeroType;
 import potato.data.IdData;
-import potato.view.RenderViewer;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
 public class DataModel {
 
-    private final RenderViewer renderer;
+    private final OpenGLPotato renderer;
     private final ServerSynch server;
     private final MouseController mouse;
     private final ScreenLocatorController locator;
 
     private int zoom = 0;
-    private int playerX;
-    private int playerY;
-    private int offsetX;
-    private int offsetY;
-    private int imageOffsetX;
-    private int imageOffsetY;
+    public float playerX;
+    public float playerY;
 
     private long serverTime;
     private int heroesLeft = 0;
@@ -45,8 +39,6 @@ public class DataModel {
     private int myId;
 
     private final ArrayList<HeroLocations>[] mapCoords;
-    private int frameWidth = 0;
-    private int frameHeight = 0;
     private int mapIndex = 0;
     private String realmName = "";
     private String serverName = "";
@@ -55,32 +47,25 @@ public class DataModel {
     private String castleTimerString = "";
     private int serverIp;
     private long tpCooldown;
-
-    private final int[] circleSize = {5, 7, 8, 9, 10, 16, 130};
-    private final int[] fontSize = {0, 8, 8, 8, 10, 16, 130};
-    public static final int[] imageSize = {308, 366, 452, 600, 925, 1725, 14788};
-    private final int[] zooms = {0, 70, 172, 340, 670, 1560, 15300};
-    private final float[] m = {0, 0.0294f, 0.072f, 0.1447f, 0.286f, 2f / 3f, 6.66f};
-    private final int[] k = {0, 6, 12, 22, 44, 100, 820};
-    public static final float[] imageM = {0, -0.03f, -0.071f, -0.144f, -0.3f, -0.691f, -7.222f};
-    public static final int[] imageK = {22, 24, 24, 24, 24, 20, 175};
-
-    private final BufferedImage[] images;
-    private final Image[] heroIcon;
+    private boolean setTpCooldown;
 
     public DataModel() {
         mapCoords = Bootloader.loadMapCoords();
         mapTileData = Bootloader.loadTiles();
         server = new ServerSynch(this);
-        renderer = new RenderViewer(this);
+        renderer = new OpenGLPotato(this);
         locator = new ScreenLocatorController(renderer, this);
         mouse = new MouseController(this, renderer, server);
 
-        images = Bootloader.loadMaps();
-        heroIcon = Bootloader.loadHeroIcons();
-
+        renderer.start();
+        try {
+            while (renderer.waitfor) {
+                Thread.sleep(1);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         locator.locateLoop();
-        renderer.renderLoop();
     }
 
     private ArrayList<HeroLocations> mapCoords() {
@@ -121,21 +106,17 @@ public class DataModel {
     public void updateLocations(GroundTileData[] tiles, ObjectData[] newObjects, int[] drops) {
         if (!inRealm) return;
 
-        ArrayList<HeroLocations> nearHeroes = getCloseHeroListForId(playerX, playerY);
+        ArrayList<HeroLocations> nearHeroes = getCloseHeroListForId((int) playerX, (int) playerY);
         tileChecks(tiles, nearHeroes);
         entityChecks(newObjects, nearHeroes);
         checkMissing(nearHeroes);
         for (int drop : drops) {
             entitys.remove(drop);
-//            WorldPosData h = entitys.remove(drops[i]);
-//            if (h != null) {
-//                System.out.println("removed: " + drops[i]);
-//            }
         }
     }
 
     private void checkMissing(ArrayList<HeroLocations> nearHeroes) {
-        HeroLocations h = findClosestHero(playerX, playerY);
+        HeroLocations h = findClosestHero((int) playerX, (int) playerY);
         if (h.isMissing(entitys)) {
             markDead(h);
         }
@@ -173,7 +154,7 @@ public class DataModel {
                 HeroLocations h = findClosestHero(gtd.x, gtd.y, nearHeroes);
                 if (h.dist < dist) {
                     nearHeroes.remove(h);
-                    h.setType(hero);
+                    h.setType(hero, renderer);
                     switch (hero) {
                         case PARASITE:
                         case SNAKE:
@@ -202,32 +183,32 @@ public class DataModel {
                 if (od.objectType == IdData.ENT_CHERRY_TREE) {
                     h = findClosestHero((int) od.status.pos.x, (int) od.status.pos.y, nearHeroes);
                     if (h.dist < 500) {
-                        h.setType(HeroType.ENT);
+                        h.setType(HeroType.ENT, renderer);
                     }
                 } else if (od.objectType == IdData.GRAVEYARD_CROSS) {
                     h = findClosestHero((int) od.status.pos.x, (int) od.status.pos.y, nearHeroes);
                     if (h.dist < 500) {
-                        h.setType(HeroType.GRAVE);
+                        h.setType(HeroType.GRAVE, renderer);
                     }
                 } else if (od.objectType == IdData.WOODEN_WALL_HOUSE) {
                     h = findClosestHero((int) od.status.pos.x, (int) od.status.pos.y, nearHeroes);
                     if (h.dist < 500) {
-                        h.setType(HeroType.HOUSE);
+                        h.setType(HeroType.HOUSE, renderer);
                     }
                 } else if (od.objectType == IdData.DEATH_TREE_MANOR) {
                     h = findClosestHero((int) od.status.pos.x, (int) od.status.pos.y, nearHeroes);
                     if (h.dist < 700) {
-                        h.setType(HeroType.MANOR);
+                        h.setType(HeroType.MANOR, renderer);
                     }
                 } else if (od.objectType == IdData.LILLYPAD) {
                     h = findClosestHero((int) od.status.pos.x, (int) od.status.pos.y, nearHeroes);
                     if (h.dist < 300) {
-                        h.setType(HeroType.OASIS);
+                        h.setType(HeroType.OASIS, renderer);
                     }
                 } else if (od.objectType == IdData.GHOST_INVON || od.objectType == IdData.GHOST_KILLABLE) {
                     h = findClosestHero((int) od.status.pos.x, (int) od.status.pos.y, nearHeroes);
                     if (h.dist < 300) {
-                        h.setType(HeroType.GHOST);
+                        h.setType(HeroType.GHOST, renderer);
                     }
                 } else if (od.objectType == IdData.DESTRUCTIBLE_GRAY_WALL || od.objectType == IdData.GRAY_WALL) {
                     entitys.put(od.status.objectId, od);
@@ -235,7 +216,7 @@ public class DataModel {
                     h = findClosestHero((int) od.status.pos.x, (int) od.status.pos.y, nearHeroes);
                     if (h.dist < 500) {
                         if (isCyclopsLoc((int) od.status.pos.x, (int) od.status.pos.y)) {
-                            h.setType(HeroType.CYCLOPS);
+                            h.setType(HeroType.CYCLOPS, renderer);
                         }
                     }
                 }
@@ -291,9 +272,9 @@ public class DataModel {
 //            }
         }
         if (wallAdded && isGhostLoc()) {
-            HeroLocations h = findClosestHero(playerX, playerY, nearHeroes);
+            HeroLocations h = findClosestHero((int) playerX, (int) playerY, nearHeroes);
             if (h.dist < 1000) {
-                h.setType(HeroType.GHOST);
+                h.setType(HeroType.GHOST, renderer);
                 markVisited(h);
                 nearHeroes.remove(h);
             }
@@ -393,31 +374,11 @@ public class DataModel {
         }
     }
 
-    public void setSize(int width, int height) {
-        frameWidth = width;
-        frameHeight = height;
-    }
-
-    public void setPlayerCoords(int x, int y) {
+    public void setPlayerCoords(float x, float y) {
+        System.out.println(x);
         playerX = x;
         playerY = y;
-        offsetX = (int) (m[zoom] * x + k[zoom]);
-        offsetY = (int) (m[zoom] * y + k[zoom]);
-        imageOffsetX = (int) (imageM[zoom] * x + imageK[zoom]);
-        imageOffsetY = (int) (imageM[zoom] * y + imageK[zoom]) + 4;
-        calcCoords();
-    }
-
-    private void calcCoords() {
-//        System.out.printf("offset x:%d y:%d\n", offsetX, offsetY);
-        int sW = frameWidth + zooms[zoom];
-        int sH = frameHeight + zooms[zoom];
-        for (HeroLocations h : mapCoords[mapIndex]) {
-            double dx = ((float) (h.getX() + 150) / 2350);
-            double dy = ((float) (h.getY() + 150) / 2350);
-            h.setDrawX((int) (dx * sW) - offsetX);
-            h.setDrawY((int) (dy * sH) - offsetY);
-        }
+        renderer.setCamera(x, y, zoom);
     }
 
     public void setServerTime(long l) {
@@ -447,49 +408,49 @@ public class DataModel {
     public void initSynch(int mapIndex, int[] markers) {
         this.mapIndex = mapIndex;
         for (int i = 0; i < mapCoords[this.mapIndex].size(); i++) {
-            mapCoords[this.mapIndex].get(i).setMarker(markers[i], false);
+            mapCoords[this.mapIndex].get(i).setMarker(markers[i], false, renderer);
         }
-        calcCoords();
+        renderer.setMap(mapIndex);
+        renderer.setCamera(playerX, playerY, zoom);
         renderer.renderMap(true);
     }
 
     public void heroSynch(int heroId, int heroState) {
-        mapCoords[this.mapIndex].get(heroId).setMarker(heroState, false);
+        mapCoords[this.mapIndex].get(heroId).setMarker(heroState, false, renderer);
     }
 
     public void editZoom(int i) {
         if (i == 1 && zoom > 0) zoom--;
         else if (i == -1 && zoom < 6) zoom++;
-        imageOffsetX = (int) (imageM[zoom] * playerX + imageK[zoom]);
-        imageOffsetY = (int) (imageM[zoom] * playerY + imageK[zoom]) + 4;
-        offsetX = (int) (m[zoom] * playerX + k[zoom]);
-        offsetY = (int) (m[zoom] * playerY + k[zoom]);
-        calcCoords();
+        renderer.setCamera(playerX, playerY, zoom);
+    }
+
+    public void refresh() {
+        renderer.setCamera(playerX, playerY, zoom);
     }
 
     public void markVisited(HeroLocations h) {
-        if (h.setState(HeroState.MARK_VISITED)) {
-            System.out.println("upload visited");
+        if (h.setState(HeroState.MARK_VISITED, renderer)) {
             server.uploadSingleHero(myId, h.getIndex(), h.getState());
         }
     }
 
     public void markActive(HeroLocations h) {
-        if (h.setState(HeroState.MARK_ACTIVE)) {
+        if (h.setState(HeroState.MARK_ACTIVE, renderer)) {
             server.uploadSingleHero(myId, h.getIndex(), h.getState());
         }
     }
 
     public void markDead(HeroLocations h) {
-        if (h.setState(HeroState.MARK_DEAD)) {
+        if (h.setState(HeroState.MARK_DEAD, renderer)) {
             server.uploadSingleHero(myId, h.getIndex(), h.getState());
         }
     }
 
     public void setInRealm(String name, long s) {
+        newRealmCheck = true;
         inRealm = true;
         zoom = 6;
-        newRealmCheck = true;
         seed = s;
         setRealmName(name);
     }
@@ -515,7 +476,7 @@ public class DataModel {
         entitys.clear();
 
         for (int i = 0; i < mapCoords[mapIndex].size(); i++) {
-            mapCoords[mapIndex].get(i).setMarker(0, true);
+            mapCoords[mapIndex].get(i).setMarker(0, true, renderer);
         }
         for (int i = 0; i < 2048; i++) {
             for (int j = 0; j < 2048; j++) {
@@ -548,26 +509,36 @@ public class DataModel {
 
     public void newRealm(GroundTileData[] tiles, WorldPosData pos) {
         if (!newRealmCheck) return;
+        playerX = (int) pos.x;
+        playerY = (int) pos.y;
         mapIndex = findMapIndex(tiles);
         server.startSynch(myId, serverIp, seed, mapIndex, (int) pos.x, (int) pos.y);
-
-//        for (int j = 0; j < mapCoords[mapIndex].size(); j++) {
-//            mapCoords[mapIndex].get(j).reset();
-//        }
-//        renderer.editMapIndex(mapIndex);
-//
-//        renderer.stuffRender(true);
 
         newRealmCheck = false;
     }
 
     public void ipChanged(String name, int ip) {
         if (!name.equals("") && !name.equals(serverName)) {
-            if (!serverName.equals("")) tpCooldown = System.currentTimeMillis() + 124000;
+            if (!serverName.equals("")) setTpCooldown = true;
             serverName = name;
             castleTimer = 0;
         }
         serverIp = ip;
+    }
+
+    public void checkNewNexus() {
+        if(setTpCooldown) {
+            tpCooldown = System.currentTimeMillis() + 124000;
+            setTpCooldown = false;
+        }
+    }
+
+    public int getIntPlayerX() {
+        return (int) playerX;
+    }
+
+    public int getIntPlayerY() {
+        return (int) playerY;
     }
 
     public void setMyId(int id) {
@@ -586,50 +557,6 @@ public class DataModel {
         return tpCooldownString;
     }
 
-    public ArrayList<HeroLocations> getMapCoords() {
-        return mapCoords[mapIndex];
-    }
-
-    public int getMapIndex() {
-        return mapIndex;
-    }
-
-    public Image getMapImage() {
-        return images[mapIndex];
-    }
-
-    public int getPlayerX() {
-        return playerX;
-    }
-
-    public int getPlayerY() {
-        return playerY;
-    }
-
-    public int getFontSize() {
-        return fontSize[zoom];
-    }
-
-    public int getImageOffsetX() {
-        return imageOffsetX;
-    }
-
-    public int getImageOffsetY() {
-        return imageOffsetY;
-    }
-
-    public int getImageSize() {
-        return imageSize[zoom];
-    }
-
-    public int getCircleSize() {
-        return circleSize[zoom];
-    }
-
-    public Image getHeroImage(int drawIndex) {
-        return heroIcon[drawIndex];
-    }
-
     public int getHeroesLeft() {
         return heroesLeft;
     }
@@ -640,10 +567,6 @@ public class DataModel {
 
     public boolean renderCastleTimer() {
         return castleTimer != 0;
-    }
-
-    public int getFrameHeight() {
-        return frameHeight;
     }
 
     public boolean inRealm() {

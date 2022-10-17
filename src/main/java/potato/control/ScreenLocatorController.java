@@ -1,7 +1,7 @@
 package potato.control;
 
+import potato.view.OpenGLPotato;
 import potato.model.DataModel;
-import potato.view.RenderViewer;
 import util.NativeWindowScreenCapture;
 
 import java.awt.*;
@@ -11,7 +11,7 @@ public class ScreenLocatorController {
     private final int FRAME_COLOR = -8553091;
     private final int BOARDER_COLOR = -13224394;
     private boolean running;
-    private final RenderViewer renderer;
+    private final OpenGLPotato renderer;
     private final DataModel model;
     private int storeX;
     private int storeY;
@@ -19,7 +19,7 @@ public class ScreenLocatorController {
     private int storeH;
     Rectangle rect = null;
 
-    public ScreenLocatorController(RenderViewer renderer, DataModel model) {
+    public ScreenLocatorController(OpenGLPotato renderer, DataModel model) {
         this.renderer = renderer;
         this.model = model;
     }
@@ -219,8 +219,8 @@ public class ScreenLocatorController {
         height -= boarder * 2 - 1;
         if (x != storeX || y != storeY || width != storeW || height != storeH) {
             System.out.printf("X:%d Y:%d W:%d H:%d\n", x, y, width, height);
-            model.setSize(width, height);
-            renderer.setSizeLoc(x, y, width, height);
+//            model.setSize(width, height);
+            renderer.setWindow(x, y, width, height);
             renderer.show();
             storeX = x;
             storeY = y;
@@ -230,7 +230,7 @@ public class ScreenLocatorController {
     }
 
     private void notFound(int i, String s) {
-        renderer.remove();
+        renderer.hide();
         storeX = 0;
         storeY = 0;
         storeW = 0;

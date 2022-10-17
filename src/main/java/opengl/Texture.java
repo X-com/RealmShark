@@ -13,9 +13,68 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL13.GL_CLAMP_TO_BORDER;
 
 public class Texture {
-    int textureId;
+    private int textureId;
+
+    /**
+     * Width of the texture.
+     */
+    private int width;
+    /**
+     * Height of the texture.
+     */
+    private int height;
+
+    public Texture() {
+        textureId = glGenTextures();
+    }
+
+    public Texture(BufferedImage image, boolean gram) {
+        textureId = glGenTextures();
+        width = image.getWidth();
+        height = image.getHeight();
+        glBindTexture(GL_TEXTURE_2D, textureId);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+        int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+        pixels = convertPixels(pixels);
+        IntBuffer intBuffer = createByteBuffer(pixels);
+
+        uploadToGRam(image, intBuffer);
+    }
+
+    public static Texture createTexture(int width, int height, ByteBuffer data) {
+        Texture texture = new Texture();
+        texture.setWidth(width);
+        texture.setHeight(height);
+
+        texture.bind();
+
+        texture.setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+        texture.setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+        texture.setParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        texture.setParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        texture.uploadToGRam(GL_RGBA8, width, height, GL_RGBA, data);
+
+        return texture;
+    }
+
+    public void uploadToGRam(int internalFormat, int width, int height, int format, ByteBuffer data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+    private void uploadToGRam(BufferedImage image, IntBuffer intBuffer) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, intBuffer);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
 
     public void bind() {
         glActiveTexture(GL_TEXTURE0);
@@ -27,40 +86,61 @@ public class Texture {
         glBindTexture(GL_TEXTURE_2D, textureId);
     }
 
-    public Texture(String imagePath) {
-        textureId = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, textureId);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-        BufferedImage image = readImage(imagePath);
-
-//        BufferedImage heroImages = new BufferedImage(72 * 13, 72, heroes[0].getType());
-//        for (int i = 0; i < 13; i++) {
-//            BufferedImage image = heroes[i];
-//            heroImages.getGraphics().drawImage(image, i * 72, 0, null);
-//        }
-
-        int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-        pixels = convertPixels(pixels);
-        IntBuffer intBuffer = createByteBuffer(pixels);
-
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, intBuffer);
-        glBindTexture(GL_TEXTURE_2D, 0);
-    }
-
     public void unbind() {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    public void dispose() {
-        glDeleteTextures(textureId);
+    /**
+     * Gets the texture width.
+     *
+     * @return Texture width
+     */
+    public int getWidth() {
+        return width;
     }
 
-    public BufferedImage readImage(String path) {
+    /**
+     * Sets the texture width.
+     *
+     * @param width The width to set
+     */
+    public void setWidth(int width) {
+        if (width > 0) {
+            this.width = width;
+        }
+    }
+
+    /**
+     * Gets the texture height.
+     *
+     * @return Texture height
+     */
+    public int getHeight() {
+        return height;
+    }
+
+    /**
+     * Sets the texture height.
+     *
+     * @param height The height to set
+     */
+    public void setHeight(int height) {
+        if (height > 0) {
+            this.height = height;
+        }
+    }
+
+    /**
+     * Sets a parameter of the texture.
+     *
+     * @param name  Name of the parameter
+     * @param value Value to set
+     */
+    public void setParameter(int name, int value) {
+        glTexParameteri(GL_TEXTURE_2D, name, value);
+    }
+
+    public static BufferedImage readImage(String path) {
         try {
             BufferedImage image = ImageIO.read(new File(path));
             BufferedImage formatted = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -89,5 +169,9 @@ public class Texture {
         IntBuffer result = ByteBuffer.allocateDirect(data.length * 4).order(ByteOrder.nativeOrder()).asIntBuffer();
         result.put(data).flip();
         return result;
+    }
+
+    public void dispose() {
+        glDeleteTextures(textureId);
     }
 }

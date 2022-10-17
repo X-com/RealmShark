@@ -61,15 +61,15 @@ public class RenderViewer {
         if (originalComposite == null) originalComposite = g.getComposite();
         if (showMap) {
             g.setComposite(composite);
-            g.drawImage(model.getMapImage(), model.getImageOffsetX(), model.getImageOffsetY(), model.getImageSize(), model.getImageSize(), null);
+//            g.drawImage(model.getMapImage(), model.getImageOffsetX(), model.getImageOffsetY(), model.getImageSize(), model.getImageSize(), null);
             g.setComposite(originalComposite);
         }
         if (showHeroes && model.inRealm()) {
             g.setStroke(new BasicStroke(1));
-            g.setFont(new Font("Monospaced", Font.PLAIN, model.getFontSize()));
-            for (HeroLocations h : model.getMapCoords()) {
-                drawHeroes(g, h);
-            }
+//            g.setFont(new Font("Monospaced", Font.PLAIN, model.getFontSize()));
+//            for (HeroLocations h : model.getMapCoords()) {
+//                drawHeroes(g, h);
+//            }
         }
         if (userShowInfo) {
             g.setColor(Color.lightGray);
@@ -78,30 +78,30 @@ public class RenderViewer {
                 g.drawString(model.getCastleTimer(), 5, 20);
             } else if (showHeroCount) {
                 g.setFont(new Font("Arial Black", Font.PLAIN, 20));
-                g.drawString(String.format("(%d) Heroes:%d", model.getMapIndex() + 1, model.getHeroesLeft()), 5, 20);
+//                g.drawString(String.format("(%d) Heroes:%d", model.getMapIndex() + 1, model.getHeroesLeft()), 5, 20);
             }
             g.setFont(new Font("Arial Black", Font.PLAIN, 10));
-            g.drawString(String.format("x:%d y:%d  %s  %s  %s", model.getPlayerX(), model.getPlayerY(), model.getServerName(), model.getRealmName(), model.getTpCooldown()), 5, model.getFrameHeight() - 5);
+//            g.drawString(String.format("x:%d y:%d  %s  %s  %s", model.getPlayerX(), model.getPlayerY(), model.getServerName(), model.getRealmName(), model.getTpCooldown()), 5, model.getFrameHeight() - 5);
         }
         g.dispose();
     }
 
     public void drawHeroes(Graphics2D g, HeroLocations h) {
-        int drawIndex = h.getDrawIndexNum();
-        if (drawIndex < 0) {
-            g.setColor(h.getColor());
-            g.setComposite(composite);
-            g.drawOval(h.getDrawX() - model.getCircleSize(), h.getDrawY() - model.getCircleSize(), model.getCircleSize() * 2, model.getCircleSize() * 2);
-            g.setComposite(originalComposite);
-            setTextCenter(g, h.getIndexString(), h.getDrawX(), h.getDrawY());
-        } else {
-            g.drawImage(model.getHeroImage(drawIndex), h.getDrawX() - model.getCircleSize(), h.getDrawY() - model.getCircleSize(), model.getCircleSize() * 2, model.getCircleSize() * 2, null);
-            setTextCenter(g, h.getIndexString(), h.getDrawX(), h.getDrawY());
-        }
+//        int drawIndex = h.getDrawIndexNum();
+//        if (drawIndex < 0) {
+//            g.setColor(h.getColor());
+//            g.setComposite(composite);
+//            g.drawOval(h.getDrawX() - model.getCircleSize(), h.getDrawY() - model.getCircleSize(), model.getCircleSize() * 2, model.getCircleSize() * 2);
+//            g.setComposite(originalComposite);
+//            setTextCenter(g, h.getIndexString(), h.getDrawX(), h.getDrawY());
+//        } else {
+//            g.drawImage(model.getHeroImage(drawIndex), h.getDrawX() - model.getCircleSize(), h.getDrawY() - model.getCircleSize(), model.getCircleSize() * 2, model.getCircleSize() * 2, null);
+//            setTextCenter(g, h.getIndexString(), h.getDrawX(), h.getDrawY());
+//        }
     }
 
     private void setTextCenter(Graphics2D g, String string, int x, int y) {
-        if (model.getFontSize() == 0) return;
+//        if (model.getFontSize() == 0) return;
         int stringWidthLength = (int) g.getFontMetrics().getStringBounds(string, g).getWidth();
         int stringHeightLength = (int) g.getFontMetrics().getStringBounds(string, g).getHeight();
 

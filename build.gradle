@@ -42,13 +42,14 @@ dependencies {
     implementation "org.lwjgl:lwjgl-openal"
     implementation "org.lwjgl:lwjgl-opengl"
     implementation "org.lwjgl:lwjgl-stb"
+    implementation 'games.spooky.gdx:gdx-gfx:1.0.0'
     runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-assimp::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
-    implementation "org.joml:joml:${jomlVersion}"
+    implementation "org.joml:joml:1.10.4"
 }
 
 mainClassName = applicationName.toLowerCase() + '.' + applicationName
@@ -81,6 +82,10 @@ public class Version {
 compileJava.dependsOn generateSources
 compileJava.source generateSources.outputs.files, sourceSets.main.java
 
+/**
+ * add to vm optoins
+ * "-XstartOnFirstThread"
+ */
 shadowJar {
     manifest {
         attributes 'Main-Class': mainClassName

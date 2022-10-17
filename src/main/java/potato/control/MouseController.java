@@ -6,8 +6,8 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 import com.github.kwhat.jnativehook.mouse.NativeMouseWheelEvent;
 import com.github.kwhat.jnativehook.mouse.NativeMouseWheelListener;
+import potato.view.OpenGLPotato;
 import potato.model.DataModel;
-import potato.view.RenderViewer;
 import util.FocusedWindow;
 
 import java.awt.*;
@@ -15,10 +15,10 @@ import java.awt.*;
 public class MouseController implements NativeMouseWheelListener, NativeKeyListener {
 
     DataModel model;
-    RenderViewer renderer;
+    OpenGLPotato renderer;
     ServerSynch server;
 
-    public MouseController(DataModel model, RenderViewer renderer, ServerSynch serverHTTP) {
+    public MouseController(DataModel model, OpenGLPotato renderer, ServerSynch serverHTTP) {
         this.model = model;
         this.renderer = renderer;
         this.server = serverHTTP;
@@ -55,6 +55,26 @@ public class MouseController implements NativeMouseWheelListener, NativeKeyListe
                 model.editZoom(e.getWheelRotation());
             }
         }
+//        if ((e.getModifiers() % 512) == 1) {
+//            float f = OpenGLPotato.playerOffset[OpenGLPotato.zoom] + e.getWheelRotation() * 0.01f;
+//            OpenGLPotato.playerOffset[OpenGLPotato.zoom] = f;
+//            System.out.println("Offset:" + f);
+//            model.refresh();
+//        }
+//        if ((e.getModifiers() % 512) == 2) {
+//            float f = OpenGLPotato.scale[OpenGLPotato.zoom] + e.getWheelRotation() * 0.01f;
+//            OpenGLPotato.scale[OpenGLPotato.zoom] = f;
+//            System.out.println("Scale: " + f);
+//            model.refresh();
+//        }
+//        if ((e.getModifiers() % 512) == 3) {
+//            float f1 = OpenGLPotato.scale[OpenGLPotato.zoom] + e.getWheelRotation() * 0.01f;
+//            float f2 = OpenGLPotato.playerOffset[OpenGLPotato.zoom] + e.getWheelRotation() * 2;
+//            OpenGLPotato.scale[OpenGLPotato.zoom] = f1;
+//            OpenGLPotato.playerOffset[OpenGLPotato.zoom] = f2;
+//            System.out.println("S:" + f1 + " O:" + f2);
+//            model.refresh();
+//        }
     }
 
     @Override

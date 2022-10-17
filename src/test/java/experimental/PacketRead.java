@@ -3,7 +3,11 @@ package experimental;
 import packets.Packet;
 import packets.data.ObjectData;
 import packets.incoming.*;
+import packets.incoming.ip.IpAddress;
+import packets.incoming.pets.ActivePetPacket;
+import packets.incoming.pets.HatchPetMessage;
 import packets.outgoing.*;
+import packets.outgoing.pets.ActivePetUpdateRequestPacket;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.register.Register;
 
@@ -14,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PacketRead {
+    public static int ip = 0;
 
     public static void main(String[] args) {
         Register.INSTANCE.registerAll(PacketRead::readAll);
@@ -33,6 +38,8 @@ public class PacketRead {
         if (packet instanceof ServerPlayerShootPacket) return;
         if (packet instanceof UpdateAckPacket) return;
         // common
+        if (packet instanceof InvDropPacket) return;
+        if (packet instanceof PlaySoundPacket) return;
         if (packet instanceof ShowEffectPacket) return;
         if (packet instanceof InvResultPacket) return;
         if (packet instanceof TextPacket) return;
@@ -46,16 +53,37 @@ public class PacketRead {
         if (packet instanceof PlayerHitPacket) return;
         if (packet instanceof PlayerTextPacket) return;
         if (packet instanceof GotoPacket) return;
+        // death and create new char
+        if (packet instanceof EditAccountListPacket) return;
+        if (packet instanceof NewCharacterInfoPacket) return;
+        if (packet instanceof CreatePacket) return;
+        if (packet instanceof DeathPacket) return;
+        // pet
+        if (packet instanceof ActivePetPacket) return;
+        if (packet instanceof ActivePetUpdateRequestPacket) return;
+        if (packet instanceof HatchPetMessage) return;
+        // trade
+        if (packet instanceof TradeDonePacket) return;
+        if (packet instanceof AcceptTradePacket) return;
+        if (packet instanceof TradeAcceptedPacket) return;
+        if (packet instanceof TradeStartPacket) return;
+        if (packet instanceof RequestTradePacket) return;
+        if (packet instanceof TradeRequestedPacket) return;
         // load packet
         if (packet instanceof QuestObjectIdPacket) return;
         if (packet instanceof LoadPacket) return;
-        if (packet instanceof HelloPacket) return;
+        if (packet instanceof HelloPacket) {
+//            System.out.println(packet);
+            return;
+        }
         if (packet instanceof ReconnectPacket) return;
         if (packet instanceof ExaltationUpdatePacket) return;
         if (packet instanceof ShootAckCounterPacket) return;
         if (packet instanceof NotificationPacket) return;
         if (packet instanceof ForgeUnlockedBlueprints) return;
         if (packet instanceof QuestFetchResponsePacket) return;
+        if (packet instanceof QueueInfoPacket) return;
+        if (packet instanceof FailurePacket) return;
         // usage
         if (packet instanceof UseItemPacket) return;
         if (packet instanceof UsePortalPacket) return;
@@ -64,12 +92,19 @@ public class PacketRead {
         if (packet instanceof DashAckPacket) return;
         if (packet instanceof EscapePacket) return;
         if (packet instanceof InvSwapPacket) return;
+        if (packet instanceof GroundDamagePacket) return;
+        if (packet instanceof TeleportPacket) return;
         // unknown
         if (packet instanceof UnknownPacket139) return;
         if (packet instanceof GotoAckPacket) return;
         // RealmHeroesLeftPacket
         if (packet instanceof RealmHeroesLeftPacket) return;
         if (packet instanceof CreateSuccessPacket) return;
+        if (packet instanceof IpAddress) {
+            IpAddress p = (IpAddress) packet;
+            ip = p.srcAddressAsInt;
+            return;
+        }
 
 //        if (packet instanceof CreateSuccessPacket) return;
 
@@ -78,9 +113,11 @@ public class PacketRead {
             return;
         }
 
-
         if (packet instanceof MapInfoPacket) {
-//            mapinfo((MapInfoPacket) packet);
+            MapInfoPacket p = (MapInfoPacket) packet;
+            if (p.name.equals("Realm of the Mad God")) {
+                System.out.println(p.seed + "   " + ip);
+            }
             return;
         }
 

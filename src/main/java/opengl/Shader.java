@@ -20,12 +20,12 @@ public class Shader {
     private static final FloatBuffer matrixBuffer = MemoryUtil.memAllocFloat(16);
 
     public Shader(String vertexFilePath, String fragmentFilePath) {
+        program = glCreateProgram();
+
         String vsCode = readShader(vertexFilePath);
         String fsCode = readShader(fragmentFilePath);
 
         createShader(vsCode, fsCode);
-
-        glUseProgram(program);
     }
 
     public void bind() {
@@ -56,8 +56,6 @@ public class Shader {
     }
 
     private void createShader(String vsCode, String fsCode) {
-        program = glCreateProgram();
-
         int vs = compileShader(GL_VERTEX_SHADER, vsCode);
         int fs = compileShader(GL_FRAGMENT_SHADER, fsCode);
 
@@ -68,7 +66,6 @@ public class Shader {
 
         glDeleteShader(vs);
         glDeleteShader(fs);
-
     }
 
     private int compileShader(int type, String src) {

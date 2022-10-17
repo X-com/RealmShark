@@ -1,6 +1,8 @@
 package potato.data;
 
 
+import java.awt.*;
+
 public enum HeroType {
     UNVISITED(0, 16, new int[0]),
     DEMON(1, 100, new int[]{IdData.DEMON}),

@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 public class Bootloader {
 
-    private static final String[] type = {"demon", "phoenix", "cyclops", "ghost", "oasis", "ent", "lich", "parasite", "coffin", "snake", "cross", "house"};
+    private static final String[] type = {"circle", "demon", "phoenix", "cyclops", "ghost", "oasis", "ent", "lich", "parasite", "coffin", "snake", "cross", "house"};
     private static final int[] colorStates = {0x9000ff00, 0x90ff0000, 0x40ffffff}; // red, green, white
 
     public static BufferedImage[] loadMaps() {
@@ -57,27 +57,26 @@ public class Bootloader {
         return coords;
     }
 
-    public static Image[] loadHeroIcons() {
-        Image[] list = new Image[36];
+    public static BufferedImage[] loadHeroIcons() {
+        BufferedImage[] list = new BufferedImage[13];
         try (Stream<Path> filePathStream = Files.walk(Paths.get("assets/heroes"))) {
             filePathStream.forEach(filePath -> {
                 if (Files.isRegularFile(filePath)) {
                     int typeIndex = -1;
-                    for (int i = 0; i < 12; i++) {
+                    for (int i = 0; i < 13; i++) {
                         if (filePath.toString().contains(type[i])) {
                             typeIndex = i;
                         }
                     }
-                    BufferedImage base = null;
                     try {
-                        base = ImageIO.read(new File(filePath.toString()));
+                        list[typeIndex] = ImageIO.read(new File(filePath.toString()));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    for (int colorIndex = 0; colorIndex < 3; colorIndex++) {
-                        int index = typeIndex * 3 + colorIndex;
-                        if (index >= 0 && base != null) list[index] = maskImage(base, colorStates[colorIndex]);
-                    }
+//                    for (int colorIndex = 0; colorIndex < 3; colorIndex++) {
+//                        int index = typeIndex * 3 + colorIndex;
+//                        if (index >= 0 && base != null) list[index] = maskImage(base, colorStates[colorIndex]);
+//                    }
                 }
             });
         } catch (IOException e) {

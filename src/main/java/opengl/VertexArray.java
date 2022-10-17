@@ -4,6 +4,8 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class VertexArray {
     private int vao;
+    private VertexBuffer vb;
+    private IndexBuffer indexBuffer;
 
     public VertexArray() {
         vao = glGenVertexArrays();
@@ -11,6 +13,7 @@ public class VertexArray {
     }
 
     public VertexArray addVertexBuffer(VertexBuffer vb, VertexBufferLayout layout) {
+        this.vb = vb;
         bind();
         vb.bind();
         int offset = 0;
@@ -20,6 +23,22 @@ public class VertexArray {
             offset += layout.getOffset(i);
         }
         return this;
+    }
+
+    public void updateDynamicVertexBufferFloats() {
+        vb.updateDynamicVertices();
+    }
+
+    public float[] getDynamicVertexBufferFloats() {
+        return vb.getDynamicVertices();
+    }
+
+    public void setIndexBuffer(IndexBuffer ib) {
+        this.indexBuffer = ib;
+    }
+
+    public IndexBuffer getIndexBuffer() {
+        return indexBuffer;
     }
 
     public void bind() {

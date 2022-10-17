@@ -3,12 +3,15 @@ package potato.view;
 import potato.Potato;
 import potato.model.DataModel;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class GUIBase {
 
-    private static final Image icon = Toolkit.getDefaultToolkit().getImage(Potato.imagePath);
+    public static final Image potatoIcon = Toolkit.getDefaultToolkit().getImage(Potato.imagePath);
     private final DataModel dataModel;
 
     public GUIBase(DataModel dataModel) {
@@ -25,7 +28,7 @@ public class GUIBase {
                 System.exit(0);
             }
         };
-        menuFrame.setIconImage(icon);
+        menuFrame.setIconImage(potatoIcon);
         menuFrame.setSize(100, 100);
         menuFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         menuFrame.setVisible(true);
@@ -41,7 +44,12 @@ public class GUIBase {
 
         //get default toolkit
         //Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Image image = Toolkit.getDefaultToolkit().getImage(Potato.imagePath);
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(Potato.imagePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         PopupMenu trayPopupMenu = new PopupMenu();
         MenuItem hideMap = new MenuItem("Hide Map");
@@ -49,28 +57,28 @@ public class GUIBase {
         MenuItem hideCoords = new MenuItem("Hide Info");
         hideMap.addActionListener(e -> {
             if (hideMap.getLabel().startsWith("Hide")) {
-                RenderViewer.showMap(false);
+                OpenGLPotato.showMap(false);
                 hideMap.setLabel("Show Map");
             } else {
-                RenderViewer.showMap(true);
+                OpenGLPotato.showMap(true);
                 hideMap.setLabel("Hide Map");
             }
         });
         hideHeroes.addActionListener(e -> {
             if (hideHeroes.getLabel().startsWith("Hide")) {
-                RenderViewer.showHeroes(false);
+                OpenGLPotato.showHeroes(false);
                 hideHeroes.setLabel("Show Heroes");
             } else {
-                RenderViewer.showHeroes(true);
+                OpenGLPotato.showHeroes(true);
                 hideHeroes.setLabel("Hide Heroes");
             }
         });
         hideCoords.addActionListener(e -> {
             if (hideCoords.getLabel().startsWith("Hide")) {
-                RenderViewer.showInfo(false);
+                OpenGLPotato.showInfo(false);
                 hideCoords.setLabel("Show Info");
             } else {
-                RenderViewer.showInfo(true);
+                OpenGLPotato.showInfo(true);
                 hideCoords.setLabel("Hide Info");
             }
         });

@@ -3,6 +3,7 @@ package potato.model;
 import packets.data.ObjectData;
 import potato.data.HeroState;
 import potato.data.HeroType;
+import potato.view.OpenGLPotato;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -15,13 +16,10 @@ public class HeroLocations {
     private final String indexString;
     private final int x;
     private final int y;
-    private int drawX;
-    private int drawY;
     private final Color color;
     private long resetTimer = 0;
     private HeroType locationType = HeroType.UNVISITED;
     private HeroState locationState = HeroState.MARK_UNVISITED;
-    private int drawIndex = -1;
     public static int largest = 0;
 
     public HeroLocations(int index, int x, int y) {
@@ -50,16 +48,16 @@ public class HeroLocations {
         return locationType;
     }
 
-    public void setType(HeroType type) {
+    public void setType(HeroType type, OpenGLPotato renderer) {
         locationType = type;
-        drawIndex = getDrawIndex();
+        renderer.updateHero(this);
         resetTimer = System.currentTimeMillis() + 2200;
     }
 
-    public boolean setState(HeroState state) {
+    public boolean setState(HeroState state, OpenGLPotato renderer) {
         if (locationState == state) return false;
         locationState = state;
-        drawIndex = getDrawIndex();
+        renderer.updateHero(this);
         resetTimer = System.currentTimeMillis() + 2200;
         return true;
     }
@@ -79,11 +77,7 @@ public class HeroLocations {
         return locationType.getIndex() + locationState.getIndex() * 16;
     }
 
-    public int getDrawIndex() {
-        return (locationType.getIndex() - 1) * 3 + (locationState.getIndex() - 1);
-    }
-
-    public void setMarker(int marker, boolean ignoreTimer) {
+    public void setMarker(int marker, boolean ignoreTimer, OpenGLPotato renderer) {
         long t = resetTimer - System.currentTimeMillis();
         if (!ignoreTimer && t > 0) return;
 
@@ -91,7 +85,7 @@ public class HeroLocations {
         int stateIndex = marker / 16;
         locationType = HeroType.byOrdinal(typeIndex);
         locationState = HeroState.byOrdinal(stateIndex);
-        drawIndex = getDrawIndex();
+        renderer.updateHero(this);
     }
 
     public boolean matchType(ObjectData found) {
@@ -110,38 +104,21 @@ public class HeroLocations {
         return y;
     }
 
-    public void setDrawX(int i) {
-        drawX = i;
-    }
-
-    public void setDrawY(int i) {
-        drawY = i;
-    }
-
-    public int getDrawX() {
-        return drawX;
-    }
-
-    public int getDrawY() {
-        return drawY;
-    }
-
     public Color getColor() {
-        return color;
+        return locationState.getColor();
+    }
+
+    public int getHeroTypeId() {
+        return locationType.getIndex();
     }
 
     public String getIndexString() {
         return indexString;
     }
 
-    public int getDrawIndexNum() {
-        return drawIndex;
-    }
-
     public void reset() {
         resetTimer = 0;
         locationType = HeroType.UNVISITED;
         locationState = HeroState.MARK_UNVISITED;
-        drawIndex = -1;
     }
 }

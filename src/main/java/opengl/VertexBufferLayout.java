@@ -23,17 +23,17 @@ public class VertexBufferLayout {
     }
 
     public void addFloat(int count) {
-        elements.add(new Element(GL_FLOAT, count, false, 4));
+        elements.add(new Element(GL_FLOAT, count, false, Float.BYTES));
         stride += count * 4;
     }
 
     public void addUnsignedInt(int count) {
-        elements.add(new Element(GL_UNSIGNED_INT, count, false, 4));
+        elements.add(new Element(GL_UNSIGNED_INT, count, false, Float.BYTES));
         stride += count * 4;
     }
 
     public void addUnsignedChar(int count) {
-        elements.add(new Element(GL_UNSIGNED_BYTE, count, true, 1));
+        elements.add(new Element(GL_UNSIGNED_BYTE, count, true, Byte.BYTES));
         stride += count;
     }
 
