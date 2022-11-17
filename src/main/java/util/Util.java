@@ -60,7 +60,12 @@ public class Util {
                 try {
                     DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss");
                     LocalDateTime dateTime = LocalDateTime.now();
-                    String fileName = folderAndName + "-" + dateTimeFormat.format(dateTime) + ".data";
+                    String fileName;
+                    if(folderAndName.endsWith("-")){
+                        fileName = folderAndName.substring(0, folderAndName.length() - 1);
+                    }else{
+                        fileName = folderAndName + "-" + dateTimeFormat.format(dateTime) + ".data";
+                    }
                     File file = new File(fileName);
                     if (!file.exists()) {
                         if (!file.getParentFile().mkdirs()) {
