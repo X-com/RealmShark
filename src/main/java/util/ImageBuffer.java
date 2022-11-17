@@ -12,6 +12,7 @@ import java.util.HashMap;
 public class ImageBuffer {
 
     private static HashMap<Integer, BufferedImage> images = new HashMap<>();
+    private static HashMap<Integer, Integer> colors = new HashMap<>();
     private static final SpriteJson spriteJson = new SpriteJson();
 
     private static String[] spriteSheets = {"assets/tiles.png", "assets/characters.png", "assets/characters_masks.png", "assets/objects.png"};
@@ -33,6 +34,24 @@ public class ImageBuffer {
         BufferedImage sprite = getSprite(spriteData);
         images.put(id, sprite);
         return sprite;
+    }
+
+    /**
+     * Color method used to get most common color from tile id.
+     *
+     * @param id Type ID of the tile.
+     * @return Most common color of the tile.
+     */
+    public static int getColor(int id) {
+        if (id <= 0) return 0;
+        if (colors.containsKey(id)) return colors.get(id);
+        if (!IdToName.tileIdExists(id)) return 0;
+        String name = IdToName.getTileTextureName(id, 0);
+        if (name == null) return 0;
+        int index = IdToName.getTileTextureIndex(id, 0);
+        int color = spriteJson.getSpriteColor(name, index);
+        colors.put(id, color);
+        return color;
     }
 
     /**
