@@ -149,6 +149,7 @@ public class IdToName {
      */
     public static String tileName(int id) {
         IdToName i = tileID.get(id);
+        if (i == null) return null;
         return i.idName;
     }
 
