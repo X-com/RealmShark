@@ -31,7 +31,7 @@ public class PacketController {
             model.setHeroesLeft(p.realmHeroesLeft);
         } else if (packet instanceof TextPacket) {
             TextPacket p = (TextPacket) packet;
-            model.updateText(p.text);
+            model.updateText(p);
         } else if (packet instanceof QuestObjectIdPacket) {
             QuestObjectIdPacket p = (QuestObjectIdPacket) packet;
             System.out.println(p);

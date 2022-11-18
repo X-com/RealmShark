@@ -1,5 +1,6 @@
 package potato.view;
 
+import com.sun.jna.WString;
 import potato.Potato;
 import potato.model.DataModel;
 
@@ -8,6 +9,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Arrays;
+
+import static org.lwjgl.glfw.GLFW.glfwHideWindow;
+import static potato.view.Win.Shell32.NIM_ADD;
+import static potato.view.Win.Shell32.Shell_NotifyIcon;
 
 public class GUIBase {
 
@@ -80,6 +86,11 @@ public class GUIBase {
             } else {
                 OpenGLPotato.showInfo(true);
                 hideCoords.setLabel("Hide Info");
+
+                Win.NOTIFYICONDATA nid = new Win.NOTIFYICONDATA();
+                nid.hWnd = Win.User32.FindWindow(new WString(""), new WString("Potato"));
+                System.out.println(Win.User32.FindWindow(new WString(""), new WString("Potato")) );
+                Shell_NotifyIcon(NIM_ADD, nid);
             }
         });
         trayPopupMenu.add(hideMap);

@@ -27,6 +27,8 @@ package opengl;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import java.awt.*;
+
 /**
  * This class represents a RGBA color.
  *
@@ -40,19 +42,29 @@ public final class GLColor {
     public static final GLColor GREEN = new GLColor(0f, 1f, 0f);
     public static final GLColor BLUE = new GLColor(0f, 0f, 1f);
 
-    /** This value specifies the red component. */
+    /**
+     * This value specifies the red component.
+     */
     private float red;
 
-    /** This value specifies the green component. */
+    /**
+     * This value specifies the green component.
+     */
     private float green;
 
-    /** This value specifies the blue component. */
+    /**
+     * This value specifies the blue component.
+     */
     private float blue;
 
-    /** This value specifies the transparency. */
+    /**
+     * This value specifies the transparency.
+     */
     private float alpha;
 
-    /** The default color is black. */
+    /**
+     * The default color is black.
+     */
     public GLColor() {
         this(0f, 0f, 0f);
     }
@@ -83,8 +95,6 @@ public final class GLColor {
         setAlpha(alpha);
     }
 
-
-
     /**
      * Creates a RGB-Color with an alpha value of 1.
      *
@@ -109,6 +119,13 @@ public final class GLColor {
         setGreen(green);
         setBlue(blue);
         setAlpha(alpha);
+    }
+
+    public GLColor(Color color) {
+        setRed(color.getRed());
+        setGreen(color.getGreen());
+        setBlue(color.getBlue());
+        setAlpha(color.getAlpha());
     }
 
     /**

@@ -1,5 +1,6 @@
 package potato.model;
 
+import packets.incoming.TextPacket;
 import potato.view.OpenGLPotato;
 import packets.data.GroundTileData;
 import packets.data.ObjectData;
@@ -68,7 +69,7 @@ public class DataModel {
         locator.locateLoop();
     }
 
-    private ArrayList<HeroLocations> mapCoords() {
+    public ArrayList<HeroLocations> mapCoords() {
         return mapCoords[mapIndex];
     }
 
@@ -368,14 +369,14 @@ public class DataModel {
         }
     }
 
-    public void updateText(String text) {
-        if (text.contains("oryx_closed_realm")) {
+    public void updateText(TextPacket p) {
+        if (p.text.contains("oryx_closed_realm")) {
             castleTimer = serverTime + 130000;
+            System.out.println(p);
         }
     }
 
     public void setPlayerCoords(float x, float y) {
-        System.out.println(x);
         playerX = x;
         playerY = y;
         renderer.setCamera(x, y, zoom);

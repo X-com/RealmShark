@@ -365,6 +365,7 @@ public class GLFont {
             drawX += g.width;
         }
         renderer.end();
+        texture.unbind();
     }
 
     /**
