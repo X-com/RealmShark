@@ -6,6 +6,7 @@ import packets.incoming.MapInfoPacket;
 import packets.incoming.UpdatePacket;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.register.Register;
+import util.ImageBuffer;
 import util.Pair;
 import util.SpriteJson;
 import util.Util;
@@ -41,8 +42,8 @@ public class TileSaver {
 //            new TileSaver().makeTileData(i);
 //        new TileSaver().merger();
 //        try {
-        for(int i = 1; i <= 13; i++)
-            new TileSaver().makeImageThingy2(i, false);
+//        for(int i = 1; i <= 13; i++)
+            new TileSaver().makeImageThingy2(1, true);
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
@@ -159,31 +160,31 @@ public class TileSaver {
 //        if (true) return;
 
         loadTiles(i);
-        colors[12] = -11715543;
-        colors[28] = -12837366;
-        colors[70] = -13269443;
-        colors[71] = -7828963;
-        colors[72] = -12496343;
-        colors[86] = -13813221;
-        colors[87] = -14341060;
-        colors[96] = -13487566;
-        colors[100] = -15132391;
-        colors[112] = -1357035;
-        colors[114] = -11372347;
-        colors[115] = -11372348;
-        colors[188] = -13940085;
-        colors[189] = -4014708;
-        colors[190] = -5338036;
-        colors[208] = -5866414;
-        colors[241] = -13159638;
-        colors[289] = -7828963;
-        colors[291] = -4315595;
-        colors[292] = -11198171;
-        colors[293] = -11198171;
-        colors[294] = -7592924;
-        colors[297] = -15658730;
-        colors[304] = -15658730;
-        colors[305] = -15658730;
+//        colors[12] = -11715543;
+//        colors[28] = -12837366;
+//        colors[70] = -13269443;
+//        colors[71] = -7828963;
+//        colors[72] = -12496343;
+//        colors[86] = -13813221;
+//        colors[87] = -14341060;
+//        colors[96] = -13487566;
+//        colors[100] = -15132391;
+//        colors[112] = -1357035;
+//        colors[114] = -11372347;
+//        colors[115] = -11372348;
+//        colors[188] = -13940085;
+//        colors[189] = -4014708;
+//        colors[190] = -5338036;
+//        colors[208] = -5866414;
+//        colors[241] = -13159638;
+//        colors[289] = -7828963;
+//        colors[291] = -4315595;
+//        colors[292] = -11198171;
+//        colors[293] = -11198171;
+//        colors[294] = -7592924;
+//        colors[297] = -15658730;
+//        colors[304] = -15658730;
+//        colors[305] = -15658730;
 
         BufferedImage bi = new BufferedImage(2048, 2048, BufferedImage.TYPE_INT_ARGB);
 
@@ -223,33 +224,34 @@ public class TileSaver {
                 if (real) {
                     int id = mapArray[i][x][y];
 //                    if (id != 96) continue;
-                    if (id == 4062) continue;
-                    if (id == 4060) continue;
-                    if (id == 4406) continue;
-                    if (id == 14370) continue;
-                    if (id == 14373) continue;
-                    if (id == 14377) continue;
-                    if (id == 14378) continue;
-                    if (id == 25137) continue;
-                    if (id == 25138) continue;
-                    if (id == 28908) continue;
-                    if (id == 29300) continue;
-                    if (id == 29301) continue;
-                    if (id == 29302) continue;
-                    if (id == 29303) continue;
-                    if (id == 29304) continue;
-                    if (id == 29305) continue;
-                    if (id == 29820) continue;
-                    if (id == 29823) continue;
-                    if (id == 29289) continue;
-                    if (id == 29297) continue;
-                    if (id == 29821) continue;
-                    if (id == 29919) continue;
-                    if (id == 45082) continue;
-                    if (id == 45679) continue;
-                    if (id == 45680) continue;
-                    if (id == 45683) continue;
-                    bi.setRGB(x, y, colors[id]);
+//                    if (id == 4062) continue;
+//                    if (id == 4060) continue;
+//                    if (id == 4406) continue;
+//                    if (id == 14370) continue;
+//                    if (id == 14373) continue;
+//                    if (id == 14377) continue;
+//                    if (id == 14378) continue;
+//                    if (id == 25137) continue;
+//                    if (id == 25138) continue;
+//                    if (id == 28908) continue;
+//                    if (id == 29300) continue;
+//                    if (id == 29301) continue;
+//                    if (id == 29302) continue;
+//                    if (id == 29303) continue;
+//                    if (id == 29304) continue;
+//                    if (id == 29305) continue;
+//                    if (id == 29820) continue;
+//                    if (id == 29823) continue;
+//                    if (id == 29289) continue;
+//                    if (id == 29297) continue;
+//                    if (id == 29821) continue;
+//                    if (id == 29919) continue;
+//                    if (id == 45082) continue;
+//                    if (id == 45679) continue;
+//                    if (id == 45680) continue;
+//                    if (id == 45683) continue;
+//                    bi.setRGB(x, y, colors[id]);
+                    bi.setRGB(x, y, ImageBuffer.getColor(id));
                 }
 //                    if(x+70 >= bi.getWidth()) continue;
 //                    if(y+80 >= bi.getHeight()) continue;

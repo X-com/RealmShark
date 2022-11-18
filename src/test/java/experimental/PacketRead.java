@@ -29,8 +29,6 @@ public class PacketRead {
     public static void readAll(Packet packet) {
 
         // spammy
-        if (packet instanceof NewTickPacket) return;
-        if (packet instanceof UpdatePacket) return;
         if (packet instanceof PingPacket) return;
         if (packet instanceof PongPacket) return;
         if (packet instanceof MovePacket) return;
@@ -114,11 +112,11 @@ public class PacketRead {
         }
 
         if (packet instanceof MapInfoPacket) {
-            MapInfoPacket p = (MapInfoPacket) packet;
-            if (p.name.equals("Realm of the Mad God")) {
-                System.out.println(p.seed + "   " + ip);
-            }
-            return;
+//            MapInfoPacket p = (MapInfoPacket) packet;
+//            if (p.name.equals("Realm of the Mad God")) {
+//                System.out.println(p.seed + "   " + ip);
+//            }
+//            return;
         }
 
         if (packet instanceof UpdatePacket) {
