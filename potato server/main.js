@@ -31,6 +31,7 @@ wss.on("connection", (ws) => {
             let server = servers.get(json.ip);
 
             if (server === undefined) {
+                if (checkError(json)) return;
                 server = {
                     map: json.map,
                     seed: json.seed,
@@ -41,6 +42,7 @@ wss.on("connection", (ws) => {
                 };
                 servers.set(json.ip, server);
             } else if (server.seed !== json.seed) {
+                if (checkError(json)) return;
                 server.ip = json.ip;
                 server.seed = json.seed;
                 server.map = json.map;
@@ -91,4 +93,10 @@ const write = async (content) => {
     } catch (err) {
         console.log(err);
     }
+}
+
+const checkError = (json) => {
+    if(json.x === 0 && json.y === 0) return true;
+
+    return false;
 }
