@@ -6,7 +6,7 @@ plugins {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-project.version = 'v0.4.3-beta'
+project.version = 'v0.5.4-beta'
 applicationName = 'Potato'
 
 project.ext.lwjglVersion = "3.3.1"
@@ -23,6 +23,7 @@ switch (org.gradle.internal.os.OperatingSystem.current()) {
 
 repositories {
     mavenCentral()
+    maven {url="https://s01.oss.sonatype.org/content/repositories/snapshots/"}
 }
 
 dependencies {
@@ -32,8 +33,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.9.1'
     implementation 'net.java.dev.jna:jna:5.12.1'
     implementation 'net.java.dev.jna:jna-platform:5.12.1'
-    implementation 'com.github.kwhat:jnativehook:2.2.2'
     implementation 'org.java-websocket:Java-WebSocket:1.5.3'
+    implementation 'lc.kra.system:system-hook:3.8'
+
 
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
     implementation "org.lwjgl:lwjgl"
@@ -50,6 +52,9 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
     implementation "org.joml:joml:1.10.4"
+
+    implementation "io.github.chiraagchakravarthy:lwjgl-vectorized-text:0.0.4-SNAPSHOT"
+//    implementation files("lib/LWJGL-vectorized-text.jar")
 }
 
 mainClassName = applicationName.toLowerCase() + '.' + applicationName
