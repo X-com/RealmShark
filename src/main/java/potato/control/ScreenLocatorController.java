@@ -10,133 +10,24 @@ import java.awt.image.BufferedImage;
 public class ScreenLocatorController {
     private final int FRAME_COLOR = -8553091;
     private final int BOARDER_COLOR = -13224394;
-    private boolean running;
     private final OpenGLPotato renderer;
-    private final DataModel model;
-    private int storeX;
-    private int storeY;
-    private int storeW;
-    private int storeH;
     Rectangle rect = null;
 
-    public ScreenLocatorController(OpenGLPotato renderer, DataModel model) {
+    public ScreenLocatorController(OpenGLPotato renderer) {
         this.renderer = renderer;
-        this.model = model;
     }
 
-//    private void calcMapSizeLoc() {
-//        Rectangle rect = NativeWindowScreenCapture.getWindowRect("RotMGExalt", false);
-//        BufferedImage createScreenCapture = NativeWindowScreenCapture.getWindowImageUndisturbed(rect);
-////            System.out.println(createScreenCapture);
-//        if (createScreenCapture == null) return;
-//        int w = createScreenCapture.getWidth() - 1;
-//        int h = 0;
-//
-//        while (true) {
-//            int color;
-//            try {
-//                color = createScreenCapture.getRGB(w, h);
-//            } catch (ArrayIndexOutOfBoundsException e) {
-//                System.out.printf("%d %d %s\n", w, h, createScreenCapture);
-//                throw new RuntimeException();
-//            }
-//            if (color == FRAME_COLOR) {
-//                break;
-//            }
-//            h++;
-//            if (h >= createScreenCapture.getHeight()) {
-//                w--;
-//                h = 0;
-//            } else if (w <= 0) {
-//                String s = String.format("failed W:%d H:%d X:%d Y:%d\n", w, h, rect.x, rect.y);
-//                notFound(1, s);
-//                return;
-//            }
-//        }
-//
-//        final int fixedHeight = h;
-//        while (true) {
-//            int color = createScreenCapture.getRGB(w, h);
-//            if (color != FRAME_COLOR) {
-//                if (color != BOARDER_COLOR && createScreenCapture.getRGB(w, h + 1) != BOARDER_COLOR) {
-//                    String s = String.format("failed W:%d H:%d X:%d Y:%d\n", w, h, rect.x, rect.y);
-//                    notFound(2, s);
-//                    return;
-//                }
-//                break;
-//            }
-//            h++;
-//            if (h >= createScreenCapture.getHeight()) {
-//                String s = String.format("failed W:%d H:%d X:%d Y:%d\n", w, h, rect.x, rect.y);
-//                notFound(3, s);
-//                return;
-//            }
-//        }
-//
-//        h = fixedHeight;
-//        int testH = fixedHeight + 20;
-//        while (true) {
-//            int color = createScreenCapture.getRGB(w, h);
-//            if (color != FRAME_COLOR) {
-//                break;
-//            }
-//            h++;
-//            if (h >= testH) {
-//                h = fixedHeight;
-//                w--;
-//            } else if (w <= 0) {
-//                String s = String.format("failed W:%d H:%d X:%d Y:%d\n", w, h, rect.x, rect.y);
-//                notFound(4, s);
-//                return;
-//            }
-//        }
-//        final int innerTopRightW = w;
-//        final int innerTopRightH = h;
-////            System.out.println("w:" + w + " h:" + h);
-//
-//        int width = 0;
-//        while (true) {
-//            int color = createScreenCapture.getRGB(w, h);
-//            if (color == FRAME_COLOR) {
-//                break;
-//            }
-//            width++;
-//            w--;
-//            if (w <= 0) {
-//                notFound(5, String.format("failed W:%d H:%d X:%d Y:%d\n", w, h, rect.x, rect.y));
-//                return;
-//            }
-//        }
-//        width--;
-//        int x = rect.x + w + 1;
-//        int y = rect.y + innerTopRightH;
-//        w = innerTopRightW;
-//        int height = 0;
-//        while (true) {
-//            int color = createScreenCapture.getRGB(w, h);
-//            if (color == FRAME_COLOR) {
-//                break;
-//            }
-//            height++;
-//            h++;
-//        }
-//        height--;
-//        if (x != storeX || y != storeY || width != storeW || height != storeH) {
-//            System.out.printf("X:%d Y:%d W:%d H:%d\n", x, y, width, height);
-//            model.setSize(width, height);
-//            renderer.setSizeLoc(x, y, width, height);
-//            renderer.show();
-//            storeX = x;
-//            storeY = y;
-//            storeW = width;
-//            storeH = height;
-//        }
-//    }
+//        A + B = C;
+//        A * t + B * (1-t) = C;
+//        at + b - bt = c;
+//        t(a - b) = c - b;
+//        t = (c - b) / (a - b);
+//        (c - b) / (a - b) > 0
+//        (c > b && a > b) || (c < b && a < b);
+//        min(A,c) > b || max(A,c) < b;
 
-    private void calcMapSizeLoc2() {
-        Rectangle newRect = NativeWindowScreenCapture.getWindowRect("RotMGExalt", false);
-        if(newRect.equals(rect)) return;
-        rect = newRect;
+    public void calcMapSizeLoc2() {
+        rect = NativeWindowScreenCapture.getWindowRect("RotMGExalt", false);
         BufferedImage createScreenCapture = NativeWindowScreenCapture.getWindowImageUndisturbed(rect);
         if (createScreenCapture == null) return;
         int w = createScreenCapture.getWidth() - 1;
@@ -162,6 +53,7 @@ public class ScreenLocatorController {
                 return;
             }
         }
+
         int tempW = w;
         int tempH = h;
         int y = h;
@@ -217,46 +109,17 @@ public class ScreenLocatorController {
         y = y + rect.y + boarder;
         width -= boarder * 2;
         height -= boarder * 2 - 1;
-        if (x != storeX || y != storeY || width != storeW || height != storeH) {
-            System.out.printf("X:%d Y:%d W:%d H:%d\n", x, y, width, height);
+        System.out.printf("X:%d Y:%d W:%d H:%d\n", x, y, width, height);
 //            model.setSize(width, height);
-            renderer.setWindow(x, y, width, height);
-            renderer.show();
-            storeX = x;
-            storeY = y;
-            storeW = width;
-            storeH = height;
-        }
+        renderer.setWindow(x, y, width, height);
+        renderer.show();
     }
 
     private void notFound(int i, String s) {
         renderer.hide();
-        storeX = 0;
-        storeY = 0;
-        storeW = 0;
-        storeH = 0;
         System.out.println(i + " " + s);
     }
 
-    public void locateLoop() {
-        new Thread(() -> {
-            running = true;
-            while (running) {
-                calcMapSizeLoc2();
-                int counter = 0;
-                while (running && counter < 20) {
-                    counter++;
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
-    }
-
     public void dispose() {
-        running = false;
     }
 }
