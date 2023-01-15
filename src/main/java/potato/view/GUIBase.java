@@ -1,43 +1,21 @@
 package potato.view;
 
-import com.sun.jna.WString;
 import potato.Potato;
+import potato.control.ScreenLocatorController;
 import potato.model.DataModel;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Arrays;
-
-import static org.lwjgl.glfw.GLFW.glfwHideWindow;
-import static potato.view.Win.Shell32.NIM_ADD;
-import static potato.view.Win.Shell32.Shell_NotifyIcon;
 
 public class GUIBase {
 
-    public static final Image potatoIcon = Toolkit.getDefaultToolkit().getImage(Potato.imagePath);
-    private final DataModel dataModel;
+    private final ScreenLocatorController aligner;
 
     public GUIBase(DataModel dataModel) {
-        this.dataModel = dataModel;
+        this.aligner = dataModel.getAligner();
         makeTrayIcon();
-    }
-
-    private void smallWindow() {
-        JFrame menuFrame = new JFrame("Potato") {
-            @Override
-            public void dispose() {
-                super.dispose();
-                dataModel.dispose();
-                System.exit(0);
-            }
-        };
-        menuFrame.setIconImage(potatoIcon);
-        menuFrame.setSize(100, 100);
-        menuFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        menuFrame.setVisible(true);
     }
 
     private void makeTrayIcon() {
@@ -86,11 +64,6 @@ public class GUIBase {
             } else {
                 OpenGLPotato.showInfo(true);
                 hideCoords.setLabel("Hide Info");
-
-                Win.NOTIFYICONDATA nid = new Win.NOTIFYICONDATA();
-                nid.hWnd = Win.User32.FindWindow(new WString(""), new WString("Potato"));
-                System.out.println(Win.User32.FindWindow(new WString(""), new WString("Potato")) );
-                Shell_NotifyIcon(NIM_ADD, nid);
             }
         });
         trayPopupMenu.add(hideMap);
@@ -99,20 +72,12 @@ public class GUIBase {
 
         trayPopupMenu.addSeparator();
 
-//        MenuItem windowScaling = new MenuItem("Enable Scaling");
-//        windowScaling.addActionListener(e -> {
-//            if (windowScaling.getLabel().startsWith("Enable")) {
-//                ScreenLocatorController.setScaling(true);
-//                windowScaling.setLabel("Disable Scaling");
-//            } else {
-//                ScreenLocatorController.setScaling(false);
-//                windowScaling.setLabel("Enable Scaling");
-//            }
-//        });
-//        trayPopupMenu.add(windowScaling);
+        MenuItem align = new MenuItem("Align Minimap");
+        align.addActionListener(e -> aligner.calcMapSizeLoc2());
+        trayPopupMenu.add(align);
 
         MenuItem options = new MenuItem("Options");
-        options.addActionListener(e -> JOptionPane.showMessageDialog(null, "Options not added yet."));
+        options.addActionListener(e -> optionsMenu());
         trayPopupMenu.add(options);
 
         MenuItem close = new MenuItem("Close");
@@ -127,5 +92,9 @@ public class GUIBase {
         } catch (AWTException awtException) {
             awtException.printStackTrace();
         }
+    }
+
+    private void optionsMenu() {
+        OptionsMenu.showOptions();
     }
 }
