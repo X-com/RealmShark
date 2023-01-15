@@ -12,6 +12,11 @@ import com.sun.jna.win32.StdCallLibrary;
 
 public class FocusedWindow {
 
+    final static int PROCESS_VM_READ = 0x0010;
+    final static int PROCESS_QUERY_INFORMATION = 0x0400;
+    final static User32 user32 = User32.INSTANCE;
+    final static Kernel32 kernel32 = Kernel32.INSTANCE;
+
     public interface Psapi extends StdCallLibrary {
         Psapi INSTANCE = (Psapi) Native.loadLibrary("Psapi", Psapi.class);
 
@@ -20,11 +25,6 @@ public class FocusedWindow {
 
     public static String getWindowFocus() {
         if (Platform.isWindows()) {
-            final int PROCESS_VM_READ = 0x0010;
-            final int PROCESS_QUERY_INFORMATION = 0x0400;
-            final User32 user32 = User32.INSTANCE;
-            final Kernel32 kernel32 = Kernel32.INSTANCE;
-            final Psapi psapi = Psapi.INSTANCE;
             WinDef.HWND windowHandle = user32.GetForegroundWindow();
             IntByReference pid = new IntByReference();
             user32.GetWindowThreadProcessId(windowHandle, pid);

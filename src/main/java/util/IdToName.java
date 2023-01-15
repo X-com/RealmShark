@@ -76,7 +76,7 @@ public class IdToName {
      * Method to grab the full list of object resource's from file and construct the hashmap.
      */
     private static void readObjectList() {
-        String fileName = "ObjectID5.list";
+        String fileName = "ObjectID6.list";
 
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(Util.resourceFilePath(fileName), StandardCharsets.UTF_8));
@@ -116,7 +116,7 @@ public class IdToName {
                 int id = Integer.parseInt(l[0]);
                 String texture = l[1];
                 String idName = l[2];
-                objectID.put(id, new IdToName(line, id, idName, texture));
+                tileID.put(id, new IdToName(line, id, idName, texture));
             }
             br.close();
         } catch (Exception e) {
@@ -148,7 +148,8 @@ public class IdToName {
      * @return Best descriptive name of the resource
      */
     public static String tileName(int id) {
-        IdToName i = objectID.get(id);
+        IdToName i = tileID.get(id);
+        if (i == null) return null;
         return i.idName;
     }
 
@@ -290,6 +291,7 @@ public class IdToName {
     public static String getObjectTextureName(int id, int num) {
         IdToName i = objectID.get(id);
         if (i.textures == null) i.textures = parseObjectTexture(i);
+        if (i.textures.length == 0) return null;
         return i.textures[num].name;
     }
 
@@ -314,8 +316,9 @@ public class IdToName {
      * @return File name of the texture
      */
     public static String getTileTextureName(int id, int num) {
-        IdToName i = objectID.get(id);
+        IdToName i = tileID.get(id);
         if (i.textures == null) i.textures = parseObjectTexture(i);
+        if (i.textures.length == 0) return null;
         return i.textures[num].name;
     }
 
@@ -327,9 +330,24 @@ public class IdToName {
      * @return File index of the texture
      */
     public static int getTileTextureIndex(int id, int num) {
-        IdToName i = objectID.get(id);
+        IdToName i = tileID.get(id);
+        if (i == null) {
+            System.out.println("tileID.size()" + tileID.size() + " " + id);
+            return 0;
+        }
         if (i.textures == null) i.textures = parseObjectTexture(i);
+        if (i.textures.length == 0) return 0;
         return i.textures[num].index;
+    }
+
+    /**
+     * Checks if the tile id exists.
+     *
+     * @param id Id of the tile.
+     * @return True if the tile ID exists.
+     */
+    public static boolean tileIdExists(int id) {
+        return tileID.containsKey(id);
     }
 
     /**

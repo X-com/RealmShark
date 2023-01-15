@@ -60,7 +60,12 @@ public class Util {
                 try {
                     DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss");
                     LocalDateTime dateTime = LocalDateTime.now();
-                    String fileName = folderAndName + "-" + dateTimeFormat.format(dateTime) + ".data";
+                    String fileName;
+                    if(folderAndName.endsWith("-")){
+                        fileName = folderAndName.substring(0, folderAndName.length() - 1);
+                    }else{
+                        fileName = folderAndName + "-" + dateTimeFormat.format(dateTime) + ".data";
+                    }
                     File file = new File(fileName);
                     if (!file.exists()) {
                         if (!file.getParentFile().mkdirs()) {
@@ -176,7 +181,7 @@ public class Util {
      * @param fileName Name of resource file.
      * @return The resource file as stream.
      */
-    public static InputStream resourceFilePath(String fileName) throws URISyntaxException {
+    public static InputStream resourceFilePath(String fileName) {
         return IdToName.class.getClassLoader().getResourceAsStream(fileName);
     }
 

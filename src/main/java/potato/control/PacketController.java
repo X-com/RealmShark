@@ -18,7 +18,7 @@ public class PacketController {
             UpdatePacket p = (UpdatePacket) packet;
             model.newRealm(p.tiles, p.pos);
             if (p.pos.x != 0 && p.pos.y != 0) {
-                model.setPlayerCoords((int) p.pos.x, (int) p.pos.y);
+                model.setPlayerCoords(p.pos.x, p.pos.y);
             }
             model.updateLocations(p.tiles, p.newObjects, p.drops);
         } else if (packet instanceof NewTickPacket) {
@@ -31,7 +31,7 @@ public class PacketController {
             model.setHeroesLeft(p.realmHeroesLeft);
         } else if (packet instanceof TextPacket) {
             TextPacket p = (TextPacket) packet;
-            model.updateText(p.text);
+            model.updateText(p);
         } else if (packet instanceof QuestObjectIdPacket) {
             QuestObjectIdPacket p = (QuestObjectIdPacket) packet;
             System.out.println(p);
@@ -43,6 +43,7 @@ public class PacketController {
             if (p.displayName.equals("{s.rotmg}")) {
                 model.setInRealm(p.realmName, p.seed);
             } else {
+                model.checkNewNexus();
                 model.setRealmName(p.realmName);
                 model.reset();
             }

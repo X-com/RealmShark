@@ -1,34 +1,21 @@
 package potato.view;
 
 import potato.Potato;
+import potato.control.ScreenLocatorController;
 import potato.model.DataModel;
 
-import javax.swing.*;
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class GUIBase {
 
-    private static final Image icon = Toolkit.getDefaultToolkit().getImage(Potato.imagePath);
-    private final DataModel dataModel;
+    private final ScreenLocatorController aligner;
 
     public GUIBase(DataModel dataModel) {
-        this.dataModel = dataModel;
+        this.aligner = dataModel.getAligner();
         makeTrayIcon();
-    }
-
-    private void smallWindow() {
-        JFrame menuFrame = new JFrame("Potato") {
-            @Override
-            public void dispose() {
-                super.dispose();
-                dataModel.dispose();
-                System.exit(0);
-            }
-        };
-        menuFrame.setIconImage(icon);
-        menuFrame.setSize(100, 100);
-        menuFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        menuFrame.setVisible(true);
     }
 
     private void makeTrayIcon() {
@@ -41,7 +28,12 @@ public class GUIBase {
 
         //get default toolkit
         //Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Image image = Toolkit.getDefaultToolkit().getImage(Potato.imagePath);
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(Potato.imagePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         PopupMenu trayPopupMenu = new PopupMenu();
         MenuItem hideMap = new MenuItem("Hide Map");
@@ -49,28 +41,28 @@ public class GUIBase {
         MenuItem hideCoords = new MenuItem("Hide Info");
         hideMap.addActionListener(e -> {
             if (hideMap.getLabel().startsWith("Hide")) {
-                RenderViewer.showMap(false);
+                OpenGLPotato.showMap(false);
                 hideMap.setLabel("Show Map");
             } else {
-                RenderViewer.showMap(true);
+                OpenGLPotato.showMap(true);
                 hideMap.setLabel("Hide Map");
             }
         });
         hideHeroes.addActionListener(e -> {
             if (hideHeroes.getLabel().startsWith("Hide")) {
-                RenderViewer.showHeroes(false);
+                OpenGLPotato.showHeroes(false);
                 hideHeroes.setLabel("Show Heroes");
             } else {
-                RenderViewer.showHeroes(true);
+                OpenGLPotato.showHeroes(true);
                 hideHeroes.setLabel("Hide Heroes");
             }
         });
         hideCoords.addActionListener(e -> {
             if (hideCoords.getLabel().startsWith("Hide")) {
-                RenderViewer.showInfo(false);
+                OpenGLPotato.showInfo(false);
                 hideCoords.setLabel("Show Info");
             } else {
-                RenderViewer.showInfo(true);
+                OpenGLPotato.showInfo(true);
                 hideCoords.setLabel("Hide Info");
             }
         });
@@ -80,20 +72,12 @@ public class GUIBase {
 
         trayPopupMenu.addSeparator();
 
-//        MenuItem windowScaling = new MenuItem("Enable Scaling");
-//        windowScaling.addActionListener(e -> {
-//            if (windowScaling.getLabel().startsWith("Enable")) {
-//                ScreenLocatorController.setScaling(true);
-//                windowScaling.setLabel("Disable Scaling");
-//            } else {
-//                ScreenLocatorController.setScaling(false);
-//                windowScaling.setLabel("Enable Scaling");
-//            }
-//        });
-//        trayPopupMenu.add(windowScaling);
+        MenuItem align = new MenuItem("Align Minimap");
+        align.addActionListener(e -> aligner.calcMapSizeLoc2());
+        trayPopupMenu.add(align);
 
         MenuItem options = new MenuItem("Options");
-        options.addActionListener(e -> JOptionPane.showMessageDialog(null, "Options not added yet."));
+        options.addActionListener(e -> optionsMenu());
         trayPopupMenu.add(options);
 
         MenuItem close = new MenuItem("Close");
@@ -108,5 +92,9 @@ public class GUIBase {
         } catch (AWTException awtException) {
             awtException.printStackTrace();
         }
+    }
+
+    private void optionsMenu() {
+        OptionsMenu.showOptions();
     }
 }

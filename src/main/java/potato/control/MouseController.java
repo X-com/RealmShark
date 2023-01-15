@@ -1,81 +1,83 @@
 package potato.control;
 
-import com.github.kwhat.jnativehook.GlobalScreen;
-import com.github.kwhat.jnativehook.NativeHookException;
-import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
-import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
-import com.github.kwhat.jnativehook.mouse.NativeMouseWheelEvent;
-import com.github.kwhat.jnativehook.mouse.NativeMouseWheelListener;
+import lc.kra.system.keyboard.GlobalKeyboardHook;
+import lc.kra.system.keyboard.event.GlobalKeyAdapter;
+import lc.kra.system.keyboard.event.GlobalKeyEvent;
+import lc.kra.system.mouse.GlobalMouseHook;
+import lc.kra.system.mouse.event.GlobalMouseAdapter;
+import lc.kra.system.mouse.event.GlobalMouseEvent;
 import potato.model.DataModel;
-import potato.view.RenderViewer;
+import potato.view.OpenGLPotato;
 import util.FocusedWindow;
 
-import java.awt.*;
-
-public class MouseController implements NativeMouseWheelListener, NativeKeyListener {
+public class MouseController {
 
     DataModel model;
-    RenderViewer renderer;
+    OpenGLPotato renderer;
     ServerSynch server;
+    GlobalMouseHook mouseHook;
+    GlobalKeyboardHook keyboardHook;
 
-    public MouseController(DataModel model, RenderViewer renderer, ServerSynch serverHTTP) {
+    public MouseController(DataModel model, OpenGLPotato renderer, ServerSynch serverHTTP) {
         this.model = model;
         this.renderer = renderer;
         this.server = serverHTTP;
-        try {
-            globalKeyMouseRegister();
-            System.out.println("clearconsole");
-        } catch (AWTException e) {
-            e.printStackTrace();
-        }
+        mouseHook = new GlobalMouseHook();
+        keyboardHook = new GlobalKeyboardHook(true);
+        registerListeners();
     }
 
-    private void globalKeyMouseRegister() throws AWTException {
-//        Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
-//        logger.setLevel(Level.OFF);
-//        logger.setUseParentHandlers(false);
-        try {
-            GlobalScreen.registerNativeHook();
-        } catch (NativeHookException ex) {
-            System.err.println("There was a problem registering the native hook.");
-            System.err.println(ex.getMessage());
+    public void registerListeners() {
+        mouseHook.addMouseListener(new GlobalMouseAdapter() {
 
-            System.exit(1);
-        }
+//            @Override
+//            public void mousePressed(GlobalMouseEvent event) {
+//                System.out.println(event);
+//            }
+//
+//            @Override
+//            public void mouseReleased(GlobalMouseEvent event) {
+//                System.out.println(event);
+//            }
+//
+//            @Override
+//            public void mouseMoved(GlobalMouseEvent event) {
+//                System.out.println(event);
+//            }
 
-        GlobalScreen.addNativeMouseWheelListener(this);
-        GlobalScreen.addNativeKeyListener(this);
-    }
-
-    @Override
-    public void nativeMouseWheelMoved(NativeMouseWheelEvent e) {
-//        System.out.println(FocusedWindow.getWindowFocus() + " mod:" + e.getModifiers() + " zoomed:" + e.getWheelRotation());
-        if ((e.getModifiers() % 512) == 0) {
-            if (FocusedWindow.getWindowFocus().equals("RotMG Exalt.exe")) {
-                model.editZoom(e.getWheelRotation());
+            @Override
+            public void mouseWheel(GlobalMouseEvent event) {
+//                System.out.println(event);
+                mouseWheelMoved(event);
             }
+        });
+
+        keyboardHook.addKeyListener(new GlobalKeyAdapter() {
+
+            @Override
+            public void keyPressed(GlobalKeyEvent event) {
+//                System.out.println(event);
+                keyboardPressed(event);
+            }
+
+//            @Override
+//            public void keyReleased(GlobalKeyEvent event) {
+//                System.out.println(event);
+//            }
+        });
+    }
+
+    public void mouseWheelMoved(GlobalMouseEvent event) {
+        if (FocusedWindow.getWindowFocus().equals("RotMG Exalt.exe")) {
+            int i = event.getDelta() / GlobalMouseEvent.WHEEL_DELTA * -1;
+            model.editZoom(i);
         }
     }
 
-    @Override
-    public void nativeKeyPressed(NativeKeyEvent e) {
-//        System.out.println(FocusedWindow.getWindowFocus() + " mod:" + e.getModifiers() + " " + e.getRawCode() + " " + e.getKeyCode());
-//        if (e.getKeyCode() == NativeKeyEvent.VC_9) {
-//            if (FocusedWindow.getWindowFocus().equals("RotMG Exalt.exe")) {
-//                model.editZoom(1);
-//            }
-//        } else if (e.getKeyCode() == NativeKeyEvent.VC_0) {
-//            if (FocusedWindow.getWindowFocus().equals("RotMG Exalt.exe")) {
-//                model.editZoom(-1);
-//            }
-//        }
+    public void keyboardPressed(GlobalKeyEvent event) {
     }
 
     public void dispose() {
-        try {
-            GlobalScreen.unregisterNativeHook();
-        } catch (NativeHookException e) {
-            e.printStackTrace();
-        }
+        mouseHook.shutdownHook();
     }
 }

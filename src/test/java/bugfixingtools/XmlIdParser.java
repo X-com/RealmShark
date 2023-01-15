@@ -36,7 +36,7 @@ public class XmlIdParser {
         System.out.println("clearconsole");
         Util.setSaveLogs(true);
         try {
-            Files.walk(Paths.get(ROOTDIR)).filter(Files::isRegularFile).filter(p -> p.toString().endsWith("xml")).forEach(XmlIdParser::xmlGround);
+            Files.walk(Paths.get(ROOTDIR)).filter(Files::isRegularFile).filter(p -> p.toString().endsWith("xml")).forEach(XmlIdParser::xml);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -88,6 +88,8 @@ public class XmlIdParser {
                     NodeList groupID = element.getElementsByTagName("Group");
                     NodeList projectile = element.getElementsByTagName("Projectile");
                     NodeList texture = element.getElementsByTagName("Texture");
+                    NodeList labels = element.getElementsByTagName("Labels");
+                    NodeList tier = element.getElementsByTagName("Tier");
 
                     String display = "";
                     String clazz = "";
@@ -96,6 +98,8 @@ public class XmlIdParser {
                     String maxDmg = "";
                     String fileName = "";
                     String indexName = "";
+                    String stringLabels = "";
+                    String stringTier = "";
                     if (displayID.getLength() > 0) {
                         display = displayID.item(0).getTextContent();
                     }
@@ -104,6 +108,12 @@ public class XmlIdParser {
                     }
                     if (groupID.getLength() > 0) {
                         group = groupID.item(0).getTextContent();
+                    }
+                    if (labels.getLength() > 0) {
+                        stringLabels = labels.item(0).getTextContent();
+                    }
+                    if (tier.getLength() > 0) {
+                        stringTier = tier.item(0).getTextContent();
                     }
                     StringBuilder pTemp = new StringBuilder();
                     boolean projectilesFound = false;
@@ -175,6 +185,13 @@ public class XmlIdParser {
                     if (imgFound) {
 //                        imgString = tTemp.substring(0, pTemp.length() - 1);
                         imgString = tTemp.toString();
+                    }
+
+                    if(clazz.equals("Equipment") && stringLabels.contains("UT")) {
+                        System.out.println(stringLabels);
+                        idID = "UT " + idID;
+                    } else if(clazz.equals("Equipment") && !stringTier.equals("")) {
+                        idID = "T" + stringTier + " " + idID;
                     }
 
                     String s = String.format("%d:%s:%s:%s:%s:%s:%s", id, display, clazz, group, projectileString, imgString, idID);
