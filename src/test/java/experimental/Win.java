@@ -1,4 +1,4 @@
-package potato.view;
+package experimental;
 
 
 import java.util.Arrays;
@@ -12,6 +12,7 @@ import com.sun.jna.Platform;
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 import com.sun.jna.WString;
+import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 import com.sun.jna.win32.W32APIOptions;
@@ -93,8 +94,9 @@ public class Win {
 
         static public native Pointer CreateWindowEx (int dwExStyle, WString lpClassName, WString lpWindowName, int dwStyle, int x,
                                                      int y, int nWidth, int nHeight, int hWndParent, int hMenu, int hInstance, int lpParam);
-
         static public native int SetWindowLong (Pointer hWnd, int nIndex, Callback procedure);
+
+        static public native int GetWindowLong(WinDef.HWND hWnd, int nIndex);
 
         static public native int DefWindowProc (Pointer hWnd, int uMsg, Parameter wParam, Parameter lParam);
 

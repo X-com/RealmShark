@@ -1,16 +1,18 @@
 #version 330 core
 layout(location = 0) in vec4 position;
 layout(location = 1) in vec2 texCoord;
-layout(location = 2) in vec4 color;
-layout(location = 3) in float id;
+layout(location = 2) in vec4 colorL;
+layout(location = 3) in vec4 colorR;
 
 out vec2 vTexCoord;
-out vec4 vColor;
+out vec4 vColorL;
+out vec4 vColorR;
 
 uniform mat4 uMVP;
 
 void main() {
+    vTexCoord = texCoord;
+    vColorL = colorL;
+    vColorR = colorR;
     gl_Position = uMVP * position;
-    vTexCoord = vec2((texCoord.x + id) / 13, texCoord.y);
-    vColor = color;
 }

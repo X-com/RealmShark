@@ -71,7 +71,7 @@ public class PacketRead {
         if (packet instanceof QuestObjectIdPacket) return;
         if (packet instanceof LoadPacket) return;
         if (packet instanceof HelloPacket) {
-//            System.out.println(packet);
+            System.out.println(packet);
             return;
         }
         if (packet instanceof ReconnectPacket) return;

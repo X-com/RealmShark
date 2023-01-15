@@ -1,20 +1,16 @@
-package potato.view;
+package experimental;
 
-import static potato.view.Win.NOTIFYICONDATA.*;
-import static potato.view.Win.Shell32.*;
-import static potato.view.Win.User32.*;
-import static potato.view.Win.User32_64.*;
-
+import experimental.Win.*;
 import java.util.concurrent.CyclicBarrier;
-
-import potato.view.Win.MSG;
-import potato.view.Win.NOTIFYICONDATA;
-import potato.view.Win.POINT;
-import potato.view.Win.Parameter;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.WString;
 import com.sun.jna.win32.StdCallLibrary.StdCallCallback;
+
+import static experimental.Win.NOTIFYICONDATA.*;
+import static experimental.Win.Shell32.*;
+import static experimental.Win.User32.*;
+import static experimental.Win.User32_64.SetWindowLongPtr;
 
 public class Tray {
     final NOTIFYICONDATA windowNotifyIconData = new NOTIFYICONDATA();

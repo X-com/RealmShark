@@ -1,5 +1,5 @@
 #version 330 core
-layout(location = 0) out vec4 fColor;
+layout (location = 0) out vec4 fColor;
 
 in vec2 vTexCoord;
 in vec4 vColor;
