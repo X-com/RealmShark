@@ -1,101 +1,83 @@
 package potato.control;
 
-import com.github.kwhat.jnativehook.GlobalScreen;
-import com.github.kwhat.jnativehook.NativeHookException;
-import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
-import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
-import com.github.kwhat.jnativehook.mouse.NativeMouseWheelEvent;
-import com.github.kwhat.jnativehook.mouse.NativeMouseWheelListener;
-import potato.view.OpenGLPotato;
+import lc.kra.system.keyboard.GlobalKeyboardHook;
+import lc.kra.system.keyboard.event.GlobalKeyAdapter;
+import lc.kra.system.keyboard.event.GlobalKeyEvent;
+import lc.kra.system.mouse.GlobalMouseHook;
+import lc.kra.system.mouse.event.GlobalMouseAdapter;
+import lc.kra.system.mouse.event.GlobalMouseEvent;
 import potato.model.DataModel;
+import potato.view.OpenGLPotato;
 import util.FocusedWindow;
 
-import java.awt.*;
-
-public class MouseController implements NativeMouseWheelListener, NativeKeyListener {
+public class MouseController {
 
     DataModel model;
     OpenGLPotato renderer;
     ServerSynch server;
+    GlobalMouseHook mouseHook;
+    GlobalKeyboardHook keyboardHook;
 
     public MouseController(DataModel model, OpenGLPotato renderer, ServerSynch serverHTTP) {
         this.model = model;
         this.renderer = renderer;
         this.server = serverHTTP;
-        try {
-            globalKeyMouseRegister();
-            System.out.println("clearconsole");
-        } catch (AWTException e) {
-            e.printStackTrace();
-        }
+        mouseHook = new GlobalMouseHook();
+        keyboardHook = new GlobalKeyboardHook(true);
+        registerListeners();
     }
 
-    private void globalKeyMouseRegister() throws AWTException {
-//        Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
-//        logger.setLevel(Level.OFF);
-//        logger.setUseParentHandlers(false);
-        try {
-            GlobalScreen.registerNativeHook();
-        } catch (NativeHookException ex) {
-            System.err.println("There was a problem registering the native hook.");
-            System.err.println(ex.getMessage());
+    public void registerListeners() {
+        mouseHook.addMouseListener(new GlobalMouseAdapter() {
 
-            System.exit(1);
-        }
+//            @Override
+//            public void mousePressed(GlobalMouseEvent event) {
+//                System.out.println(event);
+//            }
+//
+//            @Override
+//            public void mouseReleased(GlobalMouseEvent event) {
+//                System.out.println(event);
+//            }
+//
+//            @Override
+//            public void mouseMoved(GlobalMouseEvent event) {
+//                System.out.println(event);
+//            }
 
-        GlobalScreen.addNativeMouseWheelListener(this);
-        GlobalScreen.addNativeKeyListener(this);
-    }
-
-    @Override
-    public void nativeMouseWheelMoved(NativeMouseWheelEvent e) {
-//        System.out.println(FocusedWindow.getWindowFocus() + " mod:" + e.getModifiers() + " zoomed:" + e.getWheelRotation());
-        if ((e.getModifiers() % 512) == 0) {
-            if (FocusedWindow.getWindowFocus().equals("RotMG Exalt.exe")) {
-                model.editZoom(e.getWheelRotation());
+            @Override
+            public void mouseWheel(GlobalMouseEvent event) {
+//                System.out.println(event);
+                mouseWheelMoved(event);
             }
-        }
-//        if ((e.getModifiers() % 512) == 1) {
-//            float f = OpenGLPotato.playerOffset[OpenGLPotato.zoom] + e.getWheelRotation() * 0.01f;
-//            OpenGLPotato.playerOffset[OpenGLPotato.zoom] = f;
-//            System.out.println("Offset:" + f);
-//            model.refresh();
-//        }
-//        if ((e.getModifiers() % 512) == 2) {
-//            float f = OpenGLPotato.scale[OpenGLPotato.zoom] + e.getWheelRotation() * 0.01f;
-//            OpenGLPotato.scale[OpenGLPotato.zoom] = f;
-//            System.out.println("Scale: " + f);
-//            model.refresh();
-//        }
-//        if ((e.getModifiers() % 512) == 3) {
-//            float f1 = OpenGLPotato.scale[OpenGLPotato.zoom] + e.getWheelRotation() * 0.01f;
-//            float f2 = OpenGLPotato.playerOffset[OpenGLPotato.zoom] + e.getWheelRotation() * 2;
-//            OpenGLPotato.scale[OpenGLPotato.zoom] = f1;
-//            OpenGLPotato.playerOffset[OpenGLPotato.zoom] = f2;
-//            System.out.println("S:" + f1 + " O:" + f2);
-//            model.refresh();
-//        }
+        });
+
+        keyboardHook.addKeyListener(new GlobalKeyAdapter() {
+
+            @Override
+            public void keyPressed(GlobalKeyEvent event) {
+//                System.out.println(event);
+                keyboardPressed(event);
+            }
+
+//            @Override
+//            public void keyReleased(GlobalKeyEvent event) {
+//                System.out.println(event);
+//            }
+        });
     }
 
-    @Override
-    public void nativeKeyPressed(NativeKeyEvent e) {
-//        System.out.println(FocusedWindow.getWindowFocus() + " mod:" + e.getModifiers() + " " + e.getRawCode() + " " + e.getKeyCode());
-//        if (e.getKeyCode() == NativeKeyEvent.VC_9) {
-//            if (FocusedWindow.getWindowFocus().equals("RotMG Exalt.exe")) {
-//                model.editZoom(1);
-//            }
-//        } else if (e.getKeyCode() == NativeKeyEvent.VC_0) {
-//            if (FocusedWindow.getWindowFocus().equals("RotMG Exalt.exe")) {
-//                model.editZoom(-1);
-//            }
-//        }
+    public void mouseWheelMoved(GlobalMouseEvent event) {
+        if (FocusedWindow.getWindowFocus().equals("RotMG Exalt.exe")) {
+            int i = event.getDelta() / GlobalMouseEvent.WHEEL_DELTA * -1;
+            model.editZoom(i);
+        }
+    }
+
+    public void keyboardPressed(GlobalKeyEvent event) {
     }
 
     public void dispose() {
-        try {
-            GlobalScreen.unregisterNativeHook();
-        } catch (NativeHookException e) {
-            e.printStackTrace();
-        }
+        mouseHook.shutdownHook();
     }
 }
