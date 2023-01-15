@@ -181,7 +181,7 @@ public class Util {
      * @param fileName Name of resource file.
      * @return The resource file as stream.
      */
-    public static InputStream resourceFilePath(String fileName) throws URISyntaxException {
+    public static InputStream resourceFilePath(String fileName) {
         return IdToName.class.getClassLoader().getResourceAsStream(fileName);
     }
 

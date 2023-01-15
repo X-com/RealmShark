@@ -21,7 +21,7 @@ public class HackyPacketLoggerForABug {
     public static void dumpData() {
         Util.print("Packet sync error. Dumping packets.");
         for (int i = index; i <= (index + size); i++) {
-            int j = i%size;
+            int j = i % size;
             RawPacket packet = logList[j];
             if (packet != null) {
                 Util.print(Arrays.toString(packet.getPayload()) + " " + j);
