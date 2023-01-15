@@ -1,8 +1,9 @@
-package opengl;
+package potato.view.opengl;
 
 import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryUtil;
 
+import java.awt.*;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
@@ -45,9 +46,10 @@ public class GLRenderer {
      * @param regY      Y position of the texture region
      * @param regWidth  Width of the texture region
      * @param regHeight Height of the texture region
-     * @param c         The color to use
+     * @param cL         The color to use
+     * @param cR         The color to use
      */
-    public void drawTextureRegion(Texture texture, float x, float y, float regX, float regY, float regWidth, float regHeight, GLColor c) {
+    public void drawTextureRegion(Texture texture, float x, float y, float regX, float regY, float regWidth, float regHeight, Color cL, Color cR, float alpha) {
         /* Vertex positions */
         float x1 = x;
         float y1 = y;
@@ -60,7 +62,7 @@ public class GLRenderer {
         float s2 = (regX + regWidth) / texture.getWidth();
         float t2 = (regY + regHeight) / texture.getHeight();
 
-        drawTextureRegion(x1, y1, x2, y2, s1, t1, s2, t2, c);
+        drawTextureRegion(x1, y1, x2, y2, s1, t1, s2, t2, cL, cR, alpha);
 //        drawTextureRegion(-1, -1, 1, 1, 0, 0, 1, 1, c);
     }
 
@@ -76,23 +78,29 @@ public class GLRenderer {
      * @param t1 Bottom left t coordinate
      * @param s2 Top right s coordinate
      * @param t2 Top right t coordinate
-     * @param c  The color to use
+     * @param cL  The color to use
+     * @param cR  The color to use
      */
-    public void drawTextureRegion(float x1, float y1, float x2, float y2, float s1, float t1, float s2, float t2, GLColor c) {
-        if (vertices.remaining() < 32) {
+    public void drawTextureRegion(float x1, float y1, float x2, float y2, float s1, float t1, float s2, float t2, Color cL, Color cR, float alpha) {
+        if (vertices.remaining() < 48) {
             /* We need more space in the buffer, so flush it */
             flush();
         }
 
-        float r = c.getRed();
-        float g = c.getGreen();
-        float b = c.getBlue();
-        float a = c.getAlpha();
+        float r1 = cL.getRed() / 255f;
+        float g1 = cL.getGreen() / 255f;
+        float b1 = cL.getBlue() / 255f;
+        float a1 = alpha;
 
-        vertices.put(x1).put(y1).put(s1).put(t2).put(r).put(g).put(b).put(a);
-        vertices.put(x2).put(y1).put(s2).put(t2).put(r).put(g).put(b).put(a);
-        vertices.put(x2).put(y2).put(s2).put(t1).put(r).put(g).put(b).put(a);
-        vertices.put(x1).put(y2).put(s1).put(t1).put(r).put(g).put(b).put(a);
+        float r2 = cR.getRed() / 255f;
+        float g2 = cR.getGreen() / 255f;
+        float b2 = cR.getBlue() / 255f;
+        float a2 = alpha;
+
+        vertices.put(x1).put(y1).put(s1).put(t2).put(r1).put(g1).put(b1).put(a1).put(r2).put(g2).put(b2).put(a2);
+        vertices.put(x2).put(y1).put(s2).put(t2).put(r1).put(g1).put(b1).put(a1).put(r2).put(g2).put(b2).put(a2);
+        vertices.put(x2).put(y2).put(s2).put(t1).put(r1).put(g1).put(b1).put(a1).put(r2).put(g2).put(b2).put(a2);
+        vertices.put(x1).put(y2).put(s1).put(t1).put(r1).put(g1).put(b1).put(a1).put(r2).put(g2).put(b2).put(a2);
 
         int i = numIndexes / 6;
 
@@ -165,7 +173,8 @@ public class GLRenderer {
         VertexBufferLayout layout = new VertexBufferLayout();
         layout.addFloat(2); //vertex coords
         layout.addFloat(2); //texture coords
-        layout.addFloat(4); //color
+        layout.addFloat(4); //colorL
+        layout.addFloat(4); //colorR
         vao.addVertexBuffer(vbo, layout);
     }
 

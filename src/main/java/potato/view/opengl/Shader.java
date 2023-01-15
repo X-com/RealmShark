@@ -1,18 +1,17 @@
-package opengl;
+package potato.view.opengl;
 
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.MemoryUtil;
+import util.Util;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.FloatBuffer;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.List;
 
 import static org.lwjgl.opengl.GL20.*;
-
 
 public class Shader {
     private int program;
@@ -41,16 +40,20 @@ public class Shader {
     }
 
     public static String readShader(String path) {
-        List<String> lines;
+        StringBuilder out = new StringBuilder();
         try {
-            lines = Files.readAllLines(Paths.get(path));
+            InputStream is = Util.resourceFilePath(path);
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                out.append(line).append("\n");
+            }
         } catch (IOException e) {
             System.out.println("Failed to read file: " + path);
             e.printStackTrace();
             throw new RuntimeException("Shader failed to load.");
         }
-        StringBuilder out = new StringBuilder();
-        lines.forEach((line) -> out.append(line).append("\n"));
 
         return out.toString();
     }
@@ -87,6 +90,11 @@ public class Shader {
     public void setUniform4f(String name, float f0, float f1, float f2, float f3) {
         int id = glGetUniformLocation(program, name);
         glUniform4f(id, f0, f1, f2, f3);
+    }
+
+    public void setUniform1f(String name, float f) {
+        int id = glGetUniformLocation(program, name);
+        glUniform1f(id, f);
     }
 
     public void setUniform1i(String name, int value) {

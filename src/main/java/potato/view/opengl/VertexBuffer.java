@@ -1,4 +1,4 @@
-package opengl;
+package potato.view.opengl;
 
 import java.nio.FloatBuffer;
 

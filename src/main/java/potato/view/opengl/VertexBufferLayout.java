@@ -1,10 +1,9 @@
-package opengl;
+package potato.view.opengl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.lwjgl.opengl.GL11.*;
-
 
 public class VertexBufferLayout {
     private int stride;

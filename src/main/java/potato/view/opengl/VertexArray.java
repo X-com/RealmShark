@@ -1,4 +1,4 @@
-package opengl;
+package potato.view.opengl;
 
 import static org.lwjgl.opengl.GL30.*;
 

@@ -1,6 +1,5 @@
-package opengl;
+package potato.view.opengl;
 
-import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL15.*;

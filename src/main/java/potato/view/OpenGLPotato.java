@@ -1,33 +1,27 @@
 package potato.view;
 
-import opengl.*;
+import com.sun.jna.Pointer;
+import com.sun.jna.platform.win32.User32;
+import io.github.chiraagchakravarthy.lwjgl_vectorized_text.TextRenderer;
+import io.github.chiraagchakravarthy.lwjgl_vectorized_text.VectorFont;
 import org.joml.Matrix4f;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFWImage;
+import org.joml.Vector4f;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.stb.STBTTFontinfo;
-import org.lwjgl.stb.STBTruetype;
-import org.lwjgl.system.MemoryStack;
 import potato.model.Bootloader;
 import potato.model.DataModel;
-import potato.model.HeroLocations;
+import potato.view.opengl.*;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.util.ArrayList;
 
+import static com.sun.jna.platform.win32.WinUser.*;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFWNativeWin32.glfwGetWin32Window;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.stb.STBImage.stbi_load;
 import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.windows.User32.WS_EX_APPWINDOW;
+import static org.lwjgl.system.windows.User32.WS_EX_TOOLWINDOW;
 
 public class OpenGLPotato extends Thread {
-
-    private final ImageParser icon = new ImageParser().loadImage("D:/Programmering/GitKraken/RealmShark/src/main/resources/icon/potatoIcon.png");
 
     public boolean waitfor = true;
     private final DataModel model;
@@ -37,12 +31,10 @@ public class OpenGLPotato extends Thread {
     private int height = 300;
 
     private long window;
+    private HWND hwnd;
     private Shader shaderMap;
-    private Shader shaderHero;
     private VertexArray vaMap;
-    private VertexArray[] vaHero;
     private Texture[] textureMaps;
-    private Texture textureHeroes;
     private Matrix4f mvp;
     private Matrix4f proj;
     private GLRenderer renderer;
@@ -52,7 +44,6 @@ public class OpenGLPotato extends Thread {
     public static final float[] playerOffset = {0, 1f / 3, 0.85f, 5 / 3f, 10 / 3f, 8.5f, 84.25f};
     public static int zoom = 0;
     private float ratio;
-    ArrayList<HeroLocations>[] heroLocs;
 
     private static boolean userShowMap = true;
     private static boolean userShowHeroes = true;
@@ -62,13 +53,17 @@ public class OpenGLPotato extends Thread {
     private boolean showHeroCount = false;
     public static boolean refresh = false;
 
-    STBTTFontinfo stbttFontinfo;
-    //    STBTTVertex
-    STBTruetype stbTT;
+    public static VectorFont vectorFont;
+    public static VectorFont vectorShapes;
+    public static TextRenderer renderHud;
+    public static TextRenderer renderText;
+
+    private GLHeroes heroes;
+    private GLRenderer heroRender;
 
     // temp //
     long time;
-    private int test = 1000;
+    private Vector4f mainTextColor = new Vector4f(0.75f, 0.75f, 0.75f, 1.0f);
 
     public void fps() {
         long now = System.nanoTime();
@@ -82,14 +77,13 @@ public class OpenGLPotato extends Thread {
     }
 
     public OpenGLPotato(DataModel dataModel) {
-        System.setProperty("java.awt.headless", "true");
+//        System.setProperty("java.awt.headless", "true");
         this.model = dataModel;
     }
 
     public void run() {
         makeWindow();
         vertexMap();
-//        vertexHeroes();
         setupShaders();
         setupTextures();
         preRender();
@@ -112,7 +106,12 @@ public class OpenGLPotato extends Thread {
         glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
         glfwWindowHint(GLFW_FLOATING, GLFW_TRUE);
         glfwWindowHint(GLFW_MOUSE_PASSTHROUGH, GLFW_TRUE);
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         window = glfwCreateWindow(width, height, "Potato", NULL, NULL);
+        hwnd = new HWND(new Pointer(glfwGetWin32Window(window)));
+        hideTaskBarIcon();
+        glfwShowWindow(window);
+
         ratio = (float) width / height;
         if (window == NULL) {
             glfwTerminate();
@@ -122,48 +121,17 @@ public class OpenGLPotato extends Thread {
         GL.createCapabilities();
         System.out.println("Using GL Version: " + glGetString(GL_VERSION));
 
-        try {
-            GLFWImage image = GLFWImage.malloc();
-            GLFWImage.Buffer imagebf = GLFWImage.malloc(1);
-            image.set(icon.getWidth(), icon.getHeigh(), icon.getImage());
-            imagebf.put(0, image);
-            glfwSetWindowIcon(window, imagebf);
-
-            image.free();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-//        SetWindowLongPtr(window, User32.GWL_EXSTYLE, WS_EX_TOOLWINDOW);
-//        glfwShowWindow(window);
-
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     }
 
-    private GLFWImage imageToGLFWImage(BufferedImage image) {
-        if (image.getType() != BufferedImage.TYPE_INT_ARGB_PRE) {
-            final BufferedImage convertedImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
-            final Graphics2D graphics = convertedImage.createGraphics();
-            final int targetWidth = image.getWidth();
-            final int targetHeight = image.getHeight();
-            graphics.drawImage(image, 0, 0, targetWidth, targetHeight, null);
-            graphics.dispose();
-            image = convertedImage;
-        }
-        final ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * 4);
-        for (int i = 0; i < image.getHeight(); i++) {
-            for (int j = 0; j < image.getWidth(); j++) {
-                int colorSpace = image.getRGB(j, i);
-                buffer.put((byte) ((colorSpace << 8) >> 24));
-                buffer.put((byte) ((colorSpace << 16) >> 24));
-                buffer.put((byte) ((colorSpace << 24) >> 24));
-                buffer.put((byte) (colorSpace >> 24));
-            }
-        }
-        buffer.flip();
-        final GLFWImage result = GLFWImage.create();
-        result.set(image.getWidth(), image.getHeight(), buffer);
-        return result;
+    public void hideTaskBarIcon() {
+        int style = User32.INSTANCE.GetWindowLong(hwnd, GWL_EXSTYLE);
+        style &= ~(WS_VISIBLE);    // this works - window become invisible
+
+        style |= WS_EX_TOOLWINDOW;   // flags don't work - windows remains in taskbar
+        style &= ~(WS_EX_APPWINDOW);
+
+        User32.INSTANCE.SetWindowLong(hwnd, GWL_EXSTYLE, style);
     }
 
     void vertexMap() {
@@ -171,7 +139,7 @@ public class OpenGLPotato extends Thread {
                 -1024, -1024, 0, 1,
                 1024, -1024, 1, 1,
                 1024, 1024, 1, 0,
-                -1024, 1024, 0, 0,};
+                -1024, 1024, 0, 0, };
 
         int[] mapIndexes = new int[]{0, 1, 2, 2, 3, 0,};
 
@@ -185,74 +153,11 @@ public class OpenGLPotato extends Thread {
         vaMap.addVertexBuffer(vb, layout);
     }
 
-    private float[] quad(int x, int y, Color c, int id) {
-        int size = 60;
-        int half = size / 2;
-
-        return new float[]{
-                x - half, y - half, 0, 1, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha(), id,
-                x + half, y - half, 1, 1, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha(), id,
-                x + half, y + half, 1, 0, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha(), id,
-                x - half, y + half, 0, 0, c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha(), id,
-        };
-    }
-
-    private void vertexHeroes() {
-        heroLocs = Bootloader.loadMapCoords();
-        vaHero = new VertexArray[heroLocs.length];
-        for (int h = 0; h < heroLocs.length; h++) {
-            ArrayList<HeroLocations> list = heroLocs[h];
-            int spots = list.size();
-            int[] heroIndexes = new int[spots * 6];
-            for (int i = 0; i < spots; i++) {
-                heroIndexes[i * 6] = i * 4;
-                heroIndexes[i * 6 + 1] = 1 + i * 4;
-                heroIndexes[i * 6 + 2] = 2 + i * 4;
-                heroIndexes[i * 6 + 3] = 2 + i * 4;
-                heroIndexes[i * 6 + 4] = 3 + i * 4;
-                heroIndexes[i * 6 + 5] = i * 4;
-            }
-
-            float[] heroVertices = new float[spots * 4 * 9];
-
-            for (HeroLocations hl : list) {
-                addHeroToArray(heroVertices, hl);
-            }
-
-            VertexArray va = new VertexArray();
-            VertexBuffer vb = new VertexBuffer(heroVertices, true);
-            IndexBuffer ib = new IndexBuffer(heroIndexes);
-            va.setIndexBuffer(ib);
-            VertexBufferLayout layout = new VertexBufferLayout();
-            layout.addFloat(2); //vertex coords
-            layout.addFloat(2); //texture coords
-            layout.addFloat(4); //color
-            layout.addFloat(1); //id
-            va.addVertexBuffer(vb, layout);
-            vaHero[h] = va;
-        }
-    }
-
-    private void addHeroToArray(float[] heroVertices, HeroLocations hero) {
-        int x = hero.getX() - 1024;
-        int y = 1024 - hero.getY();
-        Color c = hero.getColor();
-        int id = hero.getHeroTypeId();
-        int heroIndex = hero.getIndex();
-        float[] q = quad(x, y, c, id);
-        if (q.length * (heroIndex + 1) < heroVertices.length) {
-            System.arraycopy(q, 0, heroVertices, q.length * heroIndex, q.length);
-        }
-    }
-
     private void setupShaders() {
         shaderMap = new Shader("shader/map.vert", "shader/map.frag");
         shaderMap.bind();
         shaderMap.setUniform1i("uTexImage", 0);
-
-//        shaderHero = new Shader("shader/hero.vert", "shader/hero.frag");
-//        shaderHero.bind();
-//        shaderHero.setUniform1i("uTexImage", 0);
+        shaderMap.setUniform1f("alpha", 0.6f);
     }
 
     private void setupTextures() {
@@ -265,14 +170,6 @@ public class OpenGLPotato extends Thread {
             b.getGraphics().drawImage(maps[i], 0, 0, null);
             textureMaps[i] = new Texture(b, false);
         }
-
-//        BufferedImage[] heroes = Bootloader.loadHeroIcons();
-//        BufferedImage heroImages = new BufferedImage(72 * 13, 72, BufferedImage.TYPE_INT_ARGB);
-//        for (int i = 0; i < heroes.length; i++) {
-//            BufferedImage image = heroes[i];
-//            heroImages.getGraphics().drawImage(image, i * 72, 0, null);
-//        }
-//        textureHeroes = new Texture(heroImages, true);
     }
 
     private void preRender() {
@@ -288,39 +185,16 @@ public class OpenGLPotato extends Thread {
 
         shaderMap.bind();
         shaderMap.setUniformMat4f("uMVP", mvp);
-//        shaderHero.bind();
-//        shaderHero.setUniformMat4f("uMVP", mvp);
 
         heroes = new GLHeroes();
         heroRender = new GLRenderer("font");
     }
 
-    GLHeroes heroes;
-    GLRenderer heroRender;
-
-    GLRenderer fontRender;
-    GLRenderer staticFontRender;
-    GLRenderer staticFontRender2;
-    GLFont heroFont;
-    GLFont fontAB10;
-    GLFont fontAB20;
-
     private void font() {
-        try {
-            heroFont = new GLFont(new FileInputStream("assets/font/Inconsolata.ttf"), 36);
-            fontAB10 = new GLFont(new FileInputStream("assets/font/ariblk.ttf"), 10);
-            fontAB20 = new GLFont(new FileInputStream("assets/font/ariblk.ttf"), 20);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
-        fontRender = new GLRenderer("font");
-        staticFontRender = new GLRenderer("font");
-        staticFontRender2 = new GLRenderer("font");
-
-        Matrix4f proj = new Matrix4f();
-        proj.ortho(-1024f * ratio, 1024f * ratio, -1024f, 1024f, -1.0f, 1.0f); // x*h/w or y*w/h
-
-        fontRender.setMVP(proj);
+        vectorFont = new VectorFont("/font/ariblk.ttf");
+        vectorShapes = new VectorFont("/font/shapes.ttf");
+        renderHud = new TextRenderer();
+        renderText = new TextRenderer();
     }
 
     private void render() {
@@ -332,17 +206,12 @@ public class OpenGLPotato extends Thread {
             if (viewChanged) {
                 glViewport(0, 0, width, height);
                 viewChanged = false;
-
-                Matrix4f proj = new Matrix4f();
-                proj.ortho(0, width, 0, height, -1.0f, 1.0f); // x*h/w or y*w/h
-                staticFontRender.setMVP(proj);
-                staticFontRender2.setMVP(proj);
             }
 
             if (refresh) {
                 shaderMap.bind();
                 shaderMap.setUniformMat4f("uMVP", mvp);
-                fontRender.setMVP(mvp);
+                renderText.setMvp(mvp);
                 heroRender.setMVP(mvp);
 
                 refresh = false;
@@ -354,20 +223,18 @@ public class OpenGLPotato extends Thread {
             }
 
             if (showHeroes && model.inRealm()) {
-                heroFont.drawHeroTexts(fontRender, model.mapCoords());
-                heroes.drawHeros(heroRender, model.mapCoords());
+                heroes.drawHeros(model.mapCoords());
             }
 
             if (userShowInfo) {
-                if (model.renderCastleTimer()) {
-                    fontAB20.drawText(staticFontRender, model.getCastleTimer(), 5, height - 30);
+                if (model.renderCastleTimer() && !model.getCastleTimer().isEmpty()) {
+                    renderHud.drawText2D(model.getCastleTimer(), 5, height - 20, 20, vectorFont, mainTextColor);
                 } else if (showHeroCount) {
-                    String h = String.format("(%d) Heroes:%d", mapIndex + 1, model.getHeroesLeft());
-                    fontAB20.drawText(staticFontRender, h, 5, height - 30);
-
-                    String s = String.format("x:%d y:%d  %s  %s  %s", model.getIntPlayerX(), model.getIntPlayerY(), model.getServerName(), model.getRealmName(), model.getTpCooldown());
-                    fontAB10.drawText(staticFontRender2, s, 5, 5);
+                    String h = String.format("[%d] Heroes:%d", mapIndex + 1, model.getHeroesLeft());
+                    renderHud.drawText2D(h, 5, height - 20, 20, vectorFont, mainTextColor);
                 }
+                String s = String.format("x:%d y:%d  %s  %s  %s", model.getIntPlayerX(), model.getIntPlayerY(), model.getServerName(), model.getRealmName(), model.getTpCooldown());
+                renderHud.drawText2D(s, 5, 5, 10, vectorFont, mainTextColor);
             }
 
             glfwSwapBuffers(window); // Update Window
@@ -381,7 +248,6 @@ public class OpenGLPotato extends Thread {
         width = w;
         height = h;
         ratio = (float) width / height;
-//        gluOrtho2D(left * ratio, right * ratio, bottom, top);
         glfwSetWindowPos(window, x, y);
         glfwSetWindowSize(window, w, h);
         proj = new Matrix4f();
@@ -435,68 +301,12 @@ public class OpenGLPotato extends Thread {
         System.out.println("mapIndex " + mapIndex);
     }
 
-    public void updateHero(HeroLocations hero) {
-//        float[] floats = vaHero[mapIndex].getDynamicVertexBufferFloats();
-//        addHeroToArray(floats, hero);
-        refresh = true;
-    }
-
     public void dispose() {
         running = false;
         shaderMap.dispose();
-        shaderHero.dispose();
         vaMap.dispose();
-        for (VertexArray hero : vaHero) {
-            hero.dispose();
-        }
         for (Texture textureMap : textureMaps) {
             textureMap.dispose();
-        }
-        textureHeroes.dispose();
-    }
-
-    public static class ImageParser {
-        private ByteBuffer image;
-        private int width, heigh;
-
-        public ByteBuffer getImage() {
-            return image;
-        }
-
-        public int getWidth() {
-            return width;
-        }
-
-        public int getHeigh() {
-            return heigh;
-        }
-
-        public ImageParser() {
-
-        }
-
-        public ImageParser(int width, int heigh, ByteBuffer image) {
-            this.image = image;
-            this.heigh = heigh;
-            this.width = width;
-        }
-
-        public ImageParser loadImage(String path) {
-            ByteBuffer image;
-            int width, heigh;
-            try (MemoryStack stack = MemoryStack.stackPush()) {
-                IntBuffer comp = stack.mallocInt(1);
-                IntBuffer w = stack.mallocInt(1);
-                IntBuffer h = stack.mallocInt(1);
-
-                image = stbi_load(path, w, h, comp, 4);
-                if (image == null) {
-                    throw new RuntimeException("Could not load image resources.");
-                }
-                width = w.get();
-                heigh = h.get();
-            }
-            return new ImageParser(width, heigh, image);
         }
     }
 }
