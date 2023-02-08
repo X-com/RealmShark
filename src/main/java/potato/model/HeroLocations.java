@@ -1,9 +1,10 @@
 package potato.model;
 
+import org.joml.Vector4f;
 import packets.data.ObjectData;
 import potato.data.HeroState;
 import potato.data.HeroType;
-import potato.view.OpenGLPotato;
+import potato.view.opengl.OpenGLPotato;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -17,10 +18,11 @@ public class HeroLocations {
     private final int x;
     private final int y;
 
-    private Color possibleSpawnColorLeft;
-    private Color possibleSpawnColorRight;
-    private String possibleSpawnShapeLeft;
-    private String possibleSpawnShapeRight;
+    private Vector4f possibleSpawnColorMain;
+    private Vector4f possibleSpawnColorSecondary;
+    private String possibleSpawnShapeMain;
+    private String possibleSpawnShapeSecondary;
+    private boolean multiShapes = true;
 
     private long resetTimer = 0;
     private HeroType locationType = HeroType.UNVISITED;
@@ -36,8 +38,8 @@ public class HeroLocations {
     }
 
     private void setTypes(int types) {
-        Color cc = null;
-        Color cd = null;
+        Vector4f cc = null;
+        Vector4f cd = null;
 
         String sc = null;
         String sd = null;
@@ -54,36 +56,42 @@ public class HeroLocations {
             mod = mod << 1;
         }
 
-        if (cd == null) cd = cc;
-        if (sd == null) sd = sc;
+        if (cd == null) {
+            cd = cc;
+            multiShapes = false;
+        }
+        if (sd == null) {
+            sd = sc;
+            multiShapes = false;
+        }
 
-        possibleSpawnColorLeft = cc;
-        possibleSpawnColorRight = cd;
+        possibleSpawnColorMain = cc;
+        possibleSpawnColorSecondary = cd;
 
-        possibleSpawnShapeLeft = sc;
-        possibleSpawnShapeRight = sd;
+        possibleSpawnShapeMain = sc;
+        possibleSpawnShapeSecondary = sd;
     }
 
-    private Color getTypeColor(int t) {
+    private Vector4f getTypeColor(int t) {
         switch (t) {
             case 1:
-                return new Color(255, 0, 0);
+                return colorToVecColor(new Color(255, 0, 0));
             case 2:
-                return new Color(255, 128, 0);
+                return colorToVecColor(new Color(255, 128, 0));
             case 4:
-                return new Color(255, 255, 0);
+                return colorToVecColor(new Color(255, 255, 0));
             case 8:
-                return new Color(128, 0, 255);
+                return colorToVecColor(new Color(128, 0, 255));
             case 16:
-                return new Color(255, 0, 255);
+                return colorToVecColor(new Color(255, 0, 255));
             case 32:
-                return new Color(0, 255, 0);
+                return colorToVecColor(new Color(0, 255, 0));
             case 64:
-                return new Color(0, 128, 255);
+                return colorToVecColor(new Color(0, 128, 255));
             case 128:
-                return new Color(165, 42, 42);
+                return colorToVecColor(new Color(165, 42, 42));
             default:
-                return new Color(255, 255, 255);
+                return colorToVecColor(new Color(255, 255, 255));
         }
     }
 
@@ -106,6 +114,34 @@ public class HeroLocations {
             default:
                 return "e";
         }
+    }
+
+    private Vector4f getColor(boolean main) {
+        if (locationState == HeroState.MARK_UNVISITED) {
+            if (Config.instance.singleColorShapes) return Config.instance.shapesColorVec;
+
+            Vector4f color;
+            if (main) {
+                color = possibleSpawnColorMain;
+            } else {
+                color = possibleSpawnColorSecondary;
+            }
+            color.w = Config.instance.shapesColorVec.w;
+
+            return color;
+        } else if (locationState == HeroState.MARK_DEAD) {
+            return Config.instance.deadColorVec;
+        } else if (locationState == HeroState.MARK_VISITED) {
+            return Config.instance.visitedColorVec;
+        } else if (locationState == HeroState.MARK_ACTIVE) {
+            return Config.instance.activeColorVec;
+        }
+
+        return null;
+    }
+
+    public static Vector4f colorToVecColor(Color c) {
+        return new Vector4f(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, c.getAlpha() / 255f);
     }
 
     public float squareDistTo(int x, int y) {
@@ -179,32 +215,35 @@ public class HeroLocations {
         return y;
     }
 
-    public Color getPossibleSpawnColorLeft() {
-        if (locationState == HeroState.MARK_UNVISITED) return possibleSpawnColorLeft;
-        return locationState.getColor();
+    public Vector4f getPossibleSpawnColorMain() {
+        return getColor(true);
     }
 
-    public Color getPossibleSpawnColorRight() {
-        if (locationState == HeroState.MARK_UNVISITED) return possibleSpawnColorRight;
-        return locationState.getColor();
+    public Vector4f getPossibleSpawnColorSecondary() {
+        return getColor(false);
     }
 
     public int getHeroTypeId() {
         return locationType.getIndex();
     }
 
-    public String shapeCharL() {
-        if (locationState == HeroState.MARK_UNVISITED) return possibleSpawnShapeLeft;
+    public String shapeCharM() {
+        if (locationState == HeroState.MARK_UNVISITED) return possibleSpawnShapeMain;
         return locationType.getShape();
     }
 
-    public String shapeCharR() {
-        if (locationState == HeroState.MARK_UNVISITED) return possibleSpawnShapeRight;
+    public String shapeCharS() {
+        if (locationState == HeroState.MARK_UNVISITED) return possibleSpawnShapeSecondary;
         return locationType.getShape();
     }
 
     public String getIndexString() {
         return indexString;
+    }
+
+    public boolean multipleShapes() {
+        if (locationState == HeroState.MARK_UNVISITED) return multiShapes;
+        return false;
     }
 
     public void reset() {

@@ -1,12 +1,12 @@
 package potato.model;
 
 import packets.incoming.TextPacket;
-import potato.view.OpenGLPotato;
+import potato.view.opengl.OpenGLPotato;
 import packets.data.GroundTileData;
 import packets.data.ObjectData;
 import packets.data.ObjectStatusData;
 import packets.data.WorldPosData;
-import potato.control.MouseController;
+import potato.control.InputController;
 import potato.control.ScreenLocatorController;
 import potato.control.ServerSynch;
 
@@ -18,7 +18,7 @@ public class DataModel {
     private final OpenGLPotato renderer;
     private final HeroDetect heroDetect;
     private final ServerSynch server;
-    private final MouseController mouse;
+    private final InputController mouse;
     private final ScreenLocatorController locator;
 
     private int zoom = 0;
@@ -53,17 +53,19 @@ public class DataModel {
         server = new ServerSynch(this);
         renderer = new OpenGLPotato(this);
         locator = new ScreenLocatorController(renderer);
-        mouse = new MouseController(this, renderer, server);
+        mouse = new InputController(this, renderer, server);
 
         renderer.start();
-        try {
-            while (renderer.waitfor) {
-                Thread.sleep(1);
+        if (!Config.instance.manualAlignment) {
+            try {
+                while (renderer.waitfor) {
+                    Thread.sleep(1);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            locator.calcMapSizeLoc2();
         }
-        locator.calcMapSizeLoc2();
     }
 
     public ScreenLocatorController getAligner() {
@@ -125,9 +127,9 @@ public class DataModel {
         mapCoords[this.mapIndex].get(heroId).setMarker(heroState, false, renderer);
     }
 
-    public void editZoom(int i) {
-        if (i == 1 && zoom > 0) zoom--;
-        else if (i == -1 && zoom < 6) zoom++;
+    public void editZoom(boolean zoomIn) {
+        if (!zoomIn && zoom > 0) zoom--;
+        else if (zoomIn && zoom < 6) zoom++;
         renderer.setCamera(playerX, playerY, zoom);
     }
 

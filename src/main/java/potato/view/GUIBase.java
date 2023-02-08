@@ -2,7 +2,9 @@ package potato.view;
 
 import potato.Potato;
 import potato.control.ScreenLocatorController;
+import potato.model.Config;
 import potato.model.DataModel;
+import potato.view.opengl.OpenGLPotato;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -36,34 +38,52 @@ public class GUIBase {
         }
 
         PopupMenu trayPopupMenu = new PopupMenu();
-        MenuItem hideMap = new MenuItem("Hide Map");
-        MenuItem hideHeroes = new MenuItem("Hide Heroes");
-        MenuItem hideCoords = new MenuItem("Hide Info");
+        System.out.println("Config.instance.showMap " + Config.instance.showMap);
+        MenuItem hideMap = new MenuItem(Config.instance.showMap ? "Hide Map" : "Show Map");
+        MenuItem hideHeroes = new MenuItem(Config.instance.showHeroes ? "Hide Heroes" : "Show Heroes");
+        MenuItem hideCoords = new MenuItem(Config.instance.showInfo ? "Hide Info" : "Show Info");
+
+        OpenGLPotato.showMap(Config.instance.showMap);
+        OpenGLPotato.showHeroes(Config.instance.showHeroes);
+        OpenGLPotato.showInfo(Config.instance.showInfo);
+
         hideMap.addActionListener(e -> {
-            if (hideMap.getLabel().startsWith("Hide")) {
+            if (Config.instance.showMap) {
                 OpenGLPotato.showMap(false);
                 hideMap.setLabel("Show Map");
+                Config.instance.showMap = false;
+                Config.save();
             } else {
                 OpenGLPotato.showMap(true);
                 hideMap.setLabel("Hide Map");
+                Config.instance.showMap = true;
+                Config.save();
             }
         });
         hideHeroes.addActionListener(e -> {
-            if (hideHeroes.getLabel().startsWith("Hide")) {
+            if (Config.instance.showHeroes) {
                 OpenGLPotato.showHeroes(false);
                 hideHeroes.setLabel("Show Heroes");
+                Config.instance.showHeroes = false;
+                Config.save();
             } else {
                 OpenGLPotato.showHeroes(true);
                 hideHeroes.setLabel("Hide Heroes");
+                Config.instance.showHeroes = true;
+                Config.save();
             }
         });
         hideCoords.addActionListener(e -> {
-            if (hideCoords.getLabel().startsWith("Hide")) {
+            if (Config.instance.showInfo) {
                 OpenGLPotato.showInfo(false);
                 hideCoords.setLabel("Show Info");
+                Config.instance.showInfo = false;
+                Config.save();
             } else {
                 OpenGLPotato.showInfo(true);
                 hideCoords.setLabel("Hide Info");
+                Config.instance.showInfo = true;
+                Config.save();
             }
         });
         trayPopupMenu.add(hideMap);

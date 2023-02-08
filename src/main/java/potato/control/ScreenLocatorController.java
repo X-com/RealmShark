@@ -1,7 +1,7 @@
 package potato.control;
 
-import potato.view.OpenGLPotato;
-import potato.model.DataModel;
+import potato.model.Config;
+import potato.view.opengl.OpenGLPotato;
 import util.NativeWindowScreenCapture;
 
 import java.awt.*;
@@ -110,9 +110,16 @@ public class ScreenLocatorController {
         width -= boarder * 2;
         height -= boarder * 2 - 1;
         System.out.printf("X:%d Y:%d W:%d H:%d\n", x, y, width, height);
-//            model.setSize(width, height);
-        renderer.setWindow(x, y, width, height);
+        setWindow(x, y, width, height);
         renderer.show();
+    }
+
+    private void setWindow(int x, int y, int width, int height) {
+        Config.instance.mapWidth = width;
+        Config.instance.mapHeight = height;
+        Config.instance.mapTopLeftX = x;
+        Config.instance.mapTopLeftY = y;
+        renderer.setWindow();
     }
 
     private void notFound(int i, String s) {
