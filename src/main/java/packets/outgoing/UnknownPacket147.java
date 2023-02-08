@@ -20,10 +20,10 @@ public class UnknownPacket147 extends Packet {
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
-        unknownByte = buffer.getIndex();
-        unknownInt1 = buffer.getIndex();
-        unknownInt2 = buffer.getIndex();
-        unknownInt3 = buffer.getIndex();
+        unknownByte = buffer.readByte();
+        unknownInt1 = buffer.readInt();
+        unknownInt2 = buffer.readInt();
+        unknownInt3 = buffer.readInt();
     }
 
     @Override

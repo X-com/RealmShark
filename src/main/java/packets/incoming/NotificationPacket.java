@@ -56,6 +56,14 @@ public class NotificationPacket extends Packet {
      * unknown
      */
     public int unknownInt3;
+    /**
+     * unknown
+     */
+    public int unknownInt4;
+    /**
+     * unknown
+     */
+    public int unknownInt5;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
@@ -98,6 +106,9 @@ public class NotificationPacket extends Packet {
                 message = buffer.readString();
                 unknownInt2 = buffer.readInt();
                 unknownInt3 = buffer.readInt();
+            case 13:
+                unknownInt4 = buffer.readInt();
+                unknownInt5 = buffer.readInt();
             default:
         }
     }
@@ -116,6 +127,8 @@ public class NotificationPacket extends Packet {
                 "\n   unknownInt1=" + unknownInt1 +
                 "\n   unknownShort1=" + unknownShort1 +
                 "\n   unknownInt2=" + unknownInt2 +
-                "\n   unknownInt3=" + unknownInt3;
+                "\n   unknownInt3=" + unknownInt3 +
+                "\n   unknownInt4=" + unknownInt4 +
+                "\n   unknownInt5=" + unknownInt5;
     }
 }

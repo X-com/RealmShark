@@ -20,12 +20,17 @@ public class CreatePacket extends Packet {
      * Whether the character is in challenger mode.
      */
     public boolean isChallenger;
+    /**
+     * Whether the character is in seasonal mode.
+     */
+    public boolean isSeasonal;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
         classType = buffer.readShort();
         skinType = buffer.readShort();
         isChallenger = buffer.readBoolean();
+        isSeasonal = buffer.readBoolean();
     }
 
     @Override
@@ -33,6 +38,7 @@ public class CreatePacket extends Packet {
         return "CreatePacket{" +
                 "\n   classType=" + classType +
                 "\n   skinType=" + skinType +
-                "\n   isChallenger=" + isChallenger;
+                "\n   isChallenger=" + isChallenger +
+                "\n   isSeasonal=" + isSeasonal;
     }
 }

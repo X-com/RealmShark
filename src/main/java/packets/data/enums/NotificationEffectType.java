@@ -14,6 +14,8 @@ public enum NotificationEffectType {
     DungeonCall(10),
     ProgressBar(11),
     Behavior(12),
+    UNKNOWN13(13),
+    UNKNOWN14(14),
     BlueprintUnlock(20),
     WithIcon(21),
     FameBonus(22),

@@ -33,8 +33,8 @@ public class PacketTester {
         System.out.println("clearconsole");
         try {
             Util.setSaveLogs(false);
-//            new PacketTester().crunch();
-            new PacketTester().errorSimulator();
+            new PacketTester().crunch();
+//            new PacketTester().errorSimulator();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -42,7 +42,10 @@ public class PacketTester {
 
     public void crunch() {
 //        String s = "";
-        String s = "[0, 0, 0, 13, 67, 11, 40, 0, 0, 0, 5, 0, 1]";
+//        String s = "[0, 0, 0, 25, -90, 0, 3, -112, 30, 1, 22, 0, 0, 0, 0, 0, 0, -1, -1, -1, 22, 64, -32, 0, 0]";
+        String s = "[0, 0, 0, 11, 61, 3, 30, 120, -52, 0, 1]";
+//        String s = "[0, 0, 0, 15, 67, 13, 24, 0, 0, 5, 88, 0, 0, -64, -89]";
+//        String s = "[0, 0, 0, 7, 67, 14, 0]";
         byte[] data = getByteArray(s);
 //        byte[] data2 = getByteArray(s2);
 //        byte[] data3 = getByteArray(s3);
@@ -58,6 +61,7 @@ public class PacketTester {
         deserialize(data);
 //        bruteforce(data);
 //        decrype(data);
+//        findFits(data);
     }
 
     /*
@@ -67,6 +71,18 @@ CREATE_SUCCESS
 CREATE_SUCCESS : 5/159
 [0, 0, 0, -97, 101, 21, 8, 26, -122, 120, -84, -22, 43, -123, 47, -83, -112, 30, -31, 106, 67, 55, 68, -40, -33, 66, -9, 33, 47, 66, -39, 88, 13, -4, -95, -62, -18, -17, 5, 55, 2, 72, 52, -23, -13, -6, -60, 29, 99, 11, 32, 38, 109, -7, 6, -21, -121, -56, -117, -6, 25, 87, -29, 1, -97, 103, 13, -2, 69, 96, -83, -20, 36, 106, -98, -86, 90, 85, 63, -18, 116, -72, 34, -28, -122, -86, -66, -59, 107, 6, 79, -104, 100, 106, -63, -35, -19, -43, 98, 19, -99, -97, 57, 13, 29, -113, -4, 96, -83, 44, 89, 79, 35, -57, 125, 73, -37, 59, -26, -121, -67, -79, 56, -91, -118, 125, -97, -50, 109, -82, 31, 11, -89, 68, 92, 48, -12, 101, 73, 37, 88, 39, 60, -22, -73, 51, 53, -97, -54, 7, 115, 60, 25, -72, -38, -110, 119, -107, 89]
     * */
+
+    public void findFits(byte[] data) {
+        int size = Util.decodeInt(data);
+        int type = data[4];
+
+        for (int i = 5; i < data.length; i++) {
+            int left = readCompressedInt(data, i);
+            if (left > 0 && left < size - i) {
+                System.out.println(i + " " + left);
+            }
+        }
+    }
 
     public void decrype(byte[] data) {
         System.out.println(Arrays.toString(data));
@@ -322,7 +338,7 @@ CREATE_SUCCESS : 5/159
                 packetMap.put(currentSeq, tcpPacket);
                 int size = packetMap.size();
                 System.out.println("PACKETMAP " + size + " " + counter + " " + ip4.getIdentification());
-                if(counter > 190) System.out.println(Arrays.toString(b));
+                if (counter > 190) System.out.println(Arrays.toString(b));
 //                if (counter >= 410) {
 //                    dif = nextSeq - sequenseNumber - (packet.getPayload() == null ? 0 : packet.getPayload().length());
 //                    if (packet.getPayload() != null) {
@@ -398,7 +414,7 @@ CREATE_SUCCESS : 5/159
             int i = 0;
             while ((line = br.readLine()) != null) {
                 i++;
-                if(i < 125) continue;
+                if (i < 125) continue;
 //                System.out.println(line);
                 Matcher m = p.matcher(line);
                 if (m.matches()) {
@@ -474,7 +490,7 @@ CREATE_SUCCESS : 5/159
             list = byteString.replaceAll("[\\[\\] ]", "").split(",");
         }
         byte[] b = new byte[list.length];
-        for (int i = 0; i < list.length - 1; i++) {
+        for (int i = 0; i < list.length; i++) {
             String s = list[i];
             if (hex) {
                 b[i] = (byte) ((Character.digit(s.charAt(0), 16) << 4) + Character.digit(s.charAt(1), 16));
