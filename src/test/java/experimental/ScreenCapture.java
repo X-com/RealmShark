@@ -1,9 +1,5 @@
 package experimental;
 
-import com.github.kwhat.jnativehook.GlobalScreen;
-import com.github.kwhat.jnativehook.NativeHookException;
-import com.github.kwhat.jnativehook.mouse.NativeMouseWheelEvent;
-import com.github.kwhat.jnativehook.mouse.NativeMouseWheelListener;
 import com.sun.jna.Native;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
@@ -19,10 +15,8 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class ScreenCapture extends Thread implements NativeMouseWheelListener {
+public class ScreenCapture extends Thread {
 
     int width = 976, height = 579;
     int storeX, storeY, storeW, storeH;
@@ -45,11 +39,11 @@ public class ScreenCapture extends Thread implements NativeMouseWheelListener {
 
     private static void disableLogger() {
         // Get the logger for "com.github.kwhat.jnativehook" and set the level to warning.
-        Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
-        logger.setLevel(Level.OFF);
+//        Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
+//        logger.setLevel(Level.OFF);
 
         // Don't forget to disable the parent handlers.
-        logger.setUseParentHandlers(false);
+//        logger.setUseParentHandlers(false);
     }
 
     Robot r = new Robot();
@@ -75,11 +69,11 @@ public class ScreenCapture extends Thread implements NativeMouseWheelListener {
 
         BufferStrategy strategy = asscan.getBufferStrategy();
         BufferedImage mapImg = createBackGroundImage();
-        try {
-            mouseThing();
-        } catch (AWTException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            mouseThing();
+//        } catch (AWTException e) {
+//            e.printStackTrace();
+//        }
 
         System.out.println("clearconsole");
 
@@ -107,28 +101,28 @@ public class ScreenCapture extends Thread implements NativeMouseWheelListener {
         }
     }
 
-    public void nativeMouseWheelMoved(NativeMouseWheelEvent e) {
-//        System.out.println("Mosue Wheel Moved: " + e.getWheelRotation());
-        if (e.getWheelRotation() == 1) {
+//    public void nativeMouseWheelMoved(NativeMouseWheelEvent e) {
+////        System.out.println("Mosue Wheel Moved: " + e.getWheelRotation());
+//        if (e.getWheelRotation() == 1) {
+//
+//        } else if (e.getWheelRotation() == -1) {
+//
+//        }
+//    }
 
-        } else if (e.getWheelRotation() == -1) {
-
-        }
-    }
-
-    private void mouseThing() throws AWTException {
-        try {
-            GlobalScreen.registerNativeHook();
-        } catch (NativeHookException ex) {
-            System.err.println("There was a problem registering the native hook.");
-            System.err.println(ex.getMessage());
-            ex.printStackTrace();
-
-            System.exit(1);
-        }
-
-        GlobalScreen.addNativeMouseWheelListener(new ScreenCapture());
-    }
+//    private void mouseThing() throws AWTException {
+//        try {
+//            GlobalScreen.registerNativeHook();
+//        } catch (NativeHookException ex) {
+//            System.err.println("There was a problem registering the native hook.");
+//            System.err.println(ex.getMessage());
+//            ex.printStackTrace();
+//
+//            System.exit(1);
+//        }
+//
+//        GlobalScreen.addNativeMouseWheelListener(new ScreenCapture());
+//    }
 
     public void eventDispatched2(AWTEvent e) {
         if (e instanceof MouseEvent) {

@@ -7,7 +7,7 @@ package experimental.input;
 //import com.github.kwhat.jnativehook.mouse.NativeMouseWheelEvent;
 //import com.github.kwhat.jnativehook.mouse.NativeMouseWheelListener;
 //import org.lwjgl.system.windows.User32;
-//import potato.view.OpenGLPotato;
+//import potato.view.opengl.OpenGLPotato;
 //import potato.model.DataModel;
 //import util.FocusedWindow;
 //
