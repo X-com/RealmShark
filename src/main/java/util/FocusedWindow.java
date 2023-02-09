@@ -29,6 +29,7 @@ public class FocusedWindow {
             IntByReference pid = new IntByReference();
             user32.GetWindowThreadProcessId(windowHandle, pid);
             WinNT.HANDLE processHandle = kernel32.OpenProcess(PROCESS_VM_READ | PROCESS_QUERY_INFORMATION, true, pid.getValue());
+            if (processHandle == null) return "";
 
             byte[] filename = new byte[512];
             Psapi.INSTANCE.GetModuleBaseNameW(processHandle.getPointer(), Pointer.NULL, filename, filename.length);
