@@ -1,4 +1,4 @@
-package tomato.gui;
+package packets.packetcapture;
 
 import javax.swing.*;
 import java.awt.*;

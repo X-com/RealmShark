@@ -6,8 +6,8 @@ plugins {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-project.version = 'v0.6.0-beta'
-applicationName = 'Potato'
+project.version = 'v1.0'
+applicationName = 'RealmShark'
 
 project.ext.lwjglVersion = "3.3.1"
 project.ext.jomlVersion = "1.10.5"
@@ -29,32 +29,7 @@ repositories {
 dependencies {
     implementation 'com.ardikars.pcap:pcap-spi:1.4.2'
     implementation 'com.ardikars.pcap:pcap-jdk7:1.4.2'
-    implementation 'com.github.weisj:darklaf-core:3.0.1'
     implementation 'com.google.code.gson:gson:2.9.1'
-    implementation 'net.java.dev.jna:jna:5.12.1'
-    implementation 'net.java.dev.jna:jna-platform:5.12.1'
-    implementation 'org.java-websocket:Java-WebSocket:1.5.3'
-    implementation 'lc.kra.system:system-hook:3.8'
-
-
-    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
-    implementation "org.lwjgl:lwjgl"
-    implementation "org.lwjgl:lwjgl-assimp"
-    implementation "org.lwjgl:lwjgl-glfw"
-    implementation "org.lwjgl:lwjgl-openal"
-    implementation "org.lwjgl:lwjgl-opengl"
-    implementation "org.lwjgl:lwjgl-stb"
-    implementation 'games.spooky.gdx:gdx-gfx:1.0.0'
-    runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-assimp::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
-    implementation "org.joml:joml:1.10.4"
-
-    implementation "io.github.chiraagchakravarthy:lwjgl-vectorized-text:0.0.4-SNAPSHOT"
-//    implementation files("lib/LWJGL-vectorized-text.jar")
 }
 
 mainClassName = applicationName.toLowerCase() + '.' + applicationName
