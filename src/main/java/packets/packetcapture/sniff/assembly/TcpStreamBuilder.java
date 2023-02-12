@@ -1,7 +1,5 @@
 package packets.packetcapture.sniff.assembly;
 
-import tomato.gui.TomatoGUI;
-import tomato.gui.TomatoMenuBar;
 import packets.packetcapture.sniff.netpackets.TcpPacket;
 import util.HackyPacketLoggerForABug;
 import util.Util;
@@ -59,8 +57,6 @@ public class TcpStreamBuilder {
                     TcpPacket tempPack = packetMap.get(index);
                     String errorMsg = "Packets missing id:" + (idNumber - tempPack.getIp4Packet().getIdentification()) + " seq:" + (sequenseNumber - tempPack.getSequenceNumber()) + " outgoing:" + (tempPack.getDstPort() == 2050);
                     Util.print(errorMsg);
-                    TomatoGUI.appendTextAreaChat(errorMsg);
-                    TomatoGUI.appendTextAreaKeypop(errorMsg);
                     break;
                 }
                 index++;
@@ -69,9 +65,6 @@ public class TcpStreamBuilder {
         } else if (packetMap.size() >= 100) { // Temp hacky solution until better solution is found. TODO: fix this
             String errorMsg = "Error! Stream Constructor reached 100 packets. Shutting down.";
             Util.print(errorMsg);
-            TomatoGUI.appendTextAreaChat(errorMsg);
-            TomatoGUI.appendTextAreaKeypop(errorMsg);
-            TomatoMenuBar.stopPacketSniffer();
             reset();
             HackyPacketLoggerForABug.dumpData();
         }

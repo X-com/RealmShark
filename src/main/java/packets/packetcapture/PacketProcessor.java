@@ -1,8 +1,6 @@
 package packets.packetcapture;
 
 import packets.incoming.ip.IpAddress;
-import tomato.gui.MissingNpcapGUI;
-import tomato.gui.TomatoBandwidth;
 import packets.Packet;
 import packets.PacketType;
 import packets.packetcapture.encryption.RC4;
@@ -84,7 +82,6 @@ public class PacketProcessor extends Thread implements PProcessor {
         logger.addIncoming(data.length);
         ipEmitter(srcAddr);
         incomingPacketConstructor.build(data);
-        TomatoBandwidth.setInfo(logger.toString()); // update info GUI if open
     }
 
     /**
@@ -96,7 +93,6 @@ public class PacketProcessor extends Thread implements PProcessor {
     public void outgoingStream(byte[] data) {
         logger.addOutgoing(data.length);
         outgoingPacketConstructor.build(data);
-        TomatoBandwidth.setInfo(logger.toString()); // update info GUI if open
     }
 
     /**

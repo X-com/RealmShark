@@ -7,14 +7,13 @@ import potato.control.PacketController;
 import potato.model.Config;
 import potato.model.DataModel;
 import potato.view.GUIBase;
-import tomato.Tomato;
 import util.Util;
 
 import java.net.URL;
 
 // TODO: add tp cooldown
 public class Potato {
-    static public URL imagePath = Tomato.class.getResource("/icon/potatoIcon.png");
+    static public URL imagePath = Potato.class.getResource("/icon/potatoIcon.png");
     DataModel dataModel;
     PacketController controller;
 
