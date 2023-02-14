@@ -3,7 +3,7 @@ package experimental;
 import packets.data.GroundTileData;
 import packets.data.StatData;
 import packets.data.enums.StatType;
-import potato.data.IdData;
+import potato.model.data.IdData;
 import potato.model.Bootloader;
 import potato.model.HeroLocations;
 import util.IdToName;

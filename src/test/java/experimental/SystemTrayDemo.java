@@ -1,14 +1,12 @@
 package experimental;
 
-import tomato.Tomato;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.net.URL;
 import javax.swing.JOptionPane;
 
 public class SystemTrayDemo {
-    static public URL imagePath = Tomato.class.getResource("/icon/potatoIcon.png");
+    static public URL imagePath = SystemTrayDemo.class.getResource("/icon/potatoIcon.png");
 
 
     //start of main method
