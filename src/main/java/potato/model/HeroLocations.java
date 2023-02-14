@@ -2,8 +2,8 @@ package potato.model;
 
 import org.joml.Vector4f;
 import packets.data.ObjectData;
-import potato.data.HeroState;
-import potato.data.HeroType;
+import potato.model.data.HeroState;
+import potato.model.data.HeroType;
 import potato.view.opengl.OpenGLPotato;
 
 import java.awt.*;
@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HeroLocations {
-    public float dist; // Hacky workaround to store distance.
+    public float dist; // Hacky workaround to store distance. Distance to hero location from object.
 
     private final int index;
     private final String indexString;
@@ -24,6 +24,7 @@ public class HeroLocations {
     private String possibleSpawnShapeSecondary;
     private boolean multiShapes = true;
 
+    private int possibleHeroType;
     private long resetTimer = 0;
     private HeroType locationType = HeroType.UNVISITED;
     private HeroState locationState = HeroState.MARK_UNVISITED;
@@ -44,13 +45,16 @@ public class HeroLocations {
         String sc = null;
         String sd = null;
         int mod = 1;
+        int largestMod = 0;
         for (int i = 0; i < 9; i++) {
             if (cc == null && (types & mod) != 0) {
                 cc = getTypeColor(mod);
                 sc = getTypeShape(mod);
+                largestMod = mod;
             } else if ((types & mod) != 0) {
                 cd = getTypeColor(mod);
                 sd = getTypeShape(mod);
+                largestMod = mod;
                 break;
             }
             mod = mod << 1;
@@ -58,9 +62,6 @@ public class HeroLocations {
 
         if (cd == null) {
             cd = cc;
-            multiShapes = false;
-        }
-        if (sd == null) {
             sd = sc;
             multiShapes = false;
         }
@@ -70,6 +71,8 @@ public class HeroLocations {
 
         possibleSpawnShapeMain = sc;
         possibleSpawnShapeSecondary = sd;
+
+        possibleHeroType = largestMod;
     }
 
     private Vector4f getTypeColor(int t) {
@@ -244,6 +247,10 @@ public class HeroLocations {
     public boolean multipleShapes() {
         if (locationState == HeroState.MARK_UNVISITED) return multiShapes;
         return false;
+    }
+
+    public int getPossibleHeroType() {
+        return possibleHeroType;
     }
 
     public void reset() {

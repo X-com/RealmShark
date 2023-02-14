@@ -1,5 +1,6 @@
 package potato.model;
 
+import packets.incoming.QuestObjectIdPacket;
 import packets.incoming.TextPacket;
 import potato.view.opengl.OpenGLPotato;
 import packets.data.GroundTileData;
@@ -275,5 +276,9 @@ public class DataModel {
 
     public void uploadSingleHero(HeroLocations h) {
         server.uploadSingleHero(myId, h.getIndex(), h.getState());
+    }
+
+    public void questArrow(QuestObjectIdPacket h) {
+        heroDetect.questArrow(h);
     }
 }

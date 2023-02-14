@@ -3,9 +3,10 @@ package potato.model;
 import packets.data.GroundTileData;
 import packets.data.ObjectData;
 import packets.data.ObjectStatusData;
-import potato.data.HeroState;
-import potato.data.HeroType;
-import potato.data.IdData;
+import packets.incoming.QuestObjectIdPacket;
+import potato.model.data.HeroState;
+import potato.model.data.HeroType;
+import potato.model.data.IdData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,12 +19,15 @@ public class HeroDetect {
     private final HashMap<Integer, ObjectData> entitys = new HashMap<>();
     private final int[][] mapTiles = new int[2048][2048];
 
+    private int questArrowId;
+    private int questArrowIdChecked;
+
     public HeroDetect(DataModel model) {
         this.model = model;
     }
 
     public HeroLocations findClosestHero(int x, int y) {
-        return findClosestHero(x, y, model.mapCoords());
+        return findClosestHero(x, y, model.mapHeroes());
     }
 
     public HeroLocations findClosestHero(int x, int y, ArrayList<HeroLocations> list) {
@@ -42,7 +46,7 @@ public class HeroDetect {
 
     private ArrayList<HeroLocations> getCloseHeroListForId(int x, int y) {
         ArrayList<HeroLocations> list = new ArrayList<>();
-        for (HeroLocations h : model.mapCoords()) {
+        for (HeroLocations h : model.mapHeroes()) {
             if (h.hasType()) continue;
             float d = h.squareDistTo(x, y);
             int CLOSEST_HERO_LIMIT = 3000;
@@ -131,35 +135,15 @@ public class HeroDetect {
             if (nearHeroes.size() > 0) {
                 HeroLocations h = null;
                 if (od.objectType == IdData.ENT_CHERRY_TREE) {
-                    h = findClosestHero((int) od.status.pos.x, (int) od.status.pos.y, nearHeroes);
-                    if (h.dist < 500) {
-                        h.setType(HeroType.ENT);
-                    }
+                    h = getHeroLocationByDistance(nearHeroes, od, 500, HeroType.ENT);
                 } else if (od.objectType == IdData.GRAVEYARD_CROSS) {
-                    h = findClosestHero((int) od.status.pos.x, (int) od.status.pos.y, nearHeroes);
-                    if (h.dist < 500) {
-                        h.setType(HeroType.GRAVE);
-                    }
+                    h = getHeroLocationByDistance(nearHeroes, od, 500, HeroType.GRAVE);
                 } else if (od.objectType == IdData.WOODEN_WALL_HOUSE) {
-                    h = findClosestHero((int) od.status.pos.x, (int) od.status.pos.y, nearHeroes);
-                    if (h.dist < 500) {
-                        h.setType(HeroType.HOUSE);
-                    }
+                    h = getHeroLocationByDistance(nearHeroes, od, 500, HeroType.HOUSE);
                 } else if (od.objectType == IdData.DEATH_TREE_MANOR) {
-                    h = findClosestHero((int) od.status.pos.x, (int) od.status.pos.y, nearHeroes);
-                    if (h.dist < 700) {
-                        h.setType(HeroType.MANOR);
-                    }
+                    h = getHeroLocationByDistance(nearHeroes, od, 700, HeroType.MANOR);
                 } else if (od.objectType == IdData.LILLYPAD) {
-                    h = findClosestHero((int) od.status.pos.x, (int) od.status.pos.y, nearHeroes);
-                    if (h.dist < 300) {
-                        h.setType(HeroType.OASIS);
-                    }
-                } else if (od.objectType == IdData.GHOST_INVON || od.objectType == IdData.GHOST_KILLABLE) {
-                    h = findClosestHero((int) od.status.pos.x, (int) od.status.pos.y, nearHeroes);
-                    if (h.dist < 300) {
-                        h.setType(HeroType.GHOST);
-                    }
+                    h = getHeroLocationByDistance(nearHeroes, od, 300, HeroType.OASIS);
                 } else if (od.objectType == IdData.DESTRUCTIBLE_GRAY_WALL || od.objectType == IdData.GRAY_WALL) {
                     entitys.put(od.status.objectId, od);
                     wallAdded = true;
@@ -186,32 +170,28 @@ public class HeroDetect {
             }
 
             if (od.objectType == IdData.ENT_SMALL) {
-                entitys.put(od.status.objectId, od);
+                addHeroAndSetVisited(od, HeroType.ENT);
             } else if (od.objectType == IdData.ENT_BIG) {
-                entitys.put(od.status.objectId, od);
-                HeroLocations h = findClosestHero((int) od.status.pos.x, (int) od.status.pos.y);
-                markActive(h);
+                addHeroAndSetActive(od, HeroType.ENT);
             } else if (od.objectType == IdData.LICH) {
-                entitys.put(od.status.objectId, od);
+                addHeroAndSetVisited(od, HeroType.LICH);
             } else if (od.objectType == IdData.LICH_KILLABLE) {
-                entitys.put(od.status.objectId, od);
-                HeroLocations h = findClosestHero((int) od.status.pos.x, (int) od.status.pos.y);
-                markActive(h);
+                addHeroAndSetActive(od, HeroType.LICH);
             } else if (od.objectType == IdData.GHOST_INVON) {
-                entitys.put(od.status.objectId, od);
+                addHeroAndSetVisited(od, HeroType.GHOST);
             } else if (od.objectType == IdData.GHOST_KILLABLE) {
-                entitys.put(od.status.objectId, od);
-                HeroLocations h = findClosestHero((int) od.status.pos.x, (int) od.status.pos.y);
-                markActive(h);
-            } else if (od.objectType == IdData.CYCLOPS) { // cyclops
-                entitys.put(od.status.objectId, od);
-            } else if (od.objectType == IdData.OASIS_GIANT) { // Oasis Giant
-                entitys.put(od.status.objectId, od);
+                addHeroAndSetActive(od, HeroType.GHOST);
+            } else if (od.objectType == IdData.CYCLOPS) {
+                addHeroAndSetActive(od, HeroType.CYCLOPS);
+            } else if (od.objectType == IdData.OASIS_GIANT) {
+                addHeroAndSetActive(od, HeroType.OASIS);
             } else if (od.objectType == IdData.PHENIX) { // Phoenix Lord / 1729 Phoenix Reborn
-                entitys.put(od.status.objectId, od);
-            } else if (od.objectType == IdData.DEMON) { // Phoenix Lord / 1729 Phoenix Reborn
-                entitys.put(od.status.objectId, od);
+                addHeroAndSetActive(od, HeroType.PHENIX);
+            } else if (od.objectType == IdData.DEMON) {
+                addHeroAndSetActive(od, HeroType.DEMON);
             }
+
+            questCheck();
 //            if (!hashTester.containsKey(od.objectType)) {
 //                hashTester.put(od.objectType, od);
 //
@@ -229,7 +209,60 @@ public class HeroDetect {
                 nearHeroes.remove(h);
             }
         }
+    }
 
+    private void questCheck() {
+        if (questArrowId != questArrowIdChecked) {
+            questArrowIdChecked = questArrowId;
+            ObjectData od = entitys.get(questArrowId);
+            if (od != null) {
+                if (od.objectType == IdData.PHENIX) { // remove demons
+                    setDeadHeroes(HeroType.DEMON);
+                } else if (od.objectType == IdData.CYCLOPS) { // remove demons only, given phoenix shares loc with osasis
+                    setDeadHeroes(HeroType.DEMON);
+                } else if (od.objectType == IdData.GHOST_INVON || od.objectType == IdData.GHOST_KILLABLE) { // remove cyclops too
+                    setDeadHeroes(HeroType.CYCLOPS);
+                } else if (od.objectType == IdData.OASIS_GIANT) { // remove ghost too
+                    setDeadHeroes(HeroType.GHOST);
+                } else if (od.objectType == IdData.ENT_SMALL || od.objectType == IdData.ENT_BIG) { // remove oasis and phoenix too
+                    setDeadHeroes(HeroType.OASIS);
+                } else if (od.objectType == IdData.LICH || od.objectType == IdData.LICH_KILLABLE) { // remove ents too
+                    setDeadHeroes(HeroType.ENT);
+                }
+            }
+        }
+    }
+
+    private void setDeadHeroes(HeroType ht) {
+        for (HeroLocations h : model.mapHeroes()) {
+            if (h.getPossibleHeroType() <= ht.getPossibleType()) {
+                System.out.println("filter " + h.getPossibleHeroType());
+                markDead(h);
+            }
+        }
+    }
+
+    private HeroLocations getHeroLocationByDistance(ArrayList<HeroLocations> nearHeroes, ObjectData od, int dist, HeroType ht) {
+        HeroLocations h;
+        h = findClosestHero((int) od.status.pos.x, (int) od.status.pos.y, nearHeroes);
+        if (h.dist < dist) {
+            h.setType(ht);
+        }
+        return h;
+    }
+
+    private void addHeroAndSetVisited(ObjectData od, HeroType ht) {
+        entitys.put(od.status.objectId, od);
+        HeroLocations h = findClosestHero((int) od.status.pos.x, (int) od.status.pos.y);
+        h.setType(ht);
+        markVisited(h);
+    }
+
+    private void addHeroAndSetActive(ObjectData od, HeroType ht) {
+        entitys.put(od.status.objectId, od);
+        HeroLocations h = findClosestHero((int) od.status.pos.x, (int) od.status.pos.y);
+        h.setType(ht);
+        markActive(h);
     }
 
 //    HashMap<Integer, ObjectData> hashTester = new HashMap<>();
@@ -301,7 +334,6 @@ public class HeroDetect {
             ObjectData found = entitys.get(osd.objectId);
             if (found != null) {
                 for (int j = 0; j < osd.stats.length; j++) {
-//                    System.out.println(osd.stats[j]);
                     if (osd.stats[j].statTypeNum == 1 && osd.stats[j].statValue == 0) {
                         HeroLocations h = findClosestHero((int) osd.pos.x, (int) osd.pos.y);
                         if (h.matchType(found)) {
@@ -316,6 +348,10 @@ public class HeroDetect {
                 }
             }
         }
+    }
+
+    public void questArrow(QuestObjectIdPacket quest) {
+        questArrowId = quest.objectId;
     }
 
     public void markVisited(HeroLocations h) {

@@ -34,7 +34,7 @@ public class PacketController {
             model.updateText(p);
         } else if (packet instanceof QuestObjectIdPacket) {
             QuestObjectIdPacket p = (QuestObjectIdPacket) packet;
-            System.out.println(p);
+            model.questArrow(p);
         } else if (packet instanceof IpAddress) {
             IpAddress p = (IpAddress) packet;
             model.ipChanged(p.ipAddressName, p.srcAddressAsInt);
