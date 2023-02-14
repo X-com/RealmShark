@@ -5,6 +5,7 @@ import lc.kra.system.mouse.event.GlobalMouseEvent;
 import potato.Potato;
 import potato.control.InputController;
 import potato.model.Config;
+import potato.view.opengl.OpenGLPotato;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -48,6 +49,7 @@ public class OptionsMenu {
 
     private static void makeOptionsWindow() {
         resetButton();
+        alwaysCoordsButton();
         hotkeys();
         shapes();
         colors();
@@ -64,6 +66,15 @@ public class OptionsMenu {
         button.setPreferredSize(new Dimension(80, 20));
         p.add(button);
         panels.add(p);
+    }
+
+    private static void alwaysCoordsButton() {
+        addToggleButton("Always Show Coords", Config.instance.alwaysShowCoords, e -> {
+            JToggleButton f = (JToggleButton) e.getSource();
+            Config.instance.alwaysShowCoords = f.isSelected();
+            System.out.println("test");
+            Config.save();
+        });
     }
 
     private static void hotkeys() {
@@ -97,6 +108,12 @@ public class OptionsMenu {
         shapeSlider("Text Transparency", 255, Config.instance.textTransparency, e -> {
             JSlider f = (JSlider) e.getSource();
             Config.instance.textTransparency = f.getValue();
+            Config.save();
+        });
+        shapeSlider("Map Transparency", 255, Config.instance.mapTransparency, e -> {
+            JSlider f = (JSlider) e.getSource();
+            Config.instance.mapTransparency = f.getValue();
+            OpenGLPotato.setMapAlpha(f.getValue());
             Config.save();
         });
         addColor("Visited Heroes", Config.instance.visitedColor);
@@ -257,6 +274,7 @@ public class OptionsMenu {
     private static void label(String name) {
         JPanel panel = new JPanel();
         JLabel label = new JLabel(name);
+        label.setFont(new Font("Dialog", 0, 20));
         panel.add(label);
         panels.add(panel);
     }
@@ -547,8 +565,10 @@ public class OptionsMenu {
         Config.instance.textSize = 32;
         Config.instance.shapeSize = 32;
         Config.instance.singleColorShapes = false;
+        Config.instance.alwaysShowCoords = true;
 
         Config.instance.textTransparency = 200;
+        Config.instance.mapTransparency = 150;
         Config.instance.visitedColor = 0x00FF0064;
         Config.instance.activeColor = 0xFF000064;
         Config.instance.deadColor = 0xFFFFFF50;
@@ -595,7 +615,7 @@ public class OptionsMenu {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        frame.setSize(500, 800);
+        frame.setSize(500, 850);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
     }

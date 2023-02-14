@@ -137,11 +137,7 @@ public class OpenGLPotato extends Thread {
     }
 
     void vertexMap() {
-        float[] mapVertices = new float[]{
-                -1024, -1024, 0, 1,
-                1024, -1024, 1, 1,
-                1024, 1024, 1, 0,
-                -1024, 1024, 0, 0,};
+        float[] mapVertices = new float[]{-1024, -1024, 0, 1, 1024, -1024, 1, 1, 1024, 1024, 1, 0, -1024, 1024, 0, 0,};
 
         int[] mapIndexes = new int[]{0, 1, 2, 2, 3, 0,};
 
@@ -159,7 +155,7 @@ public class OpenGLPotato extends Thread {
         shaderMap = new Shader("shader/map.vert", "shader/map.frag");
         shaderMap.bind();
         shaderMap.setUniform1i("uTexImage", 0);
-        shaderMap.setUniform1f("alpha", 0.6f);
+        shaderMap.setUniform1f("alpha", Config.instance.mapTransparency / 255f);
     }
 
     private void setupTextures() {
@@ -226,7 +222,7 @@ public class OpenGLPotato extends Thread {
                 heroes.drawHeros(model.mapHeroes());
             }
 
-            if (userShowInfo) {
+            if (userShowInfo && (Config.instance.alwaysShowCoords || model.inRealm())) {
                 if (model.renderCastleTimer() && !model.getCastleTimer().isEmpty()) {
                     renderHud.drawText2D(model.getCastleTimer(), 5, height - 20, 20, vectorFont, mainTextColor);
                 } else if (showHeroCount) {
@@ -268,6 +264,15 @@ public class OpenGLPotato extends Thread {
         showMap = b;
         showHeroes = b;
         showHeroCount = b;
+    }
+
+    public static void setMapAlpha(int alpha) {
+        instance.mapAlpha(alpha);
+    }
+
+    private void mapAlpha(int alpha) {
+        shaderMap.bind();
+        shaderMap.setUniform1f("alpha", alpha / 255f);
     }
 
     public static void toggleShowAll() {
@@ -317,7 +322,6 @@ public class OpenGLPotato extends Thread {
     public void setMap(int mapIndex) {
         this.mapIndex = mapIndex;
         refresh = true;
-        System.out.println("mapIndex " + mapIndex);
     }
 
     public void dispose() {

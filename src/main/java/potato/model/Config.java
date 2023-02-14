@@ -19,8 +19,10 @@ public class Config implements Serializable {
     public int textSize = 32;
     public int shapeSize = 32;
     public boolean singleColorShapes = false;
+    public boolean alwaysShowCoords = true;
 
     public int textTransparency = 200;
+    public int mapTransparency = 150;
     public int visitedColor = 0x00FF0064;
     public int activeColor = 0xFF000064;
     public int deadColor = 0xFFFFFF50;
