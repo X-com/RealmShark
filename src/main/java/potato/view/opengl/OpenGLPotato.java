@@ -223,7 +223,7 @@ public class OpenGLPotato extends Thread {
             }
 
             if (showHeroes && userShowHeroes && model.inRealm()) {
-                heroes.drawHeros(model.mapCoords());
+                heroes.drawHeros(model.mapHeroes());
             }
 
             if (userShowInfo) {

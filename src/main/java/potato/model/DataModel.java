@@ -34,7 +34,7 @@ public class DataModel {
     private int myId;
 
     private final HashSet<Integer>[] mapTileData;
-    private final ArrayList<HeroLocations>[] mapCoords;
+    private final ArrayList<HeroLocations>[] mapHeroes;
     private int mapIndex = 0;
     private String realmName = "";
     private String serverName = "";
@@ -46,7 +46,7 @@ public class DataModel {
     private boolean setTpCooldown;
 
     public DataModel() {
-        mapCoords = Bootloader.loadMapCoords();
+        mapHeroes = Bootloader.loadMapCoords();
         mapTileData = Bootloader.loadTiles();
 
         heroDetect = new HeroDetect(this);
@@ -72,8 +72,8 @@ public class DataModel {
         return locator;
     }
 
-    public ArrayList<HeroLocations> mapCoords() {
-        return mapCoords[mapIndex];
+    public ArrayList<HeroLocations> mapHeroes() {
+        return mapHeroes[mapIndex];
     }
 
     public void updateText(TextPacket p) {
@@ -115,8 +115,8 @@ public class DataModel {
 
     public void initSynch(int mapIndex, int[] markers) {
         this.mapIndex = mapIndex;
-        for (int i = 0; i < mapCoords[this.mapIndex].size(); i++) {
-            mapCoords[this.mapIndex].get(i).setMarker(markers[i], false, renderer);
+        for (int i = 0; i < mapHeroes[this.mapIndex].size(); i++) {
+            mapHeroes[this.mapIndex].get(i).setMarker(markers[i], false, renderer);
         }
         renderer.setMap(mapIndex);
         renderer.setCamera(playerX, playerY, zoom);
@@ -124,7 +124,7 @@ public class DataModel {
     }
 
     public void heroSynch(int heroId, int heroState) {
-        mapCoords[this.mapIndex].get(heroId).setMarker(heroState, false, renderer);
+        mapHeroes[this.mapIndex].get(heroId).setMarker(heroState, false, renderer);
     }
 
     public void editZoom(boolean zoomIn) {
@@ -164,8 +164,8 @@ public class DataModel {
         renderer.renderMap(false);
         heroesLeft = 0;
 
-        for (int i = 0; i < mapCoords[mapIndex].size(); i++) {
-            mapCoords[mapIndex].get(i).setMarker(0, true, renderer);
+        for (int i = 0; i < mapHeroes[mapIndex].size(); i++) {
+            mapHeroes[mapIndex].get(i).setMarker(0, true, renderer);
         }
         heroDetect.reset();
     }
