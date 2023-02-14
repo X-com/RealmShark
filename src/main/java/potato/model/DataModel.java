@@ -28,7 +28,7 @@ public class DataModel {
 
     private long serverTime;
     private int heroesLeft = 0;
-    private boolean inRealm = true;
+    private boolean inRealm = false;
 
     private boolean newRealmCheck = false;
     private long seed;

@@ -44,8 +44,10 @@ public class OpenGLPotato extends Thread {
     public static final float[] scale = {0.855f, 1.025f, 1.275f, 5 / 3f, 2.5f, 5f, 41.2f};
     public static final float[] playerOffset = {0, 1f / 3, 0.85f, 5 / 3f, 10 / 3f, 8.5f, 84.25f};
     public static int zoom = 0;
+    private int mapAlpha = 150;
     private float ratio;
 
+    private boolean firstDisplay = true;
     private static boolean userShowAll = true;
     private static boolean userShowMap = true;
     private static boolean userShowHeroes = true;
@@ -208,6 +210,7 @@ public class OpenGLPotato extends Thread {
             if (refresh) {
                 shaderMap.bind();
                 shaderMap.setUniformMat4f("uMVP", mvp);
+                shaderMap.setUniform1f("alpha", mapAlpha / 255f);
                 renderText.setMvp(mvp);
 
                 refresh = false;
@@ -222,7 +225,10 @@ public class OpenGLPotato extends Thread {
                 heroes.drawHeros(model.mapHeroes());
             }
 
-            if (userShowInfo && (Config.instance.alwaysShowCoords || model.inRealm())) {
+            if (firstDisplay && !model.inRealm()) {
+                renderHud.drawText2D("Enter any realm or re-enter if starting in a realm.", 5, 5, 10, vectorFont, mainTextColor);
+            } else if (userShowInfo && (Config.instance.alwaysShowCoords || model.inRealm())) {
+                firstDisplay = false;
                 if (model.renderCastleTimer() && !model.getCastleTimer().isEmpty()) {
                     renderHud.drawText2D(model.getCastleTimer(), 5, height - 20, 20, vectorFont, mainTextColor);
                 } else if (showHeroCount) {
@@ -271,8 +277,8 @@ public class OpenGLPotato extends Thread {
     }
 
     private void mapAlpha(int alpha) {
-        shaderMap.bind();
-        shaderMap.setUniform1f("alpha", alpha / 255f);
+        mapAlpha = alpha;
+        refresh = true;
     }
 
     public static void toggleShowAll() {
