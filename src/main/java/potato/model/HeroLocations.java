@@ -82,16 +82,14 @@ public class HeroLocations {
             case 2:
                 return colorToVecColor(new Color(255, 128, 0));
             case 4:
-                return colorToVecColor(new Color(255, 255, 0));
-            case 8:
-                return colorToVecColor(new Color(128, 0, 255));
-            case 16:
                 return colorToVecColor(new Color(255, 0, 255));
-            case 32:
+            case 8:
+                return colorToVecColor(new Color(255, 255, 0));
+            case 16:
                 return colorToVecColor(new Color(0, 255, 0));
-            case 64:
+            case 32:
                 return colorToVecColor(new Color(0, 128, 255));
-            case 128:
+            case 64:
                 return colorToVecColor(new Color(165, 42, 42));
             default:
                 return colorToVecColor(new Color(255, 255, 255));
@@ -105,15 +103,15 @@ public class HeroLocations {
             case 2:
                 return "b";
             case 4:
-                return "d";
-            case 8:
-            case 16:
                 return "c";
-            case 64:
-                return "f";
-            case 128:
-                return "g";
+            case 8:
+                return "d";
+            case 16:
+                return "e";
             case 32:
+                return "f";
+            case 64:
+                return "g";
             default:
                 return "e";
         }
@@ -231,12 +229,12 @@ public class HeroLocations {
     }
 
     public String shapeCharM() {
-        if (locationState == HeroState.MARK_UNVISITED) return possibleSpawnShapeMain;
+        if (locationType == HeroType.UNVISITED) return possibleSpawnShapeMain;
         return locationType.getShape();
     }
 
     public String shapeCharS() {
-        if (locationState == HeroState.MARK_UNVISITED) return possibleSpawnShapeSecondary;
+        if (locationType == HeroType.UNVISITED) return possibleSpawnShapeSecondary;
         return locationType.getShape();
     }
 
@@ -245,12 +243,16 @@ public class HeroLocations {
     }
 
     public boolean multipleShapes() {
-        if (locationState == HeroState.MARK_UNVISITED) return multiShapes;
+        if (locationType == HeroType.UNVISITED) return multiShapes;
         return false;
     }
 
     public int getPossibleHeroType() {
         return possibleHeroType;
+    }
+
+    public HeroState getLocationState() {
+        return locationState;
     }
 
     public void reset() {

@@ -106,7 +106,7 @@ public class ServerSynch {
 //    }
 
     private void incoming(String message) {
-        System.out.println(message);
+//        System.out.println(message);
         JsonObject jsonObject = JsonParser.parseString(message).getAsJsonObject();
         String type = jsonObject.get("packet").getAsJsonPrimitive().getAsString();
         if (type.equals("hero")) {

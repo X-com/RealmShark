@@ -184,7 +184,7 @@ public class DataModel {
         int largest = 0;
         int largestIndex = 0;
         for (int i = 0; i < 13; i++) {
-            System.out.printf("Index:%d Count:%d\n", i + 1, maps[i]);
+//            System.out.printf("Index:%d Count:%d\n", i + 1, maps[i]);
             if (maps[i] > largest) {
                 largest = maps[i];
                 largestIndex = i;

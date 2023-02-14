@@ -16,6 +16,7 @@ public class HeroDetect {
 
     private final DataModel model;
 
+    private final HashMap<Integer, ObjectData> allEntitys = new HashMap<>();
     private final HashMap<Integer, ObjectData> entitys = new HashMap<>();
     private final int[][] mapTiles = new int[2048][2048];
 
@@ -132,6 +133,7 @@ public class HeroDetect {
     private void entityChecks(ObjectData[] newObjects, ArrayList<HeroLocations> nearHeroes) {
         boolean wallAdded = false;
         for (ObjectData od : newObjects) {
+            allEntitys.put(od.status.objectId, od);
             if (nearHeroes.size() > 0) {
                 HeroLocations h = null;
                 if (od.objectType == IdData.ENT_CHERRY_TREE) {
@@ -191,7 +193,6 @@ public class HeroDetect {
                 addHeroAndSetActive(od, HeroType.DEMON);
             }
 
-            questCheck();
 //            if (!hashTester.containsKey(od.objectType)) {
 //                hashTester.put(od.objectType, od);
 //
@@ -201,6 +202,7 @@ public class HeroDetect {
 //                }
 //            }
         }
+        questCheck();
         if (wallAdded && isGhostLoc()) {
             HeroLocations h = findClosestHero(model.getIntPlayerX(), model.getIntPlayerY(), nearHeroes);
             if (h.dist < 1000) {
@@ -214,7 +216,8 @@ public class HeroDetect {
     private void questCheck() {
         if (questArrowId != questArrowIdChecked) {
             questArrowIdChecked = questArrowId;
-            ObjectData od = entitys.get(questArrowId);
+            ObjectData od = allEntitys.get(questArrowId);
+//            System.out.println("test check " + od + " " + questArrowId + " " + allEntitys.size());
             if (od != null) {
                 if (od.objectType == IdData.PHENIX) { // remove demons
                     setDeadHeroes(HeroType.DEMON);
@@ -229,6 +232,8 @@ public class HeroDetect {
                 } else if (od.objectType == IdData.LICH || od.objectType == IdData.LICH_KILLABLE) { // remove ents too
                     setDeadHeroes(HeroType.ENT);
                 }
+            } else {
+                questArrowIdChecked = 0;
             }
         }
     }
@@ -355,6 +360,8 @@ public class HeroDetect {
     }
 
     public void markVisited(HeroLocations h) {
+        if (h.getLocationState() == HeroState.MARK_DEAD) return;
+
         if (h.setState(HeroState.MARK_VISITED)) {
             model.uploadSingleHero(h);
         }
@@ -373,6 +380,8 @@ public class HeroDetect {
     }
 
     public void reset() {
+        questArrowIdChecked = -1;
+        allEntitys.clear();
         entitys.clear();
         for (int i = 0; i < 2048; i++) {
             for (int j = 0; j < 2048; j++) {
