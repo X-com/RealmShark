@@ -1,9 +1,8 @@
 package experimental;
 
-import potato.data.HeroType;
+import potato.model.data.HeroType;
 import potato.model.Bootloader;
 import potato.model.HeroLocations;
-import util.Pair;
 import util.Util;
 
 import java.io.BufferedReader;
@@ -111,53 +110,55 @@ public class DataLogAnalyze {
                     } else if (s.equals("CYCLOPS ")) {
                         s = "2";
                     } else if (s.equals("PHENIX OASIS ")) {
-                        s = "4";
-                    } else if (s.equals("PARASITE ")) {
                         s = "8";
+                    } else if (s.equals("PARASITE ")) {
+                        s = "4";
                     } else if (s.equals("GHOST PARASITE MANOR ")) {
-                        s = "16";
+                        s = "4";
                     } else if (s.equals("ENT SNAKE ")) {
-                        s = "32";
+                        s = "16";
                     } else if (s.equals("LICH GRAVE ")) {
-                        s = "64";
+                        s = "32";
                     } else if (s.equals("HOUSE ")) {
-                        s = "128";
+                        s = "64";
                     } else if (s.equals("CYCLOPS LICH GRAVE ")) {
-                        s = "66";
+                        s = "34";
                     } else if (s.equals("DEMON PHENIX OASIS PARASITE ")) {
-                        s = "5";
+                        s = "9";
                     } else if (s.equals("GHOST ENT PARASITE MANOR SNAKE ")) {
-                        s = "48";
+                        s = "20";
                     } else if (s.equals("DEMON GHOST PARASITE MANOR ")) {
-                        s = "17";
+                        s = "5";
                     } else if (s.equals("DEMON CYCLOPS ")) {
                         s = "3";
                     } else if (s.equals("PHENIX OASIS PARASITE ")) {
                         s = "12";
                     } else if (s.equals("DEMON PARASITE ")) {
-                        s = "9";
+                        s = "5";
                     } else if (s.equals("ENT SNAKE HOUSE ")) {
-                        s = "160";
+                        s = "80";
+                    } else if (s.equals("GHOST ENT MANOR SNAKE ")) {
+                        s = "20";
                     }
 
                     /**
                      * DEMON  55 - 1 (RED)
                      * CYCLOPS  77 - 2 (ORANGE)
-                     * PHENIX OASIS  17 - 4 (YELLOW)
-                     * PARASITE - 8 (PINK)
-                     * GHOST PARASITE MANOR  124 - 16  (MAGENTA)
-                     * ENT SNAKE  448 - 32 (GREEN)
-                     * LICH GRAVE  167 - 64 (BLUE)
-                     * HOUSE - 128 (BROWN)
+                     * PHENIX OASIS  17 - 8 (YELLOW)
+                     * PARASITE - 4 (MAGENTA)
+                     * GHOST PARASITE MANOR  124 - 4  (MAGENTA)
+                     * ENT SNAKE  448 - 16 (GREEN)
+                     * LICH GRAVE  167 - 32 (BLUE)
+                     * HOUSE - 64 (BROWN)
                      * GHOST ENT MANOR SNAKE  1 -
-                     * CYCLOPS LICH GRAVE  6 - 66 = 2+64
-                     * DEMON PHENIX OASIS PARASITE  1 - 5 = 1+4
-                     * GHOST ENT PARASITE MANOR SNAKE  28 - 48 = 16+32
-                     * DEMON GHOST PARASITE MANOR  2 - 17 = 1+16
+                     * CYCLOPS LICH GRAVE  6 - 34 = 2+32
+                     * DEMON PHENIX OASIS PARASITE  1 - 9 = 1+8
+                     * GHOST ENT PARASITE MANOR SNAKE  28 - 20 = 4+16
+                     * DEMON GHOST PARASITE MANOR  2 - 5 = 1+4
                      * DEMON CYCLOPS  27 - 3 = 1+2
                      * PHENIX OASIS PARASITE  15 - 12 = 8+4
-                     * DEMON PARASITE  1 - 9 = 1+8
-                     * ENT SNAKE HOUSE  63 - 160 = 32+128
+                     * DEMON PARASITE  1 - 5 = 1+4
+                     * ENT SNAKE HOUSE  63 - 80 = 16+64
                      */
 
                     if (s != "" && hero[i - 1].size() > j) {
@@ -224,7 +225,7 @@ public class DataLogAnalyze {
     private void loadFile() {
         int count = 0;
         try {
-            File f = new File("log.txt");
+            File f = new File("src/test/resources/log.txt");
             if (!f.exists()) {
                 System.out.println("missing: " + f);
                 return;
