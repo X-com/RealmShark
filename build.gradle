@@ -6,7 +6,7 @@ plugins {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-project.version = 'v0.6.0-beta'
+project.version = 'v0.7.0-beta'
 applicationName = 'Potato'
 
 project.ext.lwjglVersion = "3.3.1"
