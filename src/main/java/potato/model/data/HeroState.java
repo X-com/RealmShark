@@ -1,4 +1,4 @@
-package potato.data;
+package potato.model.data;
 
 public enum HeroState {
     MARK_UNVISITED(0),
