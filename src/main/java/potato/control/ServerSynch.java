@@ -63,7 +63,6 @@ public class ServerSynch {
         jsonObject.addProperty("user", myId);
         jsonObject.addProperty("heroId", markIndex);
         jsonObject.addProperty("state", colorIndex);
-//        System.out.println(jsonObject);
         byte[] out = jsonObject.toString().getBytes(StandardCharsets.UTF_8);
         webSocket.sendBytes(out);
     }
@@ -77,7 +76,6 @@ public class ServerSynch {
         jsonObject.addProperty("map", map);
         jsonObject.addProperty("x", x);
         jsonObject.addProperty("y", y);
-//        System.out.println(jsonObject);
 
         byte[] out = jsonObject.toString().getBytes(StandardCharsets.UTF_8);
         webSocket.sendBytes(out);
@@ -88,7 +86,6 @@ public class ServerSynch {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("packet", "unsub");
         jsonObject.addProperty("user", myId);
-//        System.out.println(jsonObject);
 
         byte[] out = jsonObject.toString().getBytes(StandardCharsets.UTF_8);
         webSocket.sendBytes(out);
@@ -106,7 +103,6 @@ public class ServerSynch {
 //    }
 
     private void incoming(String message) {
-//        System.out.println(message);
         JsonObject jsonObject = JsonParser.parseString(message).getAsJsonObject();
         String type = jsonObject.get("packet").getAsJsonPrimitive().getAsString();
         if (type.equals("hero")) {

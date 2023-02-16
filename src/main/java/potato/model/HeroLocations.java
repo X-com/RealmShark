@@ -4,7 +4,6 @@ import org.joml.Vector4f;
 import packets.data.ObjectData;
 import potato.model.data.HeroState;
 import potato.model.data.HeroType;
-import potato.view.opengl.OpenGLPotato;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -190,7 +189,7 @@ public class HeroLocations {
         return locationType.getIndex() + locationState.getIndex() * 16;
     }
 
-    public void setMarker(int marker, boolean ignoreTimer, OpenGLPotato renderer) {
+    public void setMarker(int marker, boolean ignoreTimer) {
         long t = resetTimer - System.currentTimeMillis();
         if (!ignoreTimer && t > 0) return;
 
@@ -222,10 +221,6 @@ public class HeroLocations {
 
     public Vector4f getPossibleSpawnColorSecondary() {
         return getColor(false);
-    }
-
-    public int getHeroTypeId() {
-        return locationType.getIndex();
     }
 
     public String shapeCharM() {

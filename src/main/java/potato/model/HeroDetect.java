@@ -64,13 +64,13 @@ public class HeroDetect {
         ArrayList<HeroLocations> nearHeroes = getCloseHeroListForId(model.getIntPlayerX(), model.getIntPlayerY());
         tileChecks(tiles, nearHeroes);
         entityChecks(newObjects, nearHeroes);
-        checkMissing(nearHeroes);
+        checkMissing();
         for (int drop : drops) {
             entitys.remove(drop);
         }
     }
 
-    private void checkMissing(ArrayList<HeroLocations> nearHeroes) {
+    private void checkMissing() {
         HeroLocations h = findClosestHero(model.getIntPlayerX(), model.getIntPlayerY());
         if (h.isMissing(entitys)) {
             markDead(h);
@@ -192,17 +192,8 @@ public class HeroDetect {
             } else if (od.objectType == IdData.DEMON) {
                 addHeroAndSetActive(od, HeroType.DEMON);
             }
-
-//            if (!hashTester.containsKey(od.objectType)) {
-//                hashTester.put(od.objectType, od);
-//
-//                if (od.status.stats.length == 4) {
-//                    System.out.println(od);
-//                    System.out.println(od.status.stats.length);
-//                }
-//            }
         }
-        questCheck();
+
         if (wallAdded && isGhostLoc()) {
             HeroLocations h = findClosestHero(model.getIntPlayerX(), model.getIntPlayerY(), nearHeroes);
             if (h.dist < 1000) {
@@ -211,13 +202,14 @@ public class HeroDetect {
                 nearHeroes.remove(h);
             }
         }
+
+        questCheck();
     }
 
     private void questCheck() {
         if (questArrowId != questArrowIdChecked) {
             questArrowIdChecked = questArrowId;
             ObjectData od = allEntitys.get(questArrowId);
-//            System.out.println("test check " + od + " " + questArrowId + " " + allEntitys.size());
             if (od != null) {
                 if (od.objectType == IdData.PHENIX) { // remove demons
                     setDeadHeroes(HeroType.DEMON);
@@ -241,7 +233,6 @@ public class HeroDetect {
     private void setDeadHeroes(HeroType ht) {
         for (HeroLocations h : model.mapHeroes()) {
             if (h.getPossibleHeroType() <= ht.getPossibleType()) {
-                System.out.println("filter " + h.getPossibleHeroType());
                 markDead(h);
             }
         }
@@ -269,8 +260,6 @@ public class HeroDetect {
         h.setType(ht);
         markActive(h);
     }
-
-//    HashMap<Integer, ObjectData> hashTester = new HashMap<>();
 
     private boolean isCyclopsLoc(int x, int y) {
         for (int i = -2; i <= 2; i++) {

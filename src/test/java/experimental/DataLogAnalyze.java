@@ -87,7 +87,9 @@ public class DataLogAnalyze {
 
         ArrayList<HeroLocations>[] hero = Bootloader.loadMapCoords();
         HashMap<String, Integer> types = new HashMap<>();
-        for (int i = 0; i < 14; i++) {
+//        for (int i = 0; i < 14; i++) {
+        {
+            int i = 7;
             for (int j = 0; j < 95; j++) {
                 int v = i * 1000 + j;
                 int[] nums = allSpots.get(v);
@@ -137,8 +139,8 @@ public class DataLogAnalyze {
                         s = "5";
                     } else if (s.equals("ENT SNAKE HOUSE ")) {
                         s = "80";
-                    } else if (s.equals("GHOST ENT MANOR SNAKE ")) {
-                        s = "20";
+//                    } else if (s.equals("GHOST ENT MANOR SNAKE ")) {
+//                        s = "20";
                     }
 
                     /**

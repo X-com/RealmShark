@@ -117,7 +117,7 @@ public class DataModel {
     public void initSynch(int mapIndex, int[] markers) {
         this.mapIndex = mapIndex;
         for (int i = 0; i < mapHeroes[this.mapIndex].size(); i++) {
-            mapHeroes[this.mapIndex].get(i).setMarker(markers[i], false, renderer);
+            mapHeroes[this.mapIndex].get(i).setMarker(markers[i], false);
         }
         renderer.setMap(mapIndex);
         renderer.setCamera(playerX, playerY, zoom);
@@ -125,7 +125,7 @@ public class DataModel {
     }
 
     public void heroSynch(int heroId, int heroState) {
-        mapHeroes[this.mapIndex].get(heroId).setMarker(heroState, false, renderer);
+        mapHeroes[this.mapIndex].get(heroId).setMarker(heroState, false);
     }
 
     public void editZoom(boolean zoomIn) {
@@ -166,7 +166,7 @@ public class DataModel {
         heroesLeft = 0;
 
         for (int i = 0; i < mapHeroes[mapIndex].size(); i++) {
-            mapHeroes[mapIndex].get(i).setMarker(0, true, renderer);
+            mapHeroes[mapIndex].get(i).setMarker(0, true);
         }
         heroDetect.reset();
     }
