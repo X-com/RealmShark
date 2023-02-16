@@ -53,7 +53,7 @@ public class HeroLocations {
             } else if ((types & mod) != 0) {
                 cd = getTypeColor(mod);
                 sd = getTypeShape(mod);
-                largestMod = mod;
+                if (mod < 64) largestMod = mod; // ignore house as 64
                 break;
             }
             mod = mod << 1;
