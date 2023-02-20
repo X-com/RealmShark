@@ -16,6 +16,7 @@ public class HeroDetect {
 
     private final DataModel model;
 
+    private final boolean[][] snakeTiles;
     private final HashMap<Integer, ObjectData> allEntitys = new HashMap<>();
     private final HashMap<Integer, ObjectData> entitys = new HashMap<>();
     private final int[][] mapTiles = new int[2048][2048];
@@ -25,6 +26,7 @@ public class HeroDetect {
 
     public HeroDetect(DataModel model) {
         this.model = model;
+        snakeTiles = Bootloader.loadSnakePattern();
     }
 
     public HeroLocations findClosestHero(int x, int y) {
@@ -64,6 +66,7 @@ public class HeroDetect {
         ArrayList<HeroLocations> nearHeroes = getCloseHeroListForId(model.getIntPlayerX(), model.getIntPlayerY());
         tileChecks(tiles, nearHeroes);
         entityChecks(newObjects, nearHeroes);
+        questCheck();
         checkMissing();
         for (int drop : drops) {
             entitys.remove(drop);
@@ -83,42 +86,32 @@ public class HeroDetect {
 
             if (nearHeroes.size() == 0) continue;
 
-            HeroType hero = null;
-            float dist = 0;
-
             if (gtd.type == IdData.SNAKE_STONE_TILE) {
-                hero = HeroType.SNAKE;
-                dist = 1000;
+                snakeTileCheck(nearHeroes, gtd, HeroType.SNAKE);
             } else if (gtd.type == IdData.LICH_BLUE_TILE) {
-                hero = HeroType.LICH;
-                dist = 500;
+                markHeroes(nearHeroes, gtd, HeroType.LICH, 500, false);
             } else if (gtd.type == IdData.DEMON_LAVA_TILE) {
-                hero = HeroType.DEMON;
-                dist = 500;
+                markHeroes(nearHeroes, gtd, HeroType.DEMON, 500, false);
             } else if (gtd.type == IdData.PHENIX_BLACK_TILE) {
                 if (phoenixTileCheck(gtd.x, gtd.y)) {
-                    hero = HeroType.PHENIX;
-                    dist = 250;
+                    markHeroes(nearHeroes, gtd, HeroType.PHENIX, 250, false);
                 }
             } else if (gtd.type == IdData.PARASITE_REDISH_TILE) {
-                hero = HeroType.PARASITE;
-                dist = 500;
+                markHeroes(nearHeroes, gtd, HeroType.PARASITE, 500, true);
             }
+        }
+    }
 
-            if (hero != null) {
-                HeroLocations h = findClosestHero(gtd.x, gtd.y, nearHeroes);
-                if (h.dist < dist) {
-                    nearHeroes.remove(h);
-                    h.setType(hero);
-                    switch (hero) {
-                        case PARASITE:
-                        case SNAKE:
-                            markDead(h);
-                            break;
-                        default:
-                            markVisited(h);
-                    }
-                }
+    private void snakeTileCheck(ArrayList<HeroLocations> nearHeroes, GroundTileData gtd, HeroType hero) {
+        for (HeroLocations h : nearHeroes) {
+            int x = Math.max(0, Math.min(69, gtd.x - h.getX() + Bootloader.SNAKE_TILE_CENTERING));
+            int y = Math.max(0, Math.min(69, gtd.y - h.getY() + Bootloader.SNAKE_TILE_CENTERING));
+
+            if (snakeTiles[x][y]) {
+                h.setType(hero);
+                nearHeroes.remove(h);
+                markDead(h);
+                return;
             }
         }
     }
@@ -128,6 +121,19 @@ public class HeroDetect {
         if (mapTiles[x - 7][y] == IdData.PHENIX_BLACK_TILE) return true;
         if (mapTiles[x][y + 7] == IdData.PHENIX_BLACK_TILE) return true;
         return mapTiles[x][y - 7] == IdData.PHENIX_BLACK_TILE;
+    }
+
+    private void markHeroes(ArrayList<HeroLocations> nearHeroes, GroundTileData gtd, HeroType hero, float dist, boolean markDead) {
+        HeroLocations h = findClosestHero(gtd.x, gtd.y, nearHeroes);
+        if (h.dist < dist) {
+            nearHeroes.remove(h);
+            h.setType(hero);
+            if (markDead) {
+                markDead(h);
+            } else {
+                markVisited(h);
+            }
+        }
     }
 
     private void entityChecks(ObjectData[] newObjects, ArrayList<HeroLocations> nearHeroes) {
@@ -202,8 +208,6 @@ public class HeroDetect {
                 nearHeroes.remove(h);
             }
         }
-
-        questCheck();
     }
 
     private void questCheck() {

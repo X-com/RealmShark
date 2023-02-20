@@ -3,17 +3,16 @@ package potato.model;
 import util.Util;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.stream.Stream;
 
 public class Bootloader {
+    public static final int SNAKE_TILE_CENTERING = 35;
 
     public static BufferedImage[] loadMaps() {
         BufferedImage[] img = new BufferedImage[13];
@@ -81,5 +80,33 @@ public class Bootloader {
             e.printStackTrace();
         }
         return maps;
+    }
+
+    public static boolean[][] loadSnakePattern() {
+        boolean[][] tiles = new boolean[SNAKE_TILE_CENTERING * 2][SNAKE_TILE_CENTERING * 2];
+        try {
+            for (int i = 1; i <= 13; i++) {
+                String file = "potatoRes/snakePattern.txt";
+                InputStream is = Util.resourceFilePath(file);
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                String line = br.readLine();
+                int tileId = Integer.parseInt(line);
+                while ((line = br.readLine()) != null) {
+                    try {
+                        String[] s = line.split(",");
+                        if (s.length == 2) {
+                            int x = Short.parseShort(s[0]);
+                            int y = Short.parseShort(s[1]);
+                            tiles[x + SNAKE_TILE_CENTERING][y + SNAKE_TILE_CENTERING] = true;
+                        }
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return tiles;
     }
 }

@@ -51,13 +51,137 @@ public class PatternFinder {
 
         pf = new PatternFinder();
 
-        lookForPattern();
+//        lookForPattern();
 //        for (int mapIndex = 0; mapIndex < 13; mapIndex++)
 //            fileWalker(mapIndex+1);
 //        saveType();
 //        makeSkipMap();
 //        findObject();
 //        makeSkipMap();
+        findSnakeShap();
+    }
+
+    private void findSnakeShap() {
+        addShapes();
+        ArrayList<GroundTileData> pattern = new ArrayList<>();
+
+        for (Pair<String, ArrayList<GroundTileData>> p : shapes) {
+            String s = p.left();
+            if (s.startsWith("snake")) {
+                for (GroundTileData g1 : p.right()) {
+                    boolean found = true;
+                    for (GroundTileData g2 : pattern) {
+                        if (g1.x == g2.x && g1.y == g2.y) {
+                            found = false;
+                            break;
+                        }
+                    }
+                    if (found) {
+                        pattern.add(g1);
+                    }
+                }
+            }
+        }
+        rangeArray(pattern);
+        ArrayList<GroundTileData> patternCopy = new ArrayList<>(pattern);
+
+        for (ArrayList<HeroLocations> hl : locs) {
+            System.out.println();
+            for (int i = 0; i < hl.size(); i++) {
+                HeroLocations h1 = hl.get(i);
+                for (int j = i + 1; j < hl.size(); j++) {
+                    HeroLocations h2 = hl.get(j);
+                    int x = h1.getX() - h2.getX();
+                    int y = h1.getY() - h2.getY();
+                    if (Math.abs(x) < 72 && Math.abs(y) < 72) {
+                        for (GroundTileData g : patternCopy) {
+                            int xx = g.x + x;
+                            int yy = g.y + y;
+                            GroundTileData gpgp = null;
+                            for (GroundTileData pg : pattern) {
+                                if (pg.x == xx && pg.y == yy) {
+                                    gpgp = pg;
+                                    break;
+                                }
+                            }
+                            if (gpgp != null) {
+                                pattern.remove(gpgp);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        rangeArray(pattern);
+        ArrayList<GroundTileData> savers = new ArrayList<>();
+
+        int di = 1;
+        int dj = 0;
+        for (GroundTileData g1 : pattern) {
+            boolean add = false;
+            for (int i = 0; i < 4; i++) {
+                boolean found = false;
+                for (GroundTileData g2 : pattern) {
+                    if (g1.x == g2.x + di && g1.y == g2.y + dj) {
+                        found = true;
+                    }
+                }
+                if (!found) add = true;
+                int temp = dj;
+                dj = di;
+                di = -temp;
+            }
+            if (add) {
+                savers.add(g1);
+            }
+        }
+
+        BufferedImage bi = new BufferedImage(600, 200, BufferedImage.TYPE_INT_ARGB);
+
+        for (GroundTileData g : patternCopy) {
+            int x = g.x + 100;
+            int y = g.y + 100;
+            bi.setRGB(x, y, Color.red.getRGB());
+        }
+        for (GroundTileData g : pattern) {
+            int x = g.x + 300;
+            int y = g.y + 100;
+            bi.setRGB(x, y, Color.red.getRGB());
+        }
+        for (GroundTileData g : savers) {
+            int x = g.x + 500;
+            int y = g.y + 100;
+            bi.setRGB(x, y, Color.red.getRGB());
+        }
+        try {
+            ImageIO.write(bi, "PNG", new File("tiles/" + "t" + ".png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println();
+        System.out.println("197");
+        for (GroundTileData g : pattern) {
+            System.out.printf("%d,%d\n", g.x, g.y);
+        }
+    }
+
+    private void rangeArray(ArrayList<GroundTileData> g) {
+        int[] range = {Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE};
+        for (GroundTileData gg : g) {
+            if (range[0] < gg.x) {
+                range[0] = gg.x;
+            } else if (range[1] > gg.x) {
+                range[1] = gg.x;
+            } else if (range[2] < gg.y) {
+                range[2] = gg.y;
+            } else if (range[3] > gg.y) {
+                range[3] = gg.y;
+            }
+        }
+
+        System.out.printf("(%d %d) (%d %d)\n", range[0], range[2], range[1], range[3]);
     }
 
     private void findObject() {
@@ -95,7 +219,7 @@ public class PatternFinder {
     private void lookForPattern() {
         for (int mapIndex = 0; mapIndex < 13; mapIndex++) {
             System.out.println("---map" + (mapIndex + 1) + "---");
-            if(mapIndex == 9) continue;
+            if (mapIndex == 9) continue;
 //            int mapIndex = 7 - 1;
 //            {
             try (Stream<Path> filePathStream = Files.walk(Paths.get("tiles/pattern"))) {
@@ -116,7 +240,7 @@ public class PatternFinder {
 
             SpiralOut spiral = new SpiralOut(pf::findStructure);
 
-            fixShapes();
+            addShapes();
 
             int count = 0;
             for (HeroLocations h : locs[mapIndex]) {
@@ -158,7 +282,7 @@ public class PatternFinder {
         }
     }
 
-    private void fixShapes() {
+    private void addShapes() {
         shapes = new ArrayList<>();
         try (Stream<Path> filePathStream = Files.walk(Paths.get("tiles/setPieces"))) {
             filePathStream.forEach(filePath -> {
@@ -288,7 +412,7 @@ public class PatternFinder {
             return;
         }
         mapArrayAll.add(new Pair(mapName, mapArray));
-        fixShapes();
+        addShapes();
         pf.temp = locs[map - 1].get(location - 1);
         if (pf.findStructure(0, 0)) {
             System.out.println("already exists");
