@@ -28,10 +28,55 @@ public class DataLogAnalyze {
     }
 
     private void read() {
-        loadFile();
+//        loadFile();
 //        findCoords();
 //        matchData();
-        findMapHeroes();
+//        findMapHeroes();
+        convertData();
+    }
+
+    private void convertData() {
+        /**
+         * DEMON  55 - 1 (RED)
+         * CYCLOPS  77 - 2 (ORANGE)
+         * PHENIX OASIS  17 - 4 (YELLOW)
+         * PARASITE - 8 (PINK)
+         * GHOST PARASITE MANOR  124 - 16  (MAGENTA)
+         * ENT SNAKE  448 - 32 (GREEN)
+         * LICH GRAVE  167 - 64 (BLUE)
+         * HOUSE - 128 (BROWN)
+         *
+         * DEMON  55 - 1 (RED)
+         * CYCLOPS  77 - 2 (ORANGE)
+         * PHENIX OASIS  17 - 8 (YELLOW)
+         * PARASITE - 4 (MAGENTA)
+         * GHOST PARASITE MANOR  124 - 4  (MAGENTA)
+         * ENT SNAKE  448 - 16 (GREEN)
+         * LICH GRAVE  167 - 32 (BLUE)
+         * HOUSE - 64 (BROWN)
+         */
+
+        ArrayList<HeroLocations>[] hero = Bootloader.loadMapCoords();
+
+        for (int i = 1; i <= 13; i++) {
+            for (HeroLocations heroLocations : hero[i - 1]) {
+                int type = heroLocations.type;
+                int t = type;
+                if(type == 4) t = 8;
+                if(type == 8) t = 4;
+                if(type == 16) t = 4;
+                if(type == 32) t = 16;
+                if(type == 64) t = 32;
+                if(type == 128) t = 64;
+                if(type == 160) t = 80;
+                if(type == 48) t = 20;
+                if(type == 66) t = 34;
+                if(type == 5) t = 9;
+                if(type == 9) t = 5;
+                if(type == 17) t = 5;
+                Util.print("D:\\Programmering\\GitKraken\\RealmShark\\src\\main\\resources\\potatoRes\\map\\heroMap" + i + ".txt-", heroLocations.getX() + " " + heroLocations.getY() + " " + t);
+            }
+        }
     }
 
     private void findMapHeroes() {
