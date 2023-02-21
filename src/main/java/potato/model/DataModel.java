@@ -281,4 +281,8 @@ public class DataModel {
     public void questArrow(QuestObjectIdPacket h) {
         heroDetect.questArrow(h);
     }
+
+    public int getMyId() {
+        return myId;
+    }
 }

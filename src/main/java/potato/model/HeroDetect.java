@@ -3,6 +3,8 @@ package potato.model;
 import packets.data.GroundTileData;
 import packets.data.ObjectData;
 import packets.data.ObjectStatusData;
+import packets.data.StatData;
+import packets.data.enums.StatType;
 import packets.incoming.QuestObjectIdPacket;
 import potato.model.data.HeroState;
 import potato.model.data.HeroType;
@@ -23,6 +25,7 @@ public class HeroDetect {
 
     private int questArrowId;
     private int questArrowIdChecked;
+    private boolean questUpdateLevel;
 
     public HeroDetect(DataModel model) {
         this.model = model;
@@ -140,6 +143,7 @@ public class HeroDetect {
         boolean wallAdded = false;
         for (ObjectData od : newObjects) {
             allEntitys.put(od.status.objectId, od);
+            questArrowLevelCheck(od.status);
             if (nearHeroes.size() > 0) {
                 HeroLocations h = null;
                 if (od.objectType == IdData.ENT_CHERRY_TREE) {
@@ -210,8 +214,19 @@ public class HeroDetect {
         }
     }
 
+    private void questArrowLevelCheck(ObjectStatusData osd) {
+        if (!questUpdateLevel && osd.objectId == model.getMyId()) {
+            for (StatData sd : osd.stats) {
+                if (sd.statType == StatType.LEVEL_STAT && sd.statValue == 20) {
+                    questUpdateLevel = true;
+                    System.out.println("questUpdateLevel " + questUpdateLevel);
+                }
+            }
+        }
+    }
+
     private void questCheck() {
-        if (questArrowId != questArrowIdChecked) {
+        if (questUpdateLevel && questArrowId != questArrowIdChecked) {
             questArrowIdChecked = questArrowId;
             ObjectData od = allEntitys.get(questArrowId);
             if (od != null) {
@@ -330,6 +345,7 @@ public class HeroDetect {
 
         for (ObjectStatusData osd : status) {
             ObjectData found = entitys.get(osd.objectId);
+            questArrowLevelCheck(osd);
             if (found != null) {
                 for (int j = 0; j < osd.stats.length; j++) {
                     if (osd.stats[j].statTypeNum == 1 && osd.stats[j].statValue == 0) {
@@ -376,6 +392,7 @@ public class HeroDetect {
         questArrowIdChecked = -1;
         allEntitys.clear();
         entitys.clear();
+        questUpdateLevel = false;
         for (int i = 0; i < 2048; i++) {
             for (int j = 0; j < 2048; j++) {
                 mapTiles[i][j] = 0;
