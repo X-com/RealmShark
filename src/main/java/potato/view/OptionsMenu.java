@@ -53,7 +53,7 @@ public class OptionsMenu {
         hotkeys();
         shapes();
         colors();
-        alignment();
+//        alignment();
         addPanels();
     }
 
