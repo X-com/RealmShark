@@ -111,7 +111,6 @@ public class ScreenLocatorController {
         height -= boarder * 2 - 1;
         System.out.printf("X:%d Y:%d W:%d H:%d\n", x, y, width, height);
         setWindow(x, y, width, height);
-        renderer.show();
     }
 
     private void setWindow(int x, int y, int width, int height) {
@@ -119,7 +118,7 @@ public class ScreenLocatorController {
         Config.instance.mapHeight = height;
         Config.instance.mapTopLeftX = x;
         Config.instance.mapTopLeftY = y;
-        renderer.setWindow();
+        OpenGLPotato.viewChanged();
     }
 
     private void notFound(int i, String s) {

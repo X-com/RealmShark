@@ -28,9 +28,6 @@ public class OpenGLPotato extends Thread {
     private final DataModel model;
     private boolean running;
 
-    private int width = 300;
-    private int height = 300;
-
     private long window;
     private HWND hwnd;
     private Shader shaderMap;
@@ -38,12 +35,11 @@ public class OpenGLPotato extends Thread {
     private Texture[] textureMaps;
     private Matrix4f mvp;
     private Matrix4f proj;
-    private GLRenderer renderer;
     private boolean viewChanged;
     private int mapIndex = 0;
     public static final float[] scale = {0.855f, 1.025f, 1.275f, 5 / 3f, 2.5f, 5f, 41.2f};
     public static final float[] playerOffset = {0, 1f / 3, 0.85f, 5 / 3f, 10 / 3f, 8.5f, 84.25f};
-    public static int zoom = 0;
+    public int zoom = 0;
     private int mapAlpha = 150;
     private float ratio;
 
@@ -65,22 +61,17 @@ public class OpenGLPotato extends Thread {
     private GLHeroes heroes;
 
     // temp //
-    long time;
-    private Vector4f mainTextColor = new Vector4f(0.75f, 0.75f, 0.75f, 1.0f);
+    private final Vector4f mainTextColor = new Vector4f(0.75f, 0.75f, 0.75f, 1.0f);
 
-    public void fps() {
-        long now = System.nanoTime();
-        System.out.println((now - time) / 1000000f);
-        time = now;
-    }
+//    long time;
+//    private void fps() {
+//        long now = System.nanoTime();
+//        System.out.println((now - time) / 1000000f);
+//        time = now;
+//    }
     // temp end //
 
-    public static void main(String[] args) throws InterruptedException {
-        new OpenGLPotato(null).run();
-    }
-
     public OpenGLPotato(DataModel dataModel) {
-//        System.setProperty("java.awt.headless", "true");
         instance = this;
         this.model = dataModel;
     }
@@ -111,24 +102,25 @@ public class OpenGLPotato extends Thread {
         glfwWindowHint(GLFW_FLOATING, GLFW_TRUE);
         glfwWindowHint(GLFW_MOUSE_PASSTHROUGH, GLFW_TRUE);
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        window = glfwCreateWindow(width, height, "Potato", NULL, NULL);
+        window = glfwCreateWindow(Config.instance.mapWidth, Config.instance.mapHeight, "Potato", NULL, NULL);
+        glfwSetWindowPos(window, Config.instance.mapTopLeftX, Config.instance.mapTopLeftY);
         hwnd = new HWND(new Pointer(glfwGetWin32Window(window)));
         hideTaskBarIcon();
-        glfwShowWindow(window);
 
-        ratio = (float) width / height;
+        ratio = (float) Config.instance.mapWidth / Config.instance.mapHeight;
         if (window == NULL) {
             glfwTerminate();
             throw new RuntimeException("Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.");
         }
         glfwMakeContextCurrent(window);
         GL.createCapabilities();
+        glfwShowWindow(window);
         System.out.println("Using GL Version: " + glGetString(GL_VERSION));
 
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     }
 
-    public void hideTaskBarIcon() {
+    private void hideTaskBarIcon() {
         int style = User32.INSTANCE.GetWindowLong(hwnd, GWL_EXSTYLE);
         style &= ~(WS_VISIBLE);    // this works - window become invisible
 
@@ -138,7 +130,7 @@ public class OpenGLPotato extends Thread {
         User32.INSTANCE.SetWindowLong(hwnd, GWL_EXSTYLE, style);
     }
 
-    void vertexMap() {
+    private void vertexMap() {
         float[] mapVertices = new float[]{-1024, -1024, 0, 1, 1024, -1024, 1, 1, 1024, 1024, 1, 0, -1024, 1024, 0, 0,};
 
         int[] mapIndexes = new int[]{0, 1, 2, 2, 3, 0,};
@@ -176,7 +168,7 @@ public class OpenGLPotato extends Thread {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_COLOR);
         glEnable(GL_BLEND);
 
-        renderer = new GLRenderer();
+//        renderer = new GLRenderer();
 
         proj = new Matrix4f();
         proj.ortho(-1024f * ratio, 1024f * ratio, -1024f, 1024f, -1.0f, 1.0f); // x*h/w or y*w/h
@@ -196,14 +188,24 @@ public class OpenGLPotato extends Thread {
         renderText = new TextRenderer();
     }
 
+    private void setWindow() {
+        ratio = (float) Config.instance.mapWidth / Config.instance.mapHeight;
+        glfwSetWindowPos(window, Config.instance.mapTopLeftX, Config.instance.mapTopLeftY);
+        glfwSetWindowSize(window, Config.instance.mapWidth, Config.instance.mapHeight);
+        proj = new Matrix4f();
+        proj.ortho(-1024f * ratio, 1024f * ratio, -1024f, 1024f, -1.0f, 1.0f); // x*h/w or y*w/h
+        mvp = proj;
+        glViewport(0, 0, Config.instance.mapWidth, Config.instance.mapHeight);
+    }
+
     private void render() {
         do {
 //            fps();
 
-            renderer.clear();
+            GLRenderer.clear();
 
             if (viewChanged) {
-                glViewport(0, 0, width, height);
+                setWindow();
                 viewChanged = false;
             }
 
@@ -218,7 +220,7 @@ public class OpenGLPotato extends Thread {
 
             if (showMap && userShowMap && model.inRealm()) {
                 textureMaps[mapIndex].bind(0);
-                renderer.draw(vaMap, vaMap.getIndexBuffer(), shaderMap);
+                GLRenderer.draw(vaMap, vaMap.getIndexBuffer(), shaderMap);
             }
 
             if (showHeroes && userShowHeroes && model.inRealm()) {
@@ -230,10 +232,10 @@ public class OpenGLPotato extends Thread {
             } else if (userShowInfo && (Config.instance.alwaysShowCoords || model.inRealm())) {
                 firstDisplay = false;
                 if (model.renderCastleTimer() && !model.getCastleTimer().isEmpty()) {
-                    renderHud.drawText2D(model.getCastleTimer(), 5, height - 20, 20, vectorFont, mainTextColor);
+                    renderHud.drawText2D(model.getCastleTimer(), 5, Config.instance.mapHeight - 20, 20, vectorFont, mainTextColor);
                 } else if (showHeroCount) {
                     String h = String.format("[%d] Heroes:%d", mapIndex + 1, model.getHeroesLeft());
-                    renderHud.drawText2D(h, 5, height - 20, 20, vectorFont, mainTextColor);
+                    renderHud.drawText2D(h, 5, Config.instance.mapHeight - 20, 20, vectorFont, mainTextColor);
                 }
                 String s = String.format("x:%d y:%d  %s  %s  %s", model.getIntPlayerX(), model.getIntPlayerY(), model.getServerName(), model.getRealmName(), model.getTpCooldown());
                 renderHud.drawText2D(s, 5, 5, 10, vectorFont, mainTextColor);
@@ -246,16 +248,8 @@ public class OpenGLPotato extends Thread {
         glfwTerminate();
     }
 
-    public void setWindow() {
-        width = Config.instance.mapWidth;
-        height = Config.instance.mapHeight;
-        ratio = (float) width / height;
-        glfwSetWindowPos(window, Config.instance.mapTopLeftX, Config.instance.mapTopLeftY);
-        glfwSetWindowSize(window, width, height);
-        proj = new Matrix4f();
-        proj.ortho(-1024f * ratio, 1024f * ratio, -1024f, 1024f, -1.0f, 1.0f); // x*h/w or y*w/h
-        mvp = proj;
-        viewChanged = true;
+    public static void viewChanged() {
+        instance.viewChanged = true;
     }
 
     public void show() {
