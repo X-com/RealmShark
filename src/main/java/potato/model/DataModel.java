@@ -50,23 +50,17 @@ public class DataModel {
         mapHeroes = Bootloader.loadMapCoords();
         mapTileData = Bootloader.loadTiles();
 
-        heroDetect = new HeroDetect(this);
-        server = new ServerSynch(this);
         renderer = new OpenGLPotato(this);
         locator = new ScreenLocatorController(renderer);
+        if (!Config.instance.manualAlignment) {
+            locator.calcMapSizeLoc2();
+        }
+
+        heroDetect = new HeroDetect(this);
+        server = new ServerSynch(this);
         mouse = new InputController(this, renderer, server);
 
         renderer.start();
-        if (!Config.instance.manualAlignment) {
-            try {
-                while (renderer.waitfor) {
-                    Thread.sleep(1);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            locator.calcMapSizeLoc2();
-        }
     }
 
     public ScreenLocatorController getAligner() {
