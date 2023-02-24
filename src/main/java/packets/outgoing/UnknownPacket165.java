@@ -4,7 +4,7 @@ import packets.Packet;
 import packets.reader.BufferReader;
 
 /**
- * Nothing is known about this packet
+ * Packets to do with quest updates from seasonal quests.
  */
 public class UnknownPacket165 extends Packet {
     /**
@@ -22,7 +22,6 @@ public class UnknownPacket165 extends Packet {
         unknownByte = buffer.readByte();
         unknownInt1 = buffer.readInt();
         unknownInt2 = buffer.readInt();
-        Thread.dumpStack();
     }
 
     @Override
