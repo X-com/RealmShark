@@ -60,7 +60,8 @@ public class DataLogAnalyze {
 
         for (int i = 1; i <= 13; i++) {
             for (HeroLocations heroLocations : hero[i - 1]) {
-                int type = heroLocations.type;
+//                int type = heroLocations.type;
+                int type = 0;
                 int t = type;
                 if(type == 4) t = 8;
                 if(type == 8) t = 4;

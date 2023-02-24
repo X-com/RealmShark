@@ -3,6 +3,7 @@ package potato.control;
 import packets.Packet;
 import packets.incoming.*;
 import packets.incoming.ip.IpAddress;
+import packets.outgoing.HelloPacket;
 import potato.model.DataModel;
 
 public class PacketController {
@@ -41,7 +42,7 @@ public class PacketController {
         } else if (packet instanceof MapInfoPacket) {
             MapInfoPacket p = (MapInfoPacket) packet;
             if (p.displayName.equals("{s.rotmg}")) {
-                model.setInRealm(p.realmName, p.seed);
+                model.setInRealm(p.realmName, p.seed, p.gameOpenedTime);
             } else {
                 model.checkNewNexus();
                 model.setRealmName(p.realmName);

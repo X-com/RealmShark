@@ -40,11 +40,14 @@ public class DataModel {
     private String realmName = "";
     private String serverName = "";
     private String tpCooldownString = "";
+    private long prismTimer = 0;
     private long castleTimer;
     private String castleTimerString = "";
     private int serverIp;
     private long tpCooldown;
     private boolean setTpCooldown;
+    private int keyTime;
+    private long openTime;
 
     public DataModel() {
         mapHeroes = Bootloader.loadMapCoords();
@@ -74,8 +77,10 @@ public class DataModel {
     public void updateText(TextPacket p) {
         if (p.text.contains("oryx_closed_realm")) {
             castleTimer = serverTime + 130000;
-            System.out.println(p);
+        } else if (p.text.contains("Location has been marked") && p.objectId == -1) {
+            prismTimer = System.currentTimeMillis() + 30000;
         }
+//        System.out.println(p);
     }
 
     public void setPlayerCoords(float x, float y) {
@@ -132,11 +137,12 @@ public class DataModel {
         renderer.setCamera(playerX, playerY, zoom);
     }
 
-    public void setInRealm(String name, long s) {
+    public void setInRealm(String name, long s, long gameOpenedTime) {
         newRealmCheck = true;
         inRealm = true;
         zoom = 6;
         seed = s;
+        openTime = gameOpenedTime;
         setRealmName(name);
     }
 
@@ -233,8 +239,23 @@ public class DataModel {
         return realmName;
     }
 
-    public String getTpCooldown() {
-        return tpCooldownString;
+    public String extraInfo() {
+        return String.format("%s%s", prismTimer(), tpCooldownString);
+    }
+
+    public String getDungeonTime() {
+        long t = System.currentTimeMillis() / 1000 - openTime;
+        return String.format("[%d:%02d:%02d]", t / 3600, t / 60, t % 60);
+    }
+
+    private String prismTimer() {
+        if (prismTimer == 0) return "";
+        int t = (int) ((prismTimer - System.currentTimeMillis()) / 100);
+        if (t < 1) {
+            prismTimer = 0;
+            return "";
+        }
+        return String.format("(%d:%d) ", t / 10, t % 10);
     }
 
     public int getHeroesLeft() {
@@ -278,5 +299,9 @@ public class DataModel {
 
     public int getMyId() {
         return myId;
+    }
+
+    public void setKeyTime(int keyTime) {
+        this.keyTime = keyTime;
     }
 }
