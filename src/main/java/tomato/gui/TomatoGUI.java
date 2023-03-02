@@ -31,6 +31,7 @@ public class TomatoGUI {
     private static JLabel statusLabel, dpsLabel;
     private static JFrame frame;
     private static ParsePanelGUI parsePanel;
+    private static CharacterPanelGUI characterPanel;
     private JMenuBar jMenuBar;
     private JPanel mainPanel, dpsPanel, dpsTopPanel;
     private TomatoMenuBar menuBar;
@@ -52,6 +53,9 @@ public class TomatoGUI {
 
         parsePanel = new ParsePanelGUI();
         tabbedPane.addTab("Parser", parsePanel);
+
+        characterPanel = new CharacterPanelGUI();
+        tabbedPane.addTab("Characters", characterPanel);
 
         textAreaQuests = new JTextArea();
         tabbedPane.addTab("Daily Quests", createTextArea(textAreaQuests));
