@@ -1,7 +1,8 @@
 package packets.data;
 
 import packets.reader.BufferReader;
-import util.IdToName;
+import util.assets.AssetMissingException;
+import util.assets.IdToName;
 
 public class ObjectData {
     /**
@@ -28,7 +29,12 @@ public class ObjectData {
 
     @Override
     public String toString() {
-        String name = IdToName.objectName(objectType);
+        String name = "";
+        try {
+            name = IdToName.objectName(objectType);
+        } catch (AssetMissingException e) {
+            e.printStackTrace();
+        }
         return "\n    " + (name.equals("") ? ("objectType=" + objectType) : ("objectType=" + objectType + " " + name)) +
                 status;
     }

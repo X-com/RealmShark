@@ -4,7 +4,8 @@ import packets.data.enums.ConditionBits;
 import packets.data.enums.ConditionNewBits;
 import packets.data.enums.StatType;
 import packets.reader.BufferReader;
-import util.IdToName;
+import util.assets.AssetMissingException;
+import util.assets.IdToName;
 
 public class StatData {
     /**
@@ -69,7 +70,13 @@ public class StatData {
         } else if (statTypeNum == 96) {
             valueExtended += " " + ConditionNewBits.effectsToString(statValue);
         } else if (statTypeNum >= 8 && statTypeNum <= 19) {
-            valueExtended += " " + IdToName.objectName(statValue);
+            String name = "";
+            try {
+                name = IdToName.objectName(statValue);
+            } catch (AssetMissingException e) {
+                e.printStackTrace();
+            }
+            valueExtended += " " + name;
         }
         return "\n      " + statType + " = " + statValue + valueExtended;
     }

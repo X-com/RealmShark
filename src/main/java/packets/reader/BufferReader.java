@@ -11,7 +11,7 @@ import java.util.Arrays;
  * Custom buffer class to deserialize the rotmg packets.
  */
 public class BufferReader {
-    ByteBuffer buffer;
+    protected ByteBuffer buffer;
 
     public BufferReader(ByteBuffer data) {
         buffer = data;

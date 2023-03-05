@@ -1,7 +1,8 @@
 package packets.data;
 
 import packets.reader.BufferReader;
-import util.IdToName;
+import util.assets.AssetMissingException;
+import util.assets.IdToName;
 
 /**
  * Tile data class storing tile coordinates (x and y) and type of each tile.
@@ -35,6 +36,12 @@ public class GroundTileData {
 
     @Override
     public String toString() {
-        return "\n    Tile: " + IdToName.tileName(type) + " " + type + " (" + x + ", " + y + ")";
+        String tile = "";
+        try {
+            tile = IdToName.tileName(type);
+        } catch (AssetMissingException e) {
+            e.printStackTrace();
+        }
+        return "\n    Tile: " + tile + " " + type + " (" + x + ", " + y + ")";
     }
 }

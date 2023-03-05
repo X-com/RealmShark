@@ -1,10 +1,7 @@
 package packets.data;
 
 import packets.reader.BufferReader;
-import util.IdToName;
 import util.Util;
-
-import java.util.Arrays;
 
 public class ObjectStatusData {
     /**

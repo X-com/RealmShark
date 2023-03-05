@@ -2,7 +2,7 @@ package tomato.gui;
 
 import tomato.logic.CharList;
 import tomato.logic.Character;
-import util.ImageBuffer;
+import util.assets.ImageBuffer;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

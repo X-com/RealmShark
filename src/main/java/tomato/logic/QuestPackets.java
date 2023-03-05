@@ -5,7 +5,8 @@ import packets.data.QuestData;
 import packets.incoming.QuestFetchResponsePacket;
 import packets.outgoing.HelloPacket;
 import tomato.gui.TomatoGUI;
-import util.IdToName;
+import util.assets.AssetMissingException;
+import util.assets.IdToName;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -56,7 +57,7 @@ public class QuestPackets {
                         memCount = 1;
                     } else if (memId != id) {
                         if (memCount > 1) sbReqs.append(memCount).append("x ");
-                        sbReqs.append(IdToName.objectName(memId));
+                        sbReqs.append(getName(memId));
                         if (i < qd.requirements.length - 1) sbReqs.append(", ");
                         memId = id;
                         memCount = 1;
@@ -65,11 +66,11 @@ public class QuestPackets {
                     }
                 }
                 if (memCount > 1) sbReqs.append(memCount).append("x ");
-                sbReqs.append(IdToName.objectName(memId));
+                sbReqs.append(getName(memId));
                 StringBuilder sbRew = new StringBuilder();
                 for (int i = 0; i < qd.rewards.length; i++) {
                     int id = qd.rewards[i];
-                    sbRew.append(IdToName.objectName(id));
+                    sbRew.append(getName(id));
                     if (i < qd.rewards.length - 1) sbRew.append(", ");
                 }
 
@@ -79,6 +80,15 @@ public class QuestPackets {
 
             getCharList();
         }
+    }
+
+    private static String getName(int id) {
+        try {
+            return IdToName.objectName(id);
+        } catch (AssetMissingException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     private static void getCharList() {

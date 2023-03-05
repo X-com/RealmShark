@@ -11,7 +11,8 @@ import tomato.damagecalc.DpsLogger;
 import tomato.gui.TomatoGUI;
 import tomato.logic.QuestPackets;
 import tomato.security.Parse;
-import util.IdToName;
+import util.assets.AssetMissingException;
+import util.assets.IdToName;
 import util.Util;
 
 import java.net.URL;
@@ -155,7 +156,11 @@ public class Tomato {
                 Matcher m = popperName.matcher(msg);
                 if (m.matches()) {
                     String playerName = m.group(1);
-                    TomatoGUI.appendTextAreaKeypop(String.format("%s [%s]: %s\n", Util.getHourTime(), playerName, IdToName.objectName(nPacket.pictureType)));
+                    try {
+                        TomatoGUI.appendTextAreaKeypop(String.format("%s [%s]: %s\n", Util.getHourTime(), playerName, IdToName.objectName(nPacket.pictureType)));
+                    } catch (AssetMissingException e) {
+                        e.printStackTrace();
+                    }
                 }
             } else if (nPacket.effect == NotificationEffectType.ServerMessage) {
                 String msg = nPacket.message;

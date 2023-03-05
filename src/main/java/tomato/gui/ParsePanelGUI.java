@@ -1,6 +1,7 @@
 package tomato.gui;
 
-import util.ImageBuffer;
+import util.assets.AssetMissingException;
+import util.assets.ImageBuffer;
 import util.Pair;
 
 import javax.swing.*;
@@ -98,7 +99,7 @@ public class ParsePanelGUI extends JPanel {
                     }
                     ImageIcon icon = new ImageIcon(img.getScaledInstance(30, 30, Image.SCALE_DEFAULT));
                     newPanel.add(new JLabel(icon));
-                } catch (IOException e) {
+                } catch (IOException | AssetMissingException e) {
                     e.printStackTrace();
                 }
             }

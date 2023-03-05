@@ -9,7 +9,8 @@ import packets.incoming.NewTickPacket;
 import packets.incoming.TextPacket;
 import packets.incoming.UpdatePacket;
 import packets.reader.BufferReader;
-import util.IdToName;
+import util.assets.AssetMissingException;
+import util.assets.IdToName;
 import util.Pair;
 
 import java.io.*;
@@ -442,7 +443,7 @@ public class DamageSimulator {
             return stats[0].statValue;
         }
 
-        public String showInv(long firstServertime, long endServerTime) {
+        public String showInv(long firstServertime, long endServerTime) throws AssetMissingException {
             if (stats[31] == null) return "";
             String s = "";
             for (int inventory = 0; inventory < 4; inventory++) {
@@ -494,7 +495,12 @@ public class DamageSimulator {
 
         @Override
         public String toString() {
-            return IdToName.objectName(objectType);
+            try {
+                return IdToName.objectName(objectType);
+            } catch (AssetMissingException e) {
+                e.printStackTrace();
+            }
+            return "";
         }
     }
 
