@@ -1,4 +1,4 @@
-package tomato.security;
+package tomato.logic;
 
 import packets.Packet;
 import packets.data.StatData;
