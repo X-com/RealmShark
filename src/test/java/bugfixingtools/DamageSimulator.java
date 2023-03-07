@@ -9,8 +9,8 @@ import packets.incoming.NewTickPacket;
 import packets.incoming.TextPacket;
 import packets.incoming.UpdatePacket;
 import packets.reader.BufferReader;
-import util.assets.AssetMissingException;
-import util.assets.IdToName;
+import assets.AssetMissingException;
+import assets.IdToName;
 import util.Pair;
 
 import java.io.*;

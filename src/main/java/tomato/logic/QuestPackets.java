@@ -5,8 +5,8 @@ import packets.data.QuestData;
 import packets.incoming.QuestFetchResponsePacket;
 import packets.outgoing.HelloPacket;
 import tomato.gui.TomatoGUI;
-import util.assets.AssetMissingException;
-import util.assets.IdToName;
+import assets.AssetMissingException;
+import assets.IdToName;
 
 import java.io.IOException;
 import java.util.Arrays;

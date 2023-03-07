@@ -1,8 +1,8 @@
 package packets.data;
 
 import packets.reader.BufferReader;
-import util.assets.AssetMissingException;
-import util.assets.IdToName;
+import assets.AssetMissingException;
+import assets.IdToName;
 
 /**
  * Tile data class storing tile coordinates (x and y) and type of each tile.

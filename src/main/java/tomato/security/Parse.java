@@ -7,8 +7,8 @@ import packets.incoming.CreateSuccessPacket;
 import packets.incoming.NewTickPacket;
 import packets.incoming.UpdatePacket;
 import tomato.gui.TomatoGUI;
-import util.assets.AssetMissingException;
-import util.assets.IdToName;
+import assets.AssetMissingException;
+import assets.IdToName;
 import util.Pair;
 
 import java.util.ArrayList;

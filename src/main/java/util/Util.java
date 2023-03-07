@@ -1,6 +1,6 @@
 package util;
 
-import util.assets.IdToName;
+import assets.IdToName;
 
 import java.io.*;
 import java.time.LocalDateTime;

@@ -11,8 +11,8 @@ import tomato.damagecalc.DpsLogger;
 import tomato.gui.TomatoGUI;
 import tomato.logic.QuestPackets;
 import tomato.security.Parse;
-import util.assets.AssetMissingException;
-import util.assets.IdToName;
+import assets.AssetMissingException;
+import assets.IdToName;
 import util.Util;
 
 import java.net.URL;
@@ -38,13 +38,22 @@ public class Tomato {
 
     public static void main(String[] args) {
         Util.setSaveLogs(true); // turns the logger to, save in to files.
-        Tomato.example();
+        loadAssets();
+        Tomato.packetRegister();
+        new TomatoGUI().create();
     }
 
     /**
-     * Example mod main method.
+     * Asset loader from realm resources.
      */
-    public static void example() {
+    private static void loadAssets() {
+
+    }
+
+    /**
+     * Packet register for listening to incoming or outgoing packets from realm client.
+     */
+    public static void packetRegister() {
         /*
             Subscribe for any packet wanting to be monitored. Use a lambda in
             the second argument for the action when registered packet is received.
@@ -76,8 +85,6 @@ public class Tomato {
         Register.INSTANCE.register(PacketType.NEWTICK, parse::packetCapture);
         Register.INSTANCE.register(PacketType.UPDATE, parse::packetCapture);
         Register.INSTANCE.register(PacketType.CREATE_SUCCESS, parse::packetCapture);
-
-        new TomatoGUI().create();
     }
 
     /**

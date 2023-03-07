@@ -1,8 +1,8 @@
 package packets.data;
 
 import packets.reader.BufferReader;
-import util.assets.AssetMissingException;
-import util.assets.IdToName;
+import assets.AssetMissingException;
+import assets.IdToName;
 
 public class ObjectData {
     /**

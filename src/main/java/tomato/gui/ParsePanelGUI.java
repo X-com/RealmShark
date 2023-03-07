@@ -1,7 +1,7 @@
 package tomato.gui;
 
-import util.assets.AssetMissingException;
-import util.assets.ImageBuffer;
+import assets.AssetMissingException;
+import assets.ImageBuffer;
 import util.Pair;
 
 import javax.swing.*;

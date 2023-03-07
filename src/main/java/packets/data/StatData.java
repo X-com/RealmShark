@@ -4,8 +4,8 @@ import packets.data.enums.ConditionBits;
 import packets.data.enums.ConditionNewBits;
 import packets.data.enums.StatType;
 import packets.reader.BufferReader;
-import util.assets.AssetMissingException;
-import util.assets.IdToName;
+import assets.AssetMissingException;
+import assets.IdToName;
 
 public class StatData {
     /**
