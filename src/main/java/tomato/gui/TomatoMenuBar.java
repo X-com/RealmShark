@@ -3,7 +3,7 @@ package tomato.gui;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.*;
 import tomato.Tomato;
-import tomato.save.PropertiesManager;
+import util.PropertiesManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

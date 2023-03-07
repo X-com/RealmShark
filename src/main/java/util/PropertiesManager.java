@@ -1,4 +1,4 @@
-package tomato.save;
+package util;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -13,7 +13,7 @@ public class PropertiesManager {
     private static Properties properties;
 
     /*
-     * Load the properties as the GUI loads to set the preset options by the user.
+     * Load the properties as the class loads.
      */
     static {
         properties = new Properties();

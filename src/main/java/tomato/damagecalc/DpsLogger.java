@@ -1,7 +1,7 @@
 package tomato.damagecalc;
 
 import tomato.gui.TomatoGUI;
-import tomato.save.PropertiesManager;
+import util.PropertiesManager;
 import packets.Packet;
 import packets.data.StatData;
 import packets.incoming.*;
