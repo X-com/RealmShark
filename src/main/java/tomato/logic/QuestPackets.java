@@ -6,7 +6,7 @@ import packets.incoming.QuestFetchResponsePacket;
 import packets.outgoing.HelloPacket;
 import tomato.gui.TomatoGUI;
 import assets.AssetMissingException;
-import assets.IdToName;
+import assets.IdToAsset;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -84,7 +84,7 @@ public class QuestPackets {
 
     private static String getName(int id) {
         try {
-            return IdToName.objectName(id);
+            return IdToAsset.objectName(id);
         } catch (AssetMissingException e) {
             e.printStackTrace();
         }

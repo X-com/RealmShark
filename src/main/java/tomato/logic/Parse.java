@@ -8,7 +8,7 @@ import packets.incoming.NewTickPacket;
 import packets.incoming.UpdatePacket;
 import tomato.gui.TomatoGUI;
 import assets.AssetMissingException;
-import assets.IdToName;
+import assets.IdToAsset;
 import util.Pair;
 
 import java.util.ArrayList;
@@ -153,7 +153,7 @@ public class Parse {
         @Override
         public String toString() {
             try {
-                return IdToName.objectName(objectType);
+                return IdToAsset.objectName(objectType);
             } catch (AssetMissingException e) {
                 e.printStackTrace();
             }

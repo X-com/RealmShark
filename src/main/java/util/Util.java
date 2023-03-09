@@ -1,6 +1,6 @@
 package util;
 
-import assets.IdToName;
+import assets.IdToAsset;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -66,7 +66,7 @@ public class Util {
                         fileName = folderAndName + "-" + dateTimeFormat.format(dateTime) + ".data";
                     }
                     File file = new File(fileName);
-                    if (!file.exists()) {
+                    if (!file.getParentFile().exists()) {
                         if (!file.getParentFile().mkdirs()) {
                             System.out.println("[X] Failed to create path for logfile '" + fileName + "'.");
                         }
@@ -181,7 +181,7 @@ public class Util {
      * @return The resource file as stream.
      */
     public static InputStream resourceFilePath(String fileName) {
-        return IdToName.class.getClassLoader().getResourceAsStream(fileName);
+        return IdToAsset.class.getClassLoader().getResourceAsStream(fileName);
     }
 
     /**

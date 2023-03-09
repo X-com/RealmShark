@@ -8,7 +8,7 @@ import packets.incoming.*;
 import packets.outgoing.EnemyHitPacket;
 import packets.outgoing.PlayerShootPacket;
 import assets.AssetMissingException;
-import assets.IdToName;
+import assets.IdToAsset;
 import util.Pair;
 import util.Util;
 
@@ -356,9 +356,9 @@ public class DpsLogger {
         if (projectileId == -1) {
             projectileId = 0;
         }
-        int min = IdToName.getIdProjectileMinDmg(weaponId, projectileId);
-        int max = IdToName.getIdProjectileMaxDmg(weaponId, projectileId);
-        boolean ap = IdToName.getIdProjectileArmorPierces(weaponId, projectileId);
+        int min = IdToAsset.getIdProjectileMinDmg(weaponId, projectileId);
+        int max = IdToAsset.getIdProjectileMaxDmg(weaponId, projectileId);
+        boolean ap = IdToAsset.getIdProjectileArmorPierces(weaponId, projectileId);
         int dmg;
         if (min != max) {
             long r = rng.next();
@@ -572,7 +572,7 @@ public class DpsLogger {
 
     private static String getName(int id) {
         try {
-            IdToName.objectName(id);
+            IdToAsset.objectName(id);
         } catch (AssetMissingException e) {
             e.printStackTrace();
         }

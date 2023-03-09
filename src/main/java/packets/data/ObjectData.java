@@ -2,7 +2,7 @@ package packets.data;
 
 import packets.reader.BufferReader;
 import assets.AssetMissingException;
-import assets.IdToName;
+import assets.IdToAsset;
 
 public class ObjectData {
     /**
@@ -31,7 +31,7 @@ public class ObjectData {
     public String toString() {
         String name = "";
         try {
-            name = IdToName.objectName(objectType);
+            name = IdToAsset.objectName(objectType);
         } catch (AssetMissingException e) {
             e.printStackTrace();
         }

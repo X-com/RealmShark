@@ -5,7 +5,7 @@ import packets.data.enums.ConditionNewBits;
 import packets.data.enums.StatType;
 import packets.reader.BufferReader;
 import assets.AssetMissingException;
-import assets.IdToName;
+import assets.IdToAsset;
 
 public class StatData {
     /**
@@ -72,7 +72,7 @@ public class StatData {
         } else if (statTypeNum >= 8 && statTypeNum <= 19) {
             String name = "";
             try {
-                name = IdToName.objectName(statValue);
+                name = IdToAsset.objectName(statValue);
             } catch (AssetMissingException e) {
                 e.printStackTrace();
             }
