@@ -1,18 +1,21 @@
 package tomato;
 
+import assets.AssetLoader;
 import packets.Packet;
 import packets.PacketType;
 import packets.data.enums.NotificationEffectType;
+import packets.incoming.MapInfoPacket;
 import packets.incoming.NotificationPacket;
 import packets.incoming.TextPacket;
 import packets.packetcapture.PacketProcessor;
+import packets.packetcapture.register.IPacketListener;
 import packets.packetcapture.register.Register;
 import tomato.damagecalc.DpsLogger;
 import tomato.gui.TomatoGUI;
 import tomato.logic.QuestPackets;
-import tomato.security.Parse;
+import tomato.logic.Parse;
 import assets.AssetMissingException;
-import assets.IdToName;
+import assets.IdToAsset;
 import util.Util;
 
 import java.net.URL;
@@ -35,19 +38,12 @@ public class Tomato {
     private static PacketProcessor packetProcessor;
     private static final DpsLogger dpsLogger = new DpsLogger();
     private static final Parse parse = new Parse();
+    private static final IPacketListener<Packet> loadAsset = Tomato::loadAssets;
 
     public static void main(String[] args) {
         Util.setSaveLogs(true); // turns the logger to, save in to files.
-        loadAssets();
         Tomato.packetRegister();
         new TomatoGUI().create();
-    }
-
-    /**
-     * Asset loader from realm resources.
-     */
-    private static void loadAssets() {
-
     }
 
     /**
@@ -64,6 +60,8 @@ public class Tomato {
             Example 2: Subscribing to TEXT packets
          */
         // [ExampleModTomato::text] is the same as [(packet) - > text(packet)]
+        Register.INSTANCE.register(PacketType.MAPINFO, Tomato::loadAssets);
+
         Register.INSTANCE.register(PacketType.TEXT, Tomato::textPacket);
 
         Register.INSTANCE.register(PacketType.NOTIFICATION, Tomato::notificationPacket);
@@ -85,6 +83,17 @@ public class Tomato {
         Register.INSTANCE.register(PacketType.NEWTICK, parse::packetCapture);
         Register.INSTANCE.register(PacketType.UPDATE, parse::packetCapture);
         Register.INSTANCE.register(PacketType.CREATE_SUCCESS, parse::packetCapture);
+    }
+
+    /**
+     * Asset loader from realm resources.
+     */
+    private static void loadAssets(Packet packet) {
+        if (packet instanceof MapInfoPacket) {
+            MapInfoPacket p = (MapInfoPacket) packet;
+            AssetLoader.load(p.buildVersion);
+            Register.INSTANCE.unregister(PacketType.MAPINFO, loadAsset);
+        }
     }
 
     /**
@@ -164,7 +173,7 @@ public class Tomato {
                 if (m.matches()) {
                     String playerName = m.group(1);
                     try {
-                        TomatoGUI.appendTextAreaKeypop(String.format("%s [%s]: %s\n", Util.getHourTime(), playerName, IdToName.objectName(nPacket.pictureType)));
+                        TomatoGUI.appendTextAreaKeypop(String.format("%s [%s]: %s\n", Util.getHourTime(), playerName, IdToAsset.objectName(nPacket.pictureType)));
                     } catch (AssetMissingException e) {
                         e.printStackTrace();
                     }
