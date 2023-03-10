@@ -16,7 +16,7 @@ public class SpriteJson implements JsonDeserializer<SpriteJson> {
     private static String spriteJson = "assets/json/spritesheet.json";
 
     private static HashMap<String, HashMap<Integer, Sprite>> sprites;
-    private static HashMap<String, Sprite> animatedSprites;
+    private static HashMap<String, HashMap<Integer, Sprite>> animatedSprites;
 
     /**
      * Static class used to load the json file and parse the json.
@@ -46,7 +46,7 @@ public class SpriteJson implements JsonDeserializer<SpriteJson> {
      * @param sprites         Hash list of all sprites.
      * @param animatedSprites Hash list of all animated sprites. (currently not implemented fully)
      */
-    public SpriteJson(HashMap<String, HashMap<Integer, Sprite>> sprites, HashMap<String, Sprite> animatedSprites) {
+    public SpriteJson(HashMap<String, HashMap<Integer, Sprite>> sprites, HashMap<String, HashMap<Integer, Sprite>> animatedSprites) {
         this.sprites = sprites;
         this.animatedSprites = animatedSprites;
     }
@@ -60,6 +60,9 @@ public class SpriteJson implements JsonDeserializer<SpriteJson> {
      */
     public int[] getSprite(String name, int index) {
         HashMap<Integer, Sprite> list = sprites.get(name);
+        if (list == null) {
+            list = animatedSprites.get(name);
+        }
         Sprite sprite = list.get(index);
         return new int[]{sprite.position.x, sprite.position.y, sprite.position.w, sprite.position.h, sprite.aId};
     }
@@ -92,7 +95,7 @@ public class SpriteJson implements JsonDeserializer<SpriteJson> {
      *
      * @return Hash of the animated sprite data.
      */
-    public HashMap<String, Sprite> getAnimatedSprites() {
+    public HashMap<String, HashMap<Integer, Sprite>> getAnimatedSprites() {
         return animatedSprites;
     }
 
@@ -102,7 +105,7 @@ public class SpriteJson implements JsonDeserializer<SpriteJson> {
     @Override
     public SpriteJson deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
         HashMap<String, HashMap<Integer, Sprite>> sprites = new HashMap<>(); // sprites
-        HashMap<String, Sprite> animatedSprites = new HashMap<>(); // animatedSprites
+        HashMap<String, HashMap<Integer, Sprite>> animatedSprites = new HashMap<>(); // animatedSprites
         JsonObject jsonObject = element.getAsJsonObject();
 
         JsonArray spritesArray = jsonObject.getAsJsonArray("sprites");
@@ -122,20 +125,19 @@ public class SpriteJson implements JsonDeserializer<SpriteJson> {
             sprites.put(name, list);
         }
 
-        // TODO: fix animated sprites.
-//        JsonArray animatedArray = jsonObject.getAsJsonArray("animatedSprites");
-//        for (JsonElement animated : animatedArray) {
-//            JsonObject animatedObject = animated.getAsJsonObject();
-//            int index = animatedObject.getAsJsonPrimitive("index").getAsInt();
-//            String name = animatedObject.getAsJsonPrimitive("spriteSheetName").getAsString();
-//            int direction = animatedObject.getAsJsonPrimitive("direction").getAsInt();
-//            String action = animatedObject.getAsJsonPrimitive("action").getAsString();
-//            int set = animatedObject.getAsJsonPrimitive("set").getAsInt();
-//            JsonObject spriteData = animatedObject.getAsJsonObject("spriteData");
-//            Sprite sprite = context.deserialize(spriteData, Sprite.class);
-//            sprite.setAnimationVars(index, direction, action, set);
-//            animatedSprites.put(name, sprite);
-//        }
+        JsonArray animatedArray = jsonObject.getAsJsonArray("animatedSprites");
+        for (JsonElement animated : animatedArray) {
+            JsonObject animatedObject = animated.getAsJsonObject();
+            int index = animatedObject.getAsJsonPrimitive("index").getAsInt();
+            String name = animatedObject.getAsJsonPrimitive("spriteSheetName").getAsString();
+            int direction = animatedObject.getAsJsonPrimitive("direction").getAsInt();
+            String action = animatedObject.getAsJsonPrimitive("action").getAsString();
+            int set = animatedObject.getAsJsonPrimitive("set").getAsInt();
+            JsonObject spriteData = animatedObject.getAsJsonObject("spriteData");
+            Sprite sprite = context.deserialize(spriteData, Sprite.class);
+            sprite.setAnimationVars(index, direction, action, set);
+            animatedSprites.computeIfAbsent(name, e -> new HashMap<>()).put(index, sprite);
+        }
 
         return new SpriteJson(sprites, animatedSprites);
     }
@@ -244,7 +246,7 @@ public class SpriteJson implements JsonDeserializer<SpriteJson> {
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
-            sb.append(String.format("padding:%d, index:%d, aId%d, isT:%b, position:%s, maskPosition:%s, mostCommonColor:%s", padding, index, aId, isT, position, maskPosition, mostCommonColor));
+            sb.append(String.format("padding:%d, index:%d, aId%d, isT:%b, position:%s, maskPosition:%s, mostCommonColor:%s, animatedIndex:%d ,animatedDirection:%d, animatedAction:%s, animatedSet:%d", padding, index, aId, isT, position, maskPosition, mostCommonColor, animatedIndex, animatedDirection, animatedAction, animatedSet));
             return sb.toString();
         }
     }
