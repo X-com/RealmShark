@@ -88,10 +88,8 @@ public class IdToAsset {
      * Method to grab the full list of object resource's from file and construct the hashmap.
      */
     private static void readObjectList() {
-        String fileName = "ObjectID6.list";
-
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(Util.resourceFilePath(fileName), StandardCharsets.UTF_8));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(AssetLoader.ASSETS_OBJECT_FILE_DIR_PATH)));
             String line;
 
             while ((line = br.readLine()) != null) {
@@ -117,10 +115,8 @@ public class IdToAsset {
      * Method to grab the full list of tile resource's from file and construct the hashmap.
      */
     private static void readTileList() {
-        String fileName = "TileID1.list";
-
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(Util.resourceFilePath(fileName), StandardCharsets.UTF_8));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(AssetLoader.ASSETS_TILE_FILE_DIR_PATH)));
             String line;
 
             while ((line = br.readLine()) != null) {
@@ -240,15 +236,14 @@ public class IdToAsset {
         int index = 0;
         try {
             for (int i = 0; i < l.length; i += 2) {
-                String name = l[i];
-                int ix = Integer.parseInt(l[1 + i]);
+                String name = l[i + 1];
+                int ix = Integer.parseInt(l[i]);
                 t[index] = new Texture(name, ix);
                 index++;
             }
         } catch (Exception e) {
             System.out.println(entity);
         }
-
         return t;
     }
 
@@ -313,7 +308,7 @@ public class IdToAsset {
      */
     public static int getObjectTextureIndex(int id, int num) throws AssetMissingException {
         IdToAsset i = objectID.get(id);
-        i.textures = parseObjectTexture(i);
+        if (i.textures == null) i.textures = parseObjectTexture(i);
         return i.textures[num].index;
     }
 

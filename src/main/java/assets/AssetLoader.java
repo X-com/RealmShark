@@ -24,9 +24,9 @@ import java.util.*;
  */
 public class AssetLoader {
 
+    public static final String ASSETS_OBJECT_FILE_DIR_PATH = "assets/ObjectID.list";
+    public static final String ASSETS_TILE_FILE_DIR_PATH = "assets/TileID.list";
     private static final String XML_DIR_PATH = "assets/xml";
-    private static final String ASSETS_OBJECT_FILE_DIR_PATH = "assets/ObjectID.list-";
-    private static final String ASSETS_TILE_FILE_DIR_PATH = "assets/TileID.list-";
     private static final File[] ASSET_FOLDERS = {new File("assets/json/"), new File("assets/sprites/"), new File("assets/xml/")};
     private static final String REALM_RES_PATH = "/RealmOfTheMadGod/Production/RotMG Exalt_Data/resources.assets";
 
@@ -40,16 +40,11 @@ public class AssetLoader {
             try {
                 System.out.println("Extracting assets");
                 extractAssets(buildVersion);
+                loadAssets();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-        loadAssets();
-    }
-
-    public static void main(String[] args) {
-        loadAssets();
     }
 
     /**
@@ -85,10 +80,8 @@ public class AssetLoader {
      */
     private static boolean checkUpdateAssets(String buildVersion) {
         if (Arrays.stream(ASSET_FOLDERS).anyMatch(file -> !file.exists())) return true;
-        if (!new File(ASSETS_OBJECT_FILE_DIR_PATH.substring(0, ASSETS_OBJECT_FILE_DIR_PATH.length() - 1)).exists())
-            return true;
-        if (!new File(ASSETS_TILE_FILE_DIR_PATH.substring(0, ASSETS_TILE_FILE_DIR_PATH.length() - 1)).exists())
-            return true;
+        if (!new File(ASSETS_OBJECT_FILE_DIR_PATH).exists()) return true;
+        if (!new File(ASSETS_TILE_FILE_DIR_PATH).exists()) return true;
         return !Objects.equals(PropertiesManager.getProperty("buildVersion"), buildVersion);
     }
 
@@ -112,10 +105,10 @@ public class AssetLoader {
         }
 
         objectAssets.sort(Comparator.comparing(a -> a.id));
-        objectAssets.forEach(e -> Util.print(ASSETS_OBJECT_FILE_DIR_PATH, e.toString()));
+        objectAssets.forEach(e -> Util.print(ASSETS_OBJECT_FILE_DIR_PATH + "-", e.toString()));
 
         tileAssets.sort(Comparator.comparing(a -> a.id));
-        tileAssets.forEach(e -> Util.print(ASSETS_TILE_FILE_DIR_PATH, e.toString()));
+        tileAssets.forEach(e -> Util.print(ASSETS_TILE_FILE_DIR_PATH + "-", e.toString()));
 
         IdToAsset.reloadAssets();
     }

@@ -15,7 +15,7 @@ public class ImageBuffer {
     private static HashMap<Integer, Integer> colors = new HashMap<>();
     private static final SpriteJson spriteJson = new SpriteJson();
 
-    private static String[] spriteSheets = {"assets/sprite/tiles.png", "assets/sprite/characters.png", "assets/sprite/characters_masks.png", "assets/sprite/objects.png"};
+    private static String[] spriteSheets = {"assets/sprites/groundTiles.png", "assets/sprites/characters.png", "assets/sprites/characters_masks.png", "assets/sprites/mapObjects.png"};
     private static BufferedImage[] bigImages = new BufferedImage[4];
 
     /**
@@ -27,7 +27,7 @@ public class ImageBuffer {
      */
     public static BufferedImage getImage(int id) throws IOException, AssetMissingException {
         if (id <= 0) return null;
-        if (images.containsKey(id)) return images.get(id);
+//        if (images.containsKey(id)) return images.get(id);
         String name = IdToAsset.getObjectTextureName(id, 0);
         int index = IdToAsset.getObjectTextureIndex(id, 0);
         int[] spriteData = spriteJson.getSprite(name, index);
