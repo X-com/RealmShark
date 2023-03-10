@@ -3,6 +3,7 @@ package tomato.gui;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.*;
 import tomato.Tomato;
+import tomato.logic.Character;
 import util.PropertiesManager;
 import util.Pair;
 
@@ -337,5 +338,14 @@ public class TomatoGUI {
      */
     public static void setStateOfSniffer(boolean running) {
         statusLabel.setText(" Network Monitor: " + (running ? "RUNNING" : "OFF"));
+    }
+
+    /**
+     * Updates the users full character list in the character tab.
+     *
+     * @param list List of all characters of the user.
+     */
+    public static void updateCharacters(ArrayList<Character> list) {
+        characterPanel.updateCharacters(list);
     }
 }

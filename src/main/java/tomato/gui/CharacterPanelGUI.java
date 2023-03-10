@@ -27,11 +27,12 @@ public class CharacterPanelGUI extends JPanel {
         charPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
         charPanel.add(Box.createVerticalGlue());
 
-        JButton button = new JButton("Add");
-        button.addActionListener(e -> {
-            updateCharacters(CharList.getCharList());
-        });
-        add(button, BorderLayout.SOUTH);
+//        JButton button = new JButton("Add");
+//        button.addActionListener(e -> {
+//            updateCharacters(CharList.getCharList(null));
+//        });
+//        add(button, BorderLayout.SOUTH);
+        add(new Label("Enter Daily Quest Room to see chars"), BorderLayout.NORTH);
 
         add(scrollPane);
     }
@@ -52,14 +53,15 @@ public class CharacterPanelGUI extends JPanel {
 //        panel.setBorder(new CompoundBorder(BorderFactory.createLineBorder(Color.black), new EmptyBorder(1, 1, 1, 1)));
 
         try {
-            int eq = c.equipment[0];
+            int eq = c.skin;
+            if(eq == 0) eq = c.classNum;
             BufferedImage img = ImageBuffer.getImage(eq);
             ImageIcon icon = new ImageIcon(img.getScaledInstance(15, 15, Image.SCALE_DEFAULT));
             JLabel characterLabel = new JLabel(c.classString + " " + c.level, icon, JLabel.CENTER);
             panel.add(characterLabel);
             characterLabel.setToolTipText(exaltStats(c));
         } catch (Exception e) {
-//                e.printStackTrace();
+            e.printStackTrace();
         }
         panel.add(new JLabel(String.format("Fame:%3d", c.fame)));
         panel.add(new JLabel(String.format("HP:%3d MP:%3d", c.hp, c.mp)));

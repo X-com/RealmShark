@@ -9,6 +9,7 @@ import assets.AssetMissingException;
 import assets.IdToAsset;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.Collectors;
@@ -93,7 +94,10 @@ public class QuestPackets {
 
     private static void getCharList() {
         try {
-            CharList.getChartList(token);
+            String s = CharList.getChartList(token);
+            System.out.println("s: " + s);
+            ArrayList<Character> l = CharList.getCharList(s);
+            TomatoGUI.updateCharacters(l);
         } catch (IOException e) {
             e.printStackTrace();
         }

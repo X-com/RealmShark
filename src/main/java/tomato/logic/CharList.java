@@ -45,6 +45,7 @@ public class CharList {
 
             // print result
             System.out.println(response);
+            return response.toString();
         } else {
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
             String inputLine;
@@ -55,30 +56,30 @@ public class CharList {
             }
             in.close();
             System.out.println(response);
-
-            return response.toString();
         }
         return null;
     }
 
-    public static ArrayList<Character> getCharList() {
-        StringBuilder r = new StringBuilder();
+    public static ArrayList<Character> getCharList(String r) {
         StringXML base;
         ArrayList<Character> listChars = new ArrayList<>();
 
-        try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(Util.resourceFilePath("temp"), StandardCharsets.UTF_8));
-            String line;
-            while ((line = br.readLine()) != null) {
-                r.append(line);
+        if (r == null) {
+            r = "";
+            try {
+                BufferedReader br = new BufferedReader(new InputStreamReader(Util.resourceFilePath("temp"), StandardCharsets.UTF_8));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    r += line;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
         }
 
         try {
-            base = StringXML.getParsedXML(r.toString());
+            base = StringXML.getParsedXML(r);
         } catch (ParserConfigurationException | IOException | SAXException e) {
             e.printStackTrace();
             return null;
@@ -156,7 +157,6 @@ public class CharList {
                     if (Objects.equals(info.name, "ClassStats")) {
                         int clazz = Integer.parseInt(info.children.get(0).value);
                         int[] exalts = Arrays.stream(info.children.get(1).value.split(",")).mapToInt(Integer::parseInt).toArray();
-                        System.out.println(Character.classType(clazz) + " " + Arrays.toString(exalts));
                         Character.exalts.put(clazz, exalts);
                     }
                 }
