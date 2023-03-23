@@ -153,7 +153,7 @@ public class TomatoGUI {
     /**
      * Loads the theme preset chosen by the user.
      */
-    private void loadThemePreset() {
+    public static void loadThemePreset() {
         String theme = PropertiesManager.getProperty("theme");
         if (theme == null) {
             LafManager.install(new DarculaTheme());
@@ -347,5 +347,14 @@ public class TomatoGUI {
      */
     public static void updateCharacters(ArrayList<Character> list) {
         characterPanel.updateCharacters(list);
+    }
+
+    /**
+     * Getter for the main object.
+     *
+     * @return The main tomato frame object.
+     */
+    public static JFrame getFrame() {
+        return frame;
     }
 }

@@ -91,7 +91,7 @@ public class Tomato {
     private static void loadAssets(Packet packet) {
         if (packet instanceof MapInfoPacket) {
             MapInfoPacket p = (MapInfoPacket) packet;
-            AssetLoader.load(p.buildVersion);
+            AssetLoader.checkForExtraction(p.buildVersion);
             Register.INSTANCE.unregister(PacketType.MAPINFO, loadAsset);
         }
     }
