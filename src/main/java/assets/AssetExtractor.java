@@ -28,7 +28,7 @@ import java.util.stream.Stream;
  * Main loader for assets. If assets are missing or are outdated,
  * extracts the assets from realm resources files.
  */
-public class AssetLoader {
+public class AssetExtractor {
 
     public static final String ASSETS_OBJECT_FILE_DIR_PATH = "assets/ObjectID.list";
     public static final String ASSETS_TILE_FILE_DIR_PATH = "assets/TileID.list";
@@ -42,8 +42,7 @@ public class AssetLoader {
      * @param buildVersion
      */
     public static void checkForExtraction(String buildVersion) {
-        int u = checkUpdateAssets(buildVersion);
-        if (u != 0) {
+        if (checkUpdateAssets(buildVersion) != 0) {
             assetExtractionWindow(buildVersion);
         }
     }
@@ -54,7 +53,6 @@ public class AssetLoader {
      * @param buildVersion Build version of realm.
      */
     private static void assetExtractionWindow(String buildVersion) {
-        TomatoGUI.loadThemePreset();
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayout(2, 1));
 
@@ -88,12 +86,9 @@ public class AssetLoader {
         buttons.add(close);
         buttons.add(Box.createHorizontalGlue());
 
-        ImageIcon icon = new ImageIcon(AssetLoader.class.getResource("/loading.gif").getFile());
-
         mainPanel.add(buttons);
 
-        JOptionPane optionPane = new JOptionPane(mainPanel, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
-        JDialog dialog = new JDialog();
+        JDialog dialog = new JDialog(TomatoGUI.getFrame());
         close.addActionListener(e -> {
             dialog.dispose();
         });
@@ -145,7 +140,6 @@ public class AssetLoader {
             buttons.removeAll();
 
             labels.setLayout(new BoxLayout(labels, BoxLayout.X_AXIS));
-            labels.add(new JLabel(icon));
             labels.add(l3);
             buttons.add(Box.createHorizontalGlue());
             close.setEnabled(false);
@@ -157,22 +151,27 @@ public class AssetLoader {
             buttons.revalidate();
             dialog.repaint();
 
-            try {
-                extractAssets(f, buildVersion);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            loadAssets();
+            File finalF = f;
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    extractAssets(finalF, buildVersion);
+                    extractAssetsFromXML();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
 
-            labels.removeAll();
-            labels.add(new JLabel("Done extracting assets"));
-            labels.revalidate();
-            dialog.repaint();
-            close.setEnabled(true);
+                labels.removeAll();
+                labels.add(new JLabel("Done extracting assets"));
+                labels.revalidate();
+                dialog.repaint();
+                close.setEnabled(true);
+            });
         });
 
+        JOptionPane optionPane = new JOptionPane(mainPanel, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
         dialog.setTitle("Asset Extraction");
         dialog.setContentPane(optionPane);
+        dialog.setLocationRelativeTo(dialog.getOwner());
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.pack();
         dialog.setVisible(true);
@@ -213,14 +212,14 @@ public class AssetLoader {
     private static int checkUpdateAssets(String buildVersion) {
         if (!new File(ASSETS_OBJECT_FILE_DIR_PATH).exists()) return 1;
         if (!new File(ASSETS_TILE_FILE_DIR_PATH).exists()) return 2;
-        if (Objects.equals(PropertiesManager.getProperty("buildVersion"), buildVersion)) return 3;
+        if (!Objects.equals(PropertiesManager.getProperty("buildVersion"), buildVersion)) return 3;
         return 0;
     }
 
     /**
-     * Loads assets from XML files.
+     * Extracts assets from XML files.
      */
-    private static void loadAssets() {
+    private static void extractAssetsFromXML() {
         ArrayList<AssetObject> objectAssets = new ArrayList<>();
         ArrayList<AssetTile> tileAssets = new ArrayList<>();
 
@@ -242,7 +241,12 @@ public class AssetLoader {
         tileAssets.sort(Comparator.comparing(a -> a.id));
         tileAssets.forEach(e -> Util.print(ASSETS_TILE_FILE_DIR_PATH + "-", e.toString()));
 
+        reloadAssetsOnRunningApp();
+    }
+
+    private static void reloadAssetsOnRunningApp() {
         IdToAsset.reloadAssets();
+        SpriteJson.jsonFileReader();
     }
 
     /**
@@ -438,7 +442,7 @@ public class AssetLoader {
                     break;
             }
         });
-        if (texture.file != null && texture.index != 0) {
+        if (texture.file != null && texture.index != -1) {
             if (ao.textures == null) ao.textures = new ArrayList<>();
             ao.textures.add(texture);
         }
@@ -538,7 +542,7 @@ public class AssetLoader {
      * Class to store XML parsed texture/sprite data into.
      */
     private static class AssetTexture {
-        int index;
+        int index = -1;
         String file;
 
         @Override

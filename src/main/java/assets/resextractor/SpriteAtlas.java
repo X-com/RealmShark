@@ -1,8 +1,5 @@
 package assets.resextractor;
 
-import com.sun.javafx.geom.Vec2f;
-import com.sun.javafx.geom.Vec4f;
-
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;

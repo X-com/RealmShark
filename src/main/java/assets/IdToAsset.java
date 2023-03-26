@@ -89,7 +89,7 @@ public class IdToAsset {
      */
     private static void readObjectList() {
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(AssetLoader.ASSETS_OBJECT_FILE_DIR_PATH)));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(AssetExtractor.ASSETS_OBJECT_FILE_DIR_PATH)));
             String line;
 
             while ((line = br.readLine()) != null) {
@@ -116,7 +116,7 @@ public class IdToAsset {
      */
     private static void readTileList() {
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(AssetLoader.ASSETS_TILE_FILE_DIR_PATH)));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(AssetExtractor.ASSETS_TILE_FILE_DIR_PATH)));
             String line;
 
             while ((line = br.readLine()) != null) {
@@ -296,7 +296,12 @@ public class IdToAsset {
     public static String getObjectTextureName(int id, int num) throws AssetMissingException {
         IdToAsset i = objectID.get(id);
         if (i.textures == null) i.textures = parseObjectTexture(i);
-        return i.textures[num].name;
+        try {
+            return i.textures[num].name;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println(id + " " + i);
+            return null;
+        }
     }
 
     /**
@@ -309,7 +314,12 @@ public class IdToAsset {
     public static int getObjectTextureIndex(int id, int num) throws AssetMissingException {
         IdToAsset i = objectID.get(id);
         if (i.textures == null) i.textures = parseObjectTexture(i);
-        return i.textures[num].index;
+        try {
+            return i.textures[num].index;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println(id + " " + i);
+            return -1;
+        }
     }
 
     /**

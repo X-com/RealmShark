@@ -1,6 +1,6 @@
 package tomato;
 
-import assets.AssetLoader;
+import assets.AssetExtractor;
 import packets.Packet;
 import packets.PacketType;
 import packets.data.enums.NotificationEffectType;
@@ -60,7 +60,7 @@ public class Tomato {
             Example 2: Subscribing to TEXT packets
          */
         // [ExampleModTomato::text] is the same as [(packet) - > text(packet)]
-        Register.INSTANCE.register(PacketType.MAPINFO, Tomato::loadAssets);
+        Register.INSTANCE.register(PacketType.MAPINFO, loadAsset);
 
         Register.INSTANCE.register(PacketType.TEXT, Tomato::textPacket);
 
@@ -91,7 +91,7 @@ public class Tomato {
     private static void loadAssets(Packet packet) {
         if (packet instanceof MapInfoPacket) {
             MapInfoPacket p = (MapInfoPacket) packet;
-            AssetLoader.checkForExtraction(p.buildVersion);
+            AssetExtractor.checkForExtraction(p.buildVersion);
             Register.INSTANCE.unregister(PacketType.MAPINFO, loadAsset);
         }
     }

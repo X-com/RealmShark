@@ -22,6 +22,13 @@ public class SpriteJson implements JsonDeserializer<SpriteJson> {
      * Static class used to load the json file and parse the json.
      */
     static {
+        jsonFileReader();
+    }
+
+    /**
+     * Loads the json file into HashMap data structure.
+     */
+    public static void jsonFileReader() {
         try {
             GsonBuilder builder = new GsonBuilder();
             builder.registerTypeAdapter(SpriteJson.class, new SpriteJson());
