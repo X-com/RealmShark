@@ -253,11 +253,19 @@ public class OpenGLPotato extends Thread {
     }
 
     public void show() {
-        glfwShowWindow(window);
+        try {
+            glfwShowWindow(window);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void hide() {
-        glfwHideWindow(window);
+        try {
+            glfwHideWindow(window);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void renderMap(boolean b) {
