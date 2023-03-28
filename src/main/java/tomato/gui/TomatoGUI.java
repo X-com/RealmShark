@@ -2,6 +2,7 @@ package tomato.gui;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.*;
+import packets.data.QuestData;
 import tomato.Tomato;
 import tomato.logic.Character;
 import util.PropertiesManager;
@@ -26,13 +27,13 @@ public class TomatoGUI {
     private static JTextArea textAreaChat;
     private static JTextArea textAreaKeypop;
     private static JTextArea textAreaDPS;
-    private static JTextArea textAreaQuests;
     private static JTextField textFilter;
     private static JCheckBox textFilterToggle;
     private static JLabel statusLabel, dpsLabel;
     private static JFrame frame;
     private static ParsePanelGUI parsePanel;
     private static CharacterPanelGUI characterPanel;
+    private static QuestGUI questPanel;
     private JMenuBar jMenuBar;
     private JPanel mainPanel, dpsPanel, dpsTopPanel;
     private TomatoMenuBar menuBar;
@@ -58,8 +59,11 @@ public class TomatoGUI {
         characterPanel = new CharacterPanelGUI();
         tabbedPane.addTab("Characters", characterPanel);
 
-        textAreaQuests = new JTextArea();
-        tabbedPane.addTab("Daily Quests", createTextArea(textAreaQuests));
+//        textAreaQuests = new JTextArea();
+//        tabbedPane.addTab("Daily Quests", createTextArea(textAreaQuests));
+
+        questPanel = new QuestGUI();
+        tabbedPane.addTab("Daily Quests", questPanel);
 
         next = new JButton("  Next  ");
         prev = new JButton("Previous");
@@ -276,7 +280,6 @@ public class TomatoGUI {
         Font f = textAreaChat.getFont();
         textAreaChat.setFont(new Font(f.getName(), f.getStyle(), size));
         textAreaKeypop.setFont(new Font(f.getName(), f.getStyle(), size));
-        textAreaQuests.setFont(new Font(f.getName(), f.getStyle(), size));
         textAreaDPS.setFont(new Font(f.getName(), f.getStyle(), size));
     }
 
@@ -287,7 +290,6 @@ public class TomatoGUI {
         Font f = textAreaChat.getFont();
         textAreaChat.setFont(new Font(name, style, f.getSize()));
         textAreaKeypop.setFont(new Font(name, style, f.getSize()));
-        textAreaQuests.setFont(new Font(name, style, f.getSize()));
         textAreaDPS.setFont(new Font(name, style, f.getSize()));
     }
 
@@ -314,12 +316,12 @@ public class TomatoGUI {
     }
 
     /**
-     * Sets the text of Quests text area.
+     * Updates the questGUI with quest data.
      *
-     * @param s Sets the text of text area.
+     * @param q Quest data received when visiting quest room.
      */
-    public static void setTextAreaQuests(String s) {
-        if (textAreaQuests != null) textAreaQuests.setText(s);
+    public static void updateQuests(QuestData[] q) {
+        questPanel.update(q);
     }
 
     /**
