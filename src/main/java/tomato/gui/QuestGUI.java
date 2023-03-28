@@ -11,15 +11,14 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class QuestGUI extends JPanel {
-    private JPanel questPanel;
-    private static JScrollPane scrollPane;
-    private JLabel infoLabel;
+    private final JPanel questPanel;
+    private final JLabel infoLabel;
 
     public QuestGUI() {
         setLayout(new BorderLayout());
 
         questPanel = new JPanel();
-        scrollPane = new JScrollPane(questPanel);
+        JScrollPane scrollPane = new JScrollPane(questPanel);
         scrollPane.getVerticalScrollBar().setUnitIncrement(40);
 
         questPanel.setLayout(new BoxLayout(questPanel, BoxLayout.Y_AXIS));

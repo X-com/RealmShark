@@ -44,7 +44,7 @@ public class CharList {
             in.close();
 
             // print result
-            System.out.println(response);
+//            System.out.println(response);
             return response.toString();
         } else {
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
@@ -55,7 +55,7 @@ public class CharList {
                 response.append(inputLine).append("\n");
             }
             in.close();
-            System.out.println(response);
+//            System.out.println(response);
         }
         return null;
     }

@@ -39,7 +39,6 @@ public class QuestPackets {
     private static void getCharList() {
         try {
             String s = CharList.getChartList(token);
-            System.out.println("s: " + s);
             ArrayList<Character> l = CharList.getCharList(s);
             TomatoGUI.updateCharacters(l);
         } catch (IOException e) {
