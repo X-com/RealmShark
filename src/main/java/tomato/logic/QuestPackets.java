@@ -5,16 +5,17 @@ import packets.data.QuestData;
 import packets.incoming.QuestFetchResponsePacket;
 import packets.outgoing.HelloPacket;
 import tomato.gui.TomatoGUI;
-import assets.AssetMissingException;
-import assets.IdToAsset;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Handles quest packets when entering daily quest room.
+ * As a side bonus, handles character list data at the same time.
+ */
 public class QuestPackets {
     private static String token;
 
@@ -36,6 +37,11 @@ public class QuestPackets {
         }
     }
 
+    /**
+     * Handles character data by sending char list request to rotmg servers while in the daily quest room.
+     * This is done here given pet yard and daily quest instance is the only instances where the char list
+     * request can be done without being rejected by rotmg servers.
+     */
     private static void getCharList() {
         try {
             String s = CharList.getChartList(token);

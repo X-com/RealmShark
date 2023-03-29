@@ -3,6 +3,9 @@ package tomato.logic;
 import java.util.Arrays;
 import java.util.HashMap;
 
+/**
+ * Basic data class to store Character info.
+ */
 public class Character {
 
     public static HashMap<Integer, int[]> exalts = new HashMap<>();
@@ -30,10 +33,19 @@ public class Character {
     public int vit;
     public int wis;
 
+    /**
+     * Simple setter for the class string from the class id.
+     */
     public void setClassString() {
         classString = classType(classNum);
     }
 
+    /**
+     * Character class id to class name
+     *
+     * @param c Id of the class
+     * @return Name of the class.
+     */
     public static String classType(int c) {
         switch (c) {
             case 768:
@@ -78,23 +90,6 @@ public class Character {
 
     @Override
     public String toString() {
-        return "Character{" +
-                "\n   skin=" + skin +
-                "\n   exp=" + exp +
-                "\n   fame=" + fame +
-                "\n   seasonal=" + seasonal +
-                "\n   backpack=" + backpack +
-                "\n   qs3=" + qs3 +
-                "\n   equipment=" + Arrays.toString(equipment) +
-                "\n   equipQS=" + Arrays.toString(equipQS) +
-                "\n   date=" + date +
-                "\n   hp=" + hp +
-                "\n   mp=" + mp +
-                "\n   att=" + atk +
-                "\n   def=" + def +
-                "\n   spd=" + spd +
-                "\n   dex=" + dex +
-                "\n   vit=" + vit +
-                "\n   wis=" + wis;
+        return "Character{" + "\n   skin=" + skin + "\n   exp=" + exp + "\n   fame=" + fame + "\n   seasonal=" + seasonal + "\n   backpack=" + backpack + "\n   qs3=" + qs3 + "\n   equipment=" + Arrays.toString(equipment) + "\n   equipQS=" + Arrays.toString(equipQS) + "\n   date=" + date + "\n   hp=" + hp + "\n   mp=" + mp + "\n   att=" + atk + "\n   def=" + def + "\n   spd=" + spd + "\n   dex=" + dex + "\n   vit=" + vit + "\n   wis=" + wis;
     }
 }

@@ -5,7 +5,10 @@ import util.StringXML;
 import util.Util;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -14,8 +17,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
+/**
+ * Used for character data from realm servers and converting to useful data.
+ */
 public class CharList {
 
+    /**
+     * Requests character list data from realm servers using the current access token of the logged in user.
+     *
+     * @param accessToken Access token of the currently logged in user.
+     * @return Char list data as XML string.
+     */
     public static String getChartList(String accessToken) throws IOException {
         String encoded = URLEncoder.encode(accessToken, "UTF-8");
         String s1 = "https://www.realmofthemadgod.com/char/list?";
@@ -60,6 +72,12 @@ public class CharList {
         return null;
     }
 
+    /**
+     * Converts XML data to array of Character data.
+     *
+     * @param r XML string to be parsed.
+     * @return List of Character data parsed from the XML string.
+     */
     public static ArrayList<Character> getCharList(String r) {
         StringXML base;
         ArrayList<Character> listChars = new ArrayList<>();

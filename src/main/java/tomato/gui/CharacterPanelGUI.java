@@ -1,8 +1,7 @@
 package tomato.gui;
 
-import tomato.logic.CharList;
-import tomato.logic.Character;
 import assets.ImageBuffer;
+import tomato.logic.Character;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -11,6 +10,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+/**
+ * Character GUI class to display character data in the character tab.
+ */
 public class CharacterPanelGUI extends JPanel {
     private static final int CHAR_PANEL_SIZE = 120;
     private JPanel charPanel;
@@ -37,6 +39,9 @@ public class CharacterPanelGUI extends JPanel {
         add(scrollPane);
     }
 
+    /**
+     * Tooltip showing exalts when hovering over char.
+     */
     private String exaltStats(Character c) {
         int[] exalts = Character.exalts.get(c.classNum);
         ToolTipManager.sharedInstance().setInitialDelay(200);
@@ -44,6 +49,9 @@ public class CharacterPanelGUI extends JPanel {
         return String.format("<html>%d :Shat<br>%d :LH<br>%d :Cult<br>%d :Nest<br>%5d :Kog<br>%d :Fung<br>%d :O3<br>%d :Void</html>", exalts[5], exalts[4], exalts[1], exalts[0], exalts[2], exalts[3], exalts[7], exalts[6]);
     }
 
+    /**
+     * Section made for adding Char skin, char type, char level, char fame and char stats.
+     */
     private JPanel leftColumn(Character c) {
         JPanel panel = new JPanel();
         panel.setMaximumSize(new Dimension(120, CHAR_PANEL_SIZE));
@@ -54,7 +62,7 @@ public class CharacterPanelGUI extends JPanel {
 
         try {
             int eq = c.skin;
-            if(eq == 0) eq = c.classNum;
+            if (eq == 0) eq = c.classNum;
             BufferedImage img = ImageBuffer.getImage(eq);
             ImageIcon icon = new ImageIcon(img.getScaledInstance(15, 15, Image.SCALE_DEFAULT));
             JLabel characterLabel = new JLabel(c.classString + " " + c.level, icon, JLabel.CENTER);
@@ -65,13 +73,16 @@ public class CharacterPanelGUI extends JPanel {
         }
         panel.add(new JLabel(String.format("Fame:%3d", c.fame)));
         panel.add(new JLabel(String.format("HP:%3d MP:%3d", c.hp, c.mp)));
-        panel.add(new JLabel(String.format("Ak:%3d Df:%3d", c.def, c.atk)));
+        panel.add(new JLabel(String.format("Ak:%3d Df:%3d", c.atk, c.def)));
         panel.add(new JLabel(String.format("Sp:%3d Dx:%3d", c.spd, c.dex)));
         panel.add(new JLabel(String.format("Vi:%3d Wi:%3d", c.vit, c.wis)));
 
         return panel;
     }
 
+    /**
+     * Section made for adding equipment, quickslot and date of character made.
+     */
     private JPanel midColumn(Character c) {
         JPanel panel = new JPanel();
         panel.setMaximumSize(new Dimension(120, CHAR_PANEL_SIZE));
@@ -116,6 +127,9 @@ public class CharacterPanelGUI extends JPanel {
         return panel;
     }
 
+    /**
+     * Section made for adding backpack data.
+     */
     private JPanel rightColumn(Character c, boolean backpack) {
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(90, 50));
@@ -148,6 +162,9 @@ public class CharacterPanelGUI extends JPanel {
         return panel;
     }
 
+    /**
+     * Individual backpacks with icons constructed.
+     */
     private JPanel invBackpack(Character c) {
         JPanel panel = new JPanel();
         panel.setMaximumSize(new Dimension(120, CHAR_PANEL_SIZE));
@@ -164,6 +181,12 @@ public class CharacterPanelGUI extends JPanel {
         return panel;
     }
 
+    /**
+     * Adds a single character in the list of characters.
+     *
+     * @param c Character to be added to the list of chars.
+     * @return The panel containing player character data to added in the list of char data.
+     */
     private JPanel addChar(Character c) {
         JPanel panel = new JPanel();
 //        panel.setBorder(new CompoundBorder(BorderFactory.createLineBorder(Color.black), new EmptyBorder(1, 1, 1, 1)));
@@ -179,6 +202,11 @@ public class CharacterPanelGUI extends JPanel {
         return panel;
     }
 
+    /**
+     * Clears all current tab data and adds the character data in the list.
+     *
+     * @param list Character info to be updated in the char tab.
+     */
     public void updateCharacters(ArrayList<Character> list) {
         if (list == null) return;
 

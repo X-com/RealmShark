@@ -10,10 +10,16 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+/**
+ * Quest tab GUI
+ */
 public class QuestGUI extends JPanel {
     private final JPanel questPanel;
     private final JLabel infoLabel;
 
+    /**
+     * Main constructor for the quest GUI panel.
+     */
     public QuestGUI() {
         setLayout(new BorderLayout());
 
@@ -31,6 +37,12 @@ public class QuestGUI extends JPanel {
         add(scrollPane);
     }
 
+    /**
+     * Creates a row panel to add a single quest to the list of quests.
+     *
+     * @param q Data of the specific quest to be added.
+     * @return Quest panel object to be added to the list of quests.
+     */
     private JPanel addQuest(QuestData q) {
         JPanel panel = new JPanel();
 
@@ -50,6 +62,12 @@ public class QuestGUI extends JPanel {
         return panel;
     }
 
+    /**
+     * Adds item images to the quest row.
+     *
+     * @param items List of items to be added to the row.
+     * @param panel The panel to be added to.
+     */
     private void addItems(int[] items, JPanel panel) throws IOException, AssetMissingException {
         for (int id : items) {
             BufferedImage img = ImageBuffer.getImage(id);
@@ -59,6 +77,12 @@ public class QuestGUI extends JPanel {
         }
     }
 
+    /**
+     * Used to update the GUI with new quest data.
+     * Clears all old inputs to add the new list.
+     *
+     * @param quests List of quests to be added in the quest tab.
+     */
     public void update(QuestData[] quests) {
         questPanel.removeAll();
         for (QuestData q : quests) {
