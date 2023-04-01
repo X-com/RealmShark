@@ -67,4 +67,13 @@ public class ImageBuffer {
 
         return bigImages[data[4] - 1].getSubimage(data[0], data[1], data[2], data[3]);
     }
+
+    /**
+     * Resets the assets after loading new ones.
+     */
+    public static void clear() {
+        images.clear();
+        colors.clear();
+        bigImages = new BufferedImage[4];
+    }
 }

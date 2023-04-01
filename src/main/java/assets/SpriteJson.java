@@ -30,6 +30,8 @@ public class SpriteJson implements JsonDeserializer<SpriteJson> {
      */
     public static void jsonFileReader() {
         try {
+            if (sprites != null) sprites.clear();
+            if (animatedSprites != null) animatedSprites.clear();
             GsonBuilder builder = new GsonBuilder();
             builder.registerTypeAdapter(SpriteJson.class, new SpriteJson());
             builder.registerTypeAdapter(Sprite.class, new Sprite());

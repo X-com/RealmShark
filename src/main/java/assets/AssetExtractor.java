@@ -244,7 +244,11 @@ public class AssetExtractor {
         reloadAssetsOnRunningApp();
     }
 
+    /**
+     * Reloads assets to reset assets in running app.
+     */
     private static void reloadAssetsOnRunningApp() {
+        ImageBuffer.clear();
         IdToAsset.reloadAssets();
         SpriteJson.jsonFileReader();
     }
