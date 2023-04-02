@@ -35,8 +35,8 @@ public class Config implements Serializable {
     public boolean manualAlignment = false;
     public int mapTopLeftX;
     public int mapTopLeftY;
-    public int mapWidth;
-    public int mapHeight;
+    public int mapWidth = 100;
+    public int mapHeight = 100;
 
     public static void save() {
         try {

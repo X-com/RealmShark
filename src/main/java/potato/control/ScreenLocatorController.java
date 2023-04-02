@@ -1,9 +1,11 @@
 package potato.control;
 
 import potato.model.Config;
+import potato.view.OptionsMenu;
 import potato.view.opengl.OpenGLPotato;
 import util.NativeWindowScreenCapture;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -122,8 +124,15 @@ public class ScreenLocatorController {
     }
 
     private void notFound(int i, String s) {
-        renderer.hide();
         System.out.println(i + " " + s);
+        Object[] options = {"Realign", "Options Menu", "Close"};
+        int n = JOptionPane.showOptionDialog(null, "<html>Failed to find minimap to align overlay.<br>Attempt to auto realign, or use<br>manual aligner in options menu.</html>",
+                "Alignment Failed", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+        if (n == 0) {
+            calcMapSizeLoc2();
+        } else if (n == 1) {
+            OptionsMenu.showOptions();
+        }
     }
 
     public void dispose() {

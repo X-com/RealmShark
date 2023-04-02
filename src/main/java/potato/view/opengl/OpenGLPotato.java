@@ -36,6 +36,7 @@ public class OpenGLPotato extends Thread {
     private Matrix4f mvp;
     private Matrix4f proj;
     private boolean viewChanged;
+    private int backgroundChange;
     private int mapIndex = 0;
     public static final float[] scale = {0.855f, 1.025f, 1.275f, 5 / 3f, 2.5f, 5f, 41.2f};
     public static final float[] playerOffset = {0, 1f / 3, 0.85f, 5 / 3f, 10 / 3f, 8.5f, 84.25f};
@@ -204,6 +205,11 @@ public class OpenGLPotato extends Thread {
 
             GLRenderer.clear();
 
+            if (backgroundChange != 0) {
+                clearColors(backgroundChange);
+                backgroundChange = 0;
+            }
+
             if (viewChanged) {
                 setWindow();
                 viewChanged = false;
@@ -250,6 +256,18 @@ public class OpenGLPotato extends Thread {
 
     public static void viewChanged() {
         instance.viewChanged = true;
+    }
+
+    public static void setColor(int color) {
+        instance.backgroundChange = color;
+    }
+
+    private void clearColors(int color) {
+        if (color == 1) {
+            glClearColor(0.75f, 0.75f, 0.75f, 0.75f);
+        } else {
+            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        }
     }
 
     public void show() {

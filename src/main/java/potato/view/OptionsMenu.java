@@ -53,7 +53,7 @@ public class OptionsMenu {
         hotkeys();
         shapes();
         colors();
-//        alignment();
+        alignment();
         addPanels();
     }
 
@@ -138,7 +138,7 @@ public class OptionsMenu {
     }
 
     private static void alignment() {
-        label("Map Alignment");
+        label("Map");
 
         addToggleButton("Manually Align", Config.instance.manualAlignment, e -> {
             JToggleButton f = (JToggleButton) e.getSource();
@@ -150,8 +150,16 @@ public class OptionsMenu {
             }
         });
 
-        alignerFields("Top Left Corner", Integer.toString(Config.instance.mapTopLeftX), Integer.toString(Config.instance.mapTopLeftY));
-        alignerFields("Map Size", Integer.toString(Config.instance.mapWidth), Integer.toString(Config.instance.mapHeight));
+        JButton button = new JButton("Align");
+        button.addActionListener(e -> {
+            new Alignment();
+        });
+        button.setPreferredSize(new Dimension(80, 20));
+
+        alignComps.add(button);
+        JPanel aligner = new JPanel();
+        aligner.add(button);
+        panels.add(aligner);
 
         for (Component c : alignComps) {
             c.setEnabled(Config.instance.manualAlignment);
@@ -274,7 +282,7 @@ public class OptionsMenu {
     private static void label(String name) {
         JPanel panel = new JPanel();
         JLabel label = new JLabel(name);
-        label.setFont(new Font("Dialog", 0, 20));
+        label.setFont(new Font("Dialog", 0, 18));
         panel.add(label);
         panels.add(panel);
     }
@@ -424,134 +432,6 @@ public class OptionsMenu {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-    }
-
-    private static void alignerFields(String name, String setX, String setY) {
-        JPanel aligner = new JPanel();
-        JLabel label = new JLabel(name);
-        JLabel labelX = new JLabel("X:");
-        JTextField X = new JTextField(5);
-        X.setText(setX);
-        JLabel labelY = new JLabel("Y:");
-        JTextField Y = new JTextField(5);
-        Y.setText(setY);
-        alignComps.add(labelX);
-        alignComps.add(X);
-        alignComps.add(labelY);
-        alignComps.add(Y);
-        panels.add(aligner);
-
-        label.setHorizontalAlignment(SwingConstants.RIGHT);
-        label.setBorder(new EmptyBorder(0, 0, 0, 5));
-
-        aligner.setLayout(new GridLayout(1, 2));
-        aligner.add(label);
-
-        JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        p.add(labelX);
-        p.add(X);
-        p.add(labelY);
-        p.add(Y);
-        aligner.add(p);
-
-        X.addCaretListener(e -> {
-            JTextField field = (JTextField) e.getSource();
-            String text = field.getText();
-            String reset = "";
-            if (name.equals("Top Left Corner")) {
-                reset = Integer.toString(Config.instance.mapTopLeftX);
-            } else if (name.equals("Map Size")) {
-                reset = Integer.toString(Config.instance.mapWidth);
-            }
-            if (!text.equals("") && !text.equals("-")) {
-                try {
-                    int i = Integer.parseInt(text);
-
-                    if (Math.abs(i) > 100000) {
-                        setTextLater(reset, field);
-                        return;
-                    } else if (name.equals("Top Left Corner") && Config.instance.mapTopLeftX != i) {
-                        Config.instance.mapTopLeftX = i;
-                    } else if (name.equals("Map Size") && Config.instance.mapWidth != i) {
-                        Config.instance.mapWidth = i;
-                    } else {
-                        return;
-                    }
-                } catch (NumberFormatException ignore) {
-                    setTextLater(reset, field);
-                    return;
-                }
-                Config.save();
-            }
-        });
-        Y.addCaretListener(e -> {
-            JTextField field = (JTextField) e.getSource();
-            String text = field.getText();
-            String reset = "";
-            if (name.equals("Top Left Corner")) {
-                reset = Integer.toString(Config.instance.mapTopLeftY);
-            } else if (name.equals("Map Size")) {
-                reset = Integer.toString(Config.instance.mapHeight);
-            }
-            if (!text.equals("") && !text.equals("-")) {
-                try {
-                    int i = Integer.parseInt(text);
-
-                    if (Math.abs(i) > 100000) {
-                        setTextLater(reset, field);
-                        return;
-                    } else if (name.equals("Top Left Corner") && Config.instance.mapTopLeftY != i) {
-                        Config.instance.mapTopLeftY = i;
-                    } else if (name.equals("Map Size") && Config.instance.mapHeight != i) {
-                        Config.instance.mapHeight = i;
-                    } else {
-                        return;
-                    }
-                } catch (NumberFormatException ignore) {
-                    setTextLater(reset, field);
-                    return;
-                }
-                Config.save();
-            }
-        });
-
-        X.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                JTextField field = (JTextField) e.getSource();
-                String text = field.getText();
-                if (text.equals("") || text.equals("-")) {
-                    if (name.equals("Top Left Corner")) {
-                        field.setText(Integer.toString(Config.instance.mapTopLeftX));
-                    } else if (name.equals("Map Size")) {
-                        field.setText(Integer.toString(Config.instance.mapWidth));
-                    }
-                }
-            }
-        });
-        Y.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                JTextField field = (JTextField) e.getSource();
-                String text = field.getText();
-                if (text.equals("") || text.equals("-")) {
-                    if (name.equals("Top Left Corner")) {
-                        field.setText(Integer.toString(Config.instance.mapTopLeftY));
-                    } else if (name.equals("Map Size")) {
-                        field.setText(Integer.toString(Config.instance.mapHeight));
-                    }
-                }
-            }
-        });
     }
 
     private static void resetAll() {
