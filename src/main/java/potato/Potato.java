@@ -29,6 +29,9 @@ public class Potato {
             new Potato().run();
         } catch (OutOfMemoryError e) {
             crashDialog();
+        } catch (Exception e) {
+            Util.print("Main crash:");
+            Util.print(e.getMessage());
         }
     }
 
