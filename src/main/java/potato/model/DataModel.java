@@ -36,6 +36,8 @@ public class DataModel {
     private boolean newRealmCheck = false;
     private long seed;
     private int myId;
+    private boolean saveData = false;
+    private MapInfoPacket mapPacketData;
 
     private final HashSet<Integer>[] mapTileData;
     private final ArrayList<HeroLocations>[] mapHeroes;
@@ -296,7 +298,7 @@ public class DataModel {
 
     public void updateLocations(GroundTileData[] tiles, ObjectData[] newObjects, int[] drops) {
         heroDetect.updateLocations(tiles, newObjects, drops);
-        if (Config.instance.saveMapInfo) {
+        if (Config.instance.saveMapInfo && saveData) {
             for (GroundTileData gtd : tiles) {
                 mapTiles[gtd.x][gtd.y] = gtd.type;
             }
@@ -340,12 +342,14 @@ public class DataModel {
     }
 
     public void saveMap(MapInfoPacket packet) {
-        if (filteredInstances(packet.displayName)) {
+        if (saveData) {
             DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss");
             LocalDateTime dateTime = LocalDateTime.now();
             String time = dateTimeFormat.format(dateTime);
-            String name = "mapData/" + packet.name + "." + time + ".mapdata-";
-            Util.print(name, "Map:" + packet);
+            String dungeon = inRealm ? ("Realm " + serverName + " " + realmName) : mapPacketData.name;
+            String name = "mapData/" + dungeon + "." + time + ".mapdata-";
+            Util.print(name, dungeon);
+            Util.print(name, mapPacketData.toString());
             if (inRealm) Util.print(name, "MapIndex:" + (mapIndex + 1));
             Util.print(name, "tiles");
             for (int i = 0; i < 2048; i++) {
@@ -375,5 +379,7 @@ public class DataModel {
                 mapTiles[i][j] = 0;
             }
         }
+        mapPacketData = packet;
+        saveData = filteredInstances(packet.displayName);
     }
 }

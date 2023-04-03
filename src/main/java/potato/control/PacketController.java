@@ -9,7 +9,8 @@ import potato.model.DataModel;
 
 public class PacketController {
 
-    DataModel model;
+    private DataModel model;
+    private boolean saving;
 
     public PacketController(DataModel model) {
         this.model = model;
@@ -42,8 +43,9 @@ public class PacketController {
             model.ipChanged(p.ipAddressName, p.srcAddressAsInt);
         } else if (packet instanceof MapInfoPacket) {
             MapInfoPacket p = (MapInfoPacket) packet;
-            if (Config.instance.saveMapInfo) {
+            if (Config.instance.saveMapInfo || saving) {
                 model.saveMap(p);
+                saving = Config.instance.saveMapInfo;
             }
             if (p.displayName.equals("{s.rotmg}")) {
                 model.setInRealm(p.realmName, p.seed, p.gameOpenedTime);
