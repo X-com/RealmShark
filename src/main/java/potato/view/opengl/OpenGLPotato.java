@@ -224,12 +224,12 @@ public class OpenGLPotato extends Thread {
                 refresh = false;
             }
 
-            if (showMap && userShowMap && model.inRealm()) {
+            if (showMap && userShowMap && model.inRealm() && zoom != 6) {
                 textureMaps[mapIndex].bind(0);
                 GLRenderer.draw(vaMap, vaMap.getIndexBuffer(), shaderMap);
             }
 
-            if (showHeroes && userShowHeroes && model.inRealm()) {
+            if (showHeroes && userShowHeroes && model.inRealm() && zoom != 6) {
                 heroes.drawHeros(model.mapHeroes());
             }
 
