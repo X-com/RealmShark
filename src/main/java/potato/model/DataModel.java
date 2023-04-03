@@ -1,17 +1,20 @@
 package potato.model;
 
+import packets.data.*;
+import packets.incoming.MapInfoPacket;
 import packets.incoming.QuestObjectIdPacket;
 import packets.incoming.TextPacket;
 import potato.view.opengl.OpenGLPotato;
-import packets.data.GroundTileData;
-import packets.data.ObjectData;
-import packets.data.ObjectStatusData;
-import packets.data.WorldPosData;
 import potato.control.InputController;
 import potato.control.ScreenLocatorController;
 import potato.control.ServerSynch;
+import util.Util;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class DataModel {
@@ -48,6 +51,9 @@ public class DataModel {
     private boolean setTpCooldown;
     private int keyTime;
     private long openTime;
+
+    private final HashMap<Integer, ObjectData> allEntitys = new HashMap<>();
+    private final int[][] mapTiles = new int[2048][2048];
 
     public DataModel() {
         mapHeroes = Bootloader.loadMapCoords();
@@ -161,6 +167,7 @@ public class DataModel {
     }
 
     public void reset() {
+        if (!inRealm) return;
         server.stopSynch(myId);
         inRealm = false;
         renderer.renderMap(false);
@@ -250,7 +257,7 @@ public class DataModel {
     }
 
     public String getPlayerCoordString() {
-        if (Config.saveMapInfo) return String.format(" x:%d y:%d", getIntPlayerX(), getIntPlayerY());
+        if (Config.instance.showPlayerCoords) return String.format(" x:%d y:%d", getIntPlayerX(), getIntPlayerY());
         return "";
     }
 
@@ -289,6 +296,14 @@ public class DataModel {
 
     public void updateLocations(GroundTileData[] tiles, ObjectData[] newObjects, int[] drops) {
         heroDetect.updateLocations(tiles, newObjects, drops);
+        if (Config.instance.saveMapInfo) {
+            for (GroundTileData gtd : tiles) {
+                mapTiles[gtd.x][gtd.y] = gtd.type;
+            }
+            for (ObjectData od : newObjects) {
+                allEntitys.put(od.status.objectId, od);
+            }
+        }
     }
 
     public void newTickUpdates(ObjectStatusData[] status) {
@@ -309,5 +324,56 @@ public class DataModel {
 
     public void setKeyTime(int keyTime) {
         this.keyTime = keyTime;
+    }
+
+    private static boolean filteredInstances(String dungName) {
+        switch (dungName) {
+            case "{s.vault}":  // vault
+            case "Daily Quest Room": // quest room
+            case "Pet Yard": // pet yard
+            case "{s.guildhall}": // guild hall
+            case "{s.nexus}": // nexus
+                return false;
+            default:
+                return true;
+        }
+    }
+
+    public void saveMap(MapInfoPacket packet) {
+        if (filteredInstances(packet.displayName)) {
+            DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss");
+            LocalDateTime dateTime = LocalDateTime.now();
+            String time = dateTimeFormat.format(dateTime);
+            String name = "mapData/" + packet.name + "." + time + ".mapdata-";
+            Util.print(name, "Map:" + packet);
+            if (inRealm) Util.print(name, "MapIndex:" + (mapIndex + 1));
+            Util.print(name, "tiles");
+            for (int i = 0; i < 2048; i++) {
+                for (int j = 0; j < 2048; j++) {
+                    int t = mapTiles[i][j];
+                    if (t != 0) {
+                        Util.print(name, String.format("%d:%d:%d", i, j, t));
+                    }
+                }
+            }
+            Util.print(name, "objects");
+            for (ObjectData od : allEntitys.values()) {
+                StringBuilder s = new StringBuilder();
+                for (StatData sd : od.status.stats) {
+                    s.append(";").append(sd.statValue).append(";").append(sd.statValueTwo).append(";").append(sd.stringStatValue).append(";").append(sd.statTypeNum);
+                }
+                Util.print(name, String.format("%d:%f:%f:%s", od.objectType, od.status.pos.x, od.status.pos.y, s.substring(1)));
+            }
+            System.out.println("done");
+            for (int[] row : mapTiles) {
+                Arrays.fill(row, 0);
+            }
+        }
+        allEntitys.clear();
+        for (int i = 0; i < 2048; i++) {
+            for (int j = 0; j < 2048; j++) {
+                mapTiles[i][j] = 0;
+            }
+        }
     }
 }
