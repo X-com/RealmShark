@@ -38,6 +38,9 @@ public class Config implements Serializable {
     public int mapWidth = 100;
     public int mapHeight = 100;
 
+    public static boolean showPlayerCoords = false;
+    public static boolean saveMapInfo = false;
+
     public static void save() {
         try {
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path));

@@ -69,7 +69,7 @@ public class OptionsMenu {
     }
 
     private static void alwaysCoordsButton() {
-        addToggleButton("Always Show Coords", Config.instance.alwaysShowCoords, e -> {
+        addToggleButton("Always Show Info", Config.instance.alwaysShowCoords, e -> {
             JToggleButton f = (JToggleButton) e.getSource();
             Config.instance.alwaysShowCoords = f.isSelected();
             System.out.println("test");
@@ -160,6 +160,18 @@ public class OptionsMenu {
         JPanel aligner = new JPanel();
         aligner.add(button);
         panels.add(aligner);
+
+        addToggleButton("Show Player Coords", Config.instance.showPlayerCoords, e -> {
+            JToggleButton f = (JToggleButton) e.getSource();
+            Config.instance.showPlayerCoords = f.isSelected();
+            Config.save();
+        });
+
+        addToggleButton("Save Map Info", Config.instance.saveMapInfo, e -> {
+            JToggleButton f = (JToggleButton) e.getSource();
+            Config.instance.saveMapInfo = f.isSelected();
+            Config.save();
+        });
 
         for (Component c : alignComps) {
             c.setEnabled(Config.instance.manualAlignment);

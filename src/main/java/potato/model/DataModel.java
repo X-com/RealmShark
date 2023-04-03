@@ -249,6 +249,11 @@ public class DataModel {
         return String.format("[%d:%02d:%02d]", t / 3600, (t / 60) % 60, t % 60);
     }
 
+    public String getPlayerCoordString() {
+        if (Config.saveMapInfo) return String.format(" x:%d y:%d", getIntPlayerX(), getIntPlayerY());
+        return "";
+    }
+
     private String prismTimer() {
         if (prismTimer == 0) return "";
         int t = (int) ((prismTimer - System.currentTimeMillis()) / 100);
