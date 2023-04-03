@@ -18,7 +18,7 @@ public class FocusedWindow {
     final static Kernel32 kernel32 = Kernel32.INSTANCE;
 
     public interface Psapi extends StdCallLibrary {
-        Psapi INSTANCE = (Psapi) Native.loadLibrary("Psapi", Psapi.class);
+        Psapi INSTANCE = (Psapi) Native.load("Psapi", Psapi.class);
 
         WinDef.DWORD GetModuleBaseNameW(Pointer hProcess, Pointer hModule, byte[] lpBaseName, int nSize);
     }

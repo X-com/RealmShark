@@ -114,6 +114,7 @@ public class OpenGLPotato extends Thread {
             throw new RuntimeException("Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.");
         }
         glfwMakeContextCurrent(window);
+        glfwSwapInterval(1);
         GL.createCapabilities();
         glfwShowWindow(window);
         System.out.println("Using GL Version: " + glGetString(GL_VERSION));

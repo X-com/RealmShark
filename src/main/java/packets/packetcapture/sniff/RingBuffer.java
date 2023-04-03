@@ -28,6 +28,7 @@ public class RingBuffer<T> {
      *
      * @param capacity Initial capacity of buffer size.
      */
+    @SuppressWarnings("unchecked")
     public RingBuffer(int capacity) {
         buffer = (T[]) new Object[capacity];
     }
@@ -66,6 +67,7 @@ public class RingBuffer<T> {
             state = FULL;
         } else {
             if (state == FULL) {
+                @SuppressWarnings("unchecked")
                 T[] next = (T[]) new Object[buffer.length << 1];
                 /*
                     [-----[writePointer,readPointer]-------]

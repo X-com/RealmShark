@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Bootloader {
-    public static final int SNAKE_TILE_CENTERING = 35;
+    public static final int SNAKE_TILE_CENTERING = 36;
 
     public static BufferedImage[] loadMaps() {
         BufferedImage[] img = new BufferedImage[13];
@@ -30,6 +30,7 @@ public class Bootloader {
     }
 
     public static ArrayList<HeroLocations>[] loadMapCoords() {
+        @SuppressWarnings("unchecked")
         ArrayList<HeroLocations>[] coords = new ArrayList[13];
         try {
             for (int i = 1; i <= 13; i++) {
@@ -60,6 +61,7 @@ public class Bootloader {
     }
 
     public static HashSet<Integer>[] loadTiles() {
+        @SuppressWarnings("unchecked")
         HashSet<Integer>[] maps = new HashSet[13];
         try {
             for (int i = 1; i <= 13; i++) {

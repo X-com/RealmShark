@@ -12,7 +12,10 @@ import util.Util;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -30,8 +33,12 @@ public class Potato {
         } catch (OutOfMemoryError e) {
             crashDialog();
         } catch (Exception e) {
+            e.printStackTrace();
             Util.print("Main crash:");
-            Util.print(e.getMessage());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            Util.print(sw.toString());
         }
     }
 
