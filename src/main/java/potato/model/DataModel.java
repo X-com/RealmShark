@@ -141,6 +141,7 @@ public class DataModel {
         newRealmCheck = true;
         inRealm = true;
         zoom = 6;
+        if (seed != s) castleTimer = 0;
         seed = s;
         openTime = gameOpenedTime;
         setRealmName(name);
