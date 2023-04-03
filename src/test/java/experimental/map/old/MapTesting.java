@@ -1,4 +1,4 @@
-package experimental;
+package experimental.map.old;
 
 import packets.Packet;
 import packets.data.GroundTileData;
