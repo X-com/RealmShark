@@ -4,10 +4,10 @@ import packets.Packet;
 import packets.data.QuestData;
 import packets.incoming.QuestFetchResponsePacket;
 import packets.outgoing.HelloPacket;
+import tomato.Tomato;
 import tomato.gui.TomatoGUI;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.Stream;
@@ -44,9 +44,8 @@ public class QuestPackets {
      */
     private static void getCharList() {
         try {
-            String s = CharList.getChartList(token);
-            ArrayList<Character> l = CharList.getCharList(s);
-            TomatoGUI.updateCharacters(l);
+            String s = HttpCharListRequest.getChartList(token);
+            Tomato.updateCharacterData(s);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -15,7 +15,6 @@ import java.io.IOException;
  */
 public class QuestGUI extends JPanel {
     private final JPanel questPanel;
-    private final JLabel infoLabel;
 
     /**
      * Main constructor for the quest GUI panel.
@@ -27,12 +26,7 @@ public class QuestGUI extends JPanel {
         JScrollPane scrollPane = new JScrollPane(questPanel);
         scrollPane.getVerticalScrollBar().setUnitIncrement(40);
 
-        questPanel.setLayout(new BoxLayout(questPanel, BoxLayout.Y_AXIS));
-        questPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-        questPanel.add(Box.createVerticalGlue());
-
-        infoLabel = new JLabel("Enter Daily Quest Room to see quests");
-        add(infoLabel, BorderLayout.NORTH);
+        questPanel.add(new JLabel("Enter Daily Quest Room to see quests"));
 
         add(scrollPane);
     }
@@ -84,13 +78,16 @@ public class QuestGUI extends JPanel {
      * @param quests List of quests to be added in the quest tab.
      */
     public void update(QuestData[] quests) {
+        questPanel.setLayout(new BoxLayout(questPanel, BoxLayout.Y_AXIS));
+        questPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+        questPanel.add(Box.createVerticalGlue());
+
         questPanel.removeAll();
         for (QuestData q : quests) {
             if (!q.repeatable && q.completed) continue;
             questPanel.add(addQuest(q));
         }
         questPanel.revalidate();
-        remove(infoLabel);
         revalidate();
     }
 }
