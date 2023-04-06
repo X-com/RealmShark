@@ -27,10 +27,10 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.ardikars.pcap:pcap-spi:1.4.2'
-    implementation 'com.ardikars.pcap:pcap-jdk7:1.4.2'
-    implementation 'com.github.weisj:darklaf-core:3.0.1'
-    implementation 'com.google.code.gson:gson:2.9.1'
+    implementation 'com.ardikars.pcap:pcap-spi:1.5.0'
+    implementation 'com.ardikars.pcap:pcap-jdk7:1.5.0'
+    implementation 'com.github.weisj:darklaf-core:3.0.2'
+    implementation 'com.google.code.gson:gson:2.10.1'
 }
 
 mainClassName = applicationName.toLowerCase() + '.' + applicationName
