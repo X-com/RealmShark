@@ -1,5 +1,7 @@
 package tomato.logic;
 
+import tomato.logic.enums.CharacterClass;
+
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -37,55 +39,7 @@ public class Character {
      * Simple setter for the class string from the class id.
      */
     public void setClassString() {
-        classString = classType(classNum);
-    }
-
-    /**
-     * Character class id to class name
-     *
-     * @param c Id of the class
-     * @return Name of the class.
-     */
-    public static String classType(int c) {
-        switch (c) {
-            case 768:
-                return "Rogue";
-            case 775:
-                return "Archer";
-            case 782:
-                return "Wizard";
-            case 784:
-                return "Priest";
-            case 797:
-                return "Warrior";
-            case 798:
-                return "Knight";
-            case 799:
-                return "Paladin";
-            case 800:
-                return "Assassin";
-            case 801:
-                return "Necromancer";
-            case 802:
-                return "Huntress";
-            case 803:
-                return "Mystic";
-            case 804:
-                return "Trickster";
-            case 805:
-                return "Sorcerer";
-            case 806:
-                return "Ninja";
-            case 785:
-                return "Samurai";
-            case 796:
-                return "Bard";
-            case 817:
-                return "Summoner";
-            case 818:
-                return "Kensei";
-        }
-        return "";
+        classString = CharacterClass.getName(classNum);
     }
 
     @Override

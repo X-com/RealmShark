@@ -12,19 +12,22 @@ import packets.packetcapture.register.IPacketListener;
 import packets.packetcapture.register.Register;
 import tomato.damagecalc.DpsLogger;
 import tomato.gui.TomatoGUI;
-import tomato.logic.QuestPackets;
-import tomato.logic.Parse;
+import tomato.logic.*;
 import assets.AssetMissingException;
 import assets.IdToAsset;
+import tomato.logic.Character;
 import util.Util;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,6 +47,7 @@ public class Tomato {
     private static PacketProcessor packetProcessor;
     private static final DpsLogger dpsLogger = new DpsLogger();
     private static final Parse parse = new Parse();
+    private static final VaultData vault = new VaultData();
     private static final IPacketListener<Packet> loadAsset = Tomato::loadAssets;
 
     public static void main(String[] args) {
@@ -54,8 +58,12 @@ public class Tomato {
         } catch (OutOfMemoryError e) {
             crashDialog();
         } catch (Exception e) {
+            e.printStackTrace();
             Util.print("Main crash:");
-            Util.print(e.getMessage());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            Util.print(sw.toString());
         }
     }
 
@@ -115,6 +123,8 @@ public class Tomato {
         Register.INSTANCE.register(PacketType.NEWTICK, parse::packetCapture);
         Register.INSTANCE.register(PacketType.UPDATE, parse::packetCapture);
         Register.INSTANCE.register(PacketType.CREATE_SUCCESS, parse::packetCapture);
+
+        Register.INSTANCE.register(PacketType.VAULT_UPDATE, vault::vaultPacketUpdate);
     }
 
     /**
@@ -247,5 +257,12 @@ public class Tomato {
         dpsLogger.updateFilter();
     }
 
-
+    /**
+     * Updates char data received from char list http request.
+     */
+    public static void updateCharacterData(String httpString) {
+        ArrayList<Character> l = HttpCharListRequest.getCharList(httpString);
+        vault.updateCharInventory(l);
+        TomatoGUI.getCharacterPanel().updateCharacters(l);
+    }
 }

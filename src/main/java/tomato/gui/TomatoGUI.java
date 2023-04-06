@@ -343,12 +343,10 @@ public class TomatoGUI {
     }
 
     /**
-     * Updates the users full character list in the character tab.
-     *
-     * @param list List of all characters of the user.
+     * Getter for the character panel.
      */
-    public static void updateCharacters(ArrayList<Character> list) {
-        characterPanel.updateCharacters(list);
+    public static CharacterPanelGUI getCharacterPanel() {
+        return characterPanel;
     }
 
     /**

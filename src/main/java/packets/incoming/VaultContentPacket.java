@@ -10,9 +10,9 @@ import java.util.Arrays;
  */
 public class VaultContentPacket extends Packet {
     /**
-     * Unknown
+     * Seasonal vault
      */
-    public boolean unknownBool;
+    public boolean seasonalVault;
     /**
      * The amount of items in the player vault
      */
@@ -64,7 +64,7 @@ public class VaultContentPacket extends Packet {
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
-        unknownBool = buffer.readBoolean();
+        seasonalVault = buffer.readBoolean();
         vaultItemCount = buffer.readCompressedInt();
         giftItemCount = buffer.readCompressedInt();
         potionItemCount = buffer.readCompressedInt();
@@ -96,7 +96,7 @@ public class VaultContentPacket extends Packet {
     @Override
     public String toString() {
         return "VaultContentPacket{" +
-                "\n   unknownBool=" + unknownBool +
+                "\n   unknownBool=" + seasonalVault +
                 "\n   vaultItemCount=" + vaultItemCount +
                 "\n   giftItemCount=" + giftItemCount +
                 "\n   potionItemCount=" + potionItemCount +
