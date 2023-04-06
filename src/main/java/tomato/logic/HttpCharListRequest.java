@@ -18,9 +18,9 @@ import java.util.Arrays;
 import java.util.Objects;
 
 /**
- * Used for character data from realm servers and converting to useful data.
+ * HTTP Requests character data from realm servers and converts data to character info.
  */
-public class CharList {
+public class HttpCharListRequest {
 
     /**
      * Requests character list data from realm servers using the current access token of the logged in user.
@@ -134,10 +134,10 @@ public class CharList {
                             case "Has3Quickslots":
                                 character.qs3 = v.value.equals("1");
                                 break;
-                            case "HitPoints":
+                            case "MaxHitPoints":
                                 character.hp = Integer.parseInt(v.value);
                                 break;
-                            case "MagicPoints":
+                            case "MaxMagicPoints":
                                 character.mp = Integer.parseInt(v.value);
                                 break;
                             case "Attack":
