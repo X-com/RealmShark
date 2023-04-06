@@ -2,8 +2,14 @@ package tomato.logic;
 
 import tomato.logic.enums.CharacterClass;
 
+/**
+ * Character data class to compute character stats and info.
+ */
 public class CharacterData {
 
+    /**
+     * Computes the missing pots needed to max the character.
+     */
     public static int[] statMissing(Character c, int[] missing) {
         missing[0] += (int) Math.ceil((CharacterClass.getLife(c.classNum) - c.hp) / 5.0);
         missing[1] += (int) Math.ceil((CharacterClass.getMana(c.classNum) - c.mp) / 5.0);
@@ -17,6 +23,9 @@ public class CharacterData {
         return missing;
     }
 
+    /**
+     * Gets the characters maxed stat count.
+     */
     public static int statsMaxed(Character c) {
         int outof8 = 0;
         if (CharacterClass.getLife(c.classNum) == c.hp) outof8++;

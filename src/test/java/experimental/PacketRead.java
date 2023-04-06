@@ -71,7 +71,7 @@ public class PacketRead {
         if (packet instanceof QuestObjectIdPacket) return;
         if (packet instanceof LoadPacket) return;
         if (packet instanceof HelloPacket) {
-            System.out.println(packet);
+//            System.out.println(packet);
             return;
         }
         if (packet instanceof ReconnectPacket) return;
@@ -122,7 +122,7 @@ public class PacketRead {
         if (packet instanceof UpdatePacket) {
 //            crystalTPRange((UpdatePacket) packet);
 //            realmIdentifier((UpdatePacket) packet);
-            return;
+//            return;
         }
         if (packet instanceof VaultContentPacket) {
 //            countPots((VaultContentPacket) packet);
