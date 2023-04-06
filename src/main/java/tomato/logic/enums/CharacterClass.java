@@ -24,8 +24,9 @@ public enum CharacterClass {
     Bard(796, 670, 385, 55, 25, 55, 70, 45, 75),
     Summoner(817, 670, 385, 50, 25, 60, 75, 40, 75),
     Kensei(818, 720, 252, 65, 25, 60, 65, 60, 50);
+    public static final CharacterClass[] CHAR_CLASS_LIST;
 
-    private int life, mana, atk, def, spd, dex, vit, wis;
+    private final int life, mana, atk, def, spd, dex, vit, wis;
     private final int id;
     private final int[] maxStats;
 
@@ -34,6 +35,7 @@ public enum CharacterClass {
     private static final HashMap<Integer, int[]> CLASS_MAX_STATS = new HashMap<>();
 
     static {
+        CHAR_CLASS_LIST = CharacterClass.values().clone();
         try {
             for (CharacterClass o : CharacterClass.values()) {
                 CHARACTER_CLASS.put(o.id, o);
@@ -88,25 +90,36 @@ public enum CharacterClass {
     public static int getLife(int id) {
         return CHARACTER_CLASS.get(id).life;
     }
+
     public static int getMana(int id) {
         return CHARACTER_CLASS.get(id).mana;
     }
+
     public static int getAtk(int id) {
         return CHARACTER_CLASS.get(id).atk;
     }
+
     public static int getDef(int id) {
         return CHARACTER_CLASS.get(id).def;
     }
+
     public static int getSpd(int id) {
         return CHARACTER_CLASS.get(id).spd;
     }
+
     public static int getDex(int id) {
         return CHARACTER_CLASS.get(id).dex;
     }
+
     public static int getVit(int id) {
         return CHARACTER_CLASS.get(id).vit;
     }
+
     public static int getWis(int id) {
         return CHARACTER_CLASS.get(id).wis;
+    }
+
+    public int getId() {
+        return id;
     }
 }

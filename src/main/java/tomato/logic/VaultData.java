@@ -39,7 +39,7 @@ public class VaultData {
             Integer i = data.get(item);
             int count = 0;
             if (i != null) count = i;
-            count++;
+            count += StatPotion.getStatGain(item);
             data.put(item, count);
         }
     }
@@ -93,26 +93,41 @@ public class VaultData {
         addPot(potContainer, dataPot);
     }
 
+    /**
+     * Gets the total number of pots in the specified regular and seasonal pots into arrays A and B.
+     */
     private static void addPots(int[] totalA, int[] totalB, HashMap<Integer, Integer> addA, HashMap<Integer, Integer> addB) {
         for (int id : StatPotion.POT_ID_LIST) {
             int index = StatPotion.getPotion(id).getIndex();
-            if(addA.get(id) != null) totalA[index] += addA.get(id);
-            if(addB.get(id) != null) totalB[index] += addB.get(id);
+            if (addA.get(id) != null) totalA[index] += addA.get(id);
+            if (addB.get(id) != null) totalB[index] += addB.get(id);
         }
     }
 
+    /**
+     * Computes the amount of pots in regular and seasonal storages specified by method name.
+     */
     public void getPlayerInvPots(int[] regularTotalPots, int[] seasonalTotalPots) {
         addPots(regularTotalPots, seasonalTotalPots, potsCharacterInventoryVault, potsCharacterInventoryVaultSeasonal);
     }
 
+    /**
+     * Computes the amount of pots in regular and seasonal storages specified by method name.
+     */
     public void getVaultChestPots(int[] regularTotalPots, int[] seasonalTotalPots) {
         addPots(regularTotalPots, seasonalTotalPots, potsChestVault, potsChestVaultSeasonal);
     }
 
+    /**
+     * Computes the amount of pots in regular and seasonal storages specified by method name.
+     */
     public void getPotStoragePots(int[] regularTotalPots, int[] seasonalTotalPots) {
         addPots(regularTotalPots, seasonalTotalPots, potsPotVault, potsPotVaultSeasonal);
     }
 
+    /**
+     * Computes the amount of pots in regular and seasonal storages specified by method name.
+     */
     public void getGiftChestPots(int[] regularTotalPots, int[] seasonalTotalPots) {
         addPots(regularTotalPots, seasonalTotalPots, potsGiftVault, potsGiftVault);
     }

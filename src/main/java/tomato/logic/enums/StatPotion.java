@@ -27,6 +27,7 @@ public enum StatPotion {
     private static final HashMap<Integer, String> POTION_NAME = new HashMap<>();
     private static final HashMap<Integer, StatPotion> POTION = new HashMap<>();
     private static final HashMap<Integer, BufferedImage> POTION_IMG = new HashMap<>();
+    private static final HashMap<Integer, Integer> POT_STAT_SIZE = new HashMap<>();
     public static final HashSet<Integer> POT_ID_LIST = new HashSet<>();
 
     static {
@@ -44,6 +45,9 @@ public enum StatPotion {
                 POT_ID_LIST.add(o.smallId);
                 POT_ID_LIST.add(o.greaterId);
                 POT_ID_LIST.add(o.soulboundId);
+                POT_STAT_SIZE.put(o.smallId, 1);
+                POT_STAT_SIZE.put(o.greaterId, 2);
+                POT_STAT_SIZE.put(o.soulboundId, 1);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,6 +99,16 @@ public enum StatPotion {
      */
     public static StatPotion getPotion(int id) {
         return POTION.get(id);
+    }
+
+    /**
+     * Potion id to stat gain.
+     *
+     * @param id Potion id
+     * @return Potion size
+     */
+    public static int getStatGain(int id) {
+        return POT_STAT_SIZE.get(id);
     }
 
     /**

@@ -6,6 +6,7 @@ import tomato.logic.CharacterData;
 import tomato.logic.HttpCharListRequest;
 import tomato.logic.Character;
 import tomato.logic.VaultData;
+import tomato.logic.enums.CharacterClass;
 import tomato.logic.enums.StatPotion;
 import util.Pair;
 import util.Util;
@@ -228,6 +229,11 @@ public class CharacterPanelGUI extends JPanel {
         return panel;
     }
 
+    /**
+     * Left box to fill with components.
+     *
+     * @return Left box to fill with components
+     */
     private JPanel createLeftBox() {
         JPanel panel = new JPanel();
         panel.setMaximumSize(new Dimension(120, CHAR_PANEL_SIZE));
@@ -236,6 +242,11 @@ public class CharacterPanelGUI extends JPanel {
         return panel;
     }
 
+    /**
+     * Right mid larger box to fill with components.
+     *
+     * @return Right mid larger box to fill with components
+     */
     private JPanel createMidRightBox(JPanel panelTop, JPanel panelMid, JPanel panelBot) {
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(240, 120));
@@ -250,19 +261,6 @@ public class CharacterPanelGUI extends JPanel {
         panel.add(panelMid);
         panel.add(panelBot);
         return panel;
-    }
-
-    /**
-     * Method to update character tabs with new char data.
-     *
-     * @param list Character info to be updated.
-     */
-    public void updateCharacters(ArrayList<Character> list) {
-        if (list == null) return;
-        chars = list;
-
-        updateCharPanel(list);
-        updateMaxingPanel(list);
     }
 
     /**
@@ -287,6 +285,9 @@ public class CharacterPanelGUI extends JPanel {
         charPanel.revalidate();
     }
 
+    /**
+     * Updates the classes with missing pots in the stat potion maxing tab.
+     */
     private void updateMaxingPanel(ArrayList<Character> list) {
         maxingPanel.setLayout(new BoxLayout(maxingPanel, BoxLayout.Y_AXIS));
         maxingPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
@@ -303,10 +304,57 @@ public class CharacterPanelGUI extends JPanel {
                 }
             }
         }
+        maxingPanel.add(exaltBox());
 
         maxingPanel.revalidate();
     }
 
+    /**
+     * Box at the bottom of the players displaying missing exalts.
+     */
+    private JPanel exaltBox() {
+        int[] exalts = new int[8];
+        for (CharacterClass cc : CharacterClass.CHAR_CLASS_LIST) {
+            int[] charExalt = Character.exalts.get(cc.getId());
+            for (int i = 0; i < 8; i++) {
+                exalts[i] += Math.max(75 - charExalt[i], 0);
+            }
+        }
+        JPanel boxExalt = createMainBox();
+        JPanel panelLeft = createLeftBox();
+        boxExalt.add(panelLeft);
+        panelLeft.add(Box.createVerticalGlue());
+        panelLeft.add(new JLabel("Missing exalts"));
+        panelLeft.add(Box.createVerticalGlue());
+        JPanel panelTop = new JPanel();
+        JPanel panelMid = new JPanel();
+        JPanel panelBot = new JPanel();
+        boxExalt.add(createMidRightBox(panelTop, panelMid, panelBot));
+        panelTop.add(Box.createHorizontalGlue());
+        panelTop.add(new JLabel("Life: " + exalts[7]));
+        panelTop.add(Box.createHorizontalGlue());
+        panelTop.add(new JLabel("Mana: " + exalts[6]));
+        panelTop.add(Box.createHorizontalGlue());
+        panelMid.add(Box.createHorizontalGlue());
+        panelMid.add(new JLabel("Atk: " + exalts[5]));
+        panelMid.add(Box.createHorizontalGlue());
+        panelMid.add(new JLabel("Def: " + exalts[4]));
+        panelMid.add(Box.createHorizontalGlue());
+        panelMid.add(new JLabel("Spd: " + exalts[1]));
+        panelMid.add(Box.createHorizontalGlue());
+        panelBot.add(Box.createHorizontalGlue());
+        panelBot.add(new JLabel("Dex: " + exalts[0]));
+        panelBot.add(Box.createHorizontalGlue());
+        panelBot.add(new JLabel("Vit: " + exalts[2]));
+        panelBot.add(Box.createHorizontalGlue());
+        panelBot.add(new JLabel("Wis: " + exalts[3]));
+        panelBot.add(Box.createHorizontalGlue());
+        return boxExalt;
+    }
+
+    /**
+     * Top pots missing display in the stat maxing tab.
+     */
     private JPanel missingPotsPanel() {
         JPanel boxPots = createMainBox();
         boxPots.setPreferredSize(new Dimension(390, CHAR_PANEL_SIZE));
@@ -391,6 +439,9 @@ public class CharacterPanelGUI extends JPanel {
         return outer;
     }
 
+    /**
+     * Updates the stat maxing tab top display with missing pots.
+     */
     private void updateStatMaxPots() {
         Arrays.fill(regularTotalPots, 0);
         Arrays.fill(seasonalTotalPots, 0);
@@ -432,6 +483,9 @@ public class CharacterPanelGUI extends JPanel {
         }
     }
 
+    /**
+     * Individual characters in the max stat character list with their stats and what is missing.
+     */
     private JPanel createPanelCharWithMissingStats(Character c, int maxedStats) {
         JPanel boxChars = createMainBox();
         JPanel panelLeft = createLeftBox();
@@ -445,6 +499,10 @@ public class CharacterPanelGUI extends JPanel {
         return boxChars;
     }
 
+    /**
+     * Individual characters in the max stat character list
+     * with icons and basic info with a selection checkbox.
+     */
     private JPanel statMaxingChar(JPanel panel, Character c, int maxedStats) {
         panel.add(Box.createVerticalGlue());
         JLabel seasonalLabel = new JLabel(c.seasonal ? "Seasonal" : "");
@@ -477,12 +535,18 @@ public class CharacterPanelGUI extends JPanel {
         return panel;
     }
 
+    /**
+     * Individual vaults checkbox created to be added in the top pot stat maxing display.
+     */
     private JCheckBox checkBoxMissingStats(String s) {
         JCheckBox checkBox = new JCheckBox(s);
         checkBox.addActionListener(e -> updateStatMaxPots());
         return checkBox;
     }
 
+    /**
+     * Checks if character should be computed for maxing if selected.
+     */
     private boolean calcChar(Character c) {
         for (Pair<Character, JCheckBox> p : charStatSelection) {
             if (p.left() == c) return p.right().isSelected();
@@ -490,6 +554,9 @@ public class CharacterPanelGUI extends JPanel {
         return false;
     }
 
+    /**
+     * Stat maxing character stats to be added on the mid right panel.
+     */
     private void statMaxingStats(Character c, JPanel panelTop, JPanel panelMid, JPanel panelBot) {
         int[] missing = new int[8];
         CharacterData.statMissing(c, missing);
@@ -517,6 +584,9 @@ public class CharacterPanelGUI extends JPanel {
         panelBot.add(Box.createHorizontalGlue());
     }
 
+    /**
+     * Individual label to be added for stat maxing stats.
+     */
     private void statLabel(JPanel panel, String name, int stat, int missing) {
         JLabel l = new JLabel();
 //        new JLabel("<html>Text color: <font color='red'>red</font></html>");
@@ -532,11 +602,34 @@ public class CharacterPanelGUI extends JPanel {
         panel.add(l);
     }
 
-    private ImageIcon getImageIcon(StatPotion life) {
-        ImageIcon icon = new ImageIcon(StatPotion.getImage(life).getScaledInstance(15, 15, Image.SCALE_DEFAULT));
+    /**
+     * Creates a potion image icon to display.
+     *
+     * @param pot Potion type
+     */
+    private ImageIcon getImageIcon(StatPotion pot) {
+        ImageIcon icon = new ImageIcon(StatPotion.getImage(pot).getScaledInstance(15, 15, Image.SCALE_DEFAULT));
         return icon;
     }
 
+    /**
+     * Method to update character tabs with new char data.
+     *
+     * @param list Character info to be updated.
+     */
+    public void updateCharacters(ArrayList<Character> list) {
+        if (list == null) return;
+        chars = list;
+
+        updateCharPanel(list);
+        updateMaxingPanel(list);
+    }
+
+    /**
+     * Vault update method called when receiving vault packets.
+     *
+     * @param vaultData Vault data to update the GUI with.
+     */
     public void vaultDataUpdate(VaultData vaultData) {
         this.vaultData = vaultData;
         updateStatMaxPots();
