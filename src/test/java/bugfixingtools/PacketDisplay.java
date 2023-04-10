@@ -14,7 +14,7 @@ public class PacketDisplay {
     private JPanel rowLittleBig;
     private byte[] bytes;
     private JLabel[] byteDisplay;
-    private ArrayList<JPanel> rowList;
+    private static final ArrayList<Grouping> groupList = new ArrayList<>();
     private HashSet<JPanel> rowHighlight = new HashSet<>();
 
 
@@ -36,7 +36,7 @@ public class PacketDisplay {
 
         selectionPanel = new JPanel();
         selectionPanel.setLayout(new BoxLayout(selectionPanel, BoxLayout.Y_AXIS));
-        JTextField field = new JTextField("[0, 0, 0, 25, -90, 0, 3, -57, -56, 1, 38, 0, 0, 0, 0, 0, 0, -1, -1, -1, 22, 64, -112, 0, 0]");
+        JTextField field = new JTextField("[0, 3, -57, -56, 1, 38, 0, 0, 0, 0, 0, 0, -1, -1, -1, 22, 64, -112, 0, 0]");
         field.addActionListener(e -> {
             System.out.println("field: " + field.getText());
             getByteArray(field.getText());
@@ -133,15 +133,10 @@ public class PacketDisplay {
         selectionPanel.removeAll();
         selectionPanel.add(rowLittleBig);
         if (bytes != null) {
-            rowList = new ArrayList<>();
-            for (int i = 0; i < 5; i++) {
-                JPanel row = addedSection(i, bytes.length);
-                rowList.add(row);
-            }
-            for (int i = 5; i < bytes.length; i++) {
+            groupList.clear();
+            for (int i = 0; i < bytes.length; i++) {
                 selectionPanel.add(new JLabel("Byte: " + i));
                 JPanel row = addedSection(i, bytes.length);
-                rowList.add(row);
                 selectionPanel.add(row);
             }
         }
@@ -161,182 +156,24 @@ public class PacketDisplay {
         row.setLayout(new BoxLayout(row, BoxLayout.Y_AXIS));
         row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
 //        row.setBorder(BorderFactory.createLineBorder(Color.gray));
-        JCheckBox byteBox = new JCheckBox("Byte:        " + Byte.toUnsignedInt(bytes[i]));
+        JCheckBox byteBox = new JCheckBox("Byte:        " + bytes[i] + "    [" + Byte.toUnsignedInt(bytes[i]) + "]");
         row.add(byteBox);
-        byteBox.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                if (!rowHighlight.contains(((JCheckBox) e.getSource()).getParent())) {
-                    byteDisplay[i].setForeground(Color.MAGENTA);
-                }
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                if (!rowHighlight.contains(((JCheckBox) e.getSource()).getParent())) {
-                    byteDisplay[i].setForeground(Color.BLACK);
-                }
-            }
-        });
-        byteBox.addActionListener(e -> {
-            if (((JCheckBox) e.getSource()).isSelected()) {
-                byteDisplay[i].setForeground(Color.LIGHT_GRAY);
-                for (int j = 0; j < 1; j++) {
-                    rowHighlight.add(rowList.get(i + j));
-                }
-            } else {
-                for (int j = 0; j < 1; j++) {
-                    rowHighlight.remove(rowList.get(i + j));
-                }
-                byteDisplay[i].setForeground(Color.BLACK);
-            }
-        });
+        Grouping.add(i, byteBox, 1, byteDisplay);
 
         if (i + 1 >= length) return row;
 
-        JCheckBox shortBox = new JCheckBox("Short:      " + Short.toUnsignedInt(decodeShort(bytes, i)));
-        shortBox.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                if (!rowHighlight.contains(((JCheckBox) e.getSource()).getParent())) {
-                    for (int j = 0; j < 2; j++) {
-                        byteDisplay[i + j].setForeground(Color.MAGENTA);
-                    }
-                }
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                if (!rowHighlight.contains(((JCheckBox) e.getSource()).getParent())) {
-                    for (int j = 0; j < 2; j++) {
-                        byteDisplay[i + j].setForeground(Color.BLACK);
-                    }
-                }
-            }
-        });
-        shortBox.addActionListener(e -> {
-            if (((JCheckBox) e.getSource()).isSelected()) {
-                for (Component c : rowList.get(i + 1).getComponents()) {
-                    c.setEnabled(false);
-                }
-                for (int j = 0; j < 2; j++) {
-                    byteDisplay[i + j].setForeground(Color.LIGHT_GRAY);
-                }
-                for (int j = 0; j < 2; j++) {
-                    rowHighlight.add(rowList.get(i + j));
-                }
-            } else {
-                for (int j = 0; j < 2; j++) {
-                    rowHighlight.remove(rowList.get(i + j));
-                }
-                for (int j = 0; j < 2; j++) {
-                    byteDisplay[i + j].setForeground(Color.BLACK);
-                }
-                for (Component c : rowList.get(i + 1).getComponents()) {
-                    c.setEnabled(true);
-                }
-            }
-        });
+        JCheckBox shortBox = new JCheckBox("Short:      " + decodeShort(bytes, i) + "    [" + Short.toUnsignedInt(decodeShort(bytes, i)) + "]");
+        Grouping.add(i, shortBox, 2, byteDisplay);
         row.add(shortBox);
 
         if (i + 3 >= length) return row;
 
-        JCheckBox intBox = new JCheckBox("Integer:   " + Integer.toUnsignedLong(decodeInt(bytes, i)));
-        intBox.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                if (!rowHighlight.contains(((JCheckBox) e.getSource()).getParent())) {
-                    for (int j = 0; j < 4; j++) {
-                        byteDisplay[i + j].setForeground(Color.MAGENTA);
-                    }
-                }
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                if (!rowHighlight.contains(((JCheckBox) e.getSource()).getParent())) {
-                    for (int j = 0; j < 4; j++) {
-                        byteDisplay[i + j].setForeground(Color.BLACK);
-                    }
-                }
-            }
-        });
-        intBox.addActionListener(e -> {
-            if (((JCheckBox) e.getSource()).isSelected()) {
-                for (int j = 1; j < 4; j++) {
-                    for (Component c : rowList.get(i + j).getComponents()) {
-                        c.setEnabled(false);
-                    }
-                }
-                for (int j = 0; j < 4; j++) {
-                    byteDisplay[i + j].setForeground(Color.LIGHT_GRAY);
-                }
-                for (int j = 0; j < 4; j++) {
-                    rowHighlight.add(rowList.get(i + j));
-                }
-            } else {
-                for (int j = 0; j < 4; j++) {
-                    rowHighlight.remove(rowList.get(i + j));
-                }
-                for (int j = 0; j < 4; j++) {
-                    byteDisplay[i + j].setForeground(Color.BLACK);
-                }
-                for (int j = 0; j < 4; j++) {
-                    for (Component c : rowList.get(i + j).getComponents()) {
-                        c.setEnabled(true);
-                    }
-                }
-            }
-        });
+        JCheckBox intBox = new JCheckBox("Integer:   " + decodeInt(bytes, i) + "    [" + Integer.toUnsignedLong(decodeInt(bytes, i)) + "]");
+        Grouping.add(i, intBox, 4, byteDisplay);
         row.add(intBox);
 
         JCheckBox floatBox = new JCheckBox("Float:       " + Float.intBitsToFloat(decodeInt(bytes, i)));
-        floatBox.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                if (!rowHighlight.contains(((JCheckBox) e.getSource()).getParent())) {
-                    for (int j = 0; j < 4; j++) {
-                        byteDisplay[i + j].setForeground(Color.MAGENTA);
-                    }
-                }
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                if (!rowHighlight.contains(((JCheckBox) e.getSource()).getParent())) {
-                    for (int j = 0; j < 4; j++) {
-                        byteDisplay[i + j].setForeground(Color.BLACK);
-                    }
-                }
-            }
-        });
-        floatBox.addActionListener(e -> {
-            if (((JCheckBox) e.getSource()).isSelected()) {
-                for (int j = 1; j < 4; j++) {
-                    for (Component c : rowList.get(i + j).getComponents()) {
-                        c.setEnabled(false);
-                    }
-                }
-                for (int j = 0; j < 4; j++) {
-                    byteDisplay[i + j].setForeground(Color.LIGHT_GRAY);
-                }
-                for (int j = 0; j < 4; j++) {
-                    rowHighlight.add(rowList.get(i + j));
-                }
-            } else {
-                for (int j = 0; j < 4; j++) {
-                    rowHighlight.remove(rowList.get(i + j));
-                }
-                for (int j = 0; j < 4; j++) {
-                    byteDisplay[i + j].setForeground(Color.BLACK);
-                }
-                for (int j = 0; j < 4; j++) {
-                    for (Component c : rowList.get(i + j).getComponents()) {
-                        c.setEnabled(true);
-                    }
-                }
-            }
-        });
+        Grouping.add(i, floatBox, 4, byteDisplay);
         row.add(floatBox);
 
         if (i + 1 >= length) return row;
@@ -347,57 +184,82 @@ public class PacketDisplay {
             ss += (char) bytes[i + s];
         }
         JCheckBox stringBox = new JCheckBox("String:     \"" + ss + "\"");
-        stringBox.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                if (!rowHighlight.contains(((JCheckBox) e.getSource()).getParent())) {
-                    for (int j = 0; j < 2; j++) {
-                        byteDisplay[i + j].setForeground(Color.MAGENTA);
-                    }
-                    for (int j = 0; j < len; j++) {
-                        byteDisplay[i + 2 + j].setForeground(Color.RED);
-                    }
-                }
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                if (!rowHighlight.contains(((JCheckBox) e.getSource()).getParent())) {
-                    for (int j = 0; j < 2 + len; j++) {
-                        byteDisplay[i + j].setForeground(Color.BLACK);
-                    }
-                }
-            }
-        });
-        stringBox.addActionListener(e -> {
-            if (((JCheckBox) e.getSource()).isSelected()) {
-                for (int j = 1; j < 2 + len; j++) {
-                    for (Component c : rowList.get(i + j).getComponents()) {
-                        c.setEnabled(false);
-                    }
-                }
-                for (int j = 0; j < 2 + len; j++) {
-                    byteDisplay[i + j].setForeground(Color.LIGHT_GRAY);
-                }
-                for (int j = 0; j < 2 + len; j++) {
-                    rowHighlight.add(rowList.get(i + j));
-                }
-            } else {
-                for (int j = 0; j < 2 + len; j++) {
-                    rowHighlight.remove(rowList.get(i + j));
-                }
-                for (int j = 0; j < 2 + len; j++) {
-                    byteDisplay[i + j].setForeground(Color.BLACK);
-                }
-                for (int j = 0; j < 2 + len; j++) {
-                    for (Component c : rowList.get(i + j).getComponents()) {
-                        c.setEnabled(true);
-                    }
-                }
-            }
-        });
+        Grouping.add(i, stringBox, 2 + len, byteDisplay);
         row.add(stringBox);
 
         return row;
+    }
+
+    public static class Grouping {
+        int index;
+        int len;
+        JCheckBox checkbox;
+
+        public Grouping(int index, JCheckBox checkbox, int len) {
+            this.index = index;
+            this.len = len;
+            this.checkbox = checkbox;
+        }
+
+        public static void add(int index, JCheckBox checkbox, int len, JLabel[] displays) {
+            Grouping group = new Grouping(index, checkbox, len);
+            groupList.add(group);
+
+            checkbox.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    JCheckBox source = (JCheckBox) e.getSource();
+                    if (source.isEnabled() && !source.isSelected()) {
+                        for (int j = 0; j < len; j++) {
+                            displays[index + j].setForeground(Color.MAGENTA);
+                        }
+                    }
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    JCheckBox source = (JCheckBox) e.getSource();
+                    if (source.isEnabled() && !source.isSelected()) {
+                        for (int j = 0; j < len; j++) {
+                            displays[index + j].setForeground(Color.BLACK);
+                        }
+                    }
+                }
+            });
+
+            checkbox.addActionListener(e -> {
+                JCheckBox source = (JCheckBox) e.getSource();
+                if (source.isSelected()) {
+                    for (Grouping g : groupList) {
+                        if (!g.checkbox.equals(source)
+                                &&
+                                (
+                                        (g.index < index && g.index + g.len - 1 >= index) ||
+                                                (g.index >= index && g.index < index + len)
+                                )
+                        ) {
+                            g.checkbox.setEnabled(false);
+                        }
+                    }
+                    for (int j = 0; j < len; j++) {
+                        displays[index + j].setForeground(Color.LIGHT_GRAY);
+                    }
+                } else {
+                    for (int j = 0; j < len; j++) {
+                        displays[index + j].setForeground(Color.BLACK);
+                    }
+                    for (Grouping g : groupList) {
+                        if (!g.checkbox.equals(source) &&
+                                (
+                                        (g.index < index && g.index + g.len - 1 >= index) ||
+                                                (g.index >= index && g.index < index + len)
+                                )
+                        ) {
+                            g.checkbox.setEnabled(true);
+                        }
+                    }
+                }
+            });
+        }
     }
 }
