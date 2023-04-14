@@ -4,6 +4,8 @@ import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES;
 
 import com.google.gson.*;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
@@ -15,6 +17,7 @@ import java.util.*;
 public class SpriteJson implements JsonDeserializer<SpriteJson> {
     private static String spriteJson = "assets/json/spritesheet.json";
 
+    private static boolean notLoaded = false;
     private static HashMap<String, HashMap<Integer, Sprite>> sprites;
     private static HashMap<String, HashMap<Integer, Sprite>> animatedSprites;
 
@@ -29,14 +32,19 @@ public class SpriteJson implements JsonDeserializer<SpriteJson> {
      * Loads the json file into HashMap data structure.
      */
     public static void jsonFileReader() {
+        File jsonFile = new File(spriteJson);
+        if (!jsonFile.exists()) {
+            notLoaded = true;
+            return;
+        }
+        if (sprites != null) sprites.clear();
+        if (animatedSprites != null) animatedSprites.clear();
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(SpriteJson.class, new SpriteJson());
+        builder.registerTypeAdapter(Sprite.class, new Sprite());
+        Gson gson = builder.setFieldNamingPolicy(LOWER_CASE_WITH_UNDERSCORES).create();
         try {
-            if (sprites != null) sprites.clear();
-            if (animatedSprites != null) animatedSprites.clear();
-            GsonBuilder builder = new GsonBuilder();
-            builder.registerTypeAdapter(SpriteJson.class, new SpriteJson());
-            builder.registerTypeAdapter(Sprite.class, new Sprite());
-            Gson gson = builder.setFieldNamingPolicy(LOWER_CASE_WITH_UNDERSCORES).create();
-            String json = new Scanner(new File(spriteJson)).useDelimiter("\\Z").next();
+            String json = new Scanner(jsonFile).useDelimiter("\\Z").next();
             gson.fromJson(json, SpriteJson.class);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -67,7 +75,8 @@ public class SpriteJson implements JsonDeserializer<SpriteJson> {
      * @param index Index of the sprite in the group.
      * @return Integer
      */
-    public int[] getSprite(String name, int index) {
+    public int[] getSpriteData(String name, int index) {
+        if(notLoaded) return null;
         HashMap<Integer, Sprite> list = sprites.get(name);
         if (list == null) {
             list = animatedSprites.get(name);
@@ -84,6 +93,7 @@ public class SpriteJson implements JsonDeserializer<SpriteJson> {
      * @return Integer
      */
     public int getSpriteColor(String name, int index) {
+        if(notLoaded) return -1;
         HashMap<Integer, Sprite> list = sprites.get(name);
         Sprite sprite = list.get(index);
         return sprite.mostCommonColor.asInt();

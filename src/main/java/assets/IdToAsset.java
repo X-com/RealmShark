@@ -1,6 +1,7 @@
 package assets;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -87,12 +88,14 @@ public class IdToAsset {
      * Method to grab the full list of object resource's from file and construct the hashmap.
      */
     private static void readObjectList() {
+        File objectsFile = new File(AssetExtractor.ASSETS_OBJECT_FILE_DIR_PATH);
+        if (!objectsFile.exists()) return;
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(AssetExtractor.ASSETS_OBJECT_FILE_DIR_PATH)));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(objectsFile)));
             String line;
 
             while ((line = br.readLine()) != null) {
-                String[] l = line.split(":");
+                String[] l = line.split(";");
                 int id = Integer.parseInt(l[0]);
                 String display = l[1];
                 String clazz = l[2];
@@ -114,12 +117,14 @@ public class IdToAsset {
      * Method to grab the full list of tile resource's from file and construct the hashmap.
      */
     private static void readTileList() {
+        File tilesFile = new File(AssetExtractor.ASSETS_TILE_FILE_DIR_PATH);
+        if (!tilesFile.exists()) return;
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(AssetExtractor.ASSETS_TILE_FILE_DIR_PATH)));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(tilesFile)));
             String line;
 
             while ((line = br.readLine()) != null) {
-                String[] l = line.split(":");
+                String[] l = line.split(";");
                 int id = Integer.parseInt(l[0]);
                 String texture = l[1];
                 String idName = l[2];
@@ -294,11 +299,11 @@ public class IdToAsset {
      */
     public static String getObjectTextureName(int id, int num) throws AssetMissingException {
         IdToAsset i = objectID.get(id);
-        if (i.textures == null) i.textures = parseObjectTexture(i);
+        if (i != null && i.textures == null) i.textures = parseObjectTexture(i);
         try {
             return i.textures[num].name;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println(id + " " + i);
+        } catch (Exception e) {
+//            System.out.println(id + " " + i);
             return null;
         }
     }

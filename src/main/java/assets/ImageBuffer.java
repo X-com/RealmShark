@@ -1,6 +1,7 @@
 package assets;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -14,9 +15,16 @@ public class ImageBuffer {
     private static HashMap<Integer, BufferedImage> images = new HashMap<>();
     private static HashMap<Integer, Integer> colors = new HashMap<>();
     private static final SpriteJson spriteJson = new SpriteJson();
+    private static BufferedImage emptyImg;
 
     private static String[] spriteSheets = {"assets/sprites/groundTiles.png", "assets/sprites/characters.png", "assets/sprites/characters_masks.png", "assets/sprites/mapObjects.png"};
     private static BufferedImage[] bigImages = new BufferedImage[4];
+
+    private static BufferedImage emptyImage() {
+        if (emptyImg != null) return emptyImg;
+        emptyImg = createTransparentBufferedImage(8, 8);
+        return emptyImg;
+    }
 
     /**
      * Image method used to get image from object id.
@@ -29,8 +37,10 @@ public class ImageBuffer {
         if (id <= 0) return null;
 //        if (images.containsKey(id)) return images.get(id);
         String name = IdToAsset.getObjectTextureName(id, 0);
+        if (name == null) return emptyImage();
         int index = IdToAsset.getObjectTextureIndex(id, 0);
-        int[] spriteData = spriteJson.getSprite(name, index);
+        int[] spriteData = spriteJson.getSpriteData(name, index);
+        if (spriteData == null) return emptyImage();
         BufferedImage sprite = getSprite(spriteData);
         images.put(id, sprite);
         return sprite;
@@ -75,5 +85,29 @@ public class ImageBuffer {
         images.clear();
         colors.clear();
         bigImages = new BufferedImage[4];
+    }
+
+    /**
+     * Creates a transparent buffered image.
+     *
+     * @param width  Width of the transparent image.
+     * @param height Height of the transparent image.
+     * @return Transparent buffered image.
+     */
+    public static BufferedImage createTransparentBufferedImage(int width, int height) {
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = bufferedImage.createGraphics();
+        graphics.setBackground(new Color(0, true));
+        graphics.clearRect(0, 0, width, height);
+        graphics.dispose();
+
+        return bufferedImage;
+    }
+
+    /**
+     * Getter for transparent 8x8 image
+     */
+    public static BufferedImage getEmptyImg() {
+        return emptyImage();
     }
 }

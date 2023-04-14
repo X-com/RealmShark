@@ -139,7 +139,7 @@ public class AssetExtractor {
             labels.removeAll();
             buttons.removeAll();
 
-            labels.setLayout(new BoxLayout(labels, BoxLayout.X_AXIS));
+            labels.setLayout(new BoxLayout(labels, BoxLayout.Y_AXIS));
             labels.add(l3);
             buttons.add(Box.createHorizontalGlue());
             close.setEnabled(false);
@@ -161,7 +161,8 @@ public class AssetExtractor {
                 }
 
                 labels.removeAll();
-                labels.add(new JLabel("Done extracting assets"));
+                labels.add(new JLabel("Done extracting assets."));
+                labels.add(new JLabel("Restart app if assets are missing."));
                 labels.revalidate();
                 dialog.repaint();
                 close.setEnabled(true);
@@ -506,7 +507,7 @@ public class AssetExtractor {
                 textureString.deleteCharAt(textureString.length() - 1);
             }
 
-            return String.format("%s:%s:%s:%s:%s:%s:%s", id, display, clazz, group, projectileString, textureString, idName);
+            return String.format("%s;%s;%s;%s;%s;%s;%s", id, display, clazz, group, projectileString, textureString, idName);
         }
     }
 
@@ -524,7 +525,7 @@ public class AssetExtractor {
                 }
                 textureString.deleteCharAt(textureString.length() - 1);
             }
-            return String.format("%d:%s:%s", id, textureString, idName);
+            return String.format("%d;%s;%s", id, textureString, idName);
         }
     }
 
