@@ -3,13 +3,11 @@ package tomato.gui;
 import assets.AssetMissingException;
 import assets.ImageBuffer;
 import tomato.logic.CharacterData;
-import tomato.logic.HttpCharListRequest;
 import tomato.logic.Character;
 import tomato.logic.VaultData;
 import tomato.logic.enums.CharacterClass;
 import tomato.logic.enums.StatPotion;
 import util.Pair;
-import util.Util;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -57,24 +55,25 @@ public class CharacterPanelGUI extends JPanel {
         tabbedPane.addTab("Characters", scrollPaneChars);
         tabbedPane.addTab("Stat Maxing", mainMaxingPanel);
 
-        JButton button = new JButton("Test");
-        button.addActionListener(e -> {
-            try {
-                mainMaxingPanel.removeAll();
-                mainMaxingPanel.add(scrollPaneMaxing, BorderLayout.CENTER);
-                mainMaxingPanel.add(missingPotsPanel(), BorderLayout.NORTH);
-                mainMaxingPanel.revalidate();
-                java.io.InputStream is = Util.resourceFilePath("char");
-                String result = new java.io.BufferedReader(new java.io.InputStreamReader(is)).lines().collect(java.util.stream.Collectors.joining("\n"));
-                ArrayList<Character> l = HttpCharListRequest.getCharList(result);
-                chars = l;
-//                updateCharPanel(l);
-                updateMaxingPanel(l);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-        add(button, BorderLayout.SOUTH);
+//        JButton button = new JButton("Test");
+//        button.addActionListener(e -> {
+//            try {
+//                mainMaxingPanel.removeAll();
+//                mainMaxingPanel.add(scrollPaneMaxing, BorderLayout.CENTER);
+//                mainMaxingPanel.add(missingPotsPanel(), BorderLayout.NORTH);
+//                mainMaxingPanel.revalidate();
+//                java.io.InputStream is = Util.resourceFilePath("char");
+//                String result = new java.io.BufferedReader(new java.io.InputStreamReader(is)).lines().collect(java.util.stream.Collectors.joining("\n"));
+//                ArrayList<Character> l = HttpCharListRequest.getCharList(result);
+//                chars = l;
+//                updateCharPanel(chars);
+//                updateMaxingPanel(l);
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
+//        });
+//        add(button, BorderLayout.SOUTH);
+
         charPanel.add(new Label("Enter Daily Quest Room to see chars"));
         maxingPanel.add(new Label("Enter Daily Quest Room to see chars"));
     }
@@ -131,7 +130,12 @@ public class CharacterPanelGUI extends JPanel {
         for (int i = 0; i < 4; i++) {
             int eq = c.equipment[i];
             try {
-                BufferedImage img = ImageBuffer.getImage(eq);
+                BufferedImage img;
+                if (eq == -1) {
+                    img = ImageBuffer.getEmptyImg();
+                } else {
+                    img = ImageBuffer.getImage(eq);
+                }
                 ImageIcon icon = new ImageIcon(img.getScaledInstance(15, 15, Image.SCALE_DEFAULT));
                 panelEquip.add(new JLabel(icon));
             } catch (Exception e) {
@@ -147,7 +151,13 @@ public class CharacterPanelGUI extends JPanel {
         for (String eqs : c.equipQS) {
             try {
                 String[] s = eqs.split("\\|");
-                BufferedImage img = ImageBuffer.getImage(Integer.parseInt(s[0]));
+                int eq = Integer.parseInt(s[0]);
+                BufferedImage img;
+                if (eq == -1) {
+                    img = ImageBuffer.getEmptyImg();
+                } else {
+                    img = ImageBuffer.getImage(eq);
+                }
                 ImageIcon icon = new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT));
                 panelBelt.add(new JLabel(icon));
                 panelBelt.add(new JLabel(s[1]));
@@ -181,7 +191,12 @@ public class CharacterPanelGUI extends JPanel {
         for (int i = 4 + b; i < 12 + b; i++) {
             int eq = c.equipment[i];
             try {
-                BufferedImage img = ImageBuffer.getImage(eq);
+                BufferedImage img;
+                if (eq == -1) {
+                    img = ImageBuffer.getEmptyImg();
+                } else {
+                    img = ImageBuffer.getImage(eq);
+                }
                 ImageIcon icon = new ImageIcon(img.getScaledInstance(12, 12, Image.SCALE_DEFAULT));
                 if (i < 8 + b) {
                     topRow.add(new JLabel(icon));
@@ -189,7 +204,7 @@ public class CharacterPanelGUI extends JPanel {
                     botRow.add(new JLabel(icon));
                 }
             } catch (Exception e) {
-//                e.printStackTrace();
+                e.printStackTrace();
             }
         }
 
@@ -269,6 +284,7 @@ public class CharacterPanelGUI extends JPanel {
      * @param list Character info to be updated in the char tab.
      */
     private void updateCharPanel(ArrayList<Character> list) {
+        chars = list;
         charPanel.setLayout(new BoxLayout(charPanel, BoxLayout.Y_AXIS));
         charPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
         charPanel.add(Box.createVerticalGlue());
