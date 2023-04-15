@@ -1,6 +1,7 @@
 package tomato.gui;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Info panel frame builder.
@@ -32,6 +33,8 @@ public class TomatoBandwidth extends JFrame {
         infoArea.setEditable(false);
         infoArea.setLineWrap(true);
         infoArea.setWrapStyleWord(true);
+        Font f = infoArea.getFont();
+        infoArea.setFont(new Font("Monospaced", f.getStyle(), f.getSize()));
         scroll = new JScrollPane(infoArea);
         scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scroll.setAutoscrolls(true);

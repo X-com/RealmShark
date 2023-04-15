@@ -4,7 +4,6 @@ import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.*;
 import packets.data.QuestData;
 import tomato.Tomato;
-import tomato.logic.Character;
 import util.PropertiesManager;
 import util.Pair;
 
@@ -31,9 +30,10 @@ public class TomatoGUI {
     private static JCheckBox textFilterToggle;
     private static JLabel statusLabel, dpsLabel;
     private static JFrame frame;
-    private static ParsePanelGUI parsePanel;
+    private static SecurityGUI securityPanel;
     private static CharacterPanelGUI characterPanel;
     private static QuestGUI questPanel;
+    private static FameTrackerGUI fameTracker;
     private JMenuBar jMenuBar;
     private JPanel mainPanel, dpsPanel, dpsTopPanel;
     private TomatoMenuBar menuBar;
@@ -53,14 +53,14 @@ public class TomatoGUI {
         textAreaKeypop = new JTextArea();
         tabbedPane.addTab("Key-pops", createTextArea(textAreaKeypop));
 
-        parsePanel = new ParsePanelGUI();
-        tabbedPane.addTab("Parser", parsePanel);
+        securityPanel = new SecurityGUI();
+        tabbedPane.addTab("Security", securityPanel);
 
         characterPanel = new CharacterPanelGUI();
         tabbedPane.addTab("Characters", characterPanel);
 
-//        textAreaQuests = new JTextArea();
-//        tabbedPane.addTab("Daily Quests", createTextArea(textAreaQuests));
+        fameTracker = new FameTrackerGUI();
+        tabbedPane.addTab("Fame", fameTracker);
 
         questPanel = new QuestGUI();
         tabbedPane.addTab("Daily Quests", questPanel);
@@ -330,7 +330,7 @@ public class TomatoGUI {
      * @param data Player data to set the equipment of parse players.
      */
     public static void setParsePlayers(ArrayList<Pair<String, int[]>> data) {
-        if (parsePanel != null) parsePanel.addPlayers(data);
+//        if (securityPanel != null) securityPanel.addPlayers(data);
     }
 
     /**
