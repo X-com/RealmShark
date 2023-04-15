@@ -33,7 +33,11 @@ Unknown packet type:-93 Data:[0, 0, 0, 11, -93, 0, 0, 0, 3, 17, 2]
 Unknown packet type:-92 Data:[0, 0, 0, 9, -92, 2, 1, 0, 0]
 
 Unknown packet type:115 Data:[0, 0, 0, 9, 115, 0, 0, 37, 42]
+Unknown packet type:115 Data:[0, 0, 0, 9, 115, 0, 0, 37, 30]
 Unknown packet type:116 Data:[0, 0, 0, 54, 116, 1, 0, 46, 73, 116, 101, 109, 32, 119, 97, 115, 32, 99, 108, 97, 105, 109, 101, 100, 44, 32, 121, 111, 117, 39, 108, 108, 32, 102, 105, 110, 100, 32, 105, 116, 32, 105, 110, 32, 121, 111, 117, 114, 32, 86, 97, 117, 108, 116]
+Unknown packet type:116 Data:[0, 0, 0, 54, 116, 1, 0, 46, 73, 116, 101, 109, 32, 119, 97, 115, 32, 99, 108, 97, 105, 109, 101, 100, 44, 32, 121, 111, 117, 39, 108, 108, 32, 102, 105, 110, 100, 32, 105, 116, 32, 105, 110, 32, 121, 111, 117, 114, 32, 86, 97, 117, 108, 116]
+
+Unknown packet type:-102 Data:[0, 0, 0, 5, -102]
 
 8617:Legacy Ancient Spell: Pierce:Equipment::53,115,1:1328,lofiObj3:Legacy Ancient Spell: Pierce
 8617:Legacy Ancient Spell: Pierce:Equipment::53,115,1:1328,lofiObj3:Legacy Ancient Spell: Pierce
