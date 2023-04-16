@@ -12,6 +12,7 @@ public class Character {
 
     public static HashMap<Integer, int[]> exalts = new HashMap<>();
 
+    public int charId;
     public int classNum;
     public String classString;
     public int level;
@@ -44,6 +45,27 @@ public class Character {
 
     @Override
     public String toString() {
-        return "Character{" + "\n   skin=" + skin + "\n   exp=" + exp + "\n   fame=" + fame + "\n   seasonal=" + seasonal + "\n   backpack=" + backpack + "\n   qs3=" + qs3 + "\n   equipment=" + Arrays.toString(equipment) + "\n   equipQS=" + Arrays.toString(equipQS) + "\n   date=" + date + "\n   hp=" + hp + "\n   mp=" + mp + "\n   att=" + atk + "\n   def=" + def + "\n   spd=" + spd + "\n   dex=" + dex + "\n   vit=" + vit + "\n   wis=" + wis;
+        return "Character{" +
+                "\n   charId=" + charId +
+                "\n   classNum=" + classNum +
+                "\n   classString=" + classString +
+                "\n   level=" + level +
+                "\n   skin=" + skin +
+                "\n   exp=" + exp +
+                "\n   fame=" + fame +
+                "\n   seasonal=" + seasonal +
+                "\n   backpack=" + backpack +
+                "\n   qs3=" + qs3 +
+                "\n   equipment=" + Arrays.toString(equipment) +
+                "\n   equipQS=" + Arrays.toString(equipQS) +
+                "\n   date=" + date +
+                "\n   hp=" + hp +
+                "\n   mp=" + mp +
+                "\n   atk=" + atk +
+                "\n   def=" + def +
+                "\n   spd=" + spd +
+                "\n   dex=" + dex +
+                "\n   vit=" + vit +
+                "\n   wis=" + wis;
     }
 }

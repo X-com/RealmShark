@@ -107,6 +107,10 @@ public class HttpCharListRequest {
             if (Objects.equals(xml.name, "Char")) {
                 Character character = new Character();
                 for (StringXML info : xml) {
+                    if(Objects.equals(info.name, "id")) {
+                        character.charId = Integer.parseInt(info.value);
+                    }
+
                     for (StringXML v : info) {
                         switch (info.name) {
                             case "ObjectType":
