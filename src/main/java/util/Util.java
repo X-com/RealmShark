@@ -130,7 +130,7 @@ public class Util {
     public static String showAll(Object[] list) {
         StringBuilder sb = new StringBuilder();
         for (Object o : list) {
-            sb.append(o);
+            sb.append("\n").append(o);
         }
         return sb.toString();
     }

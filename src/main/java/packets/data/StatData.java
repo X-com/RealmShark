@@ -64,11 +64,13 @@ public class StatData {
 
     @Override
     public String toString() {
-        String valueExtended = (statValueTwo == -1 ? "" : " [" + statValueTwo + "]");
+        String secondValue = statValueTwo == -1 ? "" : " [" + statValueTwo + "]";
+        String stringValue = stringStatValue == null ? "" : " " + stringStatValue;
+        String stringExtra = "";
         if (statTypeNum == 29) {
-            valueExtended += " " + ConditionBits.effectsToString(statValue);
+            stringExtra += " " + ConditionBits.effectsToString(statValue);
         } else if (statTypeNum == 96) {
-            valueExtended += " " + ConditionNewBits.effectsToString(statValue);
+            stringExtra += " " + ConditionNewBits.effectsToString(statValue);
         } else if (statTypeNum >= 8 && statTypeNum <= 19) {
             String name = "";
             try {
@@ -76,8 +78,8 @@ public class StatData {
             } catch (AssetMissingException e) {
                 e.printStackTrace();
             }
-            valueExtended += " " + name;
+            stringExtra += " " + name;
         }
-        return "\n      " + statType + " = " + statValue + valueExtended;
+        return "      " + statType + " = " + statValue + secondValue + stringValue + stringExtra;
     }
 }

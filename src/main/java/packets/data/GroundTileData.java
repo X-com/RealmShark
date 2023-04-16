@@ -42,6 +42,6 @@ public class GroundTileData {
         } catch (AssetMissingException e) {
             e.printStackTrace();
         }
-        return "\n    Tile: " + tile + " " + type + " (" + x + ", " + y + ")";
+        return "    Tile: " + tile + " " + type + " (" + x + ", " + y + ")";
     }
 }

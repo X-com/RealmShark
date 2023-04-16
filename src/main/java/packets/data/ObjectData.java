@@ -35,7 +35,7 @@ public class ObjectData {
         } catch (AssetMissingException e) {
             e.printStackTrace();
         }
-        return "\n    " + (name.equals("") ? ("objectType=" + objectType) : ("objectType=" + objectType + " " + name)) +
+        return "    " + (name.equals("") ? ("objectType=" + objectType) : ("objectType=" + objectType + " " + name)) +
                 status;
     }
 }
