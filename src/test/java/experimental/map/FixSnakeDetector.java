@@ -84,7 +84,7 @@ public class FixSnakeDetector {
 
     private int[][] findCombinedShapeTiles(ArrayList<HeroLocations>[] heroList) {
         int[][] combined = new int[SET_PIECE_SIZE * 2 + 1][SET_PIECE_SIZE * 2 + 1];
-        ArrayList<MapData>[] maps = LoadPattern.loadMaps();
+        ArrayList<MapData>[] maps = LoadMapData.loadMaps();
         ArrayList<HeroLocations> h10 = heroList[9];
         MapData map1015 = maps[9].get(0);
         ArrayList<HeroLocations> hlist = new ArrayList<>();

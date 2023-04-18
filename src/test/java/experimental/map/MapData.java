@@ -1,5 +1,7 @@
 package experimental.map;
 
+import util.ImageBuffer;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -10,10 +12,11 @@ import java.util.ArrayList;
 public class MapData {
     public ArrayList<Entity> entitys;
     public int[][] mapArray;
+    public int width, height;
 
     public MapData() {
-        entitys = new ArrayList<>();
-        mapArray = new int[2048][2048];
+//        entitys = new ArrayList<>();
+//        mapArray = new int[2048][2048];
     }
 
     public int tile(int x, int y) {
@@ -38,7 +41,8 @@ public class MapData {
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles[0].length; j++) {
                 if (tiles[i][j] != 0) {
-                    bi.setRGB(i, j, Color.red.getRGB());
+                    int color = ImageBuffer.getColor(tiles[i][j]);
+                    bi.setRGB(i, j, color);
                 }
             }
         }
