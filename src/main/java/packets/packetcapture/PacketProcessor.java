@@ -67,7 +67,7 @@ public class PacketProcessor extends Thread implements PProcessor {
         } catch (UnsatisfiedLinkError e) {
             new MissingNpcapGUI();
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 
@@ -130,10 +130,11 @@ public class PacketProcessor extends Thread implements PProcessor {
 
         try {
             packetType.deserialize(pData);
-            if (!pData.isBufferFullyParsed())
-                pData.printError(packetType);
+            if (!pData.isBufferFullyParsed()) {
+//                pData.printError(packetType);
+            }
         } catch (Exception e) {
-            Util.print("Buffer exploded: " + pData.getIndex() + "/" + pData.size());
+//            Util.print("Buffer exploded: " + pData.getIndex() + "/" + pData.size());
             debugPackets(type, data);
             return;
         }
@@ -146,13 +147,13 @@ public class PacketProcessor extends Thread implements PProcessor {
     private void debugPackets(int type, ByteBuffer data) {
         Packet packetType = PacketType.getPacket(type).factory();
         try {
-            Util.print(PacketType.byOrdinal(type) + "");
+//            Util.print(PacketType.byOrdinal(type) + "");
             data.position(5);
             BufferReader pDebug = new BufferReader(data);
-            pDebug.printError(packetType);
+//            pDebug.printError(packetType);
             packetType.deserialize(pDebug);
         } catch (Exception e) {
-            Util.print(Arrays.toString(e.getStackTrace()).replaceAll(", ", "\n"));
+//            Util.print(Arrays.toString(e.getStackTrace()).replaceAll(", ", "\n"));
         }
     }
 
