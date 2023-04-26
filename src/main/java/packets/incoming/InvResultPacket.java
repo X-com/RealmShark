@@ -2,6 +2,7 @@ package packets.incoming;
 
 import packets.data.SlotObjectData;
 import packets.Packet;
+import packets.data.WorldPosData;
 import packets.reader.BufferReader;
 
 /**
@@ -11,11 +12,19 @@ public class InvResultPacket extends Packet {
     /**
      * > Unknown.
      */
-    public boolean unknownBool;
+    public byte unknownByte1;
     /**
      * > Unknown.
      */
-    public byte unknownByte;
+    public byte unknownByte2;
+    /**
+     * Player time at the time of editing inventory
+     */
+    public int time;
+    /**
+     * Player positions at the time of editing inventory.
+     */
+    public WorldPosData pos;
     /**
      * The slot the item in the inventory being transferred from.
      */
@@ -24,33 +33,25 @@ public class InvResultPacket extends Packet {
      * The slot the item in the inventory being transferred to.
      */
     public SlotObjectData slotTo;
-    /**
-     * > Unknown.
-     */
-    public int unknownInt1;
-    /**
-     * > Unknown.
-     */
-    public int unknownInt2;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
-        unknownBool = buffer.readBoolean();
-        unknownByte = buffer.readByte();
+        time = buffer.readInt();
+        pos = new WorldPosData().deserialize(buffer);
         slotFrom = new SlotObjectData().deserialize(buffer);
+        unknownByte1 = buffer.readByte();
         slotTo = new SlotObjectData().deserialize(buffer);
-        unknownInt1 = buffer.readInt();
-        unknownInt2 = buffer.readInt();
+        unknownByte2 = buffer.readByte();
     }
 
     @Override
     public String toString() {
         return "InvResultPacket{" +
-                "\n   unknownBool=" + unknownBool +
-                "\n   unknownByte=" + unknownByte +
+                "\n   unknownByte1=" + unknownByte1 +
+                "\n   unknownByte2=" + unknownByte2 +
+                "\n   unknownInt=" + time +
+                "\n   unknownPos=" + pos +
                 "\n   slotFrom=" + slotFrom +
-                "\n   slotTo=" + slotTo +
-                "\n   unknownInt1=" + unknownInt1 +
-                "\n   unknownInt2=" + unknownInt2;
+                "\n   slotTo=" + slotTo;
     }
 }
