@@ -220,7 +220,6 @@ public class BufferReader {
      */
     public boolean isBufferFullyParsed() {
         if (buffer.capacity() != buffer.position()) {
-            Util.print("Buffer not finished " + buffer.position() + "/" + buffer.capacity());
             return false;
         }
         return true;

@@ -10,6 +10,7 @@ import packets.outgoing.*;
 import packets.outgoing.pets.ActivePetUpdateRequestPacket;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.register.Register;
+import util.Util;
 
 import java.awt.*;
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ public class PacketRead {
     public static int ip = 0;
 
     public static void main(String[] args) {
+        Util.saveLogs = false;
         Register.INSTANCE.registerAll(PacketRead::readAll);
         PacketProcessor packetProcessor = new PacketProcessor();
         packetProcessor.start();
@@ -36,10 +38,10 @@ public class PacketRead {
         if (packet instanceof ServerPlayerShootPacket) return;
         if (packet instanceof UpdateAckPacket) return;
         // common
-        if (packet instanceof InvDropPacket) return;
+        if (packet instanceof InvResultPacket) return;
+//        if (packet instanceof InvDropPacket) return;
         if (packet instanceof PlaySoundPacket) return;
         if (packet instanceof ShowEffectPacket) return;
-        if (packet instanceof InvResultPacket) return;
         if (packet instanceof TextPacket) return;
         if (packet instanceof ChangeAllyShootPacket) return;
         if (packet instanceof EnemyShootPacket) return;
@@ -98,13 +100,12 @@ public class PacketRead {
         // RealmHeroesLeftPacket
         if (packet instanceof RealmHeroesLeftPacket) return;
         if (packet instanceof CreateSuccessPacket) return;
+        if (packet instanceof CreepMoveMessagePacket) return;
         if (packet instanceof IpAddress) {
             IpAddress p = (IpAddress) packet;
             ip = p.srcAddressAsInt;
             return;
         }
-
-//        if (packet instanceof CreateSuccessPacket) return;
 
         if (packet instanceof NewTickPacket) {
 //            newtick((NewTickPacket) packet);
@@ -116,13 +117,13 @@ public class PacketRead {
 //            if (p.name.equals("Realm of the Mad God")) {
 //                System.out.println(p.seed + "   " + ip);
 //            }
-//            return;
+            return;
         }
 
         if (packet instanceof UpdatePacket) {
 //            crystalTPRange((UpdatePacket) packet);
 //            realmIdentifier((UpdatePacket) packet);
-//            return;
+            return;
         }
         if (packet instanceof VaultContentPacket) {
 //            countPots((VaultContentPacket) packet);
@@ -165,11 +166,11 @@ public class PacketRead {
     }
 
     private static void realmIdentifier(UpdatePacket packet) {
-        if (log && packet.pos.x != 0 && packet.pos.y != 0) {
-            DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss");
-            LocalDateTime dateTime = LocalDateTime.now();
-            System.out.printf("%s x:%f y:%f %d -map\n", dateTimeFormat.format(dateTime), packet.pos.x, packet.pos.y, time);
-        }
+//        if (log && packet.pos1.x != 0 && packet.pos1.y != 0) {
+//            DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss");
+//            LocalDateTime dateTime = LocalDateTime.now();
+//            System.out.printf("%s x:%f y:%f %d -map\n", dateTimeFormat.format(dateTime), packet.pos1.x, packet.pos1.y, time);
+//        }
     }
 
     private static void countPots(VaultContentPacket p) {
@@ -239,19 +240,26 @@ public class PacketRead {
     static float xsave = 0;
     static float ysave = 0;
 
+    // did tp
+    // crystal:111.85   TP spot:105.85
+    // crystal:119.52   TP spot:119.49
+
+    // not tp
+    // crystal:120.04   TP spot:114.68
+    // crystal:121.08   TP spot:127.08
     private static void crystalTPRange(UpdatePacket packet) {
-        float x = packet.pos.x;
-        float y = packet.pos.y;
-        for (ObjectData od : packet.newObjects) {
-            if (od.objectType == 10025) {
-                System.out.println(od.status.pos);
-                xsave = od.status.pos.x;
-                ysave = od.status.pos.y;
-            }
-        }
-        if (x != 0 && y != 0) {
-            System.out.printf("crystal:%.2f   TP spot:%.2f\n", dist(x, y, xsave, ysave), dist(x, y, xsave, ysave + 6));
-        }
+//        float x = packet.pos1.x;
+//        float y = packet.pos1.y;
+//        for (ObjectData od : packet.newObjects) {
+//            if (od.objectType == 10025) {
+//                System.out.println(od.status.pos);
+//                xsave = od.status.pos.x;
+//                ysave = od.status.pos.y;
+//            }
+//        }
+//        if (x != 0 && y != 0) {
+//            System.out.printf("crystal:%.2f   TP spot:%.2f\n", dist(x, y, xsave, ysave), dist(x, y, xsave, ysave + 6));
+//        }
     }
 
     private static double dist(float x1, float y1, float x2, float y2) {

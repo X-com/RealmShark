@@ -36,7 +36,7 @@ public class PacketDisplay {
 
         selectionPanel = new JPanel();
         selectionPanel.setLayout(new BoxLayout(selectionPanel, BoxLayout.Y_AXIS));
-        JTextField field = new JTextField("[0, 3, -57, -56, 1, 38, 0, 0, 0, 0, 0, 0, -1, -1, -1, 22, 64, -112, 0, 0]");
+        JTextField field = new JTextField("[0, 0, 0, 12, 0, -9, -116, -12, 0, 2, 0, -52, 102, -57, 67, 30, -119, -70, 67, 6, 74, 56, 0, -52, 103, 43, 67, 30, -119, -70, 67, 6, 74, 56]");
         field.addActionListener(e -> {
             System.out.println("field: " + field.getText());
             getByteArray(field.getText());
@@ -151,6 +151,27 @@ public class PacketDisplay {
         return (Byte.toUnsignedInt(bytes[0 + offset]) << 24) | (Byte.toUnsignedInt(bytes[1 + offset]) << 16) | (Byte.toUnsignedInt(bytes[2 + offset]) << 8) | Byte.toUnsignedInt(bytes[3 + offset]);
     }
 
+    public int[] readCompressedInt(byte[] bytes, int offset) {
+        int uByte = Byte.toUnsignedInt(bytes[offset]);
+        boolean isNegative = (uByte & 64) != 0;
+        int shift = 6;
+        int value = uByte & 63;
+        int size = 1;
+
+        while ((uByte & 128) != 0) {
+            if (offset + size + 1 >= bytes.length) return new int[]{-1, -1};
+            uByte = Byte.toUnsignedInt(bytes[offset + size]);
+            value |= (uByte & 127) << shift;
+            shift += 7;
+            size++;
+        }
+
+        if (isNegative) {
+            value = -value;
+        }
+        return new int[]{value, size};
+    }
+
     private JPanel addedSection(int i, int length) {
         JPanel row = new JPanel();
         row.setLayout(new BoxLayout(row, BoxLayout.Y_AXIS));
@@ -175,6 +196,14 @@ public class PacketDisplay {
         JCheckBox floatBox = new JCheckBox("Float:       " + Float.intBitsToFloat(decodeInt(bytes, i)));
         Grouping.add(i, floatBox, 4, byteDisplay);
         row.add(floatBox);
+
+        if (i + 1 >= length) return row;
+        int[] compInt = readCompressedInt(bytes, i);
+        if (compInt[0] == -1) return row;
+        JCheckBox compIntBox = new JCheckBox("Comp:     " + compInt[0]);
+        System.out.println(compInt[1]);
+        Grouping.add(i, compIntBox, compInt[1], byteDisplay);
+        row.add(compIntBox);
 
         if (i + 1 >= length) return row;
         int len = Short.toUnsignedInt(decodeShort(bytes, i));

@@ -134,8 +134,9 @@ public class PacketProcessor extends Thread implements PProcessor {
 
         try {
             packetType.deserialize(pData);
-            if (!pData.isBufferFullyParsed())
+            if (!pData.isBufferFullyParsed()) {
                 pData.printError(packetType);
+            }
         } catch (Exception e) {
             Util.print("Buffer exploded: " + pData.getIndex() + "/" + pData.size());
             debugPackets(type, data);

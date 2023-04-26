@@ -61,12 +61,9 @@ public class PacketTester {
 
     public void crunch() {
 //        String s = "";
-        String s = "[0, 0, 0, 25, -90, 0, 3, -57, -56, 1, 38, 0, 0, 0, 0, 0, 0, -1, -1, -1, 22, 64, -112, 0, 0]";
-//        String s = "[0, 0, 0, 25, -90, 0, 3, -124, 8, 1, 22, 0, 0, 0, 0, 0, 0, -1, -1, -1, 22, 64, -112, 0, 0]";
-//        String s = "[0, 0, 0, 25, -90, 0, 3, -112, 30, 1, 22, 0, 0, 0, 0, 0, 0, -1, -1, -1, 22, 64, -32, 0, 0]";
-//        String s = "[0, 0, 0, 11, 61, 3, 30, 120, -52, 0, 1]";
-//        String s = "[0, 0, 0, 15, 67, 13, 24, 0, 0, 5, 88, 0, 0, -64, -89]";
-//        String s = "[0, 0, 0, 7, 67, 14, 0]";
+        String s = "[0, 0, 0, 43, 55, 0, 55, -32, -68, 66, 32, 73, 37, 66, -123, 74, -37, 0, 0, 2, 38, 0, 15, 66, 64, 0, 0, 7, 7, 0, 0, 0, 2, 38, 0, 15, 66, 65, 0, 0, 10, 34, 0]";
+//        String s = "[0, 0, 0, 10, 61, 0, 0, 3, 22, 0]";
+//        String s = "[0, 0, 0, 31, 13, 2, -61, -121, 104, 0, 0, 2, 38, 0, 0, 0, 1, 0, 0, 12, 42, 0, 66, 114, 0, 0, 66, -123, 0, 0, 1]";
         byte[] data = getByteArray(s);
 //        byte[] data2 = getByteArray(s2);
 //        byte[] data3 = getByteArray(s3);
@@ -83,6 +80,8 @@ public class PacketTester {
 //        bruteforce(data);
 //        decrype(data);
 //        findFits(data);
+//        findPacketIndex(data, true);
+//        findPacketIndex(data, false);
     }
 
     /*
@@ -261,6 +260,24 @@ CREATE_SUCCESS : 5/159
         }
     }
 
+    public void findPacketIndex(byte[] data, boolean isIncoming) {
+        System.out.println("-----Type: " + (isIncoming ? "Incoming" : "Outgoing"));
+        for (int type : PacketType.getPacketTypeByDirection(isIncoming)) {
+            ByteBuffer bb = createBuffer(data);
+            bb.position(5);
+            Packet p = getPacket(type);
+            BufferReader br = new BufferReader(bb);
+            try {
+                p.deserialize(br);
+                if (!br.isBufferFullyParsed()) {
+                    continue;
+                }
+                System.out.println(PacketType.byClass(p) + " " + type);
+            } catch (Exception e) {
+            }
+        }
+    }
+
     public void deserialize(byte[] data) {
         int size = Util.decodeInt(data);
         int type = data[4];
@@ -272,6 +289,7 @@ CREATE_SUCCESS : 5/159
             BufferReader br = new BufferReader(bb);
             p.deserialize(br);
             if (!br.isBufferFullyParsed()) {
+                System.out.println("Buffer not finished " + br.getIndex() + " / " + br.size());
                 System.out.println(p);
                 return;
             }

@@ -9,6 +9,7 @@ import packets.outgoing.*;
 import packets.outgoing.pets.*;
 import packets.outgoing.arena.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static packets.PacketType.Direction.Incoming;
@@ -19,7 +20,7 @@ import static packets.PacketType.Direction.Outgoing;
  */
 public enum PacketType { //ChristmasTree™   ⛧   <-crown
                            FAILURE(  0, Incoming, FailurePacket::new),
-                             HELLO(  1, Outgoing, HelloPacket::new),
+                           TELEPORT( 1, Outgoing, TeleportPacket::new),
                         // Missing
             CLAIM_LOGIN_REWARD_MSG(  3, Outgoing, ClaimDailyRewardMessage::new),
                         DELETE_PET(  4, Incoming, DeletePetMessage::new),
@@ -27,17 +28,17 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
               QUEST_FETCH_RESPONSE(  6, Incoming, QuestFetchResponsePacket::new),
                          JOINGUILD(  7, Outgoing, JoinGuildPacket::new),
                               PING(  8, Incoming, PingPacket::new),
-                           NEWTICK(  9, Incoming, NewTickPacket::new),
-                        PLAYERTEXT( 10, Outgoing, PlayerTextPacket::new),
-                           USEITEM( 11, Outgoing, UseItemPacket::new),
+                        PLAYERTEXT(  9, Outgoing, PlayerTextPacket::new),
+                           NEWTICK( 10, Incoming, NewTickPacket::new),
+                        SHOWEFFECT( 11, Incoming, ShowEffectPacket::new),
                  SERVERPLAYERSHOOT( 12, Incoming, ServerPlayerShootPacket::new),
-                        SHOWEFFECT( 13, Incoming, ShowEffectPacket::new),
+                           USEITEM( 13, Outgoing, UseItemPacket::new),
                      TRADEACCEPTED( 14, Incoming, TradeAcceptedPacket::new),
                        GUILDREMOVE( 15, Outgoing, GuildRemovePacket::new),
                  PETUPGRADEREQUEST( 16, Outgoing, PetUpgradeRequestPacket::new),
                        ENTER_ARENA( 17, Outgoing, EnterArenaPacket::new),
                               GOTO( 18, Incoming, GotoPacket::new),
-                           INVSWAP( 19, Outgoing, InvSwapPacket::new),
+                           INVDROP( 19, Outgoing, InvDropPacket::new),
                           OTHERHIT( 20, Outgoing, OtherHitPacket::new),
                         NAMERESULT( 21, Incoming, NameResultPacket::new),
                          BUYRESULT( 22, Incoming, BuyResultPacket::new),
@@ -60,7 +61,7 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
                       VERIFY_EMAIL( 39, Incoming, VerifyEmailPacket::new),
                          SQUAREHIT( 40, Outgoing, SquareHitPacket::new),
                        NEW_ABILITY( 41, Incoming, NewAbilityMessage::new),
-                              MOVE( 42, Outgoing, MovePacket::new),
+                            UPDATE( 42, Incoming, UpdatePacket::new),
                          // Missing
                               TEXT( 44, Incoming, TextPacket::new),
                          RECONNECT( 45, Incoming, ReconnectPacket::new),
@@ -73,14 +74,14 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
                 RESET_DAILY_QUESTS( 52, Outgoing, ResetDailyQuestsPacket::new),
                PET_CHANGE_FORM_MSG( 53, Outgoing, ReskinPetPacket::new),
                         // Missing
-                           INVDROP( 55, Outgoing, InvDropPacket::new),
+                         INVRESULT( 55, Incoming, InvResultPacket::new),
                        CHANGETRADE( 56, Outgoing, ChangeTradePacket::new),
-                              LOAD( 57, Outgoing, LoadPacket::new),
+                            CREATE( 57, Outgoing, CreatePacket::new),
                       QUEST_REDEEM( 58, Outgoing, QuestRedeemPacket::new),
                        CREATEGUILD( 59, Outgoing, CreateGuildPacket::new),
                       SETCONDITION( 60, Outgoing, SetConditionPacket::new),
-                            CREATE( 61, Outgoing, CreatePacket::new),
-                            UPDATE( 62, Incoming, UpdatePacket::new),
+                              LOAD( 61, Outgoing, LoadPacket::new),
+                              MOVE( 62, Outgoing, MovePacket::new),
                  KEY_INFO_RESPONSE( 63, Incoming, KeyInfoResponsePacket::new),
                                AOE( 64, Incoming, AoePacket::new),
                            GOTOACK( 65, Outgoing, GotoAckPacket::new),
@@ -92,7 +93,7 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
                         // Missing
                         // Missing
                         // Missing
-                          TELEPORT( 74, Outgoing, TeleportPacket::new),
+                            HELLO(  74, Outgoing, HelloPacket::new),
                             DAMAGE( 75, Incoming, DamagePacket::new),
                    ACTIVEPETUPDATE( 76, Incoming, ActivePetPacket::new),
                     INVITEDTOGUILD( 77, Incoming, InvitedToGuildPacket::new),
@@ -113,7 +114,7 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
                            MAPINFO( 92, Incoming, MapInfoPacket::new),
                   LOGIN_REWARD_MSG( 93, Incoming, ClaimDailyRewardResponse::new),
                   KEY_INFO_REQUEST( 94, Outgoing, KeyInfoRequestPacket::new),
-                         INVRESULT( 95, Incoming, InvResultPacket::new),
+                           INVSWAP( 95, Outgoing, InvSwapPacket::new),
              QUEST_REDEEM_RESPONSE( 96, Incoming, QuestRedeemResponsePacket::new),
                         CHOOSENAME( 97, Outgoing, ChooseNamePacket::new),
                    QUEST_FETCH_ASK( 98, Outgoing, QuestFetchAskPacket::new),
@@ -243,6 +244,22 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
      */
     public Class<? extends Packet> getPacketClass() {
         return packet.factory().getClass();
+    }
+
+    /**
+     * Gets the list of packets based on direction.
+     *
+     * @param isIncoming Filter the packets by direction.
+     * @return Packet index list by direction.
+     */
+    public static Integer[] getPacketTypeByDirection(boolean isIncoming) {
+        ArrayList<Integer> list = new ArrayList<>();
+        for (PacketType o : PacketType.values()) {
+            if (isIncoming ? o.dir == Direction.Incoming : o.dir == Direction.Outgoing) {
+                list.add(o.index);
+            }
+        }
+        return list.toArray(new Integer[0]);
     }
 
     public enum Direction {
