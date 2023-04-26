@@ -19,18 +19,23 @@ public class UseItemPacket extends Packet {
      */
     public SlotObjectData slotObject;
     /**
-     * The position where the item was used.
+     * The position of the player in the world using the item.
      */
     public WorldPosData useItemPosition;
     /**
      * The type of item usage. See the `UseItemType` enum class for details.
      */
     public UseItemType useItemType;
+    /**
+     * Unknown
+     */
+    public byte unknownByte;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
         time = buffer.readInt();
         slotObject = new SlotObjectData().deserialize(buffer);
+        unknownByte = buffer.readByte();
         useItemPosition = new WorldPosData().deserialize(buffer);
         useItemType = UseItemType.fromCode(buffer.readByte());
     }
@@ -41,6 +46,7 @@ public class UseItemPacket extends Packet {
                 "\n   time=" + time +
                 "\n   slotObject=" + slotObject +
                 "\n   useItemPosition=" + useItemPosition +
+                "\n   unknownByte=" + unknownByte +
                 "\n   useItemType=" + useItemType;
     }
 }
