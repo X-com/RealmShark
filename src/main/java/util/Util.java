@@ -1,9 +1,8 @@
 package util;
 
+import assets.IdToAsset;
+
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -67,7 +66,7 @@ public class Util {
                         fileName = folderAndName + "-" + dateTimeFormat.format(dateTime) + ".data";
                     }
                     File file = new File(fileName);
-                    if (!file.exists()) {
+                    if (!file.getParentFile().exists()) {
                         if (!file.getParentFile().mkdirs()) {
                             System.out.println("[X] Failed to create path for logfile '" + fileName + "'.");
                         }
@@ -131,7 +130,7 @@ public class Util {
     public static String showAll(Object[] list) {
         StringBuilder sb = new StringBuilder();
         for (Object o : list) {
-            sb.append(o);
+            sb.append("\n").append(o);
         }
         return sb.toString();
     }
@@ -182,7 +181,7 @@ public class Util {
      * @return The resource file as stream.
      */
     public static InputStream resourceFilePath(String fileName) {
-        return IdToName.class.getClassLoader().getResourceAsStream(fileName);
+        return IdToAsset.class.getClassLoader().getResourceAsStream(fileName);
     }
 
     /**
