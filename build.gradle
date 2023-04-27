@@ -23,19 +23,16 @@ switch (org.gradle.internal.os.OperatingSystem.current()) {
 
 repositories {
     mavenCentral()
-    maven {url="https://s01.oss.sonatype.org/content/repositories/snapshots/"}
+    maven { url = "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 dependencies {
-    implementation 'com.ardikars.pcap:pcap-spi:1.5.0'
-    implementation 'com.ardikars.pcap:pcap-jdk7:1.5.0'
+    implementation files("libs/RealmShark-v1.1.jar")
     implementation 'com.github.weisj:darklaf-core:3.0.1'
-    implementation 'com.google.code.gson:gson:2.9.1'
     implementation 'net.java.dev.jna:jna:5.12.1'
     implementation 'net.java.dev.jna:jna-platform:5.12.1'
     implementation 'org.java-websocket:Java-WebSocket:1.5.3'
     implementation 'lc.kra.system:system-hook:3.8'
-
 
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
     implementation "org.lwjgl:lwjgl"
