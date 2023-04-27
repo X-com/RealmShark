@@ -3,6 +3,7 @@ package potato;
 import packets.PacketType;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.register.Register;
+import packets.packetcapture.sniff.assembly.TcpStreamErrorHandler;
 import potato.control.PacketController;
 import potato.model.Config;
 import potato.model.DataModel;
@@ -12,7 +13,6 @@ import util.Util;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -28,6 +28,7 @@ public class Potato {
 
     public static void main(String[] args) {
         Util.setSaveLogs(true); // turns the logger to, save in to files.
+        TcpStreamErrorHandler.INSTANCE.setErrorMessageHandler(Potato::errorMessage);
         try {
             new Potato().run();
         } catch (OutOfMemoryError e) {
@@ -40,6 +41,10 @@ public class Potato {
             e.printStackTrace(pw);
             Util.print(sw.toString());
         }
+    }
+
+    private static void errorMessage(String errorMsg, String errorDump) {
+        Util.print(errorDump);
     }
 
     private static void crashDialog() {
