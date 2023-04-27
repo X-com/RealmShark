@@ -32,8 +32,6 @@ public class WorldPosData {
 
     @Override
     public String toString() {
-        return "WorldPosData{" +
-                "\n   x=" + x +
-                "\n   y=" + y;
+        return String.format("WorldPosData (x:%f, y:%f)", x, y);
     }
 }

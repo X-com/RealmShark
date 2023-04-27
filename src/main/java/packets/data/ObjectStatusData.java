@@ -1,10 +1,7 @@
 package packets.data;
 
 import packets.reader.BufferReader;
-import util.IdToName;
 import util.Util;
-
-import java.util.Arrays;
 
 public class ObjectStatusData {
     /**
@@ -40,7 +37,7 @@ public class ObjectStatusData {
 
     @Override
     public String toString() {
-        return  "\n    Id=" + objectId + " Loc=(" + pos.x + ", " + pos.y + ")" +
+        return "    Id=" + objectId + " Loc=(" + pos.x + ", " + pos.y + ")" +
                 (stats.length == 0 ? "" : Util.showAll(stats));
     }
 }

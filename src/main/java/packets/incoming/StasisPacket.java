@@ -17,8 +17,10 @@ public class StasisPacket extends Packet {
     public int unknownInt1;
     public int unknownInt2;
     public int unknownInt3;
-    public short unknownShort1;
-    public short unknownShort2;
+    /**
+     * Stasis duration in seconds
+     */
+    public float stasisDuration;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
@@ -26,8 +28,7 @@ public class StasisPacket extends Packet {
         unknownInt1 = buffer.readInt();
         unknownInt2 = buffer.readInt();
         unknownInt3 = buffer.readInt();
-        unknownShort1 = buffer.readShort();
-        unknownShort2 = buffer.readShort();
+        stasisDuration = buffer.readFloat();
     }
 
     @Override
@@ -37,7 +38,6 @@ public class StasisPacket extends Packet {
                 "\n   unknownInt1=" + unknownInt1 +
                 "\n   unknownInt2=" + unknownInt2 +
                 "\n   unknownInt3=" + unknownInt3 +
-                "\n   unknownShort1=" + unknownShort1 +
-                "\n   unknownShort2=" + unknownShort2;
+                "\n   stasisDuration=" + stasisDuration;
     }
 }

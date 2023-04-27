@@ -4,7 +4,8 @@ import packets.data.enums.ConditionBits;
 import packets.data.enums.ConditionNewBits;
 import packets.data.enums.StatType;
 import packets.reader.BufferReader;
-import util.IdToName;
+import assets.AssetMissingException;
+import assets.IdToAsset;
 
 public class StatData {
     /**
@@ -63,14 +64,22 @@ public class StatData {
 
     @Override
     public String toString() {
-        String valueExtended = (statValueTwo == -1 ? "" : " [" + statValueTwo + "]");
+        String secondValue = statValueTwo == -1 ? "" : " [" + statValueTwo + "]";
+        String stringValue = stringStatValue == null ? "" : " " + stringStatValue;
+        String stringExtra = "";
         if (statTypeNum == 29) {
-            valueExtended += " " + ConditionBits.effectsToString(statValue);
+            stringExtra += " " + ConditionBits.effectsToString(statValue);
         } else if (statTypeNum == 96) {
-            valueExtended += " " + ConditionNewBits.effectsToString(statValue);
+            stringExtra += " " + ConditionNewBits.effectsToString(statValue);
         } else if (statTypeNum >= 8 && statTypeNum <= 19) {
-            valueExtended += " " + IdToName.objectName(statValue);
+            String name = "";
+            try {
+                name = IdToAsset.objectName(statValue);
+            } catch (AssetMissingException e) {
+                e.printStackTrace();
+            }
+            stringExtra += " " + name;
         }
-        return "\n      " + statType + " = " + statValue + valueExtended;
+        return "      " + statType + " = " + statValue + secondValue + stringValue + stringExtra;
     }
 }

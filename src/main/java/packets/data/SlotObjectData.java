@@ -34,8 +34,8 @@ public class SlotObjectData {
     @Override
     public String toString() {
         return "SlotObjectData{" +
-                "\n   objectId=" + objectId +
-                "\n   slotId=" + slotId +
-                "\n   objectType=" + objectType;
+                "\n       objectId=" + objectId +
+                "\n       slotId=" + slotId +
+                "\n       objectType=" + objectType;
     }
 }

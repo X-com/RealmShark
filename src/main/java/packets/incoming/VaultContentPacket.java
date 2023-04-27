@@ -10,21 +10,21 @@ import java.util.Arrays;
  */
 public class VaultContentPacket extends Packet {
     /**
-     * Unknown
+     * If this is the last vault packet
      */
-    public boolean unknownBool;
+    public boolean lastVaultPacket;
     /**
-     * The amount of items in the player vault
+     * Unknown int 1
      */
-    public int vaultItemCount;
+    public int unknownInt1;
     /**
-     * The amount of items in the gift vault
+     * Unknown int 2
      */
-    public int giftItemCount;
+    public int unknownInt2;
     /**
-     * The amount of items in the potion vault
+     * Unknown int 3
      */
-    public int potionItemCount;
+    public int unknownInt3;
     /**
      * The contents of the players vault, sent as an array of item object IDs or -1 if the slot is empty
      */
@@ -64,10 +64,10 @@ public class VaultContentPacket extends Packet {
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
-        unknownBool = buffer.readBoolean();
-        vaultItemCount = buffer.readCompressedInt();
-        giftItemCount = buffer.readCompressedInt();
-        potionItemCount = buffer.readCompressedInt();
+        lastVaultPacket = buffer.readBoolean();
+        unknownInt1 = buffer.readCompressedInt();
+        unknownInt2 = buffer.readCompressedInt();
+        unknownInt3 = buffer.readCompressedInt();
 
         vaultContents = new int[buffer.readCompressedInt()];
         for (int i = 0; i < vaultContents.length; i++) {
@@ -96,10 +96,10 @@ public class VaultContentPacket extends Packet {
     @Override
     public String toString() {
         return "VaultContentPacket{" +
-                "\n   unknownBool=" + unknownBool +
-                "\n   vaultItemCount=" + vaultItemCount +
-                "\n   giftItemCount=" + giftItemCount +
-                "\n   potionItemCount=" + potionItemCount +
+                "\n   unknownBool=" + lastVaultPacket +
+                "\n   unknownInt1=" + unknownInt1 +
+                "\n   unknownInt2=" + unknownInt2 +
+                "\n   unknownInt3=" + unknownInt3 +
                 "\n   vaultContents=" + Arrays.toString(vaultContents) +
                 "\n   giftContents=" + Arrays.toString(giftContents) +
                 "\n   potionContents=" + Arrays.toString(potionContents) +
