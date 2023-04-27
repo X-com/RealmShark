@@ -3,8 +3,12 @@ package tomato.gui;
 import assets.AssetMissingException;
 import assets.ImageBuffer;
 import tomato.logic.CharacterData;
-import tomato.logic.Character;
-import tomato.logic.VaultData;
+import tomato.logic.backend.VaultData;
+import tomato.logic.backend.action.statmaxing.*;
+import tomato.logic.backend.data.RealmCharacter;
+import tomato.logic.backend.redux.Store;
+import tomato.logic.backend.state.RootState;
+import tomato.logic.backend.state.StatMaxingGuiState;
 import tomato.logic.enums.CharacterClass;
 import tomato.logic.enums.StatPotion;
 import util.Pair;
@@ -13,7 +17,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,11 +33,13 @@ public class CharacterPanelGUI extends JPanel {
     private int[] regularTotalPots = new int[8];
     private int[] seasonalTotalPots = new int[8];
     private boolean seasonalStatMaxingDisplay;
-    private ArrayList<Pair<Character, JCheckBox>> charStatSelection = new ArrayList<>();
+    private ArrayList<Pair<RealmCharacter, JCheckBox>> charStatSelection = new ArrayList<>();
     private VaultData vaultData;
-    private JCheckBox[] checkBoxVault = new JCheckBox[4];
+    private JCheckBox charInvs, mainVault, potStorage, giftChest;
+    private JRadioButton regularRadio, seasonalRadio;
+    private JPanel exaltPanel;
 
-    private static ArrayList<Character> chars;
+    private static ArrayList<RealmCharacter> chars;
 
     public CharacterPanelGUI() {
         setLayout(new BorderLayout());
@@ -63,6 +68,7 @@ public class CharacterPanelGUI extends JPanel {
 //                mainMaxingPanel.add(missingPotsPanel(), BorderLayout.NORTH);
 //                mainMaxingPanel.revalidate();
 //                java.io.InputStream is = Util.resourceFilePath("char");
+//                FileInputStream is = new FileInputStream("tiles/assets/char");
 //                String result = new java.io.BufferedReader(new java.io.InputStreamReader(is)).lines().collect(java.util.stream.Collectors.joining("\n"));
 //                ArrayList<Character> l = HttpCharListRequest.getCharList(result);
 //                chars = l;
@@ -76,13 +82,30 @@ public class CharacterPanelGUI extends JPanel {
 
         charPanel.add(new Label("Enter Daily Quest Room to see chars"));
         maxingPanel.add(new Label("Enter Daily Quest Room to see chars"));
+
+        Store.INSTANCE.subscribe(this::onUpdate);
+        onUpdate(Store.INSTANCE.getState());
+    }
+
+    private void onUpdate(RootState state) {
+        StatMaxingGuiState s = state.statMaxingGui;
+        charInvs.setSelected(s.isCharInv);
+        mainVault.setSelected(s.isMainVault);
+        potStorage.setSelected(s.isPotStorage);
+        giftChest.setSelected(s.isGiftChest);
+
+        regularRadio.setSelected(!s.isSeasonal);
+        seasonalRadio.setSelected(s.isSeasonal);
+
+
+        updateStatMaxPots();
     }
 
     /**
      * Tooltip showing exalts when hovering over char.
      */
-    private String exaltStats(Character c) {
-        int[] exalts = Character.exalts.get(c.classNum);
+    private String exaltStats(RealmCharacter c) {
+        int[] exalts = RealmCharacter.exalts.get(c.classNum);
         ToolTipManager.sharedInstance().setInitialDelay(200);
         ToolTipManager.sharedInstance().setDismissDelay(1000000000);
         return String.format("<html>%d :HP<br>%d :MP<br>%d :Atk<br>%d :Def<br>%d :Spd<br>%d :Dex<br>%5d :Vit<br>%d :Wis</html>", exalts[7], exalts[6], exalts[5], exalts[4], exalts[1], exalts[0], exalts[2], exalts[3]);
@@ -91,7 +114,7 @@ public class CharacterPanelGUI extends JPanel {
     /**
      * Section made for adding Char skin, char type, char level, char fame and char stats.
      */
-    private JPanel leftColumn(Character c) {
+    private JPanel leftColumn(RealmCharacter c) {
         JPanel panel = createLeftBox();
 
         try {
@@ -117,7 +140,7 @@ public class CharacterPanelGUI extends JPanel {
     /**
      * Section made for adding equipment, quickslot and date of character made.
      */
-    private JPanel midColumn(Character c) {
+    private JPanel midColumn(RealmCharacter c) {
         JPanel panel = new JPanel();
         panel.setMaximumSize(new Dimension(120, CHAR_PANEL_SIZE));
         panel.setPreferredSize(new Dimension(120, CHAR_PANEL_SIZE));
@@ -174,7 +197,7 @@ public class CharacterPanelGUI extends JPanel {
     /**
      * Section made for adding backpack data.
      */
-    private JPanel rightColumn(Character c, boolean backpack) {
+    private JPanel rightColumn(RealmCharacter c, boolean backpack) {
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(90, 50));
         panel.setMaximumSize(new Dimension(120, 50));
@@ -214,7 +237,7 @@ public class CharacterPanelGUI extends JPanel {
     /**
      * Individual backpacks with icons constructed.
      */
-    private JPanel invBackpack(Character c) {
+    private JPanel invBackpack(RealmCharacter c) {
         JPanel panel = new JPanel();
         panel.setMaximumSize(new Dimension(120, CHAR_PANEL_SIZE));
         panel.setPreferredSize(new Dimension(120, CHAR_PANEL_SIZE));
@@ -283,13 +306,13 @@ public class CharacterPanelGUI extends JPanel {
      *
      * @param list Character info to be updated in the char tab.
      */
-    private void updateCharPanel(ArrayList<Character> list) {
+    private void updateCharPanel(ArrayList<RealmCharacter> list) {
         chars = list;
         charPanel.setLayout(new BoxLayout(charPanel, BoxLayout.Y_AXIS));
         charPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
         charPanel.add(Box.createVerticalGlue());
         charPanel.removeAll();
-        for (Character c : list) {
+        for (RealmCharacter c : list) {
             JPanel box = createMainBox();
 
             box.add(leftColumn(c));
@@ -304,14 +327,15 @@ public class CharacterPanelGUI extends JPanel {
     /**
      * Updates the classes with missing pots in the stat potion maxing tab.
      */
-    private void updateMaxingPanel(ArrayList<Character> list) {
+    private void updateMaxingPanel(ArrayList<RealmCharacter> list) {
+        if (list == null) return;
         maxingPanel.setLayout(new BoxLayout(maxingPanel, BoxLayout.Y_AXIS));
         maxingPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
         maxingPanel.add(Box.createVerticalGlue());
         maxingPanel.removeAll();
 
         charStatSelection.clear();
-        for (Character c : list) {
+        for (RealmCharacter c : list) {
             if ((c.seasonal && seasonalStatMaxingDisplay) || (!c.seasonal && !seasonalStatMaxingDisplay)) {
                 int maxedStats = CharacterData.statsMaxed(c);
                 if (maxedStats != 8) {
@@ -320,7 +344,9 @@ public class CharacterPanelGUI extends JPanel {
                 }
             }
         }
-        maxingPanel.add(exaltBox());
+        exaltPanel = createMainBox();
+        exaltBox(exaltPanel);
+        maxingPanel.add(exaltPanel);
 
         maxingPanel.revalidate();
     }
@@ -328,15 +354,16 @@ public class CharacterPanelGUI extends JPanel {
     /**
      * Box at the bottom of the players displaying missing exalts.
      */
-    private JPanel exaltBox() {
+    private void exaltBox(JPanel boxExalt) {
+        boxExalt.removeAll();
         int[] exalts = new int[8];
         for (CharacterClass cc : CharacterClass.CHAR_CLASS_LIST) {
-            int[] charExalt = Character.exalts.get(cc.getId());
+            int[] charExalt = RealmCharacter.exalts.get(cc.getId());
+            if (charExalt == null) return;
             for (int i = 0; i < 8; i++) {
                 exalts[i] += Math.max(75 - charExalt[i], 0);
             }
         }
-        JPanel boxExalt = createMainBox();
         JPanel panelLeft = createLeftBox();
         boxExalt.add(panelLeft);
         panelLeft.add(Box.createVerticalGlue());
@@ -365,7 +392,6 @@ public class CharacterPanelGUI extends JPanel {
         panelBot.add(Box.createHorizontalGlue());
         panelBot.add(new JLabel("Wis: " + exalts[3]));
         panelBot.add(Box.createHorizontalGlue());
-        return boxExalt;
     }
 
     /**
@@ -377,14 +403,30 @@ public class CharacterPanelGUI extends JPanel {
         boxPots.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         JPanel panelLeft = createLeftBox();
         panelLeft.add(Box.createVerticalGlue());
-        checkBoxVault[0] = checkBoxMissingStats("Char Invs");
-        checkBoxVault[1] = checkBoxMissingStats("Main Vault");
-        checkBoxVault[2] = checkBoxMissingStats("Pot Storage");
-        checkBoxVault[3] = checkBoxMissingStats("Gift Chest");
-        panelLeft.add(checkBoxVault[0]);
-        panelLeft.add(checkBoxVault[1]);
-        panelLeft.add(checkBoxVault[2]);
-        panelLeft.add(checkBoxVault[3]);
+        charInvs = new JCheckBox("Char Invs");
+        mainVault = new JCheckBox("Main Vault");
+        potStorage = new JCheckBox("Pot Storage");
+        giftChest = new JCheckBox("Gift Chest");
+        charInvs.addActionListener(e -> {
+            JCheckBox c = (JCheckBox) e.getSource();
+            Store.INSTANCE.dispatch(new SetCharInvs(c.isSelected()));
+        });
+        mainVault.addActionListener(e -> {
+            JCheckBox c = (JCheckBox) e.getSource();
+            Store.INSTANCE.dispatch(new SetMainVault(c.isSelected()));
+        });
+        potStorage.addActionListener(e -> {
+            JCheckBox c = (JCheckBox) e.getSource();
+            Store.INSTANCE.dispatch(new SetPotStorage(c.isSelected()));
+        });
+        giftChest.addActionListener(e -> {
+            JCheckBox c = (JCheckBox) e.getSource();
+            Store.INSTANCE.dispatch(new SetGiftChest(c.isSelected()));
+        });
+        panelLeft.add(charInvs);
+        panelLeft.add(mainVault);
+        panelLeft.add(potStorage);
+        panelLeft.add(giftChest);
         panelLeft.add(Box.createVerticalGlue());
         boxPots.add(panelLeft);
 
@@ -426,16 +468,22 @@ public class CharacterPanelGUI extends JPanel {
 
         rightPotDisplay.setLayout(new GridLayout(4, 1));
         JPanel panelVeryBot = new JPanel();
-        JRadioButton regularRadio = new JRadioButton("Regular", true);
-        JRadioButton seasonalRadio = new JRadioButton("Seasonal");
+        regularRadio = new JRadioButton("Regular", true);
+        seasonalRadio = new JRadioButton("Seasonal");
         seasonalRadio.setForeground(Color.cyan);
-        ActionListener l = e -> {
-            seasonalStatMaxingDisplay = seasonalRadio.isSelected();
-            updateMaxingPanel(chars);
-            updateStatMaxPots();
-        };
-        regularRadio.addActionListener(l);
-        seasonalRadio.addActionListener(l);
+//        ActionListener l = e -> {
+//            seasonalStatMaxingDisplay = seasonalRadio.isSelected();
+//            updateMaxingPanel(chars);
+//            updateStatMaxPots();
+//        };
+        regularRadio.addActionListener(e-> {
+            JRadioButton c = (JRadioButton) e.getSource();
+            Store.INSTANCE.dispatch(new SetSeasonal(!c.isSelected()));
+        });
+        seasonalRadio.addActionListener(e-> {
+            JRadioButton c = (JRadioButton) e.getSource();
+            Store.INSTANCE.dispatch(new SetSeasonal(c.isSelected()));
+        });
         ButtonGroup g = new ButtonGroup();
         g.add(regularRadio);
         g.add(seasonalRadio);
@@ -462,21 +510,21 @@ public class CharacterPanelGUI extends JPanel {
         Arrays.fill(regularTotalPots, 0);
         Arrays.fill(seasonalTotalPots, 0);
         if (vaultData != null) {
-            if (checkBoxVault[0].isSelected()) {
+            if (charInvs.isSelected()) {
                 vaultData.getPlayerInvPots(regularTotalPots, seasonalTotalPots);
             }
-            if (checkBoxVault[1].isSelected()) {
+            if (mainVault.isSelected()) {
                 vaultData.getVaultChestPots(regularTotalPots, seasonalTotalPots);
             }
-            if (checkBoxVault[2].isSelected()) {
+            if (potStorage.isSelected()) {
                 vaultData.getPotStoragePots(regularTotalPots, seasonalTotalPots);
             }
-            if (checkBoxVault[3].isSelected()) {
+            if (giftChest.isSelected()) {
                 vaultData.getGiftChestPots(regularTotalPots, seasonalTotalPots);
             }
         }
         if (chars != null) {
-            for (Character c : chars) {
+            for (RealmCharacter c : chars) {
                 if (calcChar(c)) {
                     int[] missing = new int[8];
                     CharacterData.statMissing(c, missing);
@@ -502,7 +550,7 @@ public class CharacterPanelGUI extends JPanel {
     /**
      * Individual characters in the max stat character list with their stats and what is missing.
      */
-    private JPanel createPanelCharWithMissingStats(Character c, int maxedStats) {
+    private JPanel createPanelCharWithMissingStats(RealmCharacter c, int maxedStats) {
         JPanel boxChars = createMainBox();
         JPanel panelLeft = createLeftBox();
         boxChars.add(statMaxingChar(panelLeft, c, maxedStats));
@@ -519,7 +567,7 @@ public class CharacterPanelGUI extends JPanel {
      * Individual characters in the max stat character list
      * with icons and basic info with a selection checkbox.
      */
-    private JPanel statMaxingChar(JPanel panel, Character c, int maxedStats) {
+    private JPanel statMaxingChar(JPanel panel, RealmCharacter c, int maxedStats) {
         panel.add(Box.createVerticalGlue());
         JLabel seasonalLabel = new JLabel(c.seasonal ? "Seasonal" : "");
         seasonalLabel.setForeground(Color.cyan);
@@ -563,8 +611,8 @@ public class CharacterPanelGUI extends JPanel {
     /**
      * Checks if character should be computed for maxing if selected.
      */
-    private boolean calcChar(Character c) {
-        for (Pair<Character, JCheckBox> p : charStatSelection) {
+    private boolean calcChar(RealmCharacter c) {
+        for (Pair<RealmCharacter, JCheckBox> p : charStatSelection) {
             if (p.left() == c) return p.right().isSelected();
         }
         return false;
@@ -573,7 +621,7 @@ public class CharacterPanelGUI extends JPanel {
     /**
      * Stat maxing character stats to be added on the mid right panel.
      */
-    private void statMaxingStats(Character c, JPanel panelTop, JPanel panelMid, JPanel panelBot) {
+    private void statMaxingStats(RealmCharacter c, JPanel panelTop, JPanel panelMid, JPanel panelBot) {
         int[] missing = new int[8];
         CharacterData.statMissing(c, missing);
 
@@ -633,7 +681,7 @@ public class CharacterPanelGUI extends JPanel {
      *
      * @param list Character info to be updated.
      */
-    public void updateCharacters(ArrayList<Character> list) {
+    public void updateCharacters(ArrayList<RealmCharacter> list) {
         if (list == null) return;
         chars = list;
 
@@ -649,5 +697,12 @@ public class CharacterPanelGUI extends JPanel {
     public void vaultDataUpdate(VaultData vaultData) {
         this.vaultData = vaultData;
         updateStatMaxPots();
+    }
+
+    public void updateExaltBox() {
+        if (exaltPanel != null) {
+            exaltBox(exaltPanel);
+            exaltPanel.revalidate();
+        }
     }
 }

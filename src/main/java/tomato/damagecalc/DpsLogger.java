@@ -10,6 +10,7 @@ import packets.outgoing.PlayerShootPacket;
 import assets.AssetMissingException;
 import assets.IdToAsset;
 import util.Pair;
+import util.RNG;
 import util.Util;
 
 import java.util.ArrayList;
@@ -91,7 +92,7 @@ public class DpsLogger {
             bullet.totalDmg = p.damage;
             if (p.spellBulletData) {
                 for (int j = p.bulletId; j < p.bulletId + p.bulletCount; j++) {
-                    player.setBullet(p.bulletId, bullet);
+                    player.setBullet(j, bullet);
                 }
             }
         } else if (packet instanceof EnemyHitPacket) {
@@ -572,7 +573,7 @@ public class DpsLogger {
 
     private static String getName(int id) {
         try {
-            IdToAsset.objectName(id);
+            return IdToAsset.objectName(id);
         } catch (AssetMissingException e) {
             e.printStackTrace();
         }
@@ -668,7 +669,7 @@ public class DpsLogger {
             isMe = true;
         }
 
-        public void setBullet(short bulletId, Bullet bullet) {
+        public void setBullet(int bulletId, Bullet bullet) {
             bulletDmg[bulletId] = bullet;
         }
 

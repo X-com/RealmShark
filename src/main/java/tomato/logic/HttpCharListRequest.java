@@ -1,6 +1,7 @@
 package tomato.logic;
 
 import org.xml.sax.SAXException;
+import tomato.logic.backend.data.RealmCharacter;
 import util.StringXML;
 import util.Util;
 
@@ -78,9 +79,9 @@ public class HttpCharListRequest {
      * @param r XML string to be parsed.
      * @return List of Character data parsed from the XML string.
      */
-    public static ArrayList<Character> getCharList(String r) {
+    public static ArrayList<RealmCharacter> getCharList(String r) {
         StringXML base;
-        ArrayList<Character> listChars = new ArrayList<>();
+        ArrayList<RealmCharacter> listChars = new ArrayList<>();
 
         if (r == null) {
             r = "";
@@ -105,7 +106,7 @@ public class HttpCharListRequest {
 
         for (StringXML xml : base) {
             if (Objects.equals(xml.name, "Char")) {
-                Character character = new Character();
+                RealmCharacter character = new RealmCharacter();
                 for (StringXML info : xml) {
                     if(Objects.equals(info.name, "id")) {
                         character.charId = Integer.parseInt(info.value);
@@ -179,7 +180,7 @@ public class HttpCharListRequest {
                     if (Objects.equals(info.name, "ClassStats")) {
                         int clazz = Integer.parseInt(info.children.get(0).value);
                         int[] exalts = Arrays.stream(info.children.get(1).value.split(",")).mapToInt(Integer::parseInt).toArray();
-                        Character.exalts.put(clazz, exalts);
+                        RealmCharacter.exalts.put(clazz, exalts);
                     }
                 }
             }

@@ -12,12 +12,14 @@ import packets.packetcapture.register.IPacketListener;
 import packets.packetcapture.register.Register;
 import packets.packetcapture.sniff.assembly.TcpStreamErrorHandler;
 import tomato.damagecalc.DpsLogger;
+import tomato.gui.JavaOutOfMemoryGUI;
 import tomato.gui.TomatoBandwidth;
 import tomato.gui.TomatoGUI;
 import tomato.gui.TomatoMenuBar;
 import tomato.logic.*;
 import assets.AssetMissingException;
 import assets.IdToAsset;
+import tomato.logic.backend.CrashLogger;
 import tomato.logic.backend.VaultData;
 import tomato.logic.backend.data.RealmCharacter;
 import tomato.logic.backend.TomatoBootloader;
@@ -50,9 +52,15 @@ public class Tomato {
 
     public static void main(String[] args) {
         Util.setSaveLogs(true); // turns the logger to, save in to files.
-        TcpStreamErrorHandler.INSTANCE.setErrorMessageHandler(Tomato::errorMessageHandler);
-        TcpStreamErrorHandler.INSTANCE.setErrorStopHandler(TomatoMenuBar::stopPacketSniffer);
-        TomatoBootloader.load();
+        try {
+            Tomato.packetRegister();
+            new TomatoGUI(null).create();
+        } catch (OutOfMemoryError e) {
+            JavaOutOfMemoryGUI.crashDialog();
+        } catch (Exception e) {
+            e.printStackTrace();
+            CrashLogger.printCrash(e);
+        }
     }
 
     /**
@@ -68,10 +76,8 @@ public class Tomato {
 
     /**
      * Packet register for listening to incoming or outgoing packets from realm client.
-     *
-     * @param packCap Packet capture controller.
      */
-    public static void packetRegister(TomatoPacketCapture packCap) {
+    public static void packetRegister() {
         Register.INSTANCE.subscribePacketLogger(TomatoBandwidth::setInfo);
 
         Register.INSTANCE.register(PacketType.MAPINFO, loadAsset);
@@ -80,27 +86,25 @@ public class Tomato {
 
         Register.INSTANCE.register(PacketType.NOTIFICATION, Tomato::notificationPacket);
 
-        Register.INSTANCE.register(PacketType.CREATE_SUCCESS, packCap::packetCapture);
-        Register.INSTANCE.register(PacketType.ENEMYHIT, packCap::packetCapture);
-        Register.INSTANCE.register(PacketType.PLAYERSHOOT, packCap::packetCapture);
-        Register.INSTANCE.register(PacketType.DAMAGE, packCap::packetCapture);
-        Register.INSTANCE.register(PacketType.SERVERPLAYERSHOOT, packCap::packetCapture);
-        Register.INSTANCE.register(PacketType.UPDATE, packCap::packetCapture);
-        Register.INSTANCE.register(PacketType.NEWTICK, packCap::packetCapture);
-        Register.INSTANCE.register(PacketType.MAPINFO, packCap::packetCapture);
-        Register.INSTANCE.register(PacketType.TEXT, packCap::packetCapture);
-        Register.INSTANCE.register(PacketType.EXALTATION_BONUS_CHANGED, packCap::packetCapture);
-        Register.INSTANCE.register(PacketType.VAULT_UPDATE, packCap::packetCapture);
+        Register.INSTANCE.register(PacketType.CREATE_SUCCESS, Tomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.ENEMYHIT, Tomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.PLAYERSHOOT, Tomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.DAMAGE, Tomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.SERVERPLAYERSHOOT, Tomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.UPDATE, Tomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.NEWTICK, Tomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.MAPINFO, Tomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.TEXT, Tomato::dpsLoggerPacket);
 
         Register.INSTANCE.register(PacketType.QUEST_FETCH_RESPONSE, QuestPackets::questPacket);
         Register.INSTANCE.register(PacketType.QUEST_REDEEM, QuestPackets::questPacket);
         Register.INSTANCE.register(PacketType.HELLO, QuestPackets::questPacket);
 
-//        Register.INSTANCE.register(PacketType.NEWTICK, parse::packetCapture);
-//        Register.INSTANCE.register(PacketType.UPDATE, parse::packetCapture);
-//        Register.INSTANCE.register(PacketType.CREATE_SUCCESS, parse::packetCapture);
+        Register.INSTANCE.register(PacketType.NEWTICK, parse::packetCapture);
+        Register.INSTANCE.register(PacketType.UPDATE, parse::packetCapture);
+        Register.INSTANCE.register(PacketType.CREATE_SUCCESS, parse::packetCapture);
 
-//        Register.INSTANCE.register(PacketType.VAULT_UPDATE, vault::vaultPacketUpdate);
+        Register.INSTANCE.register(PacketType.VAULT_UPDATE, vault::vaultPacketUpdate);
     }
 
     /**
