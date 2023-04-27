@@ -1,4 +1,4 @@
-package packets.packetcapture;
+package packets.packetcapture.sniff.gui;
 
 import javax.swing.*;
 import java.awt.*;

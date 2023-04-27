@@ -30,7 +30,7 @@ public class ROTMGPacketConstructor {
      * specified size at the header of the data.
      * Only start listen after the next packet less than MTU(maximum transmission unit packet) is received.
      *
-     * @param packetSequenced TCP packet with the data inside.
+     * @param data TCP packet with the data inside.
      */
     public void build(byte[] data) {
         for (byte b : data) {

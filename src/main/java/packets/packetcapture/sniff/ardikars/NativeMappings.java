@@ -58,7 +58,7 @@ public class NativeMappings {
             new HashMap<String, Object>();
 
     static {
-        com.sun.jna.Native.register(NativeMappings.class, NativeLibrary.getInstance(libName(Platform.isWindows())) );
+        Native.register(NativeMappings.class, NativeLibrary.getInstance(libName(Platform.isWindows())) );
 
         // for interface mapping
         final Map<String, String> funcMap = new HashMap<String, String>();
@@ -476,7 +476,7 @@ public class NativeMappings {
         private static final NativeLong ZERO = new NativeLong(0);
 
         private static final PlatformDependent NATIVE =
-                com.sun.jna.Native.load(
+                Native.load(
                         libName(Platform.isWindows()), PlatformDependent.class, NATIVE_LOAD_LIBRARY_OPTIONS);
 
         private final AtomicBoolean injectIsSupported = new AtomicBoolean(true);
@@ -740,7 +740,7 @@ public class NativeMappings {
 
         @Override
         public String toString() {
-            return com.sun.jna.Native.toString(buf);
+            return Native.toString(buf);
         }
     }
 
@@ -829,7 +829,7 @@ public class NativeMappings {
 
     public static class pcap_if extends Structure implements Interface {
 
-        public pcap_if.ByReference next;
+        public ByReference next;
         public String name;
         public String description;
         public pcap_addr.ByReference addresses;
@@ -890,7 +890,7 @@ public class NativeMappings {
 
     public static class pcap_addr extends Structure implements Address {
 
-        public pcap_addr.ByReference next;
+        public ByReference next;
         public sockaddr.ByReference addr;
         public sockaddr.ByReference netmask;
         public sockaddr.ByReference broadaddr;
@@ -1059,7 +1059,7 @@ public class NativeMappings {
         public NativeLong tv_usec; // long
 
         static {
-            NativeMappings.timeval tv = new NativeMappings.timeval();
+            timeval tv = new timeval();
             TV_SEC_OFFSET = tv.fieldOffset("tv_sec");
             TV_USEC_OFFSET = tv.fieldOffset("tv_usec");
         }

@@ -1,8 +1,6 @@
 package packets.packetcapture.sniff.assembly;
 
 import packets.packetcapture.sniff.netpackets.TcpPacket;
-import util.HackyPacketLoggerForABug;
-import util.Util;
 
 import java.util.HashMap;
 
@@ -12,10 +10,10 @@ import java.util.HashMap;
 public class TcpStreamBuilder {
 
     HashMap<Long, TcpPacket> packetMap = new HashMap<>();
-    PStream stream;
-    PReset packetReset;
-    private long sequenseNumber;
-    private int idNumber;
+    long sequenseNumber;
+    int idNumber;
+    private PStream packetStream;
+    private PReset packetReset;
 
     /**
      * Constructor of StreamConstructor which needs a reset class to reset if reset
@@ -26,7 +24,7 @@ public class TcpStreamBuilder {
      */
     public TcpStreamBuilder(PReset preset, PStream pstream) {
         packetReset = preset;
-        stream = pstream;
+        packetStream = pstream;
     }
 
     /**
@@ -48,33 +46,14 @@ public class TcpStreamBuilder {
 
         packetMap.put(packet.getSequenceNumber(), packet);
 
-        if (packetMap.size() > 95) {
-            long index = sequenseNumber;
-            int counter = 0;
-            while (counter < 100000) {
-                if(packetMap.containsKey(index)) {
-                    sequenseNumber = index;
-                    TcpPacket tempPack = packetMap.get(index);
-                    String errorMsg = "Packets missing id:" + (idNumber - tempPack.getIp4Packet().getIdentification()) + " seq:" + (sequenseNumber - tempPack.getSequenceNumber()) + " outgoing:" + (tempPack.getDstPort() == 2050);
-                    Util.print(errorMsg);
-                    break;
-                }
-                index++;
-                counter++;
-            }
-        } else if (packetMap.size() >= 100) { // Temp hacky solution until better solution is found. TODO: fix this
-            String errorMsg = "Error! Stream Constructor reached 100 packets. Shutting down.";
-            Util.print(errorMsg);
-            reset();
-            HackyPacketLoggerForABug.dumpData();
-        }
+        TcpStreamErrorHandler.INSTANCE.errorChecker(this);
 
         while (packetMap.containsKey(sequenseNumber)) {
             TcpPacket packetSeqed = packetMap.remove(sequenseNumber);
             idNumber = packetSeqed.getIp4Packet().getIdentification();
             if (packet.getPayload() != null) {
                 sequenseNumber += packetSeqed.getPayloadSize();
-                stream.stream(packetSeqed.getPayload(), packetSeqed.getIp4Packet().getSrcAddr());
+                packetStream.stream(packetSeqed.getPayload(), packetSeqed.getIp4Packet().getSrcAddr());
             }
         }
     }

@@ -1,7 +1,7 @@
 package packets.packetcapture.encryption;
 
 import packets.PacketType;
-import util.HackyPacketLoggerForABug;
+import packets.packetcapture.sniff.assembly.TcpStreamErrorHandler;
 import util.Util;
 
 import java.nio.ByteBuffer;
@@ -51,8 +51,8 @@ public class TickAligner {
                 CURRENT_TICK++;
                 int tick = Util.decodeInt(duplicate);
                 if (CURRENT_TICK != tick) {
-                    Util.print("Timeline synchronization critical failure, got: " + tick + " expected: " + CURRENT_TICK);
-                    HackyPacketLoggerForABug.dumpData();
+                    String error = "Timeline synchronization critical failure, got: " + tick + " expected: " + CURRENT_TICK;
+                    TcpStreamErrorHandler.INSTANCE.dumpData(error);
                     rc4.reset();
                     synced = false;
                     TickA = null;

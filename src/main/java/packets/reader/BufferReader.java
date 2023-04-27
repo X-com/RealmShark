@@ -11,7 +11,7 @@ import java.util.Arrays;
  * Custom buffer class to deserialize the rotmg packets.
  */
 public class BufferReader {
-    ByteBuffer buffer;
+    protected ByteBuffer buffer;
 
     public BufferReader(ByteBuffer data) {
         buffer = data;
@@ -220,7 +220,6 @@ public class BufferReader {
      */
     public boolean isBufferFullyParsed() {
         if (buffer.capacity() != buffer.position()) {
-            Util.print("Buffer not finished " + buffer.position() + "/" + buffer.capacity());
             return false;
         }
         return true;

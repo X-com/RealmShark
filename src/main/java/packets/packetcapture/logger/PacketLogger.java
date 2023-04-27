@@ -197,7 +197,7 @@ public class PacketLogger {
             else s = String.format("%.2f %s", bytes, PacketLogger.suffix[suffix]);
 
             String t = "";
-            if (type != -1){
+            if (type != -1) {
                 return String.format("Num:%5d Siz: %s %s\n", count, s, PacketType.byOrdinal(type).toString());
             } else {
                 return String.format("Num:%d Siz: %s", count, s);

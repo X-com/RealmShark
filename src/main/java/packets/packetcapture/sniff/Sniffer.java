@@ -2,6 +2,7 @@ package packets.packetcapture.sniff;
 
 import packets.packetcapture.sniff.ardikars.NativeBridge;
 import packets.packetcapture.sniff.assembly.Ip4Defragmenter;
+import packets.packetcapture.sniff.assembly.TcpStreamErrorHandler;
 import packets.packetcapture.sniff.assembly.TcpStreamBuilder;
 import packets.packetcapture.sniff.netpackets.EthernetPacket;
 import packets.packetcapture.sniff.netpackets.Ip4Packet;
@@ -13,7 +14,6 @@ import pcap.spi.Service;
 import pcap.spi.exception.ErrorException;
 import pcap.spi.exception.error.*;
 import pcap.spi.option.DefaultLiveOptions;
-import util.HackyPacketLoggerForABug;
 import util.Util;
 
 import java.util.Arrays;
@@ -42,8 +42,8 @@ public class Sniffer {
     public Sniffer(PProcessor processor) {
         thisObject = this;
         ringBuffer = new RingBuffer<>(32);
-        incoming = new TcpStreamBuilder(processor::resetIncoming, (data, srcAddr) -> processor.incomingStream(data, srcAddr));
-        outgoing = new TcpStreamBuilder(processor::resetOutgoing, (data, srcAddr) -> processor.outgoingStream(data));
+        incoming = new TcpStreamBuilder(processor::resetIncoming, processor::incomingStream);
+        outgoing = new TcpStreamBuilder(processor::resetOutgoing, processor::outgoingStream);
     }
 
     /**
@@ -113,7 +113,7 @@ public class Sniffer {
             @Override
             public void run() {
                 NativeBridge.PacketListener listener = packet -> {
-                    HackyPacketLoggerForABug.logTCPPacket(packet);
+                    TcpStreamErrorHandler.INSTANCE.logTCPPacket(packet);
 
                     if (packet != null && computeChecksum(packet.getPayload())) {
                         synchronized (ringBuffer) {

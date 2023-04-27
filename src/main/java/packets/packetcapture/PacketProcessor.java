@@ -1,16 +1,17 @@
 package packets.packetcapture;
 
-import packets.incoming.ip.IpAddress;
 import packets.Packet;
 import packets.PacketType;
+import packets.incoming.ip.IpAddress;
 import packets.packetcapture.encryption.RC4;
 import packets.packetcapture.encryption.RotMGRC4Keys;
 import packets.packetcapture.logger.PacketLogger;
-import packets.packetcapture.sniff.PProcessor;
-import packets.packetcapture.sniff.Sniffer;
 import packets.packetcapture.pconstructor.PacketConstructor;
 import packets.packetcapture.register.Register;
+import packets.packetcapture.sniff.PProcessor;
+import packets.packetcapture.sniff.Sniffer;
 import packets.reader.BufferReader;
+import packets.packetcapture.sniff.gui.MissingNpcapGUI;
 import util.Util;
 
 import java.nio.ByteBuffer;
@@ -82,6 +83,7 @@ public class PacketProcessor extends Thread implements PProcessor {
         logger.addIncoming(data.length);
         ipEmitter(srcAddr);
         incomingPacketConstructor.build(data);
+        Register.INSTANCE.emitPacketLogs();
     }
 
     /**
@@ -90,9 +92,10 @@ public class PacketProcessor extends Thread implements PProcessor {
      * @param data Outgoing byte stream
      */
     @Override
-    public void outgoingStream(byte[] data) {
+    public void outgoingStream(byte[] data, byte[] srcAddr) {
         logger.addOutgoing(data.length);
         outgoingPacketConstructor.build(data);
+        Register.INSTANCE.emitPacketLogs();
     }
 
     /**
@@ -104,7 +107,7 @@ public class PacketProcessor extends Thread implements PProcessor {
         for (int i = 0; i < srcAddr.length; i++) {
             if (srcAddr[i] != srcIp[i]) {
                 System.arraycopy(srcIp, 0, srcAddr, 0, srcAddr.length);
-                Register.INSTANCE.emit(new IpAddress(srcIp));
+                Register.INSTANCE.emitPacketLogs(new IpAddress(srcIp));
                 return;
             }
         }
@@ -130,14 +133,15 @@ public class PacketProcessor extends Thread implements PProcessor {
 
         try {
             packetType.deserialize(pData);
-            if (!pData.isBufferFullyParsed())
+            if (!pData.isBufferFullyParsed()) {
                 pData.printError(packetType);
+            }
         } catch (Exception e) {
             Util.print("Buffer exploded: " + pData.getIndex() + "/" + pData.size());
             debugPackets(type, data);
             return;
         }
-        Register.INSTANCE.emit(packetType);
+        Register.INSTANCE.emitPacketLogs(packetType);
     }
 
     /**

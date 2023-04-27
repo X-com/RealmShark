@@ -18,15 +18,16 @@ public interface PProcessor {
     /**
      * Incoming stream from the TCP payload.
      *
-     * @param data TCP packet payload byte data containing the stream.
-     * @param srcAddr
+     * @param data    TCP packet payload byte data containing the stream.
+     * @param srcAddr Source of the incoming packets.
      */
     void incomingStream(byte[] data, byte[] srcAddr);
 
     /**
      * Outgoing stream from the TCP payload.
      *
-     * @param data TCP packet payload byte data containing the stream.
+     * @param data    TCP packet payload byte data containing the stream.
+     * @param srcAddr Source of the outgoing packets.
      */
-    void outgoingStream(byte[] data);
+    void outgoingStream(byte[] data, byte[] srcAddr);
 }
