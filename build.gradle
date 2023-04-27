@@ -6,7 +6,7 @@ plugins {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-project.version = 'v1.0'
+project.version = 'v1.1'
 applicationName = 'RealmShark'
 
 project.ext.lwjglVersion = "3.3.1"
