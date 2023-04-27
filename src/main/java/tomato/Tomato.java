@@ -10,22 +10,20 @@ import packets.incoming.TextPacket;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.register.IPacketListener;
 import packets.packetcapture.register.Register;
+import packets.packetcapture.sniff.assembly.TcpStreamErrorHandler;
 import tomato.damagecalc.DpsLogger;
+import tomato.gui.TomatoBandwidth;
 import tomato.gui.TomatoGUI;
+import tomato.gui.TomatoMenuBar;
 import tomato.logic.*;
 import assets.AssetMissingException;
 import assets.IdToAsset;
-import tomato.logic.Character;
+import tomato.logic.backend.VaultData;
+import tomato.logic.backend.data.RealmCharacter;
+import tomato.logic.backend.TomatoBootloader;
+import tomato.logic.backend.TomatoPacketCapture;
 import util.Util;
 
-import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
-import java.awt.*;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -52,79 +50,57 @@ public class Tomato {
 
     public static void main(String[] args) {
         Util.setSaveLogs(true); // turns the logger to, save in to files.
-        try {
-            Tomato.packetRegister();
-            new TomatoGUI().create();
-        } catch (OutOfMemoryError e) {
-            crashDialog();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Util.print("Main crash:");
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
-            Util.print(sw.toString());
-        }
+        TcpStreamErrorHandler.INSTANCE.setErrorMessageHandler(Tomato::errorMessageHandler);
+        TcpStreamErrorHandler.INSTANCE.setErrorStopHandler(TomatoMenuBar::stopPacketSniffer);
+        TomatoBootloader.load();
     }
 
     /**
-     * Dialog to display crash if tomato runs out of memory.
-     * Most memory crashes related to 32-bit java suggesting 64-bit install.
+     * Error message handler from the TCP stream constructor.
+     *
+     * @param errorMsg Display message string
+     * @param dump     Log dump string
      */
-    private static void crashDialog() {
-        JEditorPane ep = new JEditorPane("text/html", "<html>Out of memory crash.<br>Please uninstall 32-bit and install 64-bit Java.<br><a href=\\\\\\\"https://www.java.com/en/download/manual.jsp\\\\\\\">Download java 64-bit</a></html>");
-        ep.addHyperlinkListener(e -> {
-            if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
-                try {
-                    Desktop.getDesktop().browse(new URI("https://www.java.com/en/download/manual.jsp"));
-                } catch (IOException | URISyntaxException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-        ep.setEditable(false);
-        JOptionPane.showMessageDialog(null, ep);
+    private static void errorMessageHandler(String errorMsg, String dump) {
+        TomatoGUI.appendTextAreaChat(errorMsg);
+        Util.print(dump);
     }
 
     /**
      * Packet register for listening to incoming or outgoing packets from realm client.
+     *
+     * @param packCap Packet capture controller.
      */
-    public static void packetRegister() {
-        /*
-            Subscribe for any packet wanting to be monitored. Use a lambda in
-            the second argument for the action when registered packet is received.
+    public static void packetRegister(TomatoPacketCapture packCap) {
+        Register.INSTANCE.subscribePacketLogger(TomatoBandwidth::setInfo);
 
-            Example for subscribing for all packet types:
-            Register.INSTANCE.registerAll(System.out::println);
-
-            Example 2: Subscribing to TEXT packets
-         */
-        // [ExampleModTomato::text] is the same as [(packet) - > text(packet)]
         Register.INSTANCE.register(PacketType.MAPINFO, loadAsset);
 
         Register.INSTANCE.register(PacketType.TEXT, Tomato::textPacket);
 
         Register.INSTANCE.register(PacketType.NOTIFICATION, Tomato::notificationPacket);
 
-        Register.INSTANCE.register(PacketType.CREATE_SUCCESS, Tomato::dpsLoggerPacket);
-        Register.INSTANCE.register(PacketType.ENEMYHIT, Tomato::dpsLoggerPacket);
-        Register.INSTANCE.register(PacketType.PLAYERSHOOT, Tomato::dpsLoggerPacket);
-        Register.INSTANCE.register(PacketType.DAMAGE, Tomato::dpsLoggerPacket);
-        Register.INSTANCE.register(PacketType.SERVERPLAYERSHOOT, Tomato::dpsLoggerPacket);
-        Register.INSTANCE.register(PacketType.UPDATE, Tomato::dpsLoggerPacket);
-        Register.INSTANCE.register(PacketType.NEWTICK, Tomato::dpsLoggerPacket);
-        Register.INSTANCE.register(PacketType.MAPINFO, Tomato::dpsLoggerPacket);
-        Register.INSTANCE.register(PacketType.TEXT, Tomato::dpsLoggerPacket);
+        Register.INSTANCE.register(PacketType.CREATE_SUCCESS, packCap::packetCapture);
+        Register.INSTANCE.register(PacketType.ENEMYHIT, packCap::packetCapture);
+        Register.INSTANCE.register(PacketType.PLAYERSHOOT, packCap::packetCapture);
+        Register.INSTANCE.register(PacketType.DAMAGE, packCap::packetCapture);
+        Register.INSTANCE.register(PacketType.SERVERPLAYERSHOOT, packCap::packetCapture);
+        Register.INSTANCE.register(PacketType.UPDATE, packCap::packetCapture);
+        Register.INSTANCE.register(PacketType.NEWTICK, packCap::packetCapture);
+        Register.INSTANCE.register(PacketType.MAPINFO, packCap::packetCapture);
+        Register.INSTANCE.register(PacketType.TEXT, packCap::packetCapture);
+        Register.INSTANCE.register(PacketType.EXALTATION_BONUS_CHANGED, packCap::packetCapture);
+        Register.INSTANCE.register(PacketType.VAULT_UPDATE, packCap::packetCapture);
 
         Register.INSTANCE.register(PacketType.QUEST_FETCH_RESPONSE, QuestPackets::questPacket);
         Register.INSTANCE.register(PacketType.QUEST_REDEEM, QuestPackets::questPacket);
         Register.INSTANCE.register(PacketType.HELLO, QuestPackets::questPacket);
 
-        Register.INSTANCE.register(PacketType.NEWTICK, parse::packetCapture);
-        Register.INSTANCE.register(PacketType.UPDATE, parse::packetCapture);
-        Register.INSTANCE.register(PacketType.CREATE_SUCCESS, parse::packetCapture);
+//        Register.INSTANCE.register(PacketType.NEWTICK, parse::packetCapture);
+//        Register.INSTANCE.register(PacketType.UPDATE, parse::packetCapture);
+//        Register.INSTANCE.register(PacketType.CREATE_SUCCESS, parse::packetCapture);
 
-        Register.INSTANCE.register(PacketType.VAULT_UPDATE, vault::vaultPacketUpdate);
+//        Register.INSTANCE.register(PacketType.VAULT_UPDATE, vault::vaultPacketUpdate);
     }
 
     /**
@@ -261,7 +237,7 @@ public class Tomato {
      * Updates char data received from char list http request.
      */
     public static void updateCharacterData(String httpString) {
-        ArrayList<Character> l = HttpCharListRequest.getCharList(httpString);
+        ArrayList<RealmCharacter> l = HttpCharListRequest.getCharList(httpString);
         vault.updateCharInventory(l);
         TomatoGUI.getCharacterPanel().updateCharacters(l);
     }
