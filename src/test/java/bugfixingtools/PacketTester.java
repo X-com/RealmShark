@@ -40,6 +40,13 @@ public class PacketTester {
         }
     }
 
+    /*
+Unknown packet type:-93 Data:[0, 0, 0, 11, -93, 0, 0, 0, 3, 20, 1]
+Unknown packet type:-92 Data:[0, 0, 0, 9, -92, 1, 1, 0, 0]
+Unknown packet type:-93 Data:[0, 0, 0, 11, -93, 0, 0, 0, 3, 17, 2]
+Unknown packet type:-92 Data:[0, 0, 0, 9, -92, 2, 1, 0, 0]
+     */
+
     public void crunch() {
 //        String s = "";
 //        String s = "[0, 0, 0, 25, -90, 0, 3, -112, 30, 1, 22, 0, 0, 0, 0, 0, 0, -1, -1, -1, 22, 64, -32, 0, 0]";
