@@ -15,15 +15,9 @@ import tomato.damagecalc.DpsLogger;
 import tomato.gui.JavaOutOfMemoryGUI;
 import tomato.gui.TomatoBandwidth;
 import tomato.gui.TomatoGUI;
-import tomato.gui.TomatoMenuBar;
 import tomato.logic.*;
 import assets.AssetMissingException;
 import assets.IdToAsset;
-import tomato.logic.backend.CrashLogger;
-import tomato.logic.backend.VaultData;
-import tomato.logic.backend.data.RealmCharacter;
-import tomato.logic.backend.TomatoBootloader;
-import tomato.logic.backend.TomatoPacketCapture;
 import util.Util;
 
 import java.net.URL;
@@ -54,12 +48,11 @@ public class Tomato {
         Util.setSaveLogs(true); // turns the logger to, save in to files.
         try {
             Tomato.packetRegister();
-            new TomatoGUI(null).create();
+            new TomatoGUI().create();
         } catch (OutOfMemoryError e) {
             JavaOutOfMemoryGUI.crashDialog();
         } catch (Exception e) {
             e.printStackTrace();
-            CrashLogger.printCrash(e);
         }
     }
 

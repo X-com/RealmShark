@@ -1,7 +1,6 @@
 package tomato.logic;
 
 import org.xml.sax.SAXException;
-import tomato.logic.backend.data.RealmCharacter;
 import util.StringXML;
 import util.Util;
 

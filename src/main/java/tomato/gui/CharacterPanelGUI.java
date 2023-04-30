@@ -3,12 +3,8 @@ package tomato.gui;
 import assets.AssetMissingException;
 import assets.ImageBuffer;
 import tomato.logic.CharacterData;
-import tomato.logic.backend.VaultData;
-import tomato.logic.backend.action.statmaxing.*;
-import tomato.logic.backend.data.RealmCharacter;
-import tomato.logic.backend.redux.Store;
-import tomato.logic.backend.state.RootState;
-import tomato.logic.backend.state.StatMaxingGuiState;
+import tomato.logic.RealmCharacter;
+import tomato.logic.VaultData;
 import tomato.logic.enums.CharacterClass;
 import tomato.logic.enums.StatPotion;
 import util.Pair;
@@ -82,23 +78,6 @@ public class CharacterPanelGUI extends JPanel {
 
         charPanel.add(new Label("Enter Daily Quest Room to see chars"));
         maxingPanel.add(new Label("Enter Daily Quest Room to see chars"));
-
-        Store.INSTANCE.subscribe(this::onUpdate);
-        onUpdate(Store.INSTANCE.getState());
-    }
-
-    private void onUpdate(RootState state) {
-        StatMaxingGuiState s = state.statMaxingGui;
-        charInvs.setSelected(s.isCharInv);
-        mainVault.setSelected(s.isMainVault);
-        potStorage.setSelected(s.isPotStorage);
-        giftChest.setSelected(s.isGiftChest);
-
-        regularRadio.setSelected(!s.isSeasonal);
-        seasonalRadio.setSelected(s.isSeasonal);
-
-
-        updateStatMaxPots();
     }
 
     /**
@@ -409,19 +388,15 @@ public class CharacterPanelGUI extends JPanel {
         giftChest = new JCheckBox("Gift Chest");
         charInvs.addActionListener(e -> {
             JCheckBox c = (JCheckBox) e.getSource();
-            Store.INSTANCE.dispatch(new SetCharInvs(c.isSelected()));
         });
         mainVault.addActionListener(e -> {
             JCheckBox c = (JCheckBox) e.getSource();
-            Store.INSTANCE.dispatch(new SetMainVault(c.isSelected()));
         });
         potStorage.addActionListener(e -> {
             JCheckBox c = (JCheckBox) e.getSource();
-            Store.INSTANCE.dispatch(new SetPotStorage(c.isSelected()));
         });
         giftChest.addActionListener(e -> {
             JCheckBox c = (JCheckBox) e.getSource();
-            Store.INSTANCE.dispatch(new SetGiftChest(c.isSelected()));
         });
         panelLeft.add(charInvs);
         panelLeft.add(mainVault);
@@ -478,11 +453,9 @@ public class CharacterPanelGUI extends JPanel {
 //        };
         regularRadio.addActionListener(e-> {
             JRadioButton c = (JRadioButton) e.getSource();
-            Store.INSTANCE.dispatch(new SetSeasonal(!c.isSelected()));
         });
         seasonalRadio.addActionListener(e-> {
             JRadioButton c = (JRadioButton) e.getSource();
-            Store.INSTANCE.dispatch(new SetSeasonal(c.isSelected()));
         });
         ButtonGroup g = new ButtonGroup();
         g.add(regularRadio);

@@ -52,19 +52,19 @@ public class VaultData {
     public void vaultPacketUpdate(Packet packet) {
         VaultContentPacket vp = (VaultContentPacket) packet;
 
-        if (vp.seasonalVault && vp.potionContents.length != 0) {
-            giftContents = vp.giftContents;
-            chestContentsSeasonal = vp.vaultContents;
-            potionContentsSeasonal = vp.potionContents;
-            updatePotData(giftContents, chestContentsSeasonal, potionContentsSeasonal, potsGiftVault, potsChestVaultSeasonal, potsPotVaultSeasonal);
-            TomatoGUI.getCharacterPanel().vaultDataUpdate(this);
-        } else if (!vp.seasonalVault) {
-            giftContents = vp.giftContents;
-            chestContents = vp.vaultContents;
-            potionContents = vp.potionContents;
-            updatePotData(giftContents, chestContents, potionContents, potsGiftVault, potsChestVault, potsPotVault);
-            TomatoGUI.getCharacterPanel().vaultDataUpdate(this);
-        }
+//        if (vp.seasonalVault && vp.potionContents.length != 0) {
+//            giftContents = vp.giftContents;
+//            chestContentsSeasonal = vp.vaultContents;
+//            potionContentsSeasonal = vp.potionContents;
+//            updatePotData(giftContents, chestContentsSeasonal, potionContentsSeasonal, potsGiftVault, potsChestVaultSeasonal, potsPotVaultSeasonal);
+//            TomatoGUI.getCharacterPanel().vaultDataUpdate(this);
+//        } else if (!vp.seasonalVault) {
+//            giftContents = vp.giftContents;
+//            chestContents = vp.vaultContents;
+//            potionContents = vp.potionContents;
+//            updatePotData(giftContents, chestContents, potionContents, potsGiftVault, potsChestVault, potsPotVault);
+//            TomatoGUI.getCharacterPanel().vaultDataUpdate(this);
+//        }
     }
 
     /**
@@ -72,10 +72,10 @@ public class VaultData {
      *
      * @param charList Character list data.
      */
-    public void updateCharInventory(ArrayList<Character> charList) {
+    public void updateCharInventory(ArrayList<RealmCharacter> charList) {
         potsCharacterInventoryVaultSeasonal.clear();
         potsCharacterInventoryVault.clear();
-        for (Character c : charList) {
+        for (RealmCharacter c : charList) {
             if (c.seasonal) addPot(c.equipment, potsCharacterInventoryVaultSeasonal);
             else addPot(c.equipment, potsCharacterInventoryVault);
         }

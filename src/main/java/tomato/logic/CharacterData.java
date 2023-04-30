@@ -1,6 +1,5 @@
 package tomato.logic;
 
-import tomato.logic.backend.data.RealmCharacter;
 import tomato.logic.enums.CharacterClass;
 
 /**

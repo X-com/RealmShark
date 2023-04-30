@@ -8,7 +8,7 @@ import java.util.HashMap;
 /**
  * Basic data class to store Character info.
  */
-public class Character {
+public class RealmCharacter {
 
     public static HashMap<Integer, int[]> exalts = new HashMap<>();
 
