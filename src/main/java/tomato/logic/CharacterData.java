@@ -1,5 +1,6 @@
 package tomato.logic;
 
+import tomato.logic.backend.data.RealmCharacter;
 import tomato.logic.enums.CharacterClass;
 
 /**
@@ -10,7 +11,7 @@ public class CharacterData {
     /**
      * Computes the missing pots needed to max the character.
      */
-    public static int[] statMissing(Character c, int[] missing) {
+    public static int[] statMissing(RealmCharacter c, int[] missing) {
         missing[0] += (int) Math.ceil((CharacterClass.getLife(c.classNum) - c.hp) / 5.0);
         missing[1] += (int) Math.ceil((CharacterClass.getMana(c.classNum) - c.mp) / 5.0);
         missing[2] += CharacterClass.getAtk(c.classNum) - c.atk;
@@ -26,7 +27,7 @@ public class CharacterData {
     /**
      * Gets the characters maxed stat count.
      */
-    public static int statsMaxed(Character c) {
+    public static int statsMaxed(RealmCharacter c) {
         int outof8 = 0;
         if (CharacterClass.getLife(c.classNum) == c.hp) outof8++;
         if (CharacterClass.getMana(c.classNum) == c.mp) outof8++;

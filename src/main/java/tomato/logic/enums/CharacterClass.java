@@ -6,7 +6,7 @@ import java.util.HashSet;
 /**
  * Character class enum to get class name and stats from class id.
  */
-public enum RealmCharacterClass {
+public enum CharacterClass {
     Rogue(768, 720, 252, 50, 25, 75, 75, 40, 50),
     Archer(775, 700, 252, 75, 25, 55, 50, 40, 50),
     Wizard(782, 670, 385, 75, 25, 50, 75, 40, 60),
@@ -25,21 +25,21 @@ public enum RealmCharacterClass {
     Bard(796, 670, 385, 55, 25, 55, 70, 45, 75),
     Summoner(817, 670, 385, 50, 25, 60, 75, 40, 75),
     Kensei(818, 720, 252, 65, 25, 60, 65, 60, 50);
-    public static final RealmCharacterClass[] CHAR_CLASS_LIST;
+    public static final CharacterClass[] CHAR_CLASS_LIST;
 
     private final int life, mana, atk, def, spd, dex, vit, wis;
     private final int id;
     private final int[] maxStats;
 
-    private static final HashMap<Integer, RealmCharacterClass> CHARACTER_CLASS = new HashMap<>();
+    private static final HashMap<Integer, CharacterClass> CHARACTER_CLASS = new HashMap<>();
     private static final HashMap<Integer, String> CLASS_NAME = new HashMap<>();
     private static final HashMap<Integer, int[]> CLASS_MAX_STATS = new HashMap<>();
     private static final HashSet<Integer> CHARACTER_IDS = new HashSet<>();
 
     static {
-        CHAR_CLASS_LIST = RealmCharacterClass.values().clone();
+        CHAR_CLASS_LIST = CharacterClass.values().clone();
         try {
-            for (RealmCharacterClass o : RealmCharacterClass.values()) {
+            for (CharacterClass o : CharacterClass.values()) {
                 CHARACTER_IDS.add(o.id);
                 CHARACTER_CLASS.put(o.id, o);
                 CLASS_NAME.put(o.id, o.toString());
@@ -50,7 +50,7 @@ public enum RealmCharacterClass {
         }
     }
 
-    RealmCharacterClass(int id, int life, int mana, int atk, int def, int spd, int dex, int vit, int wis) {
+    CharacterClass(int id, int life, int mana, int atk, int def, int spd, int dex, int vit, int wis) {
         this.id = id;
         this.life = life;
         this.mana = mana;
