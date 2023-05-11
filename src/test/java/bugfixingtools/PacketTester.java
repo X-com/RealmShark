@@ -32,6 +32,9 @@ Unknown packet type:-92 Data:[0, 0, 0, 9, -92, 1, 1, 0, 0]
 Unknown packet type:-93 Data:[0, 0, 0, 11, -93, 0, 0, 0, 3, 17, 2]
 Unknown packet type:-92 Data:[0, 0, 0, 9, -92, 2, 1, 0, 0]
 
+Unknown packet type:-93 Data:[0, 0, 0, 11, -93, 0, 0, 0, 3, 17, 2]
+Unknown packet type:-92 Data:[0, 0, 0, 9, -92, 2, 1, 0, 0]
+
 Unknown packet type:115 Data:[0, 0, 0, 9, 115, 0, 0, 37, 42]
 Unknown packet type:115 Data:[0, 0, 0, 9, 115, 0, 0, 37, 30]
 Unknown packet type:116 Data:[0, 0, 0, 54, 116, 1, 0, 46, 73, 116, 101, 109, 32, 119, 97, 115, 32, 99, 108, 97, 105, 109, 101, 100, 44, 32, 121, 111, 117, 39, 108, 108, 32, 102, 105, 110, 100, 32, 105, 116, 32, 105, 110, 32, 121, 111, 117, 114, 32, 86, 97, 117, 108, 116]
@@ -148,11 +151,11 @@ CREATE_SUCCESS : 5/159
         return f < 0 ? (f < -0.0001f && f > -10000f) : (f > 0.0001f && f < 10000f);
     }
 
-    public int readUnsignedByte(byte[] bytes, int offset) {
+    public static int readUnsignedByte(byte[] bytes, int offset) {
         return Byte.toUnsignedInt(bytes[offset]);
     }
 
-    public int readCompressedInt(byte[] bytes, int offset) {
+    public static int readCompressedInt(byte[] bytes, int offset) {
         int uByte = readUnsignedByte(bytes, offset);
         boolean isNegative = (uByte & 64) != 0;
         int shift = 6;
@@ -186,6 +189,16 @@ CREATE_SUCCESS : 5/159
 
     public static int decodeInt(byte[] bytes, int offset) {
         return (Byte.toUnsignedInt(bytes[0 + offset]) << 24) | (Byte.toUnsignedInt(bytes[1 + offset]) << 16) | (Byte.toUnsignedInt(bytes[2 + offset]) << 8) | Byte.toUnsignedInt(bytes[3 + offset]);
+    }
+
+    public static long decodeLong(byte[] bytes, int offset) {
+        long l = 0;
+        int shift = 56;
+        for (int i = 0; i < 8; i++) {
+            l |= Byte.toUnsignedLong(bytes[i + offset]) << shift;
+            shift -= 8;
+        }
+        return l;
     }
 
     public void buildPacket(byte[] data) {

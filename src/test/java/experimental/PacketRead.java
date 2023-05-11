@@ -1,7 +1,10 @@
 package experimental;
 
 import packets.Packet;
+import packets.data.GroundTileData;
 import packets.data.ObjectData;
+import packets.data.StatData;
+import packets.data.enums.StatType;
 import packets.incoming.*;
 import packets.incoming.ip.IpAddress;
 import packets.incoming.pets.ActivePetPacket;
@@ -10,11 +13,10 @@ import packets.outgoing.*;
 import packets.outgoing.pets.ActivePetUpdateRequestPacket;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.register.Register;
+import tomato.logic.enums.CharacterClass;
 import util.Util;
 
 import java.awt.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +32,11 @@ public class PacketRead {
 
     public static void readAll(Packet packet) {
 
+//        if(true){
+//            System.out.println(packet);
+//            return;
+//        }
+
         // spammy
         if (packet instanceof PingPacket) return;
         if (packet instanceof PongPacket) return;
@@ -39,7 +46,7 @@ public class PacketRead {
         if (packet instanceof UpdateAckPacket) return;
         // common
         if (packet instanceof InvResultPacket) return;
-//        if (packet instanceof InvDropPacket) return;
+        if (packet instanceof InvDropPacket) return;
         if (packet instanceof PlaySoundPacket) return;
         if (packet instanceof ShowEffectPacket) return;
         if (packet instanceof TextPacket) return;
@@ -72,10 +79,6 @@ public class PacketRead {
         // load packet
         if (packet instanceof QuestObjectIdPacket) return;
         if (packet instanceof LoadPacket) return;
-        if (packet instanceof HelloPacket) {
-//            System.out.println(packet);
-            return;
-        }
         if (packet instanceof ReconnectPacket) return;
         if (packet instanceof ExaltationUpdatePacket) return;
         if (packet instanceof ShootAckCounterPacket) return;
@@ -84,6 +87,11 @@ public class PacketRead {
         if (packet instanceof QuestFetchResponsePacket) return;
         if (packet instanceof QueueInfoPacket) return;
         if (packet instanceof FailurePacket) return;
+        if (packet instanceof HelloPacket) {
+            tileCounter = 0;
+            System.out.println(((HelloPacket) packet).accessToken);
+            return;
+        }
         // usage
         if (packet instanceof UseItemPacket) return;
         if (packet instanceof UsePortalPacket) return;
@@ -101,6 +109,7 @@ public class PacketRead {
         if (packet instanceof RealmHeroesLeftPacket) return;
         if (packet instanceof CreateSuccessPacket) return;
         if (packet instanceof CreepMoveMessagePacket) return;
+        if (packet instanceof StasisPacket) return;
         if (packet instanceof IpAddress) {
             IpAddress p = (IpAddress) packet;
             ip = p.srcAddressAsInt;
@@ -123,16 +132,73 @@ public class PacketRead {
         if (packet instanceof UpdatePacket) {
 //            crystalTPRange((UpdatePacket) packet);
 //            realmIdentifier((UpdatePacket) packet);
+//            showPlayer((UpdatePacket) packet);
+            countTiles((UpdatePacket) packet);
+//            isSeasonalCharacter((UpdatePacket) packet);
             return;
         }
         if (packet instanceof VaultContentPacket) {
 //            countPots((VaultContentPacket) packet);
-            return;
+//            return;
         }
 
         //RealmHeroesLeftPacket
 
         System.out.println(packet);
+    }
+
+    static HashMap<Integer, Boolean> playerIsSeasonal = new HashMap<>();
+
+    private static void isSeasonalCharacter(UpdatePacket packet) {
+        for (ObjectData od : packet.newObjects) {
+            int type = od.objectType;
+            if (isPlayer(type)) {
+                int id = od.status.objectId;
+                boolean isSeasonal = false;
+                for (StatData sd : od.status.stats) {
+                    if (sd.statType == StatType.UNKNOWN24) {
+                        isSeasonal = sd.statValue == 1;
+                    }
+                }
+                playerIsSeasonal.put(id, isSeasonal);
+            }
+        }
+    }
+
+    private static boolean isPlayer(int type) {
+        return CharacterClass.isPlayerCharacter(type);
+    }
+
+    static int tileCounter = 0;
+
+    private static void countTiles(UpdatePacket packet) {
+        for (GroundTileData g : packet.tiles) {
+            tileCounter++;
+            System.out.println(tileCounter);
+        }
+    }
+
+    // UNKNOWN24 seasonal == 1
+    // UNKNOWN25 skinId
+    // UNKNOWN125 animationId
+    private static void showPlayer(UpdatePacket packet) {
+        for (ObjectData objectData : packet.newObjects) {
+            if (CharacterClass.isPlayerCharacter(objectData.objectType)) {
+                System.out.println("--");
+                for (int i = 0; i < objectData.status.stats.length; i++) {
+                    StatData stats = objectData.status.stats[i];
+                    if (stats.statType == StatType.NAME_STAT) {
+                        System.out.println(stats);
+//                    } else if (stats.statType == StatType.UNKNOWN23) {
+//                        System.out.println(stats);
+                    } else if (stats.statType == StatType.UNKNOWN24) {
+                        System.out.println(stats);
+//                    } else if(stats.statType == StatType.UNKNOWN25) {
+//                        System.out.println(stats);
+                    }
+                }
+            }
+        }
     }
 
     static boolean log = false;
