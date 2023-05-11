@@ -1,5 +1,6 @@
-package tomato.logic;
+package tomato.logic.backend.data;
 
+import tomato.logic.RealmCharacterStats;
 import tomato.logic.enums.CharacterClass;
 
 import java.util.Arrays;
@@ -8,9 +9,16 @@ import java.util.HashMap;
 /**
  * Basic data class to store Character info.
  */
-public class Character {
-
-    public static HashMap<Integer, int[]> exalts = new HashMap<>();
+public class RealmCharacter {
+    // Dex 0
+    // Spd 1
+    // Vit 2
+    // Wis 3
+    // Def 4
+    // Atk 5
+    // Mana 6
+    // Life 7
+    public static HashMap<Short, int[]> exalts = new HashMap<>();
 
     public int charId;
     public int classNum;
@@ -35,12 +43,23 @@ public class Character {
     public int dex;
     public int vit;
     public int wis;
+    public String pcStats;
+    public RealmCharacterStats charStats;
 
     /**
      * Simple setter for the class string from the class id.
      */
     public void setClassString() {
         classString = CharacterClass.getName(classNum);
+        System.out.println("---" + fame + "-" + classString + "-" + skin + "---");
+    }
+
+    /**
+     * Decodes psStats into charStats
+     */
+    public void setCharacterStats() {
+        charStats = new RealmCharacterStats();
+        charStats.decode(pcStats);
     }
 
     @Override
@@ -66,6 +85,8 @@ public class Character {
                 "\n   spd=" + spd +
                 "\n   dex=" + dex +
                 "\n   vit=" + vit +
-                "\n   wis=" + wis;
+                "\n   wis=" + wis +
+                "\n   pcStats=" + pcStats +
+                "\n" + charStats;
     }
 }
