@@ -4,6 +4,7 @@ import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.*;
 import packets.data.QuestData;
 import tomato.Tomato;
+import tomato.logic.backend.data.TomatoData;
 import util.PropertiesManager;
 import util.Pair;
 
@@ -40,6 +41,9 @@ public class TomatoGUI {
     private Point center;
     private Image icon;
     private JButton next, prev;
+
+    public TomatoGUI(TomatoData data) {
+    }
 
     /**
      * Create main panel and initializes the GUI for the example Tomato.

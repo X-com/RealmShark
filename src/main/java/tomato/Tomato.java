@@ -1,6 +1,8 @@
 package tomato;
 
 import assets.AssetExtractor;
+import assets.AssetMissingException;
+import assets.IdToAsset;
 import packets.Packet;
 import packets.PacketType;
 import packets.data.enums.NotificationEffectType;
@@ -12,20 +14,19 @@ import packets.packetcapture.register.IPacketListener;
 import packets.packetcapture.register.Register;
 import packets.packetcapture.sniff.assembly.TcpStreamErrorHandler;
 import tomato.damagecalc.DpsLogger;
+import tomato.gui.JavaOutOfMemoryGUI;
 import tomato.gui.TomatoBandwidth;
 import tomato.gui.TomatoGUI;
 import tomato.gui.TomatoMenuBar;
-import tomato.logic.*;
-import assets.AssetMissingException;
-import assets.IdToAsset;
-import tomato.logic.backend.VaultData;
-import tomato.logic.backend.data.RealmCharacter;
-import tomato.logic.backend.TomatoBootloader;
+import tomato.logic.Parse;
+import tomato.logic.QuestPackets;
+import tomato.logic.backend.CrashLogger;
 import tomato.logic.backend.TomatoPacketCapture;
+import tomato.logic.backend.TomatoRootController;
+import tomato.logic.backend.data.TomatoData;
 import util.Util;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,15 +45,54 @@ public class Tomato {
     private static final Pattern popperName = Pattern.compile("[^ ]*\"player\":\"([A-Za-z]*)[^ ]*");
     private static PacketProcessor packetProcessor;
     private static final DpsLogger dpsLogger = new DpsLogger();
-    private static final Parse parse = new Parse();
-    private static final VaultData vault = new VaultData();
     private static final IPacketListener<Packet> loadAsset = Tomato::loadAssets;
+    private static TomatoRootController rootController;
 
     public static void main(String[] args) {
         Util.setSaveLogs(true); // turns the logger to, save in to files.
         TcpStreamErrorHandler.INSTANCE.setErrorMessageHandler(Tomato::errorMessageHandler);
         TcpStreamErrorHandler.INSTANCE.setErrorStopHandler(TomatoMenuBar::stopPacketSniffer);
-        TomatoBootloader.load();
+        load();
+    }
+
+    /**
+     * Main boot up method to create data storage, start controllers and attach
+     * the data to the controllers and link the data to the view to be displayed.
+     */
+    public static void load() {
+        CrashLogger.loadThisClass();
+        try {
+            TomatoData data = new TomatoData();
+            loadControllers(data);
+            new TomatoGUI(data).create();
+        } catch (OutOfMemoryError e) {
+            JavaOutOfMemoryGUI.crashDialog();
+        } catch (Exception e) {
+            e.printStackTrace();
+            CrashLogger.printCrash(e);
+        } finally {
+            dispose();
+        }
+    }
+
+    /**
+     * Loads controllers and adds them to the root controller list.
+     *
+     * @param data Main root controller.
+     */
+    private static void loadControllers(TomatoData data) {
+        rootController = new TomatoRootController(data);
+        TomatoPacketCapture packCap = new TomatoPacketCapture(data);
+        packetRegister(packCap);
+        rootController.addController(packCap);
+    }
+
+    /**
+     * Disposes all controllers
+     */
+    public static void dispose() {
+        if (rootController != null) rootController.dispose();
+//        if (packetProcessor != null) packetProcessor.stopSniffer();
     }
 
     /**
@@ -71,14 +111,14 @@ public class Tomato {
      *
      * @param packCap Packet capture controller.
      */
-    public static void packetRegister(TomatoPacketCapture packCap) {
+    private static void packetRegister(TomatoPacketCapture packCap) {
         Register.INSTANCE.subscribePacketLogger(TomatoBandwidth::setInfo);
 
-        Register.INSTANCE.register(PacketType.MAPINFO, loadAsset);
+//        Register.INSTANCE.register(PacketType.MAPINFO, loadAsset);
 
-        Register.INSTANCE.register(PacketType.TEXT, Tomato::textPacket);
+//        Register.INSTANCE.register(PacketType.TEXT, Tomato::textPacket);
 
-        Register.INSTANCE.register(PacketType.NOTIFICATION, Tomato::notificationPacket);
+//        Register.INSTANCE.register(PacketType.NOTIFICATION, Tomato::notificationPacket);
 
         Register.INSTANCE.register(PacketType.CREATE_SUCCESS, packCap::packetCapture);
         Register.INSTANCE.register(PacketType.ENEMYHIT, packCap::packetCapture);
@@ -95,13 +135,45 @@ public class Tomato {
         Register.INSTANCE.register(PacketType.QUEST_FETCH_RESPONSE, QuestPackets::questPacket);
         Register.INSTANCE.register(PacketType.QUEST_REDEEM, QuestPackets::questPacket);
         Register.INSTANCE.register(PacketType.HELLO, QuestPackets::questPacket);
-
-//        Register.INSTANCE.register(PacketType.NEWTICK, parse::packetCapture);
-//        Register.INSTANCE.register(PacketType.UPDATE, parse::packetCapture);
-//        Register.INSTANCE.register(PacketType.CREATE_SUCCESS, parse::packetCapture);
-
-//        Register.INSTANCE.register(PacketType.VAULT_UPDATE, vault::vaultPacketUpdate);
     }
+
+
+//    /**
+//     * Packet register for listening to incoming or outgoing packets from realm client.
+//     *
+//     * @param packCap Packet capture controller.
+//     */
+//    public static void packetRegister(TomatoPacketCapture packCap) {
+//        Register.INSTANCE.subscribePacketLogger(TomatoBandwidth::setInfo);
+//
+//        Register.INSTANCE.register(PacketType.MAPINFO, loadAsset);
+//
+//        Register.INSTANCE.register(PacketType.TEXT, Tomato::textPacket);
+//
+//        Register.INSTANCE.register(PacketType.NOTIFICATION, Tomato::notificationPacket);
+//
+//        Register.INSTANCE.register(PacketType.CREATE_SUCCESS, packCap::packetCapture);
+//        Register.INSTANCE.register(PacketType.ENEMYHIT, packCap::packetCapture);
+//        Register.INSTANCE.register(PacketType.PLAYERSHOOT, packCap::packetCapture);
+//        Register.INSTANCE.register(PacketType.DAMAGE, packCap::packetCapture);
+//        Register.INSTANCE.register(PacketType.SERVERPLAYERSHOOT, packCap::packetCapture);
+//        Register.INSTANCE.register(PacketType.UPDATE, packCap::packetCapture);
+//        Register.INSTANCE.register(PacketType.NEWTICK, packCap::packetCapture);
+//        Register.INSTANCE.register(PacketType.MAPINFO, packCap::packetCapture);
+//        Register.INSTANCE.register(PacketType.TEXT, packCap::packetCapture);
+//        Register.INSTANCE.register(PacketType.EXALTATION_BONUS_CHANGED, packCap::packetCapture);
+//        Register.INSTANCE.register(PacketType.VAULT_UPDATE, packCap::packetCapture);
+//
+//        Register.INSTANCE.register(PacketType.QUEST_FETCH_RESPONSE, QuestPackets::questPacket);
+//        Register.INSTANCE.register(PacketType.QUEST_REDEEM, QuestPackets::questPacket);
+//        Register.INSTANCE.register(PacketType.HELLO, QuestPackets::questPacket);
+//
+////        Register.INSTANCE.register(PacketType.NEWTICK, parse::packetCapture);
+////        Register.INSTANCE.register(PacketType.UPDATE, parse::packetCapture);
+////        Register.INSTANCE.register(PacketType.CREATE_SUCCESS, parse::packetCapture);
+//
+////        Register.INSTANCE.register(PacketType.VAULT_UPDATE, vault::vaultPacketUpdate);
+//    }
 
     /**
      * Asset loader from realm resources.
@@ -231,14 +303,5 @@ public class Tomato {
      */
     public static void updateDpsWindow() {
         dpsLogger.updateFilter();
-    }
-
-    /**
-     * Updates char data received from char list http request.
-     */
-    public static void updateCharacterData(String httpString) {
-        ArrayList<RealmCharacter> l = HttpCharListRequest.getCharList(httpString);
-        vault.updateCharInventory(l);
-        TomatoGUI.getCharacterPanel().updateCharacters(l);
     }
 }

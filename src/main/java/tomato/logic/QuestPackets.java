@@ -6,8 +6,13 @@ import packets.incoming.QuestFetchResponsePacket;
 import packets.outgoing.HelloPacket;
 import tomato.Tomato;
 import tomato.gui.TomatoGUI;
+import tomato.logic.backend.action.network.SetHttpRequest;
+import tomato.logic.backend.action.statmaxing.SetCharacter;
+import tomato.logic.backend.data.RealmCharacter;
+import tomato.logic.backend.redux.Store;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.Stream;
@@ -44,8 +49,9 @@ public class QuestPackets {
      */
     private static void getCharList() {
         try {
-            String s = HttpCharListRequest.getChartList(token);
-            Tomato.updateCharacterData(s);
+            String httpString = HttpCharListRequest.getChartList(token);
+            ArrayList<RealmCharacter> charList = HttpCharListRequest.getCharList(httpString);
+            Store.INSTANCE.dispatch(new SetHttpRequest(charList));
         } catch (IOException e) {
             e.printStackTrace();
         }
