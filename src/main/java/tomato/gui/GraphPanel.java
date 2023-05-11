@@ -1,4 +1,4 @@
-package experimental;
+package tomato.gui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -18,8 +18,6 @@ import javax.swing.SwingUtilities;
 
 public class GraphPanel extends JPanel {
 
-    private int width = 800;
-    private int heigth = 400;
     private int padding = 25;
     private int labelPadding = 25;
     private Color lineColor = new Color(44, 102, 230, 180);
@@ -119,10 +117,6 @@ public class GraphPanel extends JPanel {
         }
     }
 
-    //    @Override
-//    public Dimension getPreferredSize() {
-//        return new Dimension(width, heigth);
-//    }
     private double getMinScore() {
         double minScore = Double.MAX_VALUE;
         for (Double score : scores) {
@@ -155,8 +149,7 @@ public class GraphPanel extends JPanel {
         int maxDataPoints = 40;
         int maxScore = 10;
         for (int i = 0; i < maxDataPoints; i++) {
-            scores.add((double) random.nextDouble() * maxScore);
-//            scores.add((double) i);
+            scores.add(random.nextDouble() * maxScore);
         }
         GraphPanel mainPanel = new GraphPanel(scores);
         mainPanel.setPreferredSize(new Dimension(800, 600));
@@ -169,10 +162,6 @@ public class GraphPanel extends JPanel {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGui();
-            }
-        });
+        SwingUtilities.invokeLater(GraphPanel::createAndShowGui);
     }
 }
