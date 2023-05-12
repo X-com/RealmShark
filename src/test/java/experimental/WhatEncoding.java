@@ -7,7 +7,6 @@ import tomato.logic.backend.data.RealmCharacter;
 import tomato.logic.enums.CharacterStatistics;
 import util.Util;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -326,8 +325,9 @@ public class WhatEncoding {
     }
 
     static void request() throws IOException {
-//        System.out.println("request");
-//        String httpString = HttpCharListRequest.getChartList(token);
+        System.out.println("request");
+        String httpString = HttpCharListRequest.getChartList(token);
+        System.out.println(httpString);
 //        FileInputStream is = new FileInputStream("tiles/assets/char");
 
         String result = new java.io.BufferedReader(new java.io.InputStreamReader(Util.resourceFilePath("request"))).lines().collect(java.util.stream.Collectors.joining("\n"));

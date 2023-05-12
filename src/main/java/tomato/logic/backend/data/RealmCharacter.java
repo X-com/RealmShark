@@ -51,7 +51,6 @@ public class RealmCharacter {
      */
     public void setClassString() {
         classString = CharacterClass.getName(classNum);
-        System.out.println("---" + fame + "-" + classString + "-" + skin + "---");
     }
 
     /**
@@ -59,7 +58,11 @@ public class RealmCharacter {
      */
     public void setCharacterStats() {
         charStats = new RealmCharacterStats();
-        charStats.decode(pcStats);
+        try {
+            charStats.decode(pcStats);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
