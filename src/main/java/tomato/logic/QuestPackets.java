@@ -4,10 +4,8 @@ import packets.Packet;
 import packets.data.QuestData;
 import packets.incoming.QuestFetchResponsePacket;
 import packets.outgoing.HelloPacket;
-import tomato.Tomato;
 import tomato.gui.TomatoGUI;
 import tomato.logic.backend.action.network.SetHttpRequest;
-import tomato.logic.backend.action.statmaxing.SetCharacter;
 import tomato.logic.backend.data.RealmCharacter;
 import tomato.logic.backend.redux.Store;
 

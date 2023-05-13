@@ -56,7 +56,6 @@ public class CharacterPanelGUI extends JPanel {
         mainMaxingPanel.add(missingPotsPanel(), BorderLayout.NORTH);
 
         CharacterStatsGUI characterStatsGUI = new CharacterStatsGUI();
-        JScrollPane scrollStats = new JScrollPane(characterStatsGUI);
 
         JTabbedPane tabbedPane = new JTabbedPane();
         add(tabbedPane);
@@ -64,28 +63,28 @@ public class CharacterPanelGUI extends JPanel {
         tabbedPane.addTab("Statistics", characterStatsGUI);
         tabbedPane.addTab("Stat Maxing", mainMaxingPanel);
 
-        JButton button = new JButton("Test");
-        button.addActionListener(e -> {
-            try {
-                characterStatsGUI.update();
-//                mainMaxingPanel.removeAll();
-//                mainMaxingPanel.add(scrollPaneMaxing, BorderLayout.CENTER);
-//                mainMaxingPanel.add(missingPotsPanel(), BorderLayout.NORTH);
-//                mainMaxingPanel.revalidate();
-//                java.io.InputStream is = Util.resourceFilePath("char");
-
+//        JButton button = new JButton("Test");
+//        button.addActionListener(e -> {
+//            try {
+////                mainMaxingPanel.removeAll();
+////                mainMaxingPanel.add(scrollPaneMaxing, BorderLayout.CENTER);
+////                mainMaxingPanel.add(missingPotsPanel(), BorderLayout.NORTH);
+////                mainMaxingPanel.revalidate();
+////                java.io.InputStream is = Util.resourceFilePath("char");
+//
 //                FileInputStream is = new FileInputStream("tiles/assets/request");
 //                String result = new java.io.BufferedReader(new java.io.InputStreamReader(is)).lines().collect(java.util.stream.Collectors.joining("\n"));
 //                ArrayList<RealmCharacter> l = HttpCharListRequest.getCharList(result);
-
-//                chars = l;
-//                updateCharPanel(chars);
-//                updateMaxingPanel(l);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-        add(button, BorderLayout.SOUTH);
+//                characterStatsGUI.updateRealmChars(l);
+//
+////                chars = l;
+////                updateCharPanel(chars);
+////                updateMaxingPanel(l);
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
+//        });
+//        add(button, BorderLayout.SOUTH);
 
         charPanel.add(new Label("Enter Daily Quest Room to see chars"));
         maxingPanel.add(new Label("Enter Daily Quest Room to see chars"));

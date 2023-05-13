@@ -4,6 +4,7 @@ import packets.data.ObjectData;
 import packets.incoming.*;
 import packets.outgoing.EnemyHitPacket;
 import packets.outgoing.PlayerShootPacket;
+import tomato.gui.CharacterStatsGUI;
 import tomato.logic.backend.VaultData;
 import tomato.logic.enums.CharacterClass;
 import util.RNG;
@@ -282,6 +283,7 @@ public class TomatoData {
 
     public void characterListUpdate(ArrayList<RealmCharacter> chars) {
         this.chars = chars;
+        CharacterStatsGUI.updateRealmChars(chars);
         seasonalVault.clearChar();
         regularVault.clearChar();
         for (RealmCharacter c : chars) {
