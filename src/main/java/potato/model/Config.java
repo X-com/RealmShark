@@ -13,8 +13,8 @@ public class Config implements Serializable {
     public boolean showHeroes = true;
     public boolean showInfo = true;
 
-    public int[] keyValues = {200, 201, 0, 0, 0, 0};
-    public String[] keyString = {"MW_UP", "MW_DOWN", "", "", "", ""};
+    public int[] keyValues = {200, 201, 0, 0, 0, 0, 0};
+    public String[] keyString = {"MW_UP", "MW_DOWN", "", "", "", "", ""};
 
     public int textSize = 32;
     public int shapeSize = 32;

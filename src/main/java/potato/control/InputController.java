@@ -69,9 +69,9 @@ public class InputController {
             int key = 0;
             if (event instanceof GlobalMouseEvent) {
                 GlobalMouseEvent e = (GlobalMouseEvent) event;
-                if(e.getTransitionState() == e.TS_DOWN) {
+                if (e.getTransitionState() == e.TS_DOWN) {
                     key = e.getButton();
-                } else if(e.getTransitionState() == e.TS_WHEEL) {
+                } else if (e.getTransitionState() == e.TS_WHEEL) {
                     key = e.getDelta() == GlobalMouseEvent.WHEEL_DELTA ? 200 : 201;
                 }
             } else if (event instanceof GlobalKeyEvent) {
@@ -82,16 +82,19 @@ public class InputController {
             key |= keyMod;
             if (key == Config.instance.keyValues[0]) {
                 model.editZoom(true);
-            }else if (key == Config.instance.keyValues[1]) {
+            } else if (key == Config.instance.keyValues[1]) {
                 model.editZoom(false);
-            }else if (key == Config.instance.keyValues[2]) {
+            } else if (key == Config.instance.keyValues[2]) {
                 OpenGLPotato.toggleShowMap();
-            }else if (key == Config.instance.keyValues[3]) {
+            } else if (key == Config.instance.keyValues[3]) {
                 OpenGLPotato.toggleShowHeroes();
-            }else if (key == Config.instance.keyValues[4]) {
+            } else if (key == Config.instance.keyValues[4]) {
                 OpenGLPotato.toggleShowInfo();
-            }else if (key == Config.instance.keyValues[5]) {
+            } else if (key == Config.instance.keyValues[5]) {
                 OpenGLPotato.toggleShowAll();
+            } else if (key == Config.instance.keyValues[6]) {
+                Config.instance.saveMapInfo = !Config.instance.saveMapInfo;
+                Config.save();
             }
         }
     }

@@ -85,6 +85,7 @@ public class OptionsMenu {
         addHotkey("Toggle Heroes", 3);
         addHotkey("Toggle Info", 4);
         addHotkey("Toggle All", 5);
+        addHotkey("Toggle Recording", 6);
     }
 
     private static void shapes() {
@@ -164,12 +165,6 @@ public class OptionsMenu {
         addToggleButton("Show Player Coords", Config.instance.showPlayerCoords, e -> {
             JToggleButton f = (JToggleButton) e.getSource();
             Config.instance.showPlayerCoords = f.isSelected();
-            Config.save();
-        });
-
-        addToggleButton("Save Map Info", Config.instance.saveMapInfo, e -> {
-            JToggleButton f = (JToggleButton) e.getSource();
-            Config.instance.saveMapInfo = f.isSelected();
             Config.save();
         });
 

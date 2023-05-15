@@ -244,7 +244,8 @@ public class OpenGLPotato extends Thread {
                 if (model.renderCastleTimer() && !model.getCastleTimer().isEmpty()) {
                     renderHud.drawText2D(model.getCastleTimer(), 5, Config.instance.mapHeight - 20, 20, bottomLeftVec, TextRenderer.TextBoundType.BOUNDING_BOX, mainTextColor);
                 } else if (showHeroCount) {
-                    String h = String.format("[%d] Heroes:%d", mapIndex + 1, model.getHeroesLeft());
+                    String r = Config.instance.saveMapInfo ? " R" : "";
+                    String h = String.format("[%d] Heroes:%d %s", mapIndex + 1, model.getHeroesLeft(), r);
                     renderHud.drawText2D(h, 5, Config.instance.mapHeight - 20, 20, bottomLeftVec, TextRenderer.TextBoundType.BOUNDING_BOX, mainTextColor);
                 }
                 String s = String.format("%s%s %s %s %s", model.getDungeonTime(), model.getPlayerCoordString(), model.getServerName(), model.getRealmName(), model.extraInfo());
