@@ -28,7 +28,6 @@ repositories {
 
 dependencies {
     implementation files("libs/RealmShark-v1.1.jar")
-    implementation 'com.github.weisj:darklaf-core:3.0.1'
     implementation 'net.java.dev.jna:jna:5.12.1'
     implementation 'net.java.dev.jna:jna-platform:5.12.1'
     implementation 'org.java-websocket:Java-WebSocket:1.5.3'
