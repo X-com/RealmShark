@@ -2,7 +2,6 @@ package potato.control;
 
 import com.google.gson.*;
 import potato.model.DataModel;
-import util.WebSocket;
 
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;

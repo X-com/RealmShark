@@ -10,7 +10,6 @@ import potato.model.Config;
 import potato.model.DataModel;
 import potato.view.OptionsMenu;
 import potato.view.opengl.OpenGLPotato;
-import util.FocusedWindow;
 
 import java.util.EventObject;
 

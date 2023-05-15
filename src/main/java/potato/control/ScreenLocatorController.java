@@ -3,7 +3,6 @@ package potato.control;
 import potato.model.Config;
 import potato.view.OptionsMenu;
 import potato.view.opengl.OpenGLPotato;
-import util.NativeWindowScreenCapture;
 
 import javax.swing.*;
 import java.awt.*;
