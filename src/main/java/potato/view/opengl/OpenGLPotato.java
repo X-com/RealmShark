@@ -5,6 +5,7 @@ import com.sun.jna.platform.win32.User32;
 import io.github.chiraagchakravarthy.lwjgl_vectorized_text.TextRenderer;
 import io.github.chiraagchakravarthy.lwjgl_vectorized_text.VectorFont;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL;
 import potato.model.Bootloader;
@@ -58,6 +59,8 @@ public class OpenGLPotato extends Thread {
     public static VectorFont vectorShapes;
     public static TextRenderer renderHud;
     public static TextRenderer renderText;
+    public static TextRenderer renderShape;
+    public static Vector2f bottomLeftVec = new Vector2f(-1, -1);
 
     private GLHeroes heroes;
 
@@ -186,8 +189,9 @@ public class OpenGLPotato extends Thread {
     private void font() {
         vectorFont = new VectorFont("/font/ariblk.ttf");
         vectorShapes = new VectorFont("/font/shapes.ttf");
-        renderHud = new TextRenderer();
-        renderText = new TextRenderer();
+        renderHud = new TextRenderer(vectorFont);
+        renderText = new TextRenderer(vectorFont);
+        renderShape = new TextRenderer(vectorShapes);
     }
 
     private void setWindow() {
@@ -220,7 +224,6 @@ public class OpenGLPotato extends Thread {
                 shaderMap.bind();
                 shaderMap.setUniformMat4f("uMVP", mvp);
                 shaderMap.setUniform1f("alpha", mapAlpha / 255f);
-                renderText.setMvp(mvp);
 
                 refresh = false;
             }
@@ -231,22 +234,25 @@ public class OpenGLPotato extends Thread {
             }
 
             if (showHeroes && userShowHeroes && model.inRealm() && zoom != 6) {
-                heroes.drawHeros(model.mapHeroes());
+                heroes.drawHeros(model.mapHeroes(), mvp);
             }
 
             if (firstDisplay && !model.inRealm()) {
-                renderHud.drawText2D("Enter any realm or re-enter if starting in a realm.", 5, 5, 10, vectorFont, mainTextColor);
+                renderHud.drawText2D("Enter any realm or re-enter if starting in a realm.", 5, 5, 10, bottomLeftVec, TextRenderer.TextBoundType.BOUNDING_BOX, mainTextColor);
             } else if (userShowInfo && (Config.instance.alwaysShowCoords || model.inRealm())) {
                 firstDisplay = false;
                 if (model.renderCastleTimer() && !model.getCastleTimer().isEmpty()) {
-                    renderHud.drawText2D(model.getCastleTimer(), 5, Config.instance.mapHeight - 20, 20, vectorFont, mainTextColor);
+                    renderHud.drawText2D(model.getCastleTimer(), 5, Config.instance.mapHeight - 20, 20, bottomLeftVec, TextRenderer.TextBoundType.BOUNDING_BOX, mainTextColor);
                 } else if (showHeroCount) {
                     String h = String.format("[%d] Heroes:%d", mapIndex + 1, model.getHeroesLeft());
-                    renderHud.drawText2D(h, 5, Config.instance.mapHeight - 20, 20, vectorFont, mainTextColor);
+                    renderHud.drawText2D(h, 5, Config.instance.mapHeight - 20, 20, bottomLeftVec, TextRenderer.TextBoundType.BOUNDING_BOX, mainTextColor);
                 }
                 String s = String.format("%s%s %s %s %s", model.getDungeonTime(), model.getPlayerCoordString(), model.getServerName(), model.getRealmName(), model.extraInfo());
-                renderHud.drawText2D(s, 5, 5, 10, vectorFont, mainTextColor);
+                renderHud.drawText2D(s, 5, 5, 10, bottomLeftVec, TextRenderer.TextBoundType.BOUNDING_BOX, mainTextColor);
             }
+            renderHud.render();
+            renderText.render();
+            renderShape.render();
 
             glfwSwapBuffers(window); // Update Window
             glfwPollEvents(); // Key Mouse Input
