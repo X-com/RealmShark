@@ -48,9 +48,9 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
-    implementation "org.joml:joml:1.10.4"
+    implementation 'org.joml:joml:1.10.5'
 
-    implementation "io.github.chiraagchakravarthy:lwjgl-vectorized-text:0.0.6-SNAPSHOT"
+    implementation "io.github.chiraagchakravarthy:lwjgl-vectorized-text:0.0.7-SNAPSHOT"
 //    implementation files("lib/LWJGL-vectorized-text.jar")
 }
 
