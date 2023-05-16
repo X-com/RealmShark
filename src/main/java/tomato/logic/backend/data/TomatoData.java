@@ -4,11 +4,14 @@ import packets.data.ObjectData;
 import packets.incoming.*;
 import packets.outgoing.EnemyHitPacket;
 import packets.outgoing.PlayerShootPacket;
-import tomato.gui.CharacterStatsGUI;
+import tomato.gui.character.CharacterExaltGUI;
+import tomato.gui.character.CharacterPanelGUI;
+import tomato.logic.HttpCharListRequest;
 import tomato.logic.backend.VaultData;
 import tomato.logic.enums.CharacterClass;
 import util.RNG;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,6 +22,7 @@ import java.util.HashSet;
  * Resets the data after leaving the instance.
  */
 public class TomatoData {
+    private String token;
     protected MapInfoPacket map;
     protected int worldPlayerId;
     protected int charId;
@@ -293,5 +297,32 @@ public class TomatoData {
                 regularVault.updateCharInventory(c);
             }
         }
+        CharacterPanelGUI.updateRealmChars();
+    }
+
+    /**
+     * Handles character data by sending char list request to rotmg servers while in the daily quest room.
+     * This is done here given pet yard and daily quest instance is the only instances where the char list
+     * request can be done without being rejected by rotmg servers.
+     * <p>
+     * token Current client token string used in http request packet.
+     */
+    public void charListHttpRequest() {
+        try {
+            String httpString = HttpCharListRequest.getChartList(token);
+            ArrayList<RealmCharacter> charList = HttpCharListRequest.getCharList(httpString);
+            if (charList != null) characterListUpdate(charList);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Stores the token for char list requests.
+     *
+     * @param token Current client token.
+     */
+    public void updateToken(String token) {
+        this.token = token;
     }
 }

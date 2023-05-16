@@ -1,17 +1,17 @@
 package tomato.logic.backend;
 
 import packets.Packet;
+import packets.data.QuestData;
 import packets.incoming.*;
 import packets.outgoing.EnemyHitPacket;
+import packets.outgoing.HelloPacket;
 import packets.outgoing.PlayerShootPacket;
 import tomato.gui.TomatoGUI;
-import tomato.logic.backend.action.network.SetHttpRequest;
-import tomato.logic.backend.action.network.SetNetwork;
-import tomato.logic.backend.data.RealmCharacter;
 import tomato.logic.backend.data.TomatoData;
-import tomato.logic.backend.redux.Store;
 
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.stream.Stream;
 
 /**
  * Main packet handling class for incoming packets.
@@ -62,6 +62,15 @@ public class TomatoPacketCapture implements Controller {
         } else if (packet instanceof VaultContentPacket) {
             VaultContentPacket p = (VaultContentPacket) packet;
             data.vaultPacketUpdate(p);
+        } else if (packet instanceof HelloPacket) {
+            HelloPacket p = (HelloPacket) packet;
+            data.updateToken(p.accessToken);
+        } else if (packet instanceof QuestFetchResponsePacket) {
+            QuestFetchResponsePacket p = (QuestFetchResponsePacket) packet;
+            Stream<QuestData> list = Arrays.stream(p.quests).sorted(Comparator.comparing(questData -> questData.category));
+            TomatoGUI.updateQuests(list.toArray(QuestData[]::new));
+
+            data.charListHttpRequest();
         }
     }
 

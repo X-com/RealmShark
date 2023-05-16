@@ -18,8 +18,6 @@ import tomato.gui.JavaOutOfMemoryGUI;
 import tomato.gui.TomatoBandwidth;
 import tomato.gui.TomatoGUI;
 import tomato.gui.TomatoMenuBar;
-import tomato.logic.Parse;
-import tomato.logic.QuestPackets;
 import tomato.logic.backend.CrashLogger;
 import tomato.logic.backend.TomatoPacketCapture;
 import tomato.logic.backend.TomatoRootController;
@@ -82,6 +80,7 @@ public class Tomato {
      */
     private static void loadControllers(TomatoData data) {
         rootController = new TomatoRootController(data);
+        // Create realm packet capture instance and add to root controller
         TomatoPacketCapture packCap = new TomatoPacketCapture(data);
         packetRegister(packCap);
         rootController.addController(packCap);
@@ -131,10 +130,8 @@ public class Tomato {
         Register.INSTANCE.register(PacketType.TEXT, packCap::packetCapture);
         Register.INSTANCE.register(PacketType.EXALTATION_BONUS_CHANGED, packCap::packetCapture);
         Register.INSTANCE.register(PacketType.VAULT_UPDATE, packCap::packetCapture);
-
-        Register.INSTANCE.register(PacketType.QUEST_FETCH_RESPONSE, QuestPackets::questPacket);
-        Register.INSTANCE.register(PacketType.QUEST_REDEEM, QuestPackets::questPacket);
-        Register.INSTANCE.register(PacketType.HELLO, QuestPackets::questPacket);
+        Register.INSTANCE.register(PacketType.QUEST_FETCH_RESPONSE, packCap::packetCapture);
+        Register.INSTANCE.register(PacketType.HELLO, packCap::packetCapture);
     }
 
 
