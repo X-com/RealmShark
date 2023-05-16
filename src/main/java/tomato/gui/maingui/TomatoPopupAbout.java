@@ -1,4 +1,4 @@
-package tomato.gui;
+package tomato.gui.maingui;
 
 
 import tomato.Tomato;

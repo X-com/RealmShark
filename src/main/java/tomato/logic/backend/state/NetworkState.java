@@ -4,7 +4,7 @@ import packets.Packet;
 import packets.incoming.*;
 import packets.outgoing.EnemyHitPacket;
 import packets.outgoing.PlayerShootPacket;
-import tomato.gui.TomatoGUI;
+import tomato.gui.maingui.TomatoGUI;
 import tomato.logic.backend.DpsToString;
 import tomato.logic.backend.action.Action;
 import tomato.logic.backend.action.network.SetHttpRequest;

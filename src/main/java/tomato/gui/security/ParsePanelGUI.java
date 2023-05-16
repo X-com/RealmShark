@@ -1,7 +1,8 @@
-package tomato.gui;
+package tomato.gui.security;
 
 import assets.AssetMissingException;
 import assets.ImageBuffer;
+import tomato.gui.SmartScroller;
 import util.Pair;
 
 import javax.swing.*;

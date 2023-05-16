@@ -6,7 +6,7 @@ import packets.incoming.*;
 import packets.outgoing.EnemyHitPacket;
 import packets.outgoing.HelloPacket;
 import packets.outgoing.PlayerShootPacket;
-import tomato.gui.TomatoGUI;
+import tomato.gui.maingui.TomatoGUI;
 import tomato.logic.backend.data.TomatoData;
 
 import java.util.Arrays;

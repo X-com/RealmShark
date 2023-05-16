@@ -1,10 +1,14 @@
-package tomato.gui;
+package tomato.gui.maingui;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.*;
 import packets.data.QuestData;
 import tomato.Tomato;
+import tomato.gui.fame.FameTrackerGUI;
+import tomato.gui.QuestGUI;
+import tomato.gui.SmartScroller;
 import tomato.gui.character.CharacterPanelGUI;
+import tomato.gui.security.SecurityGUI;
 import tomato.logic.backend.data.TomatoData;
 import util.PropertiesManager;
 import util.Pair;

@@ -6,7 +6,7 @@ import packets.data.WorldPosData;
 import packets.incoming.CreateSuccessPacket;
 import packets.incoming.NewTickPacket;
 import packets.incoming.UpdatePacket;
-import tomato.gui.TomatoGUI;
+import tomato.gui.maingui.TomatoGUI;
 import assets.AssetMissingException;
 import assets.IdToAsset;
 import util.Pair;

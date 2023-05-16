@@ -1,4 +1,6 @@
-package tomato.gui;
+package tomato.gui.maingui;
+
+import tomato.gui.SmartScroller;
 
 import javax.swing.*;
 import java.awt.*;

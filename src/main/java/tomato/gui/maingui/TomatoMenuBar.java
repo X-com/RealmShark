@@ -1,4 +1,4 @@
-package tomato.gui;
+package tomato.gui.maingui;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.*;

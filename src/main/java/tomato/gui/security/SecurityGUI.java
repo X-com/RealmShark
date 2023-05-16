@@ -1,4 +1,6 @@
-package tomato.gui;
+package tomato.gui.security;
+
+import tomato.gui.security.ParsePanelGUI;
 
 import javax.swing.*;
 import java.awt.*;

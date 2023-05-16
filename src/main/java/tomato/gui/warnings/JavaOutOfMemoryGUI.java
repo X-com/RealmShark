@@ -1,4 +1,4 @@
-package tomato.gui;
+package tomato.gui.warnings;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;

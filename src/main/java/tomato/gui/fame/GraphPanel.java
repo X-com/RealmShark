@@ -1,4 +1,4 @@
-package tomato.gui;
+package tomato.gui.fame;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
