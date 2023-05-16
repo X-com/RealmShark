@@ -108,14 +108,14 @@ public class HttpCharListRequest {
             if (Objects.equals(xml.name, "Char")) {
                 RealmCharacter character = new RealmCharacter();
                 for (StringXML info : xml) {
-                    if(Objects.equals(info.name, "id")) {
+                    if (Objects.equals(info.name, "id")) {
                         character.charId = Integer.parseInt(info.value);
                     }
 
                     for (StringXML v : info) {
                         switch (info.name) {
                             case "ObjectType":
-                                character.classNum = Integer.parseInt(v.value);
+                                character.classNum = Short.parseShort(v.value);
                                 character.setClassString();
                                 break;
                             case "Equipment":
@@ -182,7 +182,7 @@ public class HttpCharListRequest {
             } else if (Objects.equals(xml.name, "PowerUpStats")) {
                 for (StringXML info : xml) {
                     if (Objects.equals(info.name, "ClassStats")) {
-                        short clazz = Short.parseShort(info.children.get(0).value);
+                        int clazz = Integer.parseInt(info.children.get(0).value);
                         int[] exalts = Arrays.stream(info.children.get(1).value.split(",")).mapToInt(Integer::parseInt).toArray();
                         RealmCharacter.exalts.put(clazz, exalts);
                     }

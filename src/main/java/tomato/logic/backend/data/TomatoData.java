@@ -33,6 +33,7 @@ public class TomatoData {
     private final HashMap<Integer, Entity> entityHitList = new HashMap<>();
     public VaultData regularVault = new VaultData();
     public VaultData seasonalVault = new VaultData();
+    public boolean vaultDataRecievedSeasonal, vaultDataRecievedRegular, characterDataRecieved;
     public ArrayList<RealmCharacter> chars;
 
     /**
@@ -258,32 +259,31 @@ public class TomatoData {
     }
 
     public void exaltUpdate(ExaltationUpdatePacket p) {
-        int[] exalts = new int[]{
-                p.dexterityProgress,
-                p.speedProgress,
-                p.vitalityProgress,
-                p.wisdomProgress,
-                p.defenseProgress,
-                p.attackProgress,
-                p.manaProgress,
-                p.healthProgress
-        };
-        RealmCharacter.exalts.put(p.objType, exalts);
+        int[] exalts = RealmCharacter.exalts.get((int) p.objType);
+        if (exalts == null) return;
+        int[] update = new int[]{p.dexterityProgress, p.speedProgress, p.vitalityProgress, p.wisdomProgress, p.defenseProgress, p.attackProgress, p.manaProgress, p.healthProgress};
+        if (!Arrays.equals(exalts, update)) {
+            RealmCharacter.exalts.put((int) p.objType, update);
+            CharacterExaltGUI.updateExalts();
+        }
     }
 
     public void vaultPacketUpdate(VaultContentPacket p) {
         if (player != null) {
             if (player.stat.UNKNOWN24.statValue == 1) {
+                vaultDataRecievedSeasonal = true;
                 seasonalVault.vaultPacketUpdate(p);
             } else {
+                vaultDataRecievedRegular = true;
                 regularVault.vaultPacketUpdate(p);
             }
+            CharacterPanelGUI.vaultDataUpdate();
         }
     }
 
     public void characterListUpdate(ArrayList<RealmCharacter> chars) {
+        characterDataRecieved = true;
         this.chars = chars;
-        CharacterStatsGUI.updateRealmChars(chars);
         seasonalVault.clearChar();
         regularVault.clearChar();
         for (RealmCharacter c : chars) {

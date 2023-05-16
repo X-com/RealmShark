@@ -18,10 +18,10 @@ public class RealmCharacter {
     // Atk 5
     // Mana 6
     // Life 7
-    public static HashMap<Short, int[]> exalts = new HashMap<>();
+    public static HashMap<Integer, int[]> exalts = new HashMap<>();
 
     public int charId;
-    public int classNum;
+    public short classNum;
     public String classString;
     public int level;
     public int skin;

@@ -1,9 +1,10 @@
-package tomato.gui;
+package tomato.gui.character;
 
 import assets.AssetMissingException;
 import assets.IdToAsset;
 import assets.ImageBuffer;
 import tomato.logic.backend.data.RealmCharacter;
+import tomato.logic.backend.data.TomatoData;
 import tomato.logic.enums.CharacterStatistics;
 
 import javax.swing.*;
@@ -20,14 +21,13 @@ import java.util.Comparator;
  */
 public class CharacterStatsGUI extends JPanel {
     private static CharacterStatsGUI INSTANCE;
-    private JPanel top;
-    private JPanel left;
-    private JPanel right;
-    private ArrayList<RealmCharacter> realmChars;
+    private final JPanel top, left, right;
     private boolean sortOrder;
+    private final TomatoData data;
 
-    public CharacterStatsGUI() {
+    public CharacterStatsGUI(TomatoData data) {
         INSTANCE = this;
+        this.data = data;
 
         top = new JPanel();
         left = new JPanel();
@@ -40,6 +40,7 @@ public class CharacterStatsGUI extends JPanel {
 
         spRight.getHorizontalScrollBar().setModel(spTop.getHorizontalScrollBar().getModel());
         spRight.getVerticalScrollBar().setModel(spLeft.getVerticalScrollBar().getModel());
+        spRight.getVerticalScrollBar().setUnitIncrement(9);
 
         spLeft.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         spRight.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -66,11 +67,8 @@ public class CharacterStatsGUI extends JPanel {
 
     /**
      * Method for receiving realm character list info.
-     *
-     * @param r Realm character list.
      */
-    public static void updateRealmChars(ArrayList<RealmCharacter> r) {
-        INSTANCE.realmChars = r;
+    public static void updateRealmChars() {
         INSTANCE.update();
     }
 
@@ -78,20 +76,20 @@ public class CharacterStatsGUI extends JPanel {
      * Update method clearing all the display and re-display it with the updated info.
      */
     private void update() {
-        if (realmChars == null) return;
+        if (data.chars == null) return;
 
         top.removeAll();
         left.removeAll();
         right.removeAll();
 
-        int dungeonCount = realmChars.get(0).charStats.dungeonStats.length;
-        int charCount = realmChars.size();
+        int dungeonCount = data.chars.get(0).charStats.dungeonStats.length;
+        int charCount = data.chars.size();
         top.setLayout(new GridLayout(1, dungeonCount));
         left.setLayout(new GridLayout(charCount, 1));
         right.setLayout(new GridLayout(charCount, dungeonCount));
 
         for (int i = 0; i < charCount; i++) {
-            RealmCharacter c = realmChars.get(i);
+            RealmCharacter c = data.chars.get(i);
             JLabel player = playerIcon(c);
             JPanel p = new JPanel(new GridBagLayout());
             p.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.BLACK));
@@ -111,10 +109,10 @@ public class CharacterStatsGUI extends JPanel {
         }
 
         for (int j = 0; j < dungeonCount; j++) {
-            BufferedImage img = null;
+            BufferedImage img;
             String name;
+            int id = CharacterStatistics.DUNGEONS.get(j);
             try {
-                int id = CharacterStatistics.DUNGEONS.get(j);
                 name = IdToAsset.getDisplayName(id);
                 img = ImageBuffer.getImage(id);
             } catch (IOException | AssetMissingException e) {
@@ -128,12 +126,12 @@ public class CharacterStatsGUI extends JPanel {
             int finalJ = j;
             dungeonIcon.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
-                    if (realmChars == null) return;
+                    if (data.chars == null) return;
                     sortOrder = !sortOrder;
                     if (sortOrder) {
-                        realmChars.sort(Comparator.comparingLong(o -> -o.charStats.dungeonStats[finalJ]));
+                        data.chars.sort(Comparator.comparingLong(o -> -o.charStats.dungeonStats[finalJ]));
                     } else {
-                        realmChars.sort(Comparator.comparingLong(o -> o.charStats.dungeonStats[finalJ]));
+                        data.chars.sort(Comparator.comparingLong(o -> o.charStats.dungeonStats[finalJ]));
                     }
                     update();
                 }
@@ -154,7 +152,7 @@ public class CharacterStatsGUI extends JPanel {
      * @param c Character to be made into label showing icon fame and class name.
      * @return Label displaying the character.
      */
-    JLabel playerIcon(RealmCharacter c) {
+    private JLabel playerIcon(RealmCharacter c) {
         try {
             int eq = c.skin;
             if (eq == 0) eq = c.classNum;
@@ -163,12 +161,12 @@ public class CharacterStatsGUI extends JPanel {
             JLabel characterLabel = new JLabel(c.classString + " " + c.fame, icon, JLabel.CENTER);
             characterLabel.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
-                    if (realmChars == null) return;
+                    if (data.chars == null) return;
                     sortOrder = !sortOrder;
                     if (sortOrder) {
-                        realmChars.sort(Comparator.comparingLong(o -> -o.fame));
+                        data.chars.sort(Comparator.comparingLong(o -> -o.fame));
                     } else {
-                        realmChars.sort(Comparator.comparingLong(o -> o.fame));
+                        data.chars.sort(Comparator.comparingLong(o -> o.fame));
                     }
                     update();
                 }

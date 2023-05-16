@@ -4,6 +4,7 @@ import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.*;
 import packets.data.QuestData;
 import tomato.Tomato;
+import tomato.gui.character.CharacterPanelGUI;
 import tomato.logic.backend.data.TomatoData;
 import util.PropertiesManager;
 import util.Pair;
@@ -41,8 +42,10 @@ public class TomatoGUI {
     private Point center;
     private Image icon;
     private JButton next, prev;
+    private TomatoData data;
 
     public TomatoGUI(TomatoData data) {
+        this.data = data;
     }
 
     /**
@@ -60,7 +63,7 @@ public class TomatoGUI {
         securityPanel = new SecurityGUI();
         tabbedPane.addTab("Security", securityPanel);
 
-        characterPanel = new CharacterPanelGUI();
+        characterPanel = new CharacterPanelGUI(data);
         tabbedPane.addTab("Characters", characterPanel);
 
         fameTracker = new FameTrackerGUI();
