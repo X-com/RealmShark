@@ -1,6 +1,6 @@
 package tomato.gui.character;
 
-import tomato.logic.backend.data.TomatoData;
+import tomato.backend.data.TomatoData;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

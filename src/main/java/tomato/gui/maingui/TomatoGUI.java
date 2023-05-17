@@ -9,7 +9,7 @@ import tomato.gui.QuestGUI;
 import tomato.gui.SmartScroller;
 import tomato.gui.character.CharacterPanelGUI;
 import tomato.gui.security.SecurityGUI;
-import tomato.logic.backend.data.TomatoData;
+import tomato.backend.data.TomatoData;
 import util.PropertiesManager;
 import util.Pair;
 

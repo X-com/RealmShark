@@ -1,4 +1,4 @@
-package tomato.logic.backend;
+package tomato.backend;
 
 public interface Controller {
     void dispose();

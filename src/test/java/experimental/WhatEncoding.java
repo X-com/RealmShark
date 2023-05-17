@@ -1,10 +1,10 @@
 package experimental;
 
 import packets.reader.BufferReader;
-import tomato.logic.HttpCharListRequest;
-import tomato.logic.PcStatsDecoder;
-import tomato.logic.backend.data.RealmCharacter;
-import tomato.logic.enums.CharacterStatistics;
+import tomato.realmshark.HttpCharListRequest;
+import tomato.realmshark.PcStatsDecoder;
+import tomato.backend.data.RealmCharacter;
+import tomato.realmshark.enums.CharacterStatistics;
 import util.Util;
 
 import java.io.IOException;

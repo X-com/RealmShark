@@ -1,4 +1,4 @@
-package tomato.logic.backend.data;
+package tomato.backend.data;
 
 /**
  * Class used to store damage and counter info.

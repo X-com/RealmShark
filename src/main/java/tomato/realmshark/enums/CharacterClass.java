@@ -1,4 +1,4 @@
-package tomato.logic.enums;
+package tomato.realmshark.enums;
 
 import java.util.HashMap;
 import java.util.HashSet;

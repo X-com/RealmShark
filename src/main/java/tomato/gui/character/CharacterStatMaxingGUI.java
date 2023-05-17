@@ -2,11 +2,11 @@ package tomato.gui.character;
 
 import assets.AssetMissingException;
 import assets.ImageBuffer;
-import tomato.logic.backend.VaultData;
-import tomato.logic.backend.data.RealmCharacter;
-import tomato.logic.backend.data.TomatoData;
-import tomato.logic.enums.CharacterClass;
-import tomato.logic.enums.StatPotion;
+import tomato.backend.VaultData;
+import tomato.backend.data.RealmCharacter;
+import tomato.backend.data.TomatoData;
+import tomato.realmshark.enums.CharacterClass;
+import tomato.realmshark.enums.StatPotion;
 
 import javax.swing.*;
 import java.awt.*;

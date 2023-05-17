@@ -7,10 +7,10 @@ import packets.outgoing.PlayerShootPacket;
 import redux.action.network.SetHttpRequest;
 import redux.action.network.SetNetwork;
 import tomato.gui.maingui.TomatoGUI;
-import tomato.logic.backend.DpsToString;
+import tomato.backend.DpsToString;
 import redux.action.Action;
-import tomato.logic.backend.data.RealmCharacter;
-import tomato.logic.backend.data.TomatoData;
+import tomato.backend.data.RealmCharacter;
+import tomato.backend.data.TomatoData;
 
 import java.util.ArrayList;
 

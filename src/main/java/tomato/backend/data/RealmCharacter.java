@@ -1,7 +1,7 @@
-package tomato.logic.backend.data;
+package tomato.backend.data;
 
-import tomato.logic.RealmCharacterStats;
-import tomato.logic.enums.CharacterClass;
+import tomato.realmshark.RealmCharacterStats;
+import tomato.realmshark.enums.CharacterClass;
 
 import java.util.Arrays;
 import java.util.HashMap;

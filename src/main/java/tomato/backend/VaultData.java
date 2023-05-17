@@ -1,13 +1,12 @@
-package tomato.logic.backend;
+package tomato.backend;
 
 import packets.Packet;
 import packets.incoming.VaultContentPacket;
-import tomato.logic.backend.data.RealmCharacter;
-import tomato.logic.enums.StatPotion;
+import tomato.backend.data.RealmCharacter;
+import tomato.realmshark.enums.StatPotion;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * Data storage class for vault data.

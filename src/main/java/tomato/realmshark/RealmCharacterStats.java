@@ -1,7 +1,7 @@
-package tomato.logic;
+package tomato.realmshark;
 
 import packets.reader.BufferReader;
-import tomato.logic.enums.CharacterStatistics;
+import tomato.realmshark.enums.CharacterStatistics;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

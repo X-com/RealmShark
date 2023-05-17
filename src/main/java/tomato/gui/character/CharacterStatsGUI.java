@@ -3,9 +3,9 @@ package tomato.gui.character;
 import assets.AssetMissingException;
 import assets.IdToAsset;
 import assets.ImageBuffer;
-import tomato.logic.backend.data.RealmCharacter;
-import tomato.logic.backend.data.TomatoData;
-import tomato.logic.enums.CharacterStatistics;
+import tomato.backend.data.RealmCharacter;
+import tomato.backend.data.TomatoData;
+import tomato.realmshark.enums.CharacterStatistics;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +13,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Comparator;
 
 /**

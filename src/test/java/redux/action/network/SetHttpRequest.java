@@ -1,7 +1,7 @@
 package redux.action.network;
 
 import redux.action.Action;
-import tomato.logic.backend.data.RealmCharacter;
+import tomato.backend.data.RealmCharacter;
 
 import java.util.ArrayList;
 

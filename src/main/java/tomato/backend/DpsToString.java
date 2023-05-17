@@ -1,10 +1,10 @@
-package tomato.logic.backend;
+package tomato.backend;
 
 import assets.AssetMissingException;
 import assets.IdToAsset;
-import tomato.logic.backend.data.Damage;
-import tomato.logic.backend.data.Entity;
-import tomato.logic.backend.data.TomatoData;
+import tomato.backend.data.Damage;
+import tomato.backend.data.Entity;
+import tomato.backend.data.TomatoData;
 
 import java.util.*;
 import java.util.stream.Collectors;

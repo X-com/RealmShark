@@ -13,7 +13,7 @@ import packets.outgoing.*;
 import packets.outgoing.pets.ActivePetUpdateRequestPacket;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.register.Register;
-import tomato.logic.enums.CharacterClass;
+import tomato.realmshark.enums.CharacterClass;
 import util.Util;
 
 import java.awt.*;

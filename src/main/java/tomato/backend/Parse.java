@@ -1,4 +1,4 @@
-package tomato.logic;
+package tomato.backend;
 
 import packets.Packet;
 import packets.data.StatData;

@@ -1,8 +1,8 @@
 package tomato.gui.character;
 
 import assets.ImageBuffer;
-import tomato.logic.backend.data.RealmCharacter;
-import tomato.logic.backend.data.TomatoData;
+import tomato.backend.data.RealmCharacter;
+import tomato.backend.data.TomatoData;
 
 import javax.swing.*;
 import java.awt.*;

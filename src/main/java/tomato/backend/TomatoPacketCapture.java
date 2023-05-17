@@ -1,4 +1,4 @@
-package tomato.logic.backend;
+package tomato.backend;
 
 import packets.Packet;
 import packets.data.QuestData;
@@ -6,8 +6,8 @@ import packets.incoming.*;
 import packets.outgoing.EnemyHitPacket;
 import packets.outgoing.HelloPacket;
 import packets.outgoing.PlayerShootPacket;
+import tomato.backend.data.TomatoData;
 import tomato.gui.maingui.TomatoGUI;
-import tomato.logic.backend.data.TomatoData;
 
 import java.util.Arrays;
 import java.util.Comparator;

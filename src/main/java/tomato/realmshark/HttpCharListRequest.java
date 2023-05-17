@@ -1,7 +1,7 @@
-package tomato.logic;
+package tomato.realmshark;
 
 import org.xml.sax.SAXException;
-import tomato.logic.backend.data.RealmCharacter;
+import tomato.backend.data.RealmCharacter;
 import util.StringXML;
 import util.Util;
 

@@ -1,4 +1,4 @@
-package tomato.logic.backend.data;
+package tomato.backend.data;
 
 import assets.AssetMissingException;
 import assets.IdToAsset;

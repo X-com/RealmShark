@@ -1,6 +1,6 @@
-package tomato.logic.backend;
+package tomato.backend;
 
-import tomato.logic.backend.data.TomatoData;
+import tomato.backend.data.TomatoData;
 
 import java.util.ArrayList;
 

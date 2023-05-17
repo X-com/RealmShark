@@ -1,4 +1,4 @@
-package tomato.logic.backend.data;
+package tomato.backend.data;
 
 import packets.data.ObjectData;
 import packets.incoming.*;
@@ -6,9 +6,9 @@ import packets.outgoing.EnemyHitPacket;
 import packets.outgoing.PlayerShootPacket;
 import tomato.gui.character.CharacterExaltGUI;
 import tomato.gui.character.CharacterPanelGUI;
-import tomato.logic.HttpCharListRequest;
-import tomato.logic.backend.VaultData;
-import tomato.logic.enums.CharacterClass;
+import tomato.realmshark.HttpCharListRequest;
+import tomato.backend.VaultData;
+import tomato.realmshark.enums.CharacterClass;
 import util.RNG;
 
 import java.io.IOException;
