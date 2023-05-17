@@ -3,7 +3,7 @@ package tomato.gui.character;
 import assets.AssetMissingException;
 import assets.IdToAsset;
 import assets.ImageBuffer;
-import tomato.backend.data.RealmCharacter;
+import tomato.realmshark.RealmCharacter;
 import tomato.backend.data.TomatoData;
 import tomato.realmshark.enums.CharacterStatistics;
 

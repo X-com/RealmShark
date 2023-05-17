@@ -2,8 +2,8 @@ package tomato.gui.character;
 
 import assets.AssetMissingException;
 import assets.ImageBuffer;
-import tomato.backend.VaultData;
-import tomato.backend.data.RealmCharacter;
+import tomato.backend.data.VaultData;
+import tomato.realmshark.RealmCharacter;
 import tomato.backend.data.TomatoData;
 import tomato.realmshark.enums.CharacterClass;
 import tomato.realmshark.enums.StatPotion;

@@ -3,7 +3,7 @@ package experimental;
 import packets.reader.BufferReader;
 import tomato.realmshark.HttpCharListRequest;
 import tomato.realmshark.PcStatsDecoder;
-import tomato.backend.data.RealmCharacter;
+import tomato.realmshark.RealmCharacter;
 import tomato.realmshark.enums.CharacterStatistics;
 import util.Util;
 

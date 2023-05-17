@@ -9,7 +9,7 @@ import redux.action.network.SetNetwork;
 import tomato.gui.maingui.TomatoGUI;
 import tomato.backend.DpsToString;
 import redux.action.Action;
-import tomato.backend.data.RealmCharacter;
+import tomato.realmshark.RealmCharacter;
 import tomato.backend.data.TomatoData;
 
 import java.util.ArrayList;

@@ -7,7 +7,7 @@ import packets.outgoing.PlayerShootPacket;
 import tomato.gui.character.CharacterExaltGUI;
 import tomato.gui.character.CharacterPanelGUI;
 import tomato.realmshark.HttpCharListRequest;
-import tomato.backend.VaultData;
+import tomato.realmshark.RealmCharacter;
 import tomato.realmshark.enums.CharacterClass;
 import util.RNG;
 

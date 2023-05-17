@@ -1,8 +1,8 @@
-package tomato.backend;
+package tomato.backend.data;
 
 import packets.Packet;
 import packets.incoming.VaultContentPacket;
-import tomato.backend.data.RealmCharacter;
+import tomato.realmshark.RealmCharacter;
 import tomato.realmshark.enums.StatPotion;
 
 import java.util.*;
