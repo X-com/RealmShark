@@ -1,7 +1,7 @@
-package tomato.logic.backend.action.network;
+package redux.action.network;
 
 import packets.Packet;
-import tomato.logic.backend.action.Action;
+import redux.action.Action;
 
 public class SetNetwork implements Action {
     public Packet value;

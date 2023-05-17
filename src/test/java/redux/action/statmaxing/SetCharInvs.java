@@ -1,6 +1,6 @@
-package tomato.logic.backend.action.statmaxing;
+package redux.action.statmaxing;
 
-import tomato.logic.backend.action.Action;
+import redux.action.Action;
 
 public class SetCharInvs implements Action {
     public boolean value;

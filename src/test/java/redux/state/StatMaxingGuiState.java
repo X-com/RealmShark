@@ -1,6 +1,7 @@
-package tomato.logic.backend.state;
+package redux.state;
 
-import tomato.logic.backend.action.Action;
+import redux.action.Action;
+import redux.action.statmaxing.*;
 import tomato.logic.backend.action.statmaxing.*;
 
 import java.util.HashMap;

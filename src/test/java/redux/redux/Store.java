@@ -1,8 +1,7 @@
-package tomato.logic.backend.redux;
+package redux.redux;
 
-import tomato.logic.backend.action.Action;
-import tomato.logic.backend.state.RootState;
-import tomato.logic.backend.state.StatMaxingGuiState;
+import redux.action.Action;
+import redux.state.RootState;
 
 import java.util.HashSet;
 import java.util.function.Consumer;

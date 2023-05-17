@@ -1,6 +1,6 @@
-package tomato.logic.backend.action.network;
+package redux.action.network;
 
-import tomato.logic.backend.action.Action;
+import redux.action.Action;
 import tomato.logic.backend.data.RealmCharacter;
 
 import java.util.ArrayList;

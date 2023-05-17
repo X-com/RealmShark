@@ -1,14 +1,14 @@
-package tomato.logic.backend.state;
+package redux.state;
 
 import packets.Packet;
 import packets.incoming.*;
 import packets.outgoing.EnemyHitPacket;
 import packets.outgoing.PlayerShootPacket;
+import redux.action.network.SetHttpRequest;
+import redux.action.network.SetNetwork;
 import tomato.gui.maingui.TomatoGUI;
 import tomato.logic.backend.DpsToString;
-import tomato.logic.backend.action.Action;
-import tomato.logic.backend.action.network.SetHttpRequest;
-import tomato.logic.backend.action.network.SetNetwork;
+import redux.action.Action;
 import tomato.logic.backend.data.RealmCharacter;
 import tomato.logic.backend.data.TomatoData;
 

@@ -1,6 +1,6 @@
-package tomato.logic.backend.state;
+package redux.state;
 
-import tomato.logic.backend.action.Action;
+import redux.action.Action;
 
 public class RootState {
     public StatMaxingGuiState statMaxingGui = new StatMaxingGuiState();
