@@ -17,7 +17,7 @@ public class MovePacket extends Packet {
      */
     public int tickId;
     /**
-     * The current client time.
+     * The serverRealTimeMS.
      */
     public int time;
     /**
