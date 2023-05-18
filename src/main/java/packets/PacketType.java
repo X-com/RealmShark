@@ -151,11 +151,11 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
                         // Missing
                              DASH(-119, Outgoing, DashPacket::new),
                          DASH_ACK(-118, Outgoing, DashAckPacket::new),
-                       UNKNOWN139(-117, Outgoing, UnknownPacket139::new),
+                       UNKNOWN139(-117, Incoming, UnknownPacket139::new),
                         // Missing
                        UNKNOWN145(-111, Outgoing, UnknownPacket145::new),
                        UNKNOWN146(-110, Outgoing, UnknownPacket146::new),
-                       UNKNOWN147(-109, Outgoing, UnknownPacket147::new),
+                       UNKNOWN147(-109, Incoming, UnknownPacket147::new),
                        UNKNOWN154(-102, Outgoing, UnknownPacket154::new),
                        UNKNOWN165(-91,  Incoming, UnknownPacket165::new),
                        UNKNOWN166(-90,  Incoming, StasisPacket::new),
