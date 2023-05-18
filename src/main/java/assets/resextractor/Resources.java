@@ -29,7 +29,7 @@ public class Resources {
         parseAllResources(sf);
     }
 
-    public void parseAllResources(SerializedFile sf) {
+    public void parseAllResources(SerializedFile sf) throws IOException {
         for (ObjectReader o : sf.objects) {
             switch (o.type) {
                 case AudioClip:
@@ -55,7 +55,7 @@ public class Resources {
         }
     }
 
-    private void parseTextAsset(ObjectReader o) {
+    private void parseTextAsset(ObjectReader o) throws IOException {
         TextAsset t = new TextAsset(o);
         if (t.name.equals("spritesheet")) {
             spritesheet = t;
@@ -67,12 +67,12 @@ public class Resources {
         assetTextAsset.add(t);
     }
 
-    private void parseSpriteAtlas(ObjectReader o) {
+    private void parseSpriteAtlas(ObjectReader o) throws IOException {
         SpriteAtlas s = new SpriteAtlas(o);
         assetSpriteAtlas.add(s);
     }
 
-    private void parseTexture2D(ObjectReader o) {
+    private void parseTexture2D(ObjectReader o) throws IOException {
         Texture2D t = new Texture2D(o);
         assetTexture2D.add(t);
     }

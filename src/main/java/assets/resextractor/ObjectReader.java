@@ -1,5 +1,7 @@
 package assets.resextractor;
 
+import java.io.IOException;
+
 /**
  * Class extracted from UnityPy https://github.com/K0lb3/UnityPy
  */
@@ -23,7 +25,7 @@ public class ObjectReader {
     public byte stripped;
     public short script_type_index;
 
-    public ObjectReader(SerializedFile serializedFile, DataReader reader) {
+    public ObjectReader(SerializedFile serializedFile, DataReader reader) throws IOException {
         this.version = serializedFile.version;
         this.reader = reader;
         this.data_offset = serializedFile.data_offset;

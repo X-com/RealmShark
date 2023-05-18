@@ -1,5 +1,7 @@
 package assets.resextractor;
 
+import java.io.IOException;
+
 /**
  * Class extracted from UnityPy https://github.com/K0lb3/UnityPy
  */
@@ -14,7 +16,7 @@ public class TextAsset {
     String name;
     byte[] m_Script;
 
-    public TextAsset(ObjectReader o) {
+    public TextAsset(ObjectReader o) throws IOException {
         this.reader = o.reader;
         reader.setPosition((int) o.byte_start);
 

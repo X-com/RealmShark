@@ -1,5 +1,6 @@
 package assets.resextractor;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -49,7 +50,7 @@ public class Texture2D {
 
     TextureFormat m_TextureFormat;
 
-    public Texture2D(ObjectReader o) {
+    public Texture2D(ObjectReader o) throws IOException {
         this.reader = o.reader;
         reader.setPosition((int) o.byte_start);
 
@@ -131,7 +132,7 @@ public class Texture2D {
 //        } // # 5.3 and up end
     }
 
-    private void gLTextureSettings() {
+    private void gLTextureSettings() throws IOException {
         m_FilterMode = reader.readInt();
         m_Aniso = reader.readInt();
         m_MipBias = reader.readFloat();
@@ -140,7 +141,7 @@ public class Texture2D {
         m_WrapW = reader.readInt();
     }
 
-    private void streamingInfo() {
+    private void streamingInfo() throws IOException {
         offset = reader.readLong();
         size = reader.readUnsignedInt();
         path = reader.readAlignedString();

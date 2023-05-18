@@ -2,6 +2,7 @@ package assets.resextractor;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -16,7 +17,7 @@ public class SpriteAtlas {
     int m_render_data_map_size;
     RenderDataMap[] m_RenderDataMap;
 
-    public SpriteAtlas(ObjectReader o) {
+    public SpriteAtlas(ObjectReader o) throws IOException {
         this.reader = o.reader;
         reader.setPosition((int) o.byte_start);
 
@@ -54,13 +55,13 @@ public class SpriteAtlas {
         int secondaryTexturesSize;
         SecondarySpriteTexture[] secondaryTextures;
 
-        public RenderDataMap() {
+        public RenderDataMap() throws IOException {
             first = reader.readByte(16);
             second = reader.readLong();
             spriteAtlasData();
         }
 
-        private void spriteAtlasData() {
+        private void spriteAtlasData() throws IOException {
             texture = new PPtr();
             alphaTexture = new PPtr();
             textureRect = new Rectangle();
@@ -86,7 +87,7 @@ public class SpriteAtlas {
 //            }
         }
 
-        private void spriteSettings() {
+        private void spriteSettings() throws IOException {
             settingsRaw = reader.readUnsignedInt();
             packed = settingsRaw & 1;
 //            packingMode = SpritePackingMode((self.settingsRaw >> 1) & 1)  #1
@@ -135,7 +136,7 @@ public class SpriteAtlas {
         PPtr texture;
         String name;
 
-        public SecondarySpriteTexture() {
+        public SecondarySpriteTexture() throws IOException {
             texture = new PPtr();
             name = reader.readStringToNull();
         }
@@ -152,7 +153,7 @@ public class SpriteAtlas {
         int file_id;
         long path_id;
 
-        public PPtr() {
+        public PPtr() throws IOException {
             file_id = reader.readInt();
 //            if(_version < 14) {
 //                p.path_id = reader.readInt();
