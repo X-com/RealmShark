@@ -11,22 +11,16 @@ public class ChangeAllyShootPacket extends Packet {
      * Whether the server will send ally projectiles.
      * 0 = disable, 1 = enable.
      */
-    public int toggle;
-    /**
-     * Unknown
-     */
-    public short unknownShort;
+    public int isEnabledIfOne;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
-        toggle = buffer.readInt();
-        unknownShort = buffer.readShort();
+        isEnabledIfOne = buffer.readInt();
     }
 
     @Override
     public String toString() {
         return "ChangeAllyShootPacket{" +
-                "\n   toggle=" + toggle +
-                "\n   unknownShort=" + unknownShort;
+                "\n   toggle=" + isEnabledIfOne;
     }
 }

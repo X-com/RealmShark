@@ -9,18 +9,24 @@ import packets.reader.BufferReader;
  */
 public class ShootAckCounterPacket extends Packet {
     /**
-     * Unknown Int.
+     * Time
      */
-    public int unknownInt;
+    public int time;
+    /**
+     * Enemy shots ACKed
+     */
+    public short ack;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
-        unknownInt = buffer.readInt();
+        time = buffer.readInt();
+        ack = buffer.readShort();
     }
 
     @Override
     public String toString() {
         return "ShootAckCounterPacket{" +
-                "\n   unknownInt=" + unknownInt;
+                "\n   time=" + time +
+                "\n   ack=" + ack;
     }
 }

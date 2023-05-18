@@ -140,8 +140,8 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
                      FORGE_REQUEST(118, Outgoing, ForgeRequestPacket::new),
                       FORGE_RESULT(119, Incoming, ForgeResultPacket::new),
          FORGE_UNLOCKED_BLUEPRINTS(120, Incoming, ForgeUnlockedBlueprints::new),
-                  CHANGE_ALLYSHOOT(121, Outgoing, ChangeAllyShootPacket::new),
-                 SHOOT_ACK_COUNTER(122, Outgoing, ShootAckCounterPacket::new),
+                 SHOOT_ACK_COUNTER(121, Outgoing, ShootAckCounterPacket::new),
+                  CHANGE_ALLYSHOOT(122, Outgoing, ChangeAllyShootPacket::new),
           GET_PLAYERS_LIST_MESSAGE(123, Outgoing, GetPlayersListPacket::new),
           MODERATOR_ACTION_MESSAGE(124, Outgoing, ModeratorActionMessagePacket::new),
                         // Missing
