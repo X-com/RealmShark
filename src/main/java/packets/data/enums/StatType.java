@@ -28,8 +28,8 @@ public enum StatType {
     DEFENSE_STAT(21),
     SPEED_STAT(22),
     UNKNOWN23(23),
-    UNKNOWN24(24),
-    UNKNOWN25(25),
+    SEASONAL(24),
+    SKIN_ID(25),
     VITALITY_STAT(26),
     WISDOM_STAT(27),
     DEXTERITY_STAT(28),
@@ -129,7 +129,7 @@ public enum StatType {
     UNKNOWN122(122),
     UNKNOWN123(123),
     UNKNOWN124(124),
-    UNKNOWN125(125),
+    ANIMATION_ID(125),
     UNKNOWN126(126);
 
     private final int index;
