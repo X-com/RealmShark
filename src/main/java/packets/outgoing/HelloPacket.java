@@ -40,17 +40,17 @@ public class HelloPacket extends Packet {
      */
     public String playPlatform;
     /**
-     * > Unknown
+     * Steam token used to verify steam user verification
      */
     public String platformToken;
-    /**
-     * > Unknown
-     */
-    public String userToken;
     /**
      * The client token (hwid) of the Unity client
      */
     public String clientToken;
+    /**
+     * Hardcoded token string
+     */
+    public String userToken;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
@@ -62,8 +62,8 @@ public class HelloPacket extends Packet {
         userPlatform = buffer.readString();
         playPlatform = buffer.readString();
         platformToken = buffer.readString();
-        userToken = buffer.readString();
         clientToken = buffer.readString();
+        userToken = buffer.readString();
     }
 
     @Override
