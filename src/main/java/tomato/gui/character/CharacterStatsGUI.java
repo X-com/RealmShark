@@ -20,15 +20,18 @@ import java.util.Comparator;
  */
 public class CharacterStatsGUI extends JPanel {
     private static CharacterStatsGUI INSTANCE;
-    private final JPanel top, left, right;
+    private final JPanel left, right;
+    private final int dungeonCount;
     private boolean sortOrder;
     private final TomatoData data;
+    private int charCount;
+    private JLabel[][] labels;
 
     public CharacterStatsGUI(TomatoData data) {
         INSTANCE = this;
         this.data = data;
 
-        top = new JPanel();
+        JPanel top = new JPanel();
         left = new JPanel();
         right = new JPanel();
         JPanel topLeft = new JPanel();
@@ -62,50 +65,19 @@ public class CharacterStatsGUI extends JPanel {
 
         ToolTipManager.sharedInstance().setInitialDelay(200);
         ToolTipManager.sharedInstance().setDismissDelay(1000000000);
+
+        dungeonCount = CharacterStatistics.DUNGEONS.size();
+
+        topDungeonList(top);
     }
 
     /**
-     * Method for receiving realm character list info.
+     * Creates top panel dungeon list;
+     *
+     * @param top Panel to add dungeon icons to.
      */
-    public static void updateRealmChars() {
-        INSTANCE.update();
-    }
-
-    /**
-     * Update method clearing all the display and re-display it with the updated info.
-     */
-    private void update() {
-        if (data.chars == null) return;
-
-        top.removeAll();
-        left.removeAll();
-        right.removeAll();
-
-        int dungeonCount = data.chars.get(0).charStats.dungeonStats.length;
-        int charCount = data.chars.size();
+    private void topDungeonList(JPanel top) {
         top.setLayout(new GridLayout(1, dungeonCount));
-        left.setLayout(new GridLayout(charCount, 1));
-        right.setLayout(new GridLayout(charCount, dungeonCount));
-
-        for (int i = 0; i < charCount; i++) {
-            RealmCharacter c = data.chars.get(i);
-            JLabel player = playerIcon(c);
-            JPanel p = new JPanel(new GridBagLayout());
-            p.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.BLACK));
-            p.setPreferredSize(new Dimension(150, 27));
-            p.add(player);
-
-            left.add(p);
-
-            for (int j = 0; j < dungeonCount; j++) {
-                int v = c.charStats.dungeonStats[j];
-                JPanel p2 = new JPanel();
-                p2.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.BLACK));
-                p2.add(new JLabel("" + v));
-                p2.setPreferredSize(new Dimension(35, 27));
-                right.add(p2);
-            }
-        }
 
         for (int j = 0; j < dungeonCount; j++) {
             BufferedImage img;
@@ -142,7 +114,90 @@ public class CharacterStatsGUI extends JPanel {
             p.setPreferredSize(new Dimension(35, 37));
             top.add(p);
         }
-        validate();
+    }
+
+    /**
+     * Method for receiving realm character list info.
+     */
+    public static void updateRealmChars() {
+        INSTANCE.update();
+    }
+
+    /**
+     * Update method clearing all the display and re-display it with the updated info.
+     */
+    private void update() {
+        if (data.chars == null) return;
+
+        int charCount = data.chars.size();
+
+        if (charCount != this.charCount) {
+            updatePanelWithPlayerListChanged();
+            updatePlayerList();
+            validate();
+        } else {
+            updateDungeonLabels();
+            updatePlayerList();
+            revalidate();
+        }
+    }
+
+    /**
+     * Updates dungeon labels with dungeon completes.
+     */
+    private void updateDungeonLabels() {
+        for (int i = 0; i < charCount; i++) {
+            RealmCharacter c = data.chars.get(i);
+
+            for (int j = 0; j < dungeonCount; j++) {
+                int v = c.charStats.dungeonStats[j];
+                labels[i][j].setText("" + v);
+            }
+        }
+    }
+
+    /**
+     * Updates player list on the left panel.
+     */
+    private void updatePlayerList() {
+        left.removeAll();
+
+        for (int i = 0; i < charCount; i++) {
+            RealmCharacter c = data.chars.get(i);
+            JLabel player = playerIcon(c);
+            JPanel p = new JPanel(new GridBagLayout());
+            p.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.BLACK));
+            p.setPreferredSize(new Dimension(150, 27));
+            p.add(player);
+
+            left.add(p);
+        }
+    }
+
+    /**
+     * Flushes player dungeon complete labels and rebuilds labels with corrected player list.
+     */
+    private void updatePanelWithPlayerListChanged() {
+        charCount = data.chars.size();
+
+        left.setLayout(new GridLayout(charCount, 1));
+        right.removeAll();
+        right.setLayout(new GridLayout(charCount, dungeonCount));
+        labels = new JLabel[charCount][dungeonCount];
+
+        for (int i = 0; i < charCount; i++) {
+            RealmCharacter c = data.chars.get(i);
+
+            for (int j = 0; j < dungeonCount; j++) {
+                int v = c.charStats.dungeonStats[j];
+                JPanel p2 = new JPanel();
+                p2.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.BLACK));
+                labels[i][j] = new JLabel("" + v);
+                p2.add(labels[i][j]);
+                p2.setPreferredSize(new Dimension(35, 27));
+                right.add(p2);
+            }
+        }
     }
 
     /**

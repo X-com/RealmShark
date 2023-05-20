@@ -47,7 +47,7 @@ public class NetworkState {
                 state.data.setNewRealm(p);
             } else if (packet instanceof CreateSuccessPacket) {
                 CreateSuccessPacket p = (CreateSuccessPacket) packet;
-                state.data.setUserId(p.objectId, p.charId);
+                state.data.setUserId(p.objectId, p.charId, p.str);
             } else if (packet instanceof ExaltationUpdatePacket) {
                 ExaltationUpdatePacket p = (ExaltationUpdatePacket) packet;
                 state.data.exaltUpdate(p);

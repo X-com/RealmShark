@@ -55,7 +55,7 @@ public class TomatoPacketCapture implements Controller {
             data.setNewRealm(p);
         } else if (packet instanceof CreateSuccessPacket) {
             CreateSuccessPacket p = (CreateSuccessPacket) packet;
-            data.setUserId(p.objectId, p.charId);
+            data.setUserId(p.objectId, p.charId, p.str);
         } else if (packet instanceof ExaltationUpdatePacket) {
             ExaltationUpdatePacket p = (ExaltationUpdatePacket) packet;
             data.exaltUpdate(p);

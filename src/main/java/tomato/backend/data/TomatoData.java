@@ -6,8 +6,10 @@ import packets.outgoing.EnemyHitPacket;
 import packets.outgoing.PlayerShootPacket;
 import tomato.gui.character.CharacterExaltGUI;
 import tomato.gui.character.CharacterPanelGUI;
+import tomato.gui.character.CharacterStatsGUI;
 import tomato.realmshark.HttpCharListRequest;
 import tomato.realmshark.RealmCharacter;
+import tomato.realmshark.RealmCharacterStats;
 import tomato.realmshark.enums.CharacterClass;
 import util.RNG;
 
@@ -39,6 +41,7 @@ public class TomatoData {
     public VaultData seasonalVault = new VaultData();
     public boolean vaultDataRecievedSeasonal, vaultDataRecievedRegular, characterDataRecieved;
     public ArrayList<RealmCharacter> chars;
+    public HashMap<Integer, RealmCharacter> charMap;
 
     /**
      * Sets the current realm.
@@ -56,10 +59,23 @@ public class TomatoData {
      *
      * @param objectId ID of the object in the world.
      * @param charId   Current character id loaded.
+     * @param str
      */
-    public void setUserId(int objectId, int charId) {
+    public void setUserId(int objectId, int charId, String str) {
         this.worldPlayerId = objectId;
         this.charId = charId;
+        updateDungeonStats(charId, str);
+    }
+
+    private void updateDungeonStats(int charId, String str) {
+        if (charMap == null) return;
+        RealmCharacter r = charMap.get(charId);
+        RealmCharacterStats newStats = new RealmCharacterStats();
+        newStats.decode(str);
+        if (!Arrays.equals(newStats.dungeonStats, r.charStats.dungeonStats)) {
+            r.charStats = newStats;
+            CharacterStatsGUI.updateRealmChars();
+        }
     }
 
     /**
@@ -111,7 +127,7 @@ public class TomatoData {
             playerList.put(id, entity);
             if (id == worldPlayerId) {
                 player = entity;
-                entity.setUser(true);
+                entity.setUser(charId);
             }
         }
     }
@@ -288,6 +304,10 @@ public class TomatoData {
     public void characterListUpdate(ArrayList<RealmCharacter> chars) {
         characterDataRecieved = true;
         this.chars = chars;
+        charMap = new HashMap<>();
+        for (RealmCharacter r : chars) {
+            charMap.put(r.charId, r);
+        }
         seasonalVault.clearChar();
         regularVault.clearChar();
         for (RealmCharacter c : chars) {

@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
  */
 public class VaultData {
 
-    private ArrayList<Integer> giftContents;
-    private ArrayList<Integer> chestContents;
-    private ArrayList<Integer> potionContents;
+    private final ArrayList<Integer> giftContents;
+    private final ArrayList<Integer> chestContents;
+    private final ArrayList<Integer> potionContents;
     private final HashMap<Integer, Integer> potsCharacterInventoryVault;
     private final HashMap<Integer, Integer> potsChestVault;
     private final HashMap<Integer, Integer> potsPotVault;

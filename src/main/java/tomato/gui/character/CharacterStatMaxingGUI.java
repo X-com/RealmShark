@@ -138,49 +138,6 @@ public class CharacterStatMaxingGUI extends JPanel {
     }
 
     /**
-     * Box at the bottom of the players displaying missing exalts.
-     */
-    private void exaltBox(JPanel boxExalt) {
-        boxExalt.removeAll();
-        int[] exalts = new int[8];
-        for (CharacterClass cc : CharacterClass.CHAR_CLASS_LIST) {
-            int[] charExalt = RealmCharacter.exalts.get(cc.getId());
-            if (charExalt == null) return;
-            for (int i = 0; i < 8; i++) {
-                exalts[i] += Math.max(75 - charExalt[i], 0);
-            }
-        }
-        JPanel panelLeft = CharacterPanelGUI.createLeftBox();
-        boxExalt.add(panelLeft);
-        panelLeft.add(Box.createVerticalGlue());
-        panelLeft.add(new JLabel("Missing exalts"));
-        panelLeft.add(Box.createVerticalGlue());
-        JPanel panelTop = new JPanel();
-        JPanel panelMid = new JPanel();
-        JPanel panelBot = new JPanel();
-        boxExalt.add(CharacterPanelGUI.createMidRightBox(panelTop, panelMid, panelBot));
-        panelTop.add(Box.createHorizontalGlue());
-        panelTop.add(new JLabel("Life: " + exalts[7]));
-        panelTop.add(Box.createHorizontalGlue());
-        panelTop.add(new JLabel("Mana: " + exalts[6]));
-        panelTop.add(Box.createHorizontalGlue());
-        panelMid.add(Box.createHorizontalGlue());
-        panelMid.add(new JLabel("Atk: " + exalts[5]));
-        panelMid.add(Box.createHorizontalGlue());
-        panelMid.add(new JLabel("Def: " + exalts[4]));
-        panelMid.add(Box.createHorizontalGlue());
-        panelMid.add(new JLabel("Spd: " + exalts[1]));
-        panelMid.add(Box.createHorizontalGlue());
-        panelBot.add(Box.createHorizontalGlue());
-        panelBot.add(new JLabel("Dex: " + exalts[0]));
-        panelBot.add(Box.createHorizontalGlue());
-        panelBot.add(new JLabel("Vit: " + exalts[2]));
-        panelBot.add(Box.createHorizontalGlue());
-        panelBot.add(new JLabel("Wis: " + exalts[3]));
-        panelBot.add(Box.createHorizontalGlue());
-    }
-
-    /**
      * Top pots missing display in the stat maxing tab.
      */
     private JPanel missingPotsPanel() {

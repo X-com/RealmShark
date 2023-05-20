@@ -4,6 +4,8 @@ import assets.AssetMissingException;
 import assets.IdToAsset;
 import packets.data.ObjectStatusData;
 import packets.data.WorldPosData;
+import tomato.gui.character.CharacterStatMaxingGUI;
+import tomato.realmshark.RealmCharacter;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,15 +14,18 @@ public class Entity {
     private boolean isUser;
     public final Stat stat;
     private final TomatoData tomatoData;
-    private int id;
+    private final int id;
     private int objectType;
     private long creationTime;
     private WorldPosData pos;
-    private ArrayList<ObjectStatusData> statUpdates;
-    private ArrayList<Damage> damageList;
-    private HashMap<Integer, Damage> damagePlayer;
+    private final ArrayList<ObjectStatusData> statUpdates;
+    private final ArrayList<Damage> damageList;
+    private final HashMap<Integer, Damage> damagePlayer;
     private String name;
     private long lastDamageTaken;
+    private int charId;
+    private int type;
+    private int[] baseStats;
 
     public Entity(TomatoData tomatoData, int id, long time) {
         this.tomatoData = tomatoData;
@@ -34,6 +39,7 @@ public class Entity {
 
     public void entityUpdate(int type, ObjectStatusData status, long time) {
         updateStats(status, time);
+        this.type = type;
         try {
             name = IdToAsset.objectName(type);
         } catch (AssetMissingException e) {
@@ -45,6 +51,12 @@ public class Entity {
     public void updateStats(ObjectStatusData status, long time) {
         statUpdates.add(status);
         stat.setStats(status.stats);
+        if (status.stats.length > 0) {
+            if (baseStats != null) {
+                fame();
+                tomatoData.player.charStat(charId, calculateBaseStats());
+            }
+        }
     }
 
     public int maxHp() {
@@ -118,7 +130,7 @@ public class Entity {
 
     private void bossPhaseDamage(Damage damage) {
         damage.walledGardenReflectors = objectType == 29039 && stat.UNKNOWN125 != null && (stat.UNKNOWN125.statValue == -123818367 && tomatoData.floorPlanCrystals() == 12);
-        damage.chancellorDammahDmg = objectType == 9635 && !damage.dammahCountered;
+        damage.chancellorDammahDmg = objectType == 9635 && !Damage.dammahCountered;
     }
 
     public String name() {
@@ -142,7 +154,73 @@ public class Entity {
         return isUser;
     }
 
-    public void setUser(boolean b) {
-        isUser = b;
+    public void setUser(int charId) {
+        isUser = true;
+        this.charId = charId;
+        baseStats = calculateBaseStats();
+    }
+
+    private int[] calculateBaseStats() {
+        int[] base = new int[8];
+
+        base[0] = stat.MAX_HP_STAT.statValue - stat.MAX_HP_BOOST_STAT.statValue;
+        base[1] = stat.MAX_MP_STAT.statValue - stat.MAX_MP_BOOST_STAT.statValue;
+        base[2] = stat.ATTACK_STAT.statValue - stat.ATTACK_BOOST_STAT.statValue;
+        base[3] = stat.DEFENSE_STAT.statValue - stat.DEFENSE_BOOST_STAT.statValue;
+        base[4] = stat.SPEED_STAT.statValue - stat.SPEED_BOOST_STAT.statValue;
+        base[5] = stat.DEXTERITY_STAT.statValue - stat.DEXTERITY_BOOST_STAT.statValue;
+        base[6] = stat.VITALITY_STAT.statValue - stat.VITALITY_BOOST_STAT.statValue;
+        base[7] = stat.WISDOM_STAT.statValue - stat.WISDOM_BOOST_STAT.statValue;
+
+        return base;
+    }
+
+    /**
+     * Fame update from experience points.
+     */
+    private void fame() {
+        long f = Long.parseLong(stat.EXP_STAT.stringStatValue);
+        long fame = (f + 40071) / 2000;
+        if (tomatoData.charMap != null) {
+            RealmCharacter r = tomatoData.charMap.get(charId);
+            r.fame = fame;
+        }
+    }
+
+    /**
+     * Updates player stats when drinking potions.
+     *
+     * @param charId User character id that is loaded in.
+     * @param stats  Current base stats of user character.
+     */
+    public void charStat(int charId, int[] stats) {
+        if (tomatoData.charMap == null) return;
+        RealmCharacter r = tomatoData.charMap.get(charId);
+
+        if (r.hp != stats[0]) {
+            r.hp = stats[0];
+            CharacterStatMaxingGUI.updateRealmChars();
+        } else if (r.mp != stats[1]) {
+            r.mp = stats[1];
+            CharacterStatMaxingGUI.updateRealmChars();
+        } else if (r.atk != stats[2]) {
+            r.atk = stats[2];
+            CharacterStatMaxingGUI.updateRealmChars();
+        } else if (r.def != stats[3]) {
+            r.def = stats[3];
+            CharacterStatMaxingGUI.updateRealmChars();
+        } else if (r.spd != stats[4]) {
+            r.spd = stats[4];
+            CharacterStatMaxingGUI.updateRealmChars();
+        } else if (r.dex != stats[5]) {
+            r.dex = stats[5];
+            CharacterStatMaxingGUI.updateRealmChars();
+        } else if (r.vit != stats[6]) {
+            r.vit = stats[6];
+            CharacterStatMaxingGUI.updateRealmChars();
+        } else if (r.wis != stats[7]) {
+            r.wis = stats[7];
+            CharacterStatMaxingGUI.updateRealmChars();
+        }
     }
 }
