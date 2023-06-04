@@ -10,6 +10,7 @@ import packets.outgoing.*;
 import packets.outgoing.pets.ActivePetUpdateRequestPacket;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.register.Register;
+import util.Util;
 
 import java.awt.*;
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ public class PacketRead {
     public static int ip = 0;
 
     public static void main(String[] args) {
+        Util.saveLogs = false;
         Register.INSTANCE.registerAll(PacketRead::readAll);
         PacketProcessor packetProcessor = new PacketProcessor();
         packetProcessor.start();

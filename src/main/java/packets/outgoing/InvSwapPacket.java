@@ -14,10 +14,6 @@ public class InvSwapPacket extends Packet {
      */
     public int time;
     /**
-     * The current client position.
-     */
-    public WorldPosData position;
-    /**
      * The slot to swap from.
      */
     public SlotObjectData slotFrom;
@@ -29,16 +25,14 @@ public class InvSwapPacket extends Packet {
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
         time = buffer.readInt();
-        position = new WorldPosData().deserialize(buffer);
         slotFrom = new SlotObjectData().deserialize(buffer);
-        slotTo  = new SlotObjectData().deserialize(buffer);
+        slotTo = new SlotObjectData().deserialize(buffer);
     }
 
     @Override
     public String toString() {
         return "InvSwapPacket{" +
                 "\n   time=" + time +
-                "\n   position=" + position +
                 "\n   slotFrom=" + slotFrom +
                 "\n   slotTo=" + slotTo;
     }
