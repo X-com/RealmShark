@@ -347,7 +347,7 @@ public class DataModel {
             LocalDateTime dateTime = LocalDateTime.now();
             String time = dateTimeFormat.format(dateTime);
             String dungeon = inRealm ? ("Realm " + serverName + " " + realmName) : mapPacketData.name;
-            String name = "mapData/" + dungeon + "." + time + ".mapdata-";
+            String name = "mapData/" + dungeon + "." + time + ".mapdata2-";
             Util.print(name, dungeon);
             Util.print(name, mapPacketData.toString());
             if (inRealm) Util.print(name, "MapIndex:" + (mapIndex + 1));
@@ -366,7 +366,7 @@ public class DataModel {
                 for (StatData sd : od.status.stats) {
                     s.append(";").append(sd.statValue).append(";").append(sd.statValueTwo).append(";").append(sd.stringStatValue).append(";").append(sd.statTypeNum);
                 }
-                Util.print(name, String.format("%d:%f:%f:%s", od.objectType, od.status.pos.x, od.status.pos.y, s.substring(1)));
+                Util.print(name, String.format("%d:%d:%f:%f:%s", od.status.objectId, od.objectType, od.status.pos.x, od.status.pos.y, s.substring(1)));
             }
             System.out.println("done");
             for (int[] row : mapTiles) {
