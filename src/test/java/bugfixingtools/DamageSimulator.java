@@ -1,6 +1,8 @@
 package bugfixingtools;
 
 //import tomato.damagecalc.DpsLogger;
+import assets.AssetMissingException;
+import assets.IdToAsset;
 import packets.Packet;
 import packets.PacketType;
 import packets.data.StatData;
@@ -9,7 +11,6 @@ import packets.incoming.NewTickPacket;
 import packets.incoming.TextPacket;
 import packets.incoming.UpdatePacket;
 import packets.reader.BufferReader;
-import util.IdToName;
 import util.Pair;
 
 import java.io.*;
@@ -451,7 +452,11 @@ public class DamageSimulator {
                 if (inv[inventory].size() == 0) {
                     s += "  ";
                 } else if (inv[inventory].size() == 1) {
-                    s += String.format("%s %.1fsec %s\n", IdToName.objectName(inv[inventory].get(0).left().statValue), (float) (endServerTime - firstServertime) / 1000, "100% Equipped:1 ");
+                    try {
+                        s += String.format("%s %.1fsec %s\n", IdToAsset.objectName(inv[inventory].get(0).left().statValue), (float) (endServerTime - firstServertime) / 1000, "100% Equipped:1 ");
+                    } catch (AssetMissingException e) {
+                        throw new RuntimeException(e);
+                    }
                 } else {
                     HashMap<Integer, Equipment> gear = new HashMap<>();
                     Pair<StatData, Long> pair2 = null;
@@ -472,7 +477,11 @@ public class DamageSimulator {
 
                     Stream<Map.Entry<Integer, Equipment>> sorted2 = gear.entrySet().stream().sorted(comparingByValue());
                     for (Map.Entry<Integer, Equipment> m : sorted2.collect(Collectors.toList())) {
-                        s += String.format("%s %.1fsec %.2f%% Equipped:%d ,", IdToName.objectName(m.getKey()), ((float) m.getValue().time / 1000), ((float) m.getValue().time * 100 / totalTime), m.getValue().swaps);
+                        try {
+                            s += String.format("%s %.1fsec %.2f%% Equipped:%d ,", IdToAsset.objectName(m.getKey()), ((float) m.getValue().time / 1000), ((float) m.getValue().time * 100 / totalTime), m.getValue().swaps);
+                        } catch (AssetMissingException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
                 s = s.substring(0, s.length() - 2);
@@ -494,7 +503,11 @@ public class DamageSimulator {
 
         @Override
         public String toString() {
-            return IdToName.objectName(objectType);
+            try {
+                return IdToAsset.objectName(objectType);
+            } catch (AssetMissingException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

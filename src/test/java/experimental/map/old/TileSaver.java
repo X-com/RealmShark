@@ -1,14 +1,15 @@
 package experimental.map.old;
 
+import assets.AssetMissingException;
+import assets.ImageBuffer;
+import assets.SpriteJson;
 import packets.Packet;
 import packets.data.GroundTileData;
 import packets.incoming.MapInfoPacket;
 import packets.incoming.UpdatePacket;
 import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.register.Register;
-import util.ImageBuffer;
 import util.Pair;
-import util.SpriteJson;
 import util.Util;
 
 import javax.imageio.ImageIO;
@@ -251,7 +252,11 @@ public class TileSaver {
 //                    if (id == 45680) continue;
 //                    if (id == 45683) continue;
 //                    bi.setRGB(x, y, colors[id]);
-                    bi.setRGB(x, y, ImageBuffer.getColor(id));
+                    try {
+                        bi.setRGB(x, y, ImageBuffer.getColor(id));
+                    } catch (AssetMissingException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
 //                    if(x+70 >= bi.getWidth()) continue;
 //                    if(y+80 >= bi.getHeight()) continue;

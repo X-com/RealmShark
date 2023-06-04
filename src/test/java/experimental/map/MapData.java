@@ -1,6 +1,7 @@
 package experimental.map;
 
-import util.ImageBuffer;
+import assets.AssetMissingException;
+import assets.ImageBuffer;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -41,7 +42,12 @@ public class MapData {
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles[0].length; j++) {
                 if (tiles[i][j] != 0) {
-                    int color = ImageBuffer.getColor(tiles[i][j]);
+                    int color = 0;
+                    try {
+                        color = ImageBuffer.getColor(tiles[i][j]);
+                    } catch (AssetMissingException e) {
+                        throw new RuntimeException(e);
+                    }
                     bi.setRGB(i, j, color);
                 }
             }

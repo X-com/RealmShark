@@ -59,7 +59,7 @@ public class TextRendererTest {
         Vector4f color = new Vector4f(0.75f, 0.75f, 0.75f, 1);
         float v = 0;
 
-        TextRenderer completelyUnnecessaryObject = new TextRenderer(new Matrix4f().ortho(0, WIDTH, 0, HEIGHT, -1, 1));
+//        TextRenderer completelyUnnecessaryObject = new TextRenderer(new Matrix4f().ortho(0, WIDTH, 0, HEIGHT, -1, 1));
 
         do {
             v += 0.01f;

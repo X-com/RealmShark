@@ -1,13 +1,14 @@
 package experimental.map.old;
 
+import assets.AssetMissingException;
+import assets.IdToAsset;
+import assets.ImageBuffer;
 import packets.data.GroundTileData;
 import packets.data.StatData;
 import packets.data.enums.StatType;
 import potato.model.data.IdData;
 import potato.model.Bootloader;
 import potato.model.HeroLocations;
-import util.IdToName;
-import util.ImageBuffer;
 import util.Pair;
 import util.Util;
 
@@ -284,7 +285,12 @@ public class SetPieces extends JFrame {
     }
 
     private int getColor(int id) {
-        int color = ImageBuffer.getColor(id);
+        int color = 0;
+        try {
+            color = ImageBuffer.getColor(id);
+        } catch (AssetMissingException e) {
+            throw new RuntimeException(e);
+        }
         if (id == IdData.ENT_CHERRY_TREE) color = Color.PINK.getRGB();
         if (id == IdData.GRAY_WALL) color = Color.GRAY.getRGB();
         if (id == IdData.LAVA_PATH) color = Color.YELLOW.getRGB();
@@ -317,7 +323,11 @@ public class SetPieces extends JFrame {
                 if (tileCheck(type, id)) {
 //                    if (shape.left().contains("cyclops")){
                     if (count > 4) {
-                        System.out.println(shape.left() + " " + count + " " + IdToName.tileName(id) + " " + id + " " + xx + " " + yy);
+                        try {
+                            System.out.println(shape.left() + " " + count + " " + IdToAsset.tileName(id) + " " + id + " " + xx + " " + yy);
+                        } catch (AssetMissingException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                     found = false;
                     break;
@@ -620,7 +630,11 @@ public class SetPieces extends JFrame {
 
         @Override
         public String toString() {
-            return "Entity{" + "\n   type=" + type + " " + IdToName.objectName(type) + "\n   x=" + x + "\n   y=" + y + "\n   stats=" + Arrays.toString(stats);
+            try {
+                return "Entity{" + "\n   type=" + type + " " + IdToAsset.objectName(type) + "\n   x=" + x + "\n   y=" + y + "\n   stats=" + Arrays.toString(stats);
+            } catch (AssetMissingException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         public double dist(float x, float y) {

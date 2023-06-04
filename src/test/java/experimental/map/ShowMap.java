@@ -1,6 +1,7 @@
 package experimental.map;
 
-import util.ImageBuffer;
+import assets.AssetMissingException;
+import assets.ImageBuffer;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -105,7 +106,11 @@ public class ShowMap {
         for (int x = 0; x < bi.getWidth(); x++) {
             for (int y = 0; y < bi.getHeight(); y++) {
                 int id = map.mapArray[x][y];
-                bi.setRGB(x, y, ImageBuffer.getColor(id));
+                try {
+                    bi.setRGB(x, y, ImageBuffer.getColor(id));
+                } catch (AssetMissingException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 

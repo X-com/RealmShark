@@ -1,8 +1,9 @@
 package experimental.map;
 
+import assets.AssetMissingException;
+import assets.IdToAsset;
 import packets.data.StatData;
 import packets.data.enums.StatType;
-import util.IdToName;
 
 import java.util.Arrays;
 
@@ -31,11 +32,15 @@ public class Entity {
 
     @Override
     public String toString() {
-        return "Entity{" +
-                "\n   type=" + type + " " + IdToName.objectName(type) +
-                "\n   x=" + x +
-                "\n   y=" + y +
-                "\n   stats=" + Arrays.toString(stats);
+        try {
+            return "Entity{" +
+                    "\n   type=" + type + " " + IdToAsset.objectName(type) +
+                    "\n   x=" + x +
+                    "\n   y=" + y +
+                    "\n   stats=" + Arrays.toString(stats);
+        } catch (AssetMissingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public double dist(float x, float y) {

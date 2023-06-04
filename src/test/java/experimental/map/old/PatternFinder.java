@@ -1,5 +1,8 @@
 package experimental.map.old;
 
+import assets.AssetMissingException;
+import assets.IdToAsset;
+import assets.ImageBuffer;
 import experimental.SpiralOut;
 import packets.data.GroundTileData;
 import packets.data.StatData;
@@ -7,8 +10,6 @@ import packets.data.enums.StatType;
 import potato.model.data.IdData;
 import potato.model.Bootloader;
 import potato.model.HeroLocations;
-import util.IdToName;
-import util.ImageBuffer;
 import util.Pair;
 import util.Util;
 
@@ -401,7 +402,11 @@ public class PatternFinder {
         if (false) {
             for (int i = 0; i < 20; i++) {
                 int a = mapArray[627 + i][893];
-                System.out.println(a + " " + IdToName.tileName(a));
+                try {
+                    System.out.println(a + " " + IdToAsset.tileName(a));
+                } catch (AssetMissingException e) {
+                    throw new RuntimeException(e);
+                }
             }
 //            for(int i = 0; i < para2.length; i+=2){
 //                int x = para2[i];
@@ -559,7 +564,11 @@ public class PatternFinder {
         for (int x = 0; x < bi.getWidth(); x++) {
             for (int y = 0; y < bi.getHeight(); y++) {
                 int id = mapArray[x][y];
-                bi.setRGB(x, y, ImageBuffer.getColor(id));
+                try {
+                    bi.setRGB(x, y, ImageBuffer.getColor(id));
+                } catch (AssetMissingException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
         Graphics g = bi.getGraphics();
@@ -713,11 +722,15 @@ public class PatternFinder {
 
         @Override
         public String toString() {
-            return "Entity{" +
-                    "\n   type=" + type + " " + IdToName.objectName(type) +
-                    "\n   x=" + x +
-                    "\n   y=" + y +
-                    "\n   stats=" + Arrays.toString(stats);
+            try {
+                return "Entity{" +
+                        "\n   type=" + type + " " + IdToAsset.objectName(type) +
+                        "\n   x=" + x +
+                        "\n   y=" + y +
+                        "\n   stats=" + Arrays.toString(stats);
+            } catch (AssetMissingException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         public double dist(float x, float y) {
