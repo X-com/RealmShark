@@ -1,0 +1,28 @@
+package potato.model.data;
+
+import packets.data.WorldPosData;
+
+public class Entity {
+    public float x;
+    public float y;
+    public String shape;
+
+    public Entity(float x, float y, String s) {
+        this.x = x;
+        this.y = y;
+        shape = s;
+    }
+
+    public void move(WorldPosData pos) {
+        this.x = pos.x;
+        this.y = pos.y;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+}

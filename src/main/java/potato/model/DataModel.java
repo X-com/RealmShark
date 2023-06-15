@@ -4,6 +4,7 @@ import packets.data.*;
 import packets.incoming.MapInfoPacket;
 import packets.incoming.QuestObjectIdPacket;
 import packets.incoming.TextPacket;
+import potato.model.data.Entity;
 import potato.view.opengl.OpenGLPotato;
 import potato.control.InputController;
 import potato.control.ScreenLocatorController;
@@ -25,13 +26,13 @@ public class DataModel {
     private final InputController mouse;
     private final ScreenLocatorController locator;
 
-    private int zoom = 0;
     public float playerX;
     public float playerY;
 
     private long serverTime;
     private int heroesLeft = 0;
     private boolean inRealm = false;
+    private boolean isShatters = false;
 
     private boolean newRealmCheck = false;
     private long seed;
@@ -41,6 +42,7 @@ public class DataModel {
 
     private final HashSet<Integer>[] mapTileData;
     private final ArrayList<HeroLocations>[] mapHeroes;
+    private final HashMap<Integer, Entity> entityList;
     private int mapIndex = 0;
     private String realmName = "";
     private String serverName = "";
@@ -89,6 +91,10 @@ public class DataModel {
         return mapHeroes[mapIndex];
     }
 
+    public HashMap<Integer, Entity> mapEntitys() {
+        return entityList;
+    }
+
     public void updateText(TextPacket p) {
         if (p.text.contains("oryx_closed_realm")) {
             castleTimer = serverTime + 130000;
@@ -130,7 +136,7 @@ public class DataModel {
 
     public void initSynch(int mapIndex, int[] markers) {
         this.mapIndex = mapIndex;
-        for (int i = 0; i < mapHeroes[this.mapIndex].size(); i++) {
+        for (int i = 0; i < mapHeroes[this.mapIndex].size() && i < markers.length; i++) {
             mapHeroes[this.mapIndex].get(i).setMarker(markers[i], false);
         }
         renderer.setMap(mapIndex);
@@ -192,6 +198,7 @@ public class DataModel {
         for (int i = 0; i < mapHeroes[mapIndex].size(); i++) {
             mapHeroes[mapIndex].get(i).setMarker(0, true);
         }
+        entityList.clear();
         heroDetect.reset();
     }
 
@@ -320,10 +327,33 @@ public class DataModel {
                 allEntitys.put(od.status.objectId, od);
             }
         }
+        if (isShatters) {
+            for (ObjectData od : newObjects) {
+                if (od.objectType == 33445) { // Shatters Void Phantasm
+                    System.out.println("Shatters Void Phantasm added");
+                    addEntity(od, "e");
+                } else if (od.objectType == 29054) { // Shatters Village Switch
+                    System.out.println("Shatters Village Switch added");
+                    addEntity(od, "a");
+                }
+            }
+            for (int drop : drops) {
+                removeEntity(drop);
+            }
+        }
     }
 
     public void newTickUpdates(ObjectStatusData[] status) {
         heroDetect.newTickUpdates(status);
+        if (isShatters) {
+            for (ObjectStatusData osd : status) {
+                int objectId = osd.objectId;
+                if (entityList.containsKey(objectId)) {
+                    entityList.get(osd.objectId).move(osd.pos);
+                }
+            }
+            renderer.renderMap(true);
+        }
     }
 
     public void uploadSingleHero(HeroLocations h) {
@@ -383,7 +413,6 @@ public class DataModel {
                 }
                 Util.print(name, String.format("%d:%d:%f:%f:%s", od.status.objectId, od.objectType, od.status.pos.x, od.status.pos.y, s.substring(1)));
             }
-            System.out.println("done");
             for (int[] row : mapTiles) {
                 Arrays.fill(row, 0);
             }
@@ -396,5 +425,45 @@ public class DataModel {
         }
         mapPacketData = packet;
         saveData = filteredInstances(packet.displayName);
+    }
+
+    public boolean isShatters() {
+        return isShatters;
+    }
+
+    public void setInShatters(long s, long gameOpenedTime, int width, int height) {
+        isShatters = true;
+        seed = s;
+        openTime = gameOpenedTime;
+        entityList.clear();
+        mapWidth = width;
+        mapHeight = height;
+        setZoom(width);
+    }
+
+    public void addEntity(ObjectData od, String shape) {
+        entityList.put(od.status.objectId, new Entity(od.status.pos.x, od.status.pos.y, shape));
+    }
+
+    public void removeEntity(int id) {
+        entityList.remove(id);
+    }
+
+    private void setZoom(int mapSize) {
+        renderer.mapSize(mapSize);
+        zoom = 1f;
+        if (mapSize == 2048) {
+            zoomMax = 48f;
+            zoomStep = 7.8f;
+        } else if (mapSize == 512) {
+            zoomMax = 12f;
+            zoomStep = 1.8f;
+        } else if (mapSize == 256) {
+            zoomMax = 6f;
+            zoomStep = 1f;
+        } else if (mapSize == 128) {
+            zoomMax = 3f;
+            zoomStep = 1f;
+        }
     }
 }

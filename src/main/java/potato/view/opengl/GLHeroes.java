@@ -38,4 +38,15 @@ public class GLHeroes {
             }
         }
     }
+
+    public void drawShapes(HashMap<Integer, Entity> entitys, Matrix4f mvp, int mapSize) {
+        for (Entity hero : entitys.values()) {
+            float drawX = hero.getX();
+            float drawY = mapSize - hero.getY();
+
+            Matrix4f poseShape = new Matrix4f().translate(drawX, drawY, 0);
+            renderShape.drawText(hero.shape, poseShape.scale(Config.instance.shapeSize), mvp, zerozero, TextRenderer.TextBoundType.BOUNDING_BOX, white);
+//            System.out.println("draw " + drawX + " " + drawY);
+        }
+    }
 }

@@ -4,8 +4,10 @@ import packets.Packet;
 import packets.incoming.*;
 import packets.incoming.ip.IpAddress;
 import packets.outgoing.HelloPacket;
+import packets.outgoing.MovePacket;
 import potato.model.Config;
 import potato.model.DataModel;
+import potato.view.opengl.OpenGLPotato;
 
 public class PacketController {
 
@@ -17,7 +19,11 @@ public class PacketController {
     }
 
     public void packets(Packet packet) {
-        if (packet instanceof UpdatePacket) {
+        if (packet instanceof MovePacket) {
+            MovePacket p = (MovePacket) packet;
+            int size = p.records.length - 1;
+            model.setPlayerCoords(p.records[size].pos.x, p.records[size].pos.y);
+        } else if (packet instanceof UpdatePacket) {
             UpdatePacket p = (UpdatePacket) packet;
             model.newRealm(p.tiles, p.pos);
             if (p.pos.x != 0 && p.pos.y != 0) {
@@ -47,12 +53,15 @@ public class PacketController {
                 model.saveMap(p);
                 saving = Config.instance.saveMapInfo;
             }
+
+            model.checkNewNexus();
+            model.setRealmName(p.realmName);
+            model.reset();
+
             if (p.displayName.equals("{s.rotmg}")) {
-                model.setInRealm(p.realmName, p.seed, p.gameOpenedTime);
-            } else {
-                model.checkNewNexus();
-                model.setRealmName(p.realmName);
-                model.reset();
+                model.setInRealm(p.realmName, p.seed, p.gameOpenedTime, p.width, p.height);
+            } else if (p.displayName.equals("The Shatters")) {
+                model.setInShatters(p.seed, p.gameOpenedTime, p.width, p.height);
             }
         } else if (packet instanceof CreateSuccessPacket) {
             CreateSuccessPacket p = (CreateSuccessPacket) packet;
