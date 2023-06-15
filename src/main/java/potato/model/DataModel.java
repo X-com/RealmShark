@@ -56,8 +56,15 @@ public class DataModel {
 
     private final HashMap<Integer, ObjectData> allEntitys = new HashMap<>();
     private final int[][] mapTiles = new int[2048][2048];
+    private float mapWidth;
+    private float mapHeight;
+    private float zoomStep = 7.8f;
+    private float zoomMax = 48f;
+    private float zoom = 1f;
+
 
     public DataModel() {
+        entityList = new HashMap<>();
         mapHeroes = Bootloader.loadMapCoords();
         mapTileData = Bootloader.loadTiles();
 
@@ -136,8 +143,13 @@ public class DataModel {
     }
 
     public void editZoom(boolean zoomIn) {
-        if (!zoomIn && zoom > 0) zoom--;
-        else if (zoomIn && zoom < 6) zoom++;
+        if (!zoomIn) {
+            zoom += zoomStep;
+            if (zoom > zoomMax) zoom = zoomMax;
+        } else if (zoomIn) {
+            zoom -= zoomStep;
+            if (zoom < 1) zoom = 1f;
+        }
         renderer.setCamera(playerX, playerY, zoom);
     }
 
@@ -145,14 +157,16 @@ public class DataModel {
         renderer.setCamera(playerX, playerY, zoom);
     }
 
-    public void setInRealm(String name, long s, long gameOpenedTime) {
+    public void setInRealm(String name, long s, long gameOpenedTime, int width, int height) {
         newRealmCheck = true;
         inRealm = true;
-        zoom = 6;
         if (seed != s) castleTimer = 0;
         seed = s;
         openTime = gameOpenedTime;
+        mapWidth = width;
+        mapHeight = height;
         setRealmName(name);
+        setZoom(width);
     }
 
     public void setRealmName(String name) {
@@ -335,6 +349,7 @@ public class DataModel {
             case "Pet Yard": // pet yard
             case "{s.guildhall}": // guild hall
             case "{s.nexus}": // nexus
+            case "Grand Bazaar": // bazaar
                 return false;
             default:
                 return true;

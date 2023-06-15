@@ -76,6 +76,7 @@ public class Potato {
         Register.INSTANCE.register(PacketType.QUESTOBJID, controller::packets);
         Register.INSTANCE.register(PacketType.IP_ADDRESS, controller::packets);
         Register.INSTANCE.register(PacketType.CREATE_SUCCESS, controller::packets);
+        Register.INSTANCE.register(PacketType.MOVE, controller::packets);
 
         PacketProcessor packetProcessor = new PacketProcessor();
         packetProcessor.start();

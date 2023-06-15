@@ -368,24 +368,26 @@ public class HeroDetect {
         questArrowId = quest.objectId;
     }
 
-    public void markVisited(HeroLocations h) {
-        if (h.getLocationState() == HeroState.MARK_DEAD) return;
-
-        if (h.setState(HeroState.MARK_VISITED)) {
+    private void sendHeroUpdate(HeroLocations h) {
+        if (h.shouldSendHeroUpdate()) {
             model.uploadSingleHero(h);
         }
+    }
+
+    public void markVisited(HeroLocations h) {
+        if (h.getLocationState() == HeroState.MARK_DEAD) return;
+        h.setState(HeroState.MARK_VISITED);
+        sendHeroUpdate(h);
     }
 
     public void markActive(HeroLocations h) {
-        if (h.setState(HeroState.MARK_ACTIVE)) {
-            model.uploadSingleHero(h);
-        }
+        h.setState(HeroState.MARK_ACTIVE);
+        sendHeroUpdate(h);
     }
 
     public void markDead(HeroLocations h) {
-        if (h.setState(HeroState.MARK_DEAD)) {
-            model.uploadSingleHero(h);
-        }
+        h.setState(HeroState.MARK_DEAD);
+        sendHeroUpdate(h);
     }
 
     public void reset() {

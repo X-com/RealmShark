@@ -35,15 +35,13 @@ public class OpenGLPotato extends Thread {
     private VertexArray vaMap;
     private Texture[] textureMaps;
     private Matrix4f mvp;
-    private Matrix4f proj;
+    public static Matrix4f proj;
     private boolean viewChanged;
     private int backgroundChange;
     private int mapIndex = 0;
-    public static final float[] scale = {0.855f, 1.025f, 1.275f, 5 / 3f, 2.5f, 5f, 41.2f};
-    public static final float[] playerOffset = {0, 1f / 3, 0.85f, 5 / 3f, 10 / 3f, 8.5f, 84.25f};
-    public int zoom = 0;
+
     private int mapAlpha = 150;
-    private float ratio;
+//    public static float ratio;
 
     private boolean firstDisplay = true;
     private static boolean userShowAll = true;
@@ -66,6 +64,13 @@ public class OpenGLPotato extends Thread {
 
     // temp //
     private final Vector4f mainTextColor = new Vector4f(0.75f, 0.75f, 0.75f, 1.0f);
+
+    private int mapSize = 2048;
+    private float zoomMax = 48f;
+    private float xLeft = -128f;
+    private float yBot = 2176f;
+    private Matrix4f view = new Matrix4f();
+    private float zoom;
 
 //    long time;
 //    private void fps() {
@@ -111,7 +116,7 @@ public class OpenGLPotato extends Thread {
         hwnd = new HWND(new Pointer(glfwGetWin32Window(window)));
         hideTaskBarIcon();
 
-        ratio = (float) Config.instance.mapWidth / Config.instance.mapHeight;
+//        ratio = (float) Config.instance.mapWidth / Config.instance.mapHeight;
         if (window == NULL) {
             glfwTerminate();
             throw new RuntimeException("Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.");
@@ -136,9 +141,9 @@ public class OpenGLPotato extends Thread {
     }
 
     private void vertexMap() {
-        float[] mapVertices = new float[]{-1024, -1024, 0, 1, 1024, -1024, 1, 1, 1024, 1024, 1, 0, -1024, 1024, 0, 0,};
+        float[] mapVertices = new float[]{0, 0, 0, 1, 2048, 0, 1, 1, 2048, 2048, 1, 0, 0, 2048, 0, 0};
 
-        int[] mapIndexes = new int[]{0, 1, 2, 2, 3, 0,};
+        int[] mapIndexes = new int[]{0, 1, 2, 2, 3, 0};
 
         vaMap = new VertexArray();
         VertexBuffer vb = new VertexBuffer(mapVertices);
@@ -176,7 +181,7 @@ public class OpenGLPotato extends Thread {
 //        renderer = new GLRenderer();
 
         proj = new Matrix4f();
-        proj.ortho(-1024f * ratio, 1024f * ratio, -1024f, 1024f, -1.0f, 1.0f); // x*h/w or y*w/h
+//        proj.ortho(-1024f, 1024f, -1024f / ratio, 1024f / ratio, -1.0f, 1.0f); // x*h/w or y*w/h
 
         mvp = proj;
 
@@ -195,12 +200,13 @@ public class OpenGLPotato extends Thread {
     }
 
     private void setWindow() {
-        ratio = (float) Config.instance.mapWidth / Config.instance.mapHeight;
+//        ratio = (float) Config.instance.mapWidth / Config.instance.mapHeight;
         glfwSetWindowPos(window, Config.instance.mapTopLeftX, Config.instance.mapTopLeftY);
         glfwSetWindowSize(window, Config.instance.mapWidth, Config.instance.mapHeight);
-        proj = new Matrix4f();
-        proj.ortho(-1024f * ratio, 1024f * ratio, -1024f, 1024f, -1.0f, 1.0f); // x*h/w or y*w/h
-        mvp = proj;
+//        proj = new Matrix4f();
+//        System.out.println(ratio);
+//        proj.ortho(-1024f, 1024f, -1024f / ratio, 1024f / ratio, -1.0f, 1.0f); // x*h/w or y*w/h
+//        mvp = proj;
         glViewport(0, 0, Config.instance.mapWidth, Config.instance.mapHeight);
     }
 
@@ -228,13 +234,16 @@ public class OpenGLPotato extends Thread {
                 refresh = false;
             }
 
-            if (showMap && userShowMap && model.inRealm() && zoom != 6) {
+            if (showMap && userShowMap && model.inRealm() && zoom != 1) {
                 textureMaps[mapIndex].bind(0);
                 GLRenderer.draw(vaMap, vaMap.getIndexBuffer(), shaderMap);
             }
 
-            if (showHeroes && userShowHeroes && model.inRealm() && zoom != 6) {
-                heroes.drawHeros(model.mapHeroes(), mvp);
+//            if (showHeroes && userShowHeroes && model.inRealm() && zoom != 6) {
+            if (showHeroes && userShowHeroes && model.inRealm() && zoom != 1) {
+                heroes.drawHeros(model.mapHeroes(), mvp, mapSize);
+            } else if (showHeroes && userShowHeroes && model.isShatters() && zoom != 1) {
+                heroes.drawShapes(model.mapEntitys(), mvp, mapSize);
             }
 
             if (firstDisplay && !model.inRealm()) {
@@ -346,11 +355,24 @@ public class OpenGLPotato extends Thread {
         System.out.println("Show info: " + show);
     }
 
-    public void setCamera(float x, float y, int zoom) {
+    public void setCamera(float x, float y, float zoom) {
         this.zoom = zoom;
-        Matrix4f view = new Matrix4f();
         refresh = true;
-        mvp = view.translate(playerOffset[zoom] * (1024f - x) / 2048f, ratio * playerOffset[zoom] * (y - 1024f) / 2048f, 0).scale(scale[zoom]).mul(proj);
+        y = mapSize - y;
+        view.identity();
+        if (zoom == 1f) {
+            float xmin = x - 24.0f;
+            float xmax = xmin + 48f;
+            float ymax = y + 24.0f;
+            float ymin = ymax - 48f;
+            mvp = view.ortho(xmin, xmax, ymin, ymax, -1.0f, 1.0f);
+        } else {
+            float xmin = xLeft * zoom / zoomMax - x * zoom / zoomMax + x;
+            float xmax = xmin + 48f * zoom;
+            float ymax = yBot * zoom / zoomMax - y * zoom / zoomMax + y;
+            float ymin = ymax - 48f * zoom;
+            mvp = view.ortho(xmin, xmax, ymin, ymax, -1.0f, 1.0f);
+        }
     }
 
     public void setMap(int mapIndex) {
@@ -364,6 +386,27 @@ public class OpenGLPotato extends Thread {
         vaMap.dispose();
         for (Texture textureMap : textureMaps) {
             textureMap.dispose();
+        }
+    }
+
+    public void mapSize(int mapSize) {
+        this.mapSize = mapSize;
+        if (mapSize == 2048) {
+            zoomMax = 48f;
+            xLeft = -128f;
+            yBot = 2176f;
+        } else if (mapSize == 512) {
+            zoomMax = 12f;
+            xLeft = -32f;
+            yBot = 544f;
+        } else if (mapSize == 256) {
+            zoomMax = 6f;
+            xLeft = -16f;
+            yBot = 272f;
+        } else if (mapSize == 128) {
+            zoomMax = 3f;
+            xLeft = -8f;
+            yBot = 136f;
         }
     }
 }

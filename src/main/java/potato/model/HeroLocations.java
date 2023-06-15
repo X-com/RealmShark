@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HeroLocations {
+    private final int types;
     public float dist; // Hacky workaround to store distance. Distance to hero location from object.
 
     private final int index;
@@ -35,9 +36,11 @@ public class HeroLocations {
         this.x = x;
         this.y = y;
         setTypes(types);
+        this.types = types;
     }
 
     private void setTypes(int types) {
+        if (types > 100) types = types / 10;
         Vector4f cc = null;
         Vector4f cd = null;
 
@@ -167,11 +170,14 @@ public class HeroLocations {
         resetTimer = System.currentTimeMillis() + 2200;
     }
 
-    public boolean setState(HeroState state) {
-        if (locationState == state) return false;
+    public void setState(HeroState state) {
+        if (locationState == state) return;
         locationState = state;
         resetTimer = System.currentTimeMillis() + 2200;
-        return true;
+    }
+
+    public boolean shouldSendHeroUpdate() {
+        return types < 100;
     }
 
     public boolean isMissing(HashMap<Integer, ObjectData> entitys) {
