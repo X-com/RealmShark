@@ -12,7 +12,6 @@ import potato.view.opengl.OpenGLPotato;
 public class PacketController {
 
     private DataModel model;
-    private boolean saving;
 
     public PacketController(DataModel model) {
         this.model = model;
@@ -49,11 +48,11 @@ public class PacketController {
             model.ipChanged(p.ipAddressName, p.srcAddressAsInt);
         } else if (packet instanceof MapInfoPacket) {
             MapInfoPacket p = (MapInfoPacket) packet;
-            if (Config.instance.saveMapInfo || saving) {
-                model.saveMap(p);
-                saving = Config.instance.saveMapInfo;
+            if (Config.instance.saveMapInfo) {
+                model.saveMap();
             }
 
+            model.resetSaver(p);
             model.checkNewNexus();
             model.setRealmName(p.realmName);
             model.reset();

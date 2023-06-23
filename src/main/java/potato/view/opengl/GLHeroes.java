@@ -20,9 +20,9 @@ public class GLHeroes {
 
     public void drawHeros(ArrayList<HeroLocations> vaHero, Matrix4f mvp, int mapSize) {
         for (HeroLocations hero : vaHero) {
-            if (!hero.shouldSendHeroUpdate()) continue;
             float drawX = hero.getX();
             float drawY = mapSize - hero.getY();
+            if (!Config.instance.saveMapInfo && !hero.shouldSendHeroUpdate()) continue;
             Vector4f c = hero.getPossibleSpawnColorMain();
             Vector4f colorText = new Vector4f(c.x(), c.y(), c.z(), Config.instance.textTransparency / 255f);
 //String text, Matrix4f pose, Vector2f align, TextBoundType alignType, Vector4f color

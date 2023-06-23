@@ -319,13 +319,11 @@ public class DataModel {
 
     public void updateLocations(GroundTileData[] tiles, ObjectData[] newObjects, int[] drops) {
         heroDetect.updateLocations(tiles, newObjects, drops);
-        if (Config.instance.saveMapInfo && saveData) {
-            for (GroundTileData gtd : tiles) {
-                mapTiles[gtd.x][gtd.y] = gtd.type;
-            }
-            for (ObjectData od : newObjects) {
-                allEntitys.put(od.status.objectId, od);
-            }
+        for (GroundTileData gtd : tiles) {
+            mapTiles[gtd.x][gtd.y] = gtd.type;
+        }
+        for (ObjectData od : newObjects) {
+            allEntitys.put(od.status.objectId, od);
         }
         if (isShatters) {
             for (ObjectData od : newObjects) {
@@ -386,7 +384,7 @@ public class DataModel {
         }
     }
 
-    public void saveMap(MapInfoPacket packet) {
+    public void saveMap() {
         if (saveData) {
             DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss");
             LocalDateTime dateTime = LocalDateTime.now();
@@ -417,6 +415,9 @@ public class DataModel {
                 Arrays.fill(row, 0);
             }
         }
+    }
+
+    public void resetSaver(MapInfoPacket packet) {
         allEntitys.clear();
         for (int i = 0; i < 2048; i++) {
             for (int j = 0; j < 2048; j++) {
