@@ -1,9 +1,0 @@
-[Unit]
-Description=Potato Server
-After=network.target
-[Service]
-Environment=Display=:0
-ExecStart=/home/pi/.nvm/versions/node/v16.17.1/bin/node /home/pi/.nvm/versions/node/v16.17.1/bin/nodemon --watch /home/pi/potatoServer/ /home/pi/potatoServer/main.js
-Restart=always
-[Install]
-WantedBy=multi-user.target
