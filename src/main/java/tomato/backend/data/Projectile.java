@@ -18,7 +18,6 @@ public class Projectile {
         try {
             armorPiercing = IdToAsset.getIdProjectileArmorPierces(containerType, 0);
         } catch (AssetMissingException e) {
-            e.printStackTrace();
         }
     }
 

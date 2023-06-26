@@ -7,6 +7,7 @@ import packets.outgoing.PlayerShootPacket;
 import tomato.gui.character.CharacterExaltGUI;
 import tomato.gui.character.CharacterPanelGUI;
 import tomato.gui.character.CharacterStatsGUI;
+import tomato.gui.security.ParsePanelGUI;
 import tomato.realmshark.HttpCharListRequest;
 import tomato.realmshark.RealmCharacter;
 import tomato.realmshark.RealmCharacterStats;
@@ -50,6 +51,7 @@ public class TomatoData {
      */
     public void setNewRealm(MapInfoPacket map) {
         clear();
+        ParsePanelGUI.clear();
         this.map = map;
         rng = new RNG(map.seed);
     }
@@ -70,6 +72,7 @@ public class TomatoData {
     private void updateDungeonStats(int charId, String str) {
         if (charMap == null) return;
         RealmCharacter r = charMap.get(charId);
+        if (r == null) return;
         RealmCharacterStats newStats = new RealmCharacterStats();
         newStats.decode(str);
         if (!Arrays.equals(newStats.dungeonStats, r.charStats.dungeonStats)) {
@@ -107,6 +110,7 @@ public class TomatoData {
             if (e != null) {
                 e.entityDropped(time);
             }
+            ParsePanelGUI.removePlayer(dropId);
         }
     }
 
@@ -128,7 +132,10 @@ public class TomatoData {
             if (id == worldPlayerId) {
                 player = entity;
                 entity.setUser(charId);
+            } else {
+                entity.isPlayer();
             }
+            ParsePanelGUI.addPlayer(id, entity);
         }
     }
 
