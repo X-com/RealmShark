@@ -66,9 +66,13 @@ public class VaultContentPacket extends Packet {
      */
     public short nextPotionMax;
     /**
-     * Vault string
+     * Unknown string
      */
-    public String vaultString;
+    public String unknownString1;
+    /**
+     * Unknown string
+     */
+    public String unknownString2;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
@@ -101,6 +105,9 @@ public class VaultContentPacket extends Packet {
         potionUpgradeCost = buffer.readShort();
         currentPotionMax = buffer.readShort();
         nextPotionMax = buffer.readShort();
+
+        unknownString1 = buffer.readString();
+        unknownString2 = buffer.readString();
     }
 
     @Override
@@ -120,6 +127,7 @@ public class VaultContentPacket extends Packet {
                 "\n   potionUpgradeCost=" + potionUpgradeCost +
                 "\n   currentPotionMax=" + currentPotionMax +
                 "\n   nextPotionMax=" + nextPotionMax +
-                "\n   vaultString=" + vaultString;
+                "\n   unknownString1=" + unknownString1 +
+                "\n   unknownString2=" + unknownString2;
     }
 }
