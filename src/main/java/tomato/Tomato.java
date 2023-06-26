@@ -127,7 +127,7 @@ public class Tomato {
         Register.INSTANCE.register(PacketType.UPDATE, packCap::packetCapture);
         Register.INSTANCE.register(PacketType.NEWTICK, packCap::packetCapture);
         Register.INSTANCE.register(PacketType.MAPINFO, packCap::packetCapture);
-        Register.INSTANCE.register(PacketType.UNKNOWN166, packCap::packetCapture);
+        Register.INSTANCE.register(PacketType.STASIS, packCap::packetCapture);
         Register.INSTANCE.register(PacketType.TEXT, packCap::packetCapture);
         Register.INSTANCE.register(PacketType.EXALTATION_BONUS_CHANGED, packCap::packetCapture);
         Register.INSTANCE.register(PacketType.VAULT_UPDATE, packCap::packetCapture);

@@ -27,8 +27,8 @@ public class Stat {
     public StatData DEFENSE_STAT; // 21
     public StatData SPEED_STAT; // 22
     public StatData UNKNOWN23; // 23
-    public StatData UNKNOWN24; // 24
-    public StatData UNKNOWN25; // 25
+    public StatData SEASONAL; // 24
+    public StatData SKIN_ID; // 25
     public StatData VITALITY_STAT; // 26
     public StatData WISDOM_STAT; // 27
     public StatData DEXTERITY_STAT; // 28
@@ -128,7 +128,7 @@ public class Stat {
     public StatData UNKNOWN122; // 122
     public StatData UNKNOWN123; // 123
     public StatData UNKNOWN124; // 124
-    public StatData UNKNOWN125; // 125
+    public StatData ANIMATION_ID; // 125
     public StatData UNKNOWN126; // 126
 
     public Stat() {
@@ -213,11 +213,11 @@ public class Stat {
                 case UNKNOWN23:
                     UNKNOWN23 = sd;
                     break;
-                case UNKNOWN24:
-                    UNKNOWN24 = sd;
+                case SEASONAL:
+                    SEASONAL = sd;
                     break;
-                case UNKNOWN25:
-                    UNKNOWN25 = sd;
+                case SKIN_ID:
+                    SKIN_ID = sd;
                     break;
                 case VITALITY_STAT:
                     VITALITY_STAT = sd;
@@ -516,8 +516,8 @@ public class Stat {
                 case UNKNOWN124:
                     UNKNOWN124 = sd;
                     break;
-                case UNKNOWN125:
-                    UNKNOWN125 = sd;
+                case ANIMATION_ID:
+                    ANIMATION_ID = sd;
                     break;
                 case UNKNOWN126:
                     UNKNOWN126 = sd;

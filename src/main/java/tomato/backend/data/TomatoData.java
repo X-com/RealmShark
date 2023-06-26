@@ -320,7 +320,7 @@ public class TomatoData {
 
     public void vaultPacketUpdate(VaultContentPacket p) {
         if (player != null) {
-            if (player.stat.UNKNOWN24.statValue == 1) {
+            if (player.stat.SEASONAL.statValue == 1) {
                 vaultDataRecievedSeasonal = true;
                 seasonalVault.vaultPacketUpdate(p);
             } else {

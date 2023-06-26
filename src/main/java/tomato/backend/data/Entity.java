@@ -134,7 +134,7 @@ public class Entity {
     }
 
     private void bossPhaseDamage(Damage damage) {
-        damage.walledGardenReflectors = objectType == 29039 && stat.UNKNOWN125 != null && (stat.UNKNOWN125.statValue == -123818367 && tomatoData.floorPlanCrystals() == 12);
+        damage.walledGardenReflectors = objectType == 29039 && stat.ANIMATION_ID != null && (stat.ANIMATION_ID.statValue == -123818367 && tomatoData.floorPlanCrystals() == 12);
         damage.chancellorDammahDmg = objectType == 9635 && !Damage.dammahCountered;
     }
 

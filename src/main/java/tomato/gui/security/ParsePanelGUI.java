@@ -89,7 +89,7 @@ public class ParsePanelGUI extends JPanel {
         panel.setPreferredSize(new Dimension(110, 33));
 
         try {
-            int eq = player.stat.UNKNOWN25.statValue;
+            int eq = player.stat.SKIN_ID.statValue;
             if (eq == 0) eq = player.objectType;
             BufferedImage img = ImageBuffer.getImage(eq);
             ImageIcon icon = new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT));
