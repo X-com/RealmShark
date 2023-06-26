@@ -26,9 +26,9 @@ public class GraphPanel extends JPanel {
     private static final Stroke GRAPH_STROKE = new BasicStroke(2f);
     private int pointWidth = 4;
     private int numberYDivisions = 10;
-    private List<Double> scores;
+    private ArrayList<Fame> scores;
 
-    public GraphPanel(List<Double> scores) {
+    public GraphPanel(ArrayList<Fame> scores) {
         this.scores = scores;
     }
 
@@ -44,7 +44,7 @@ public class GraphPanel extends JPanel {
         List<Point> graphPoints = new ArrayList<>();
         for (int i = 0; i < scores.size(); i++) {
             int x1 = (int) (i * xScale + padding + labelPadding);
-            int y1 = (int) ((getMaxScore() - scores.get(i)) * yScale + padding);
+            int y1 = (int) ((getMaxScore() - scores.get(i).fame) * yScale + padding);
             graphPoints.add(new Point(x1, y1));
         }
 
@@ -119,37 +119,37 @@ public class GraphPanel extends JPanel {
 
     private double getMinScore() {
         double minScore = Double.MAX_VALUE;
-        for (Double score : scores) {
-            minScore = Math.min(minScore, score);
+        for (Fame score : scores) {
+            minScore = Math.min(minScore, score.fame);
         }
         return minScore;
     }
 
     private double getMaxScore() {
         double maxScore = Double.MIN_VALUE;
-        for (Double score : scores) {
-            maxScore = Math.max(maxScore, score);
+        for (Fame score : scores) {
+            maxScore = Math.max(maxScore, score.fame);
         }
         return maxScore;
     }
 
-    public void setScores(List<Double> scores) {
+    public void setScores(ArrayList<Fame> scores) {
         this.scores = scores;
         invalidate();
         this.repaint();
     }
 
-    public List<Double> getScores() {
+    public ArrayList<Fame> getScores() {
         return scores;
     }
 
     private static void createAndShowGui() {
-        List<Double> scores = new ArrayList<>();
+        ArrayList<Fame> scores = new ArrayList<>();
         Random random = new Random();
         int maxDataPoints = 40;
         int maxScore = 10;
         for (int i = 0; i < maxDataPoints; i++) {
-            scores.add(random.nextDouble() * maxScore);
+            scores.add(new Fame(random.nextDouble() * maxScore, 0));
         }
         GraphPanel mainPanel = new GraphPanel(scores);
         mainPanel.setPreferredSize(new Dimension(800, 600));

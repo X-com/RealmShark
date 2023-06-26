@@ -5,6 +5,7 @@ import assets.IdToAsset;
 import packets.data.ObjectStatusData;
 import packets.data.WorldPosData;
 import tomato.gui.character.CharacterStatMaxingGUI;
+import tomato.gui.security.ParsePanelGUI;
 import tomato.realmshark.RealmCharacter;
 
 import java.util.*;
@@ -15,17 +16,17 @@ public class Entity {
     public final Stat stat;
     private final TomatoData tomatoData;
     private final int id;
-    private int objectType;
+    public int objectType;
     private long creationTime;
     private WorldPosData pos;
-    private final ArrayList<ObjectStatusData> statUpdates;
+    public final ArrayList<ObjectStatusData> statUpdates;
     private final ArrayList<Damage> damageList;
     private final HashMap<Integer, Damage> damagePlayer;
     private String name;
     private long lastDamageTaken;
     private int charId;
-    private int type;
-    private int[] baseStats;
+    public int[] baseStats;
+    private boolean isPlayer;
 
     public Entity(TomatoData tomatoData, int id, long time) {
         this.tomatoData = tomatoData;
@@ -39,11 +40,12 @@ public class Entity {
 
     public void entityUpdate(int type, ObjectStatusData status, long time) {
         updateStats(status, time);
-        this.type = type;
+        this.objectType = type;
         try {
-            name = IdToAsset.objectName(type);
-        } catch (AssetMissingException e) {
-            e.printStackTrace();
+            if (type != -1) {
+                name = IdToAsset.objectName(type);
+            }
+        } catch (Exception e) {
         }
     }
 
@@ -52,11 +54,14 @@ public class Entity {
         statUpdates.add(status);
         stat.setStats(status.stats);
         if (status.stats.length > 0) {
-            if (baseStats != null) {
-                fame();
+            if (isUser) {
+                fame(time);
                 tomatoData.player.charStat(charId, calculateBaseStats());
+            } else if (isPlayer) {
+                baseStats = calculateBaseStats();
             }
         }
+        ParsePanelGUI.update(id, this);
     }
 
     public int maxHp() {
@@ -154,6 +159,11 @@ public class Entity {
         return isUser;
     }
 
+    public void isPlayer() {
+        isPlayer = true;
+        baseStats = calculateBaseStats();
+    }
+
     public void setUser(int charId) {
         isUser = true;
         this.charId = charId;
@@ -177,13 +187,18 @@ public class Entity {
 
     /**
      * Fame update from experience points.
+     *
+     * @param time
      */
-    private void fame() {
-        long f = Long.parseLong(stat.EXP_STAT.stringStatValue);
-        long fame = (f + 40071) / 2000;
+    private void fame(long time) {
+        long exp = Long.parseLong(stat.EXP_STAT.stringStatValue);
+        FameTracker.trackFame(charId, exp, time);
         if (tomatoData.charMap != null) {
+            long fame = (exp + 40071) / 2000;
             RealmCharacter r = tomatoData.charMap.get(charId);
-            r.fame = fame;
+            if (r != null) {
+                r.fame = fame;
+            }
         }
     }
 
@@ -196,6 +211,8 @@ public class Entity {
     public void charStat(int charId, int[] stats) {
         if (tomatoData.charMap == null) return;
         RealmCharacter r = tomatoData.charMap.get(charId);
+
+        if (r == null) return;
 
         if (r.hp != stats[0]) {
             r.hp = stats[0];
