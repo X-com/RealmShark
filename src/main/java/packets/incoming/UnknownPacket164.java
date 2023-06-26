@@ -4,7 +4,7 @@ import packets.Packet;
 import packets.reader.BufferReader;
 
 /**
- * Packet related to battle pass quests.
+ * Packet related to battle pass missions.
  */
 public class UnknownPacket164 extends Packet {
     /**

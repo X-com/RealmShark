@@ -1,10 +1,10 @@
-package packets.incoming;
+package packets.outgoing;
 
 import packets.Packet;
 import packets.reader.BufferReader;
 
 /**
- * Packet related to battle pass quests.
+ * Packet related to battle pass missions.
  */
 public class UnknownPacket163 extends Packet {
     /**

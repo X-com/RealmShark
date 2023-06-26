@@ -24,6 +24,8 @@ public class UnknownPacket147 extends Packet {
         unknownInt1 = buffer.readInt();
         unknownInt2 = buffer.readInt();
         unknownInt3 = buffer.readInt();
+        System.out.println(this);
+        Thread.dumpStack();
     }
 
     @Override
