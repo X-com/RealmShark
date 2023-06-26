@@ -30,7 +30,6 @@ public class UnknownPacket163 extends Packet {
         unknownByte1 = buffer.readByte();
         unknownByte2 = buffer.readByte();
         unknownShort = buffer.readShort();
-        Thread.dumpStack();
     }
 
     @Override

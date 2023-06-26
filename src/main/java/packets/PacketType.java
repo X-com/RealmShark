@@ -157,7 +157,7 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
                        UNKNOWN146(-110, Outgoing, UnknownPacket146::new),
                        UNKNOWN147(-109, Incoming, UnknownPacket147::new),
                        UNKNOWN154(-102, Outgoing, UnknownPacket154::new),
-                        UNKNOWN163(-93, Incoming, UnknownPacket163::new),
+                        UNKNOWN163(-93, Outgoing, UnknownPacket163::new),
                         UNKNOWN164(-92, Incoming, UnknownPacket164::new),
                         UNKNOWN165(-91, Incoming, UnknownPacket165::new),
                             STASIS(-90, Incoming, StasisPacket::new),
