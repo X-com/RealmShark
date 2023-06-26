@@ -50,6 +50,9 @@ public class TomatoPacketCapture implements Controller {
         } else if (packet instanceof TextPacket) {
             TextPacket p = (TextPacket) packet;
             data.text(p);
+        } else if (packet instanceof StasisPacket) {
+            StasisPacket p = (StasisPacket) packet;
+            data.stasis(p);
         } else if (packet instanceof MapInfoPacket) {
             MapInfoPacket p = (MapInfoPacket) packet;
             data.setNewRealm(p);

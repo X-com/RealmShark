@@ -252,6 +252,29 @@ public class TomatoData {
     }
 
     /**
+     * Incoming packets updates after observing an entity becoming stasised.
+     *
+     * @param p Stasis packet
+     */
+    public void stasis(StasisPacket p) {
+        float stasisDuration = p.stasisDuration;
+//        System.out.println(p);
+
+        int itemId = -1;
+        if (stasisDuration == 4.0f) {
+            itemId = 2627;
+        }
+
+        if (itemId == -1) return;
+
+        for (Entity player : playerList.values()) {
+            if (player.stat.INVENTORY_1_STAT.statValue == itemId) {
+                System.out.println(player.stat.NAME_STAT.stringStatValue);
+            }
+        }
+    }
+
+    /**
      * Incoming text data.
      *
      * @param p Text info.
