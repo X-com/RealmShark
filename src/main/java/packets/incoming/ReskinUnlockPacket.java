@@ -4,28 +4,28 @@ import packets.Packet;
 import packets.reader.BufferReader;
 
 /**
- * Received to notify the player that a new skin has been unlocked
+ * Received to notify the player that a new object has been unlocked
  */
 public class ReskinUnlockPacket extends Packet {
     /**
-     * The id of the skin that was unlocked
+     * The type of unlocked object
      */
-    public int skinId;
+    public int unlockType;
     /**
-     * The id of the pet skin that was unlocked
+     * The id of object that was unlocked
      */
-    public int isPetSkin;
+    public int unlockId;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
-        skinId = buffer.readInt();
-        isPetSkin = buffer.readInt();
+        unlockType = buffer.readByte();
+        unlockId = buffer.readInt();
     }
 
     @Override
     public String toString() {
         return "ReskinUnlockPacket{" +
-                "\n   skinId=" + skinId +
-                "\n   isPetSkin=" + isPetSkin;
+                "\n   unlockType=" + unlockType +
+                "\n   unlockId=" + unlockId;
     }
 }

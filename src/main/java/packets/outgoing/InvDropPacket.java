@@ -15,24 +15,18 @@ public class InvDropPacket extends Packet {
     /**
      * Unknown
      */
-    public byte unknownByte1;
-    /**
-     * Unknown
-     */
-    public byte unknownByte2;
+    public byte unknownByte;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
         slotObject = new SlotObjectData().deserialize(buffer);
-        unknownByte1 = buffer.readByte();
-        unknownByte2 = buffer.readByte();
+        unknownByte = buffer.readByte();
     }
 
     @Override
     public String toString() {
         return "InvDropPacket{" +
                 "\n   slotObject=" + slotObject +
-                "\n   unknownByte1=" + unknownByte1 +
-                "\n   unknownByte2=" + unknownByte2;
+                "\n   unknownByte=" + unknownByte;
     }
 }

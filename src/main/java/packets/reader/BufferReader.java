@@ -160,7 +160,7 @@ public class BufferReader {
      * @return Returns a byte array that have been deserialized.
      */
     public byte[] readBytes(int bytes) {
-        byte[] out = new byte[readShort()];
+        byte[] out = new byte[bytes];
         buffer.get(out);
         return out;
     }

@@ -35,7 +35,6 @@ public class UseItemPacket extends Packet {
     public void deserialize(BufferReader buffer) throws Exception {
         time = buffer.readInt();
         slotObject = new SlotObjectData().deserialize(buffer);
-        unknownByte = buffer.readByte();
         useItemPosition = new WorldPosData().deserialize(buffer);
         useItemType = UseItemType.fromCode(buffer.readByte());
     }
@@ -46,7 +45,6 @@ public class UseItemPacket extends Packet {
                 "\n   time=" + time +
                 "\n   slotObject=" + slotObject +
                 "\n   useItemPosition=" + useItemPosition +
-                "\n   unknownByte=" + unknownByte +
                 "\n   useItemType=" + useItemType;
     }
 }
