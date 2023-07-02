@@ -83,7 +83,7 @@ public class PacketProcessor extends Thread implements PProcessor {
         logger.addIncoming(data.length);
         ipEmitter(srcAddr);
         incomingPacketConstructor.build(data);
-        Register.INSTANCE.emitPacketLogs();
+        Register.INSTANCE.emitLogs(logger);
     }
 
     /**
@@ -95,7 +95,7 @@ public class PacketProcessor extends Thread implements PProcessor {
     public void outgoingStream(byte[] data, byte[] srcAddr) {
         logger.addOutgoing(data.length);
         outgoingPacketConstructor.build(data);
-        Register.INSTANCE.emitPacketLogs();
+        Register.INSTANCE.emitLogs(logger);
     }
 
     /**

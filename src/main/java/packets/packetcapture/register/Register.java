@@ -2,6 +2,7 @@ package packets.packetcapture.register;
 
 import packets.Packet;
 import packets.PacketType;
+import packets.packetcapture.logger.PacketLogger;
 import util.Pair;
 
 import java.util.ArrayList;
@@ -102,9 +103,9 @@ public class Register {
     /**
      * Emits the logs to any subscriber.
      */
-    public void emitPacketLogs() {
+    public void emitLogs(PacketLogger logger) {
         for (Subscriber sub : subscribePacketLogs) {
-            sub.receive(toString());
+            sub.receive(logger.toString());
         }
     }
 
