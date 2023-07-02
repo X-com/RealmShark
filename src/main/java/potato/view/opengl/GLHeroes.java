@@ -29,7 +29,7 @@ public class GLHeroes {
             Matrix4f pose = new Matrix4f().translate(drawX, drawY, 0);
             renderText.drawText(hero.getIndexString(), pose.scale(Config.instance.textSize), mvp, zerozero, TextRenderer.TextBoundType.BOUNDING_BOX, colorText);
 
-            Matrix4f poseShape = new Matrix4f().translate(drawX, drawY, 0);
+            Matrix4f poseShape = new Matrix4f().translate(drawX, drawY, 0).rotate(0.005f, 0, 0, 1);
             if (hero.multipleShapes()) {
                 renderShape.drawText(hero.shapeCharS(), poseShape.scale(Config.instance.shapeSize * 4), mvp, zerozero, TextRenderer.TextBoundType.BOUNDING_BOX, hero.getPossibleSpawnColorSecondary());
                 renderShape.drawText(hero.shapeCharM(), poseShape.scale(1.5f), mvp, zerozero, TextRenderer.TextBoundType.BOUNDING_BOX, hero.getPossibleSpawnColorMain());
