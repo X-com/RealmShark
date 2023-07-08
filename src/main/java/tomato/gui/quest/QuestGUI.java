@@ -1,4 +1,4 @@
-package tomato.gui;
+package tomato.gui.quest;
 
 import assets.AssetMissingException;
 import assets.ImageBuffer;

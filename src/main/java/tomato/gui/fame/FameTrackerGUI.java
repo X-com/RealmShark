@@ -21,14 +21,14 @@ public class FameTrackerGUI extends JPanel {
 
         graphPanel = new GraphPanel(scores);
 
-        JButton button = new JButton("Test");
-        button.addActionListener(e -> {
-//            scores.clear();
-            System.out.println(scores);
-        });
-        add(button, BorderLayout.SOUTH);
-
-        add(graphPanel);
+//        JButton button = new JButton("Test");
+//        button.addActionListener(e -> {
+////            scores.clear();
+//            System.out.println(scores);
+//        });
+//        add(button, BorderLayout.SOUTH);
+//
+//        add(graphPanel);
     }
 
     public static void updateFame(int charId, long fame, long time) {
