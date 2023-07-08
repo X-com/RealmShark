@@ -117,6 +117,7 @@ public class TomatoData {
             if (e != null) {
                 e.entityDropped(time);
             }
+            playerListUpdated.remove(dropId);
             ParsePanelGUI.removePlayer(dropId);
         }
     }
@@ -136,6 +137,7 @@ public class TomatoData {
         }
         if (isPlayerEntity(object.objectType)) {
             playerList.put(id, entity);
+            playerListUpdated.put(id, entity);
             if (id == worldPlayerId) {
                 player = entity;
                 entity.setUser(charId);
@@ -264,19 +266,51 @@ public class TomatoData {
      * @param p Stasis packet
      */
     public void stasis(StasisPacket p) {
+        if (p.unknownByteArray[1] != 38) return;
         float stasisDuration = p.stasisDuration;
-//        System.out.println(p);
 
-        int itemId = -1;
-        if (stasisDuration == 4.0f) {
-            itemId = 2627;
+        int[] itemId;
+        if (stasisDuration == 3.0f) {
+            itemId = new int[]{2788, 306}; // T0 Stasis Orb, UT Orb of Sweet Demise
+        } else if (stasisDuration == 3.5f) {
+            itemId = new int[]{2626}; // T1 Suspension Orb
+        } else if (stasisDuration == 4.0f) {
+            itemId = new int[]{2627, 2111}; // T2 Imprisonment Orb, UT Enchantment Orb
+        } else if (stasisDuration == 4.5f) {
+            itemId = new int[]{2628}; // T3 Neutralization Orb
+        } else if (stasisDuration == 5.0f) {
+            itemId = new int[]{2629}; // T4 Timelock Orb
+        } else if (stasisDuration == 5.5f) {
+            itemId = new int[]{2630}; // T5 Banishment Orb
+        } else if (stasisDuration == 6.0f) {
+            itemId = new int[]{2630, 8334, 9058, 23352, 25752}; // T6 Planefetter Orb, UT Snowbound Orb, Soul of the Bearer, UT Karma Orb, Orb of the Sabbath
+        } else if (stasisDuration == 6.5f) {
+            itemId = new int[]{8287}; // T7 Dimensiongate Orb
+        } else if (stasisDuration == 7.0f) {
+            itemId = new int[]{3083, 29647}; // UT Orb of Conflict, UT Orb of Terror
+        } else {
+            return;
         }
 
-        if (itemId == -1) return;
+        for (Entity player : playerListUpdated.values()) {
+            if (player.stasisTimer == time) continue;
 
-        for (Entity player : playerList.values()) {
-            if (player.stat.INVENTORY_1_STAT.statValue == itemId) {
-                System.out.println(player.stat.NAME_STAT.stringStatValue);
+            for (int id : itemId) {
+                int statValue = player.stat.INVENTORY_1_STAT.statValue;
+                if (statValue == id) {
+                    player.stasisTimer = time;
+                    try {
+                        StringBuilder sb = new StringBuilder();
+                        sb.append("[").append(Util.getHourTime()).append("] ");
+                        String name = player.stat.NAME_STAT.stringStatValue;
+                        sb.append(name.split(",")[0]).append(": ");
+                        String item = IdToAsset.objectName(statValue);
+                        sb.append(item);
+                        SecurityGUI.updateAbilityUsage(sb.toString());
+                    } catch (AssetMissingException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
         }
     }

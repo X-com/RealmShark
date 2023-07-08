@@ -1,14 +1,17 @@
 package tomato.gui.security;
 
+import assets.IdToAsset;
 import assets.ImageBuffer;
 import tomato.backend.data.Entity;
 import tomato.gui.SmartScroller;
 import tomato.realmshark.enums.CharacterClass;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class ParsePanelGUI extends JPanel {
@@ -30,14 +33,6 @@ public class ParsePanelGUI extends JPanel {
         charPanel.setLayout(new GridBagLayout());
 
         charPanel.setLayout(new BoxLayout(charPanel, BoxLayout.Y_AXIS));
-//        charPanel.setBorder(BorderFactory.createEmptyBorder(2, 20, 2, 20));
-        charPanel.add(Box.createVerticalGlue());
-//        charPanel.removeAll();
-//        for (RealmCharacter c : data.chars) {
-//            JPanel box = CharacterPanelGUI.createMainBox();
-//
-//            charPanel.add(box);
-//        }
 
         validate();
 
@@ -46,11 +41,17 @@ public class ParsePanelGUI extends JPanel {
         new SmartScroller(scroll);
         add(scroll, BorderLayout.CENTER);
 
-        JButton button = new JButton("Add");
-        button.addActionListener(e -> {
-            add();
-        });
-        add(button, BorderLayout.SOUTH);
+//        JButton button = new JButton("Clear");
+//        button.addActionListener(e -> clicked());
+//        add(button, BorderLayout.SOUTH);
+    }
+
+    private void clicked() {
+        charPanel.removeAll();
+        Player p = playerDisplay.get(552);
+        JPanel panel = createMainBox(p, p.playerEntity);
+        charPanel.add(panel);
+        INSTANCE.updateUI();
     }
 
     private void guiUpdate() {
@@ -58,21 +59,15 @@ public class ParsePanelGUI extends JPanel {
         repaint();
     }
 
-    private void add() {
-//        JPanel panel = createMainBox();
-//        charPanel.add(panel);
-//        validate();
-    }
-
     private static JPanel createMainBox(Player p, Entity player) {
         JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(), BorderFactory.createEmptyBorder(-4, 0, 0, 0)));
         panel.setPreferredSize(new Dimension(370, HEIGHT));
         panel.setMaximumSize(new Dimension(370, HEIGHT));
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
+
         JPanel left = leftPanel(player);
-        left.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(left);
 
         JPanel inv = equipment(p, player);
@@ -87,6 +82,7 @@ public class ParsePanelGUI extends JPanel {
     private static JPanel leftPanel(Entity player) {
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(110, 33));
+        panel.setLayout(new BorderLayout());
 
         try {
             int eq = player.stat.SKIN_ID.statValue;
@@ -94,7 +90,9 @@ public class ParsePanelGUI extends JPanel {
             BufferedImage img = ImageBuffer.getImage(eq);
             ImageIcon icon = new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT));
             int level = player.stat.LEVEL_STAT.statValue;
-            JLabel characterLabel = new JLabel(player.stat.NAME_STAT.stringStatValue + " " + level, icon, JLabel.CENTER);
+            String name = player.stat.NAME_STAT.stringStatValue;
+            JLabel characterLabel = new JLabel(name.split(",")[0] + " [" + level + "]", icon, JLabel.CENTER);
+            characterLabel.setHorizontalAlignment(SwingConstants.CENTER);
             panel.add(characterLabel);
 //            characterLabel.setToolTipText(exaltStats(c));
         } catch (Exception e) {
@@ -105,10 +103,12 @@ public class ParsePanelGUI extends JPanel {
 
     private static JPanel rightPanel(Entity player) {
         JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
 
         int stat = statsMaxed(player);
         JLabel stats = new JLabel(stat + " / 8");
         stats.setToolTipText(statMissing(player));
+        stats.setHorizontalAlignment(SwingConstants.CENTER);
 
         panel.add(stats);
 
@@ -136,10 +136,10 @@ public class ParsePanelGUI extends JPanel {
                 } else {
                     img = ImageBuffer.getImage(eq);
                 }
-                p.icon[i] = new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-                panelEquip.add(new JLabel(p.icon[i]));
+                p.icon[i] = new JLabel(new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT)));
+                p.icon[i].setToolTipText(IdToAsset.objectName(eq));
+                panelEquip.add(p.icon[i]);
             } catch (Exception e) {
-//                e.printStackTrace();
             }
         }
         panel.add(panelEquip);
@@ -209,13 +209,12 @@ public class ParsePanelGUI extends JPanel {
     public static void clear() {
         playerDisplay.clear();
         charPanel.removeAll();
-        charPanel.add(Box.createVerticalGlue());
         INSTANCE.guiUpdate();
     }
 
     public static class Player {
         int[] inv = new int[4];
-        ImageIcon[] icon = new ImageIcon[4];
+        JLabel[] icon = new JLabel[4];
         int id;
         Entity playerEntity;
         JPanel panel;
@@ -237,7 +236,8 @@ public class ParsePanelGUI extends JPanel {
                 } else {
                     img = ImageBuffer.getImage(eq);
                 }
-                icon[i].setImage(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+                icon[i].setIcon(new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT)));
+                icon[i].setToolTipText(IdToAsset.objectName(eq));
             } catch (Exception e) {
             }
             INSTANCE.updateUI();
