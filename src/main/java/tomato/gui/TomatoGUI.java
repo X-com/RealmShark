@@ -1,24 +1,22 @@
-package tomato.gui.maingui;
+package tomato.gui;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.*;
 import packets.data.QuestData;
 import tomato.Tomato;
+import tomato.gui.dps.DpsDisplayOptions;
+import tomato.gui.dps.DpsGUI;
 import tomato.gui.fame.FameTrackerGUI;
-import tomato.gui.QuestGUI;
-import tomato.gui.SmartScroller;
 import tomato.gui.character.CharacterPanelGUI;
+import tomato.gui.maingui.TomatoMenuBar;
+import tomato.gui.quest.QuestGUI;
 import tomato.gui.security.SecurityGUI;
 import tomato.backend.data.TomatoData;
 import util.PropertiesManager;
-import util.Pair;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.ArrayList;
 
 /**
  * Example GUI for Tomato mod.
@@ -31,21 +29,17 @@ public class TomatoGUI {
     private static String fontName = "Monospaced";
     private static JTextArea textAreaChat;
     private static JTextArea textAreaKeypop;
-    private static JTextArea textAreaDPS;
-    private static JTextField textFilter;
-    private static JCheckBox textFilterToggle;
-    private static JLabel statusLabel, dpsLabel;
+    private static JLabel statusLabel;
     private static JFrame frame;
     private static SecurityGUI securityPanel;
     private static CharacterPanelGUI characterPanel;
     private static QuestGUI questPanel;
     private static FameTrackerGUI fameTracker;
     private JMenuBar jMenuBar;
-    private JPanel mainPanel, dpsPanel, dpsTopPanel;
+    private JPanel mainPanel, dpsPanel;
     private TomatoMenuBar menuBar;
     private Point center;
     private Image icon;
-    private JButton next, prev;
     private TomatoData data;
 
     public TomatoGUI(TomatoData data) {
@@ -76,55 +70,8 @@ public class TomatoGUI {
         questPanel = new QuestGUI();
         tabbedPane.addTab("Daily Quests", questPanel);
 
-        next = new JButton("  Next  ");
-        prev = new JButton("Previous");
-        dpsLabel = new JLabel("1/1");
-        textFilter = new JTextField();
-        textFilter.addKeyListener(new KeyListener() {
-            public void keyTyped(KeyEvent e) {
-            }
-
-            public void keyPressed(KeyEvent e) {
-            }
-
-            public void keyReleased(KeyEvent e) {
-                PropertiesManager.setProperties("nameFilter", textFilter.getText());
-                Tomato.updateDpsWindow();
-            }
-        });
-        textFilterToggle = new JCheckBox();
-        textFilterToggle.setSelected(true);
-        textFilterToggle.addActionListener(event -> {
-            boolean selected = textFilterToggle.isSelected();
-            textFilter.setEnabled(selected);
-            PropertiesManager.setProperties("toggleFilter", selected ? "T" : "F");
-            Tomato.updateDpsWindow();
-        });
-
-        dpsTopPanel = new JPanel();
-        dpsTopPanel.setLayout(new BoxLayout(dpsTopPanel, BoxLayout.X_AXIS));
-        dpsTopPanel.add(Box.createHorizontalGlue());
-        dpsTopPanel.add(textFilterToggle);
-        dpsTopPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-        dpsTopPanel.add(textFilter);
-        dpsTopPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-        dpsTopPanel.add(prev);
-        dpsTopPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-        dpsTopPanel.add(dpsLabel);
-        dpsTopPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-        dpsTopPanel.add(next);
-        dpsTopPanel.add(Box.createHorizontalGlue());
-
-        dpsPanel = new JPanel();
-        dpsPanel.setLayout(new BorderLayout());
-        dpsPanel.add(dpsTopPanel, BorderLayout.NORTH);
-        textAreaDPS = new JTextArea();
-        dpsPanel.add(createTextArea(textAreaDPS), BorderLayout.CENTER);
-        textAreaDPS.setEnabled(false);
+        dpsPanel = new DpsGUI(data);
         tabbedPane.addTab("DPS Logger", dpsPanel);
-
-        next.addActionListener(event -> Tomato.nextDpsLogDungeon());
-        prev.addActionListener(event -> Tomato.previousDpsLogDungeon());
 
         center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
         menuBar = new TomatoMenuBar();
@@ -140,7 +87,8 @@ public class TomatoGUI {
         icon = Toolkit.getDefaultToolkit().getImage(Tomato.imagePath);
         loadFontSizePreset();
         loadFontNamePreset();
-        loadFilterPreset();
+        DpsGUI.loadFilterPreset();
+        DpsDisplayOptions.loadProfileFilter();
         jMenuBar = menuBar.make();
         makeFrame();
 
@@ -153,7 +101,7 @@ public class TomatoGUI {
      * @param textArea Text area object.
      * @return Scroll pane object to add to a parent object.
      */
-    private JScrollPane createTextArea(JTextArea textArea) {
+    public static JScrollPane createTextArea(JTextArea textArea) {
         textArea.setEnabled(true);
         textArea.setEditable(false);
         textArea.setLineWrap(true);
@@ -236,23 +184,6 @@ public class TomatoGUI {
     }
 
     /**
-     * Loads the filter preset chosen by the user.
-     */
-    private void loadFilterPreset() {
-        String nameFilter = PropertiesManager.getProperty("nameFilter");
-        String toggleFilter = PropertiesManager.getProperty("toggleFilter");
-
-        if (nameFilter != null) {
-            textFilter.setText(nameFilter);
-        }
-        if (toggleFilter != null) {
-            boolean toggled = toggleFilter.equals("T");
-            textFilterToggle.setSelected(toggled);
-            textFilter.setEnabled(toggled);
-        }
-    }
-
-    /**
      * Creates the frame with icon.
      */
     public void makeFrame() {
@@ -291,7 +222,7 @@ public class TomatoGUI {
         Font f = textAreaChat.getFont();
         textAreaChat.setFont(new Font(f.getName(), f.getStyle(), size));
         textAreaKeypop.setFont(new Font(f.getName(), f.getStyle(), size));
-        textAreaDPS.setFont(new Font(f.getName(), f.getStyle(), size));
+        DpsGUI.editFont(new Font(f.getName(), f.getStyle(), size));
     }
 
     /**
@@ -301,7 +232,7 @@ public class TomatoGUI {
         Font f = textAreaChat.getFont();
         textAreaChat.setFont(new Font(name, style, f.getSize()));
         textAreaKeypop.setFont(new Font(name, style, f.getSize()));
-        textAreaDPS.setFont(new Font(name, style, f.getSize()));
+        DpsGUI.editFont(new Font(name, style, f.getSize()));
     }
 
     /**
@@ -314,19 +245,6 @@ public class TomatoGUI {
     }
 
     /**
-     * Sets the text of DPS logger text area.
-     *
-     * @param text       Sets the text of text area.
-     * @param label      Sets the text label showing the page being viewed.
-     * @param selectable Sets if the text area should be selectable.
-     */
-    public static void setTextAreaAndLabelDPS(String text, String label, boolean selectable) {
-        if (textAreaDPS != null && text != null) textAreaDPS.setText(text);
-        if (dpsLabel != null && label != null) dpsLabel.setText(label);
-        if (textAreaDPS != null) textAreaDPS.setEnabled(selectable);
-    }
-
-    /**
      * Updates the questGUI with quest data.
      *
      * @param q Quest data received when visiting quest room.
@@ -336,28 +254,12 @@ public class TomatoGUI {
     }
 
     /**
-     * Sets the equipment of parse players.
-     *
-     * @param data Player data to set the equipment of parse players.
-     */
-    public static void setParsePlayers(ArrayList<Pair<String, int[]>> data) {
-//        if (securityPanel != null) securityPanel.addPlayers(data);
-    }
-
-    /**
      * Updates the state of the sniffer at the bottom label to show if running or off.
      *
      * @param running Set the label to running or off.
      */
     public static void setStateOfSniffer(boolean running) {
         statusLabel.setText(" Network Monitor: " + (running ? "RUNNING" : "OFF"));
-    }
-
-    /**
-     * Getter for the character panel.
-     */
-    public static CharacterPanelGUI getCharacterPanel() {
-        return characterPanel;
     }
 
     /**

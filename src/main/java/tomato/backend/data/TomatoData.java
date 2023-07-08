@@ -1,5 +1,7 @@
 package tomato.backend.data;
 
+import assets.AssetMissingException;
+import assets.IdToAsset;
 import packets.data.ObjectData;
 import packets.incoming.*;
 import packets.outgoing.EnemyHitPacket;
@@ -7,12 +9,15 @@ import packets.outgoing.PlayerShootPacket;
 import tomato.gui.character.CharacterExaltGUI;
 import tomato.gui.character.CharacterPanelGUI;
 import tomato.gui.character.CharacterStatsGUI;
+import tomato.gui.dps.DpsGUI;
 import tomato.gui.security.ParsePanelGUI;
+import tomato.gui.security.SecurityGUI;
 import tomato.realmshark.HttpCharListRequest;
 import tomato.realmshark.RealmCharacter;
 import tomato.realmshark.RealmCharacterStats;
 import tomato.realmshark.enums.CharacterClass;
 import util.RNG;
+import util.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,15 +39,17 @@ public class TomatoData {
     protected final int[][] mapTiles = new int[2048][2048];
     protected final HashMap<Integer, Entity> entityList = new HashMap<>();
     protected final HashMap<Integer, Entity> playerList = new HashMap<>();
+    protected final HashMap<Integer, Entity> playerListUpdated = new HashMap<>();
     protected final Projectile[] projectiles = new Projectile[512];
     protected RNG rng;
     protected HashSet<Integer> crystalTracker = new HashSet<>();
-    private final HashMap<Integer, Entity> entityHitList = new HashMap<>();
+    private HashMap<Integer, Entity> entityHitList = new HashMap<>();
     public VaultData regularVault = new VaultData();
     public VaultData seasonalVault = new VaultData();
     public boolean vaultDataRecievedSeasonal, vaultDataRecievedRegular, characterDataRecieved;
     public ArrayList<RealmCharacter> chars;
     public HashMap<Integer, RealmCharacter> charMap;
+    public ArrayList<DpsData> dpsData = new ArrayList<>();
 
     /**
      * Sets the current realm.
@@ -284,18 +291,43 @@ public class TomatoData {
     }
 
     /**
+     * Dungeons that should not be logged.
+     *
+     * @param dungName Map data name of the instance.
+     * @return Dungeon that should be logged.
+     */
+    private static boolean isLoggedDungeon(String dungName) {
+        switch (dungName) {
+            case "{s.vault}":  // vault
+            case "Daily Quest Room": // quest room
+            case "Pet Yard": // pet yard
+            case "{s.guildhall}": // guild hall
+            case "{s.nexus}": // nexus
+            case "Grand Bazaar": // bazaar
+                return false;
+            default:
+                return true;
+        }
+    }
+
+    /**
      * Clears all data as instance is changing.
      */
     public void clear() {
         worldPlayerId = -1;
         charId = -1;
         time = -1;
-        player = null;
         rng = null;
+        player = null;
         entityList.clear();
         playerList.clear();
         crystalTracker.clear();
-        entityHitList.clear();
+        playerListUpdated.clear();
+        if (map != null && isLoggedDungeon(map.displayName)) {
+            dpsData.add(new DpsData(map, entityHitList));
+            DpsGUI.updateLabel();
+        }
+        entityHitList = new HashMap<>();
         for (int[] row : mapTiles) {
             Arrays.fill(row, 0);
         }

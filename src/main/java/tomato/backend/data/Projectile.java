@@ -17,7 +17,7 @@ public class Projectile {
         this.damage = damage;
         try {
             armorPiercing = IdToAsset.getIdProjectileArmorPierces(containerType, 0);
-        } catch (AssetMissingException e) {
+        } catch (Exception e) {
         }
     }
 

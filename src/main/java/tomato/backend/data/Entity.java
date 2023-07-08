@@ -1,6 +1,5 @@
 package tomato.backend.data;
 
-import assets.AssetMissingException;
 import assets.IdToAsset;
 import packets.data.ObjectStatusData;
 import packets.data.WorldPosData;
@@ -15,7 +14,7 @@ public class Entity {
     private boolean isUser;
     public final Stat stat;
     private final TomatoData tomatoData;
-    private final int id;
+    public final int id;
     public int objectType;
     private long creationTime;
     private WorldPosData pos;
@@ -27,6 +26,7 @@ public class Entity {
     private int charId;
     public int[] baseStats;
     private boolean isPlayer;
+    public long stasisTimer;
 
     public Entity(TomatoData tomatoData, int id, long time) {
         this.tomatoData = tomatoData;

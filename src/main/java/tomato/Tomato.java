@@ -13,10 +13,9 @@ import packets.packetcapture.PacketProcessor;
 import packets.packetcapture.register.IPacketListener;
 import packets.packetcapture.register.Register;
 import packets.packetcapture.sniff.assembly.TcpStreamErrorHandler;
-import tomato.damagecalc.DpsLogger;
 import tomato.gui.warnings.JavaOutOfMemoryGUI;
 import tomato.gui.maingui.TomatoBandwidth;
-import tomato.gui.maingui.TomatoGUI;
+import tomato.gui.TomatoGUI;
 import tomato.gui.maingui.TomatoMenuBar;
 import tomato.realmshark.CrashLogger;
 import tomato.backend.TomatoPacketCapture;
@@ -42,7 +41,6 @@ public class Tomato {
     public static URL imagePath = Tomato.class.getResource("/icon/tomatoIcon.png");
     private static final Pattern popperName = Pattern.compile("[^ ]*\"player\":\"([A-Za-z]*)[^ ]*");
     private static PacketProcessor packetProcessor;
-    private static final DpsLogger dpsLogger = new DpsLogger();
     private static final IPacketListener<Packet> loadAsset = Tomato::loadAssets;
     private static TomatoRootController rootController;
 
@@ -135,44 +133,6 @@ public class Tomato {
         Register.INSTANCE.register(PacketType.HELLO, packCap::packetCapture);
     }
 
-
-//    /**
-//     * Packet register for listening to incoming or outgoing packets from realm client.
-//     *
-//     * @param packCap Packet capture controller.
-//     */
-//    public static void packetRegister(TomatoPacketCapture packCap) {
-//        Register.INSTANCE.subscribePacketLogger(TomatoBandwidth::setInfo);
-//
-//        Register.INSTANCE.register(PacketType.MAPINFO, loadAsset);
-//
-//        Register.INSTANCE.register(PacketType.TEXT, Tomato::textPacket);
-//
-//        Register.INSTANCE.register(PacketType.NOTIFICATION, Tomato::notificationPacket);
-//
-//        Register.INSTANCE.register(PacketType.CREATE_SUCCESS, packCap::packetCapture);
-//        Register.INSTANCE.register(PacketType.ENEMYHIT, packCap::packetCapture);
-//        Register.INSTANCE.register(PacketType.PLAYERSHOOT, packCap::packetCapture);
-//        Register.INSTANCE.register(PacketType.DAMAGE, packCap::packetCapture);
-//        Register.INSTANCE.register(PacketType.SERVERPLAYERSHOOT, packCap::packetCapture);
-//        Register.INSTANCE.register(PacketType.UPDATE, packCap::packetCapture);
-//        Register.INSTANCE.register(PacketType.NEWTICK, packCap::packetCapture);
-//        Register.INSTANCE.register(PacketType.MAPINFO, packCap::packetCapture);
-//        Register.INSTANCE.register(PacketType.TEXT, packCap::packetCapture);
-//        Register.INSTANCE.register(PacketType.EXALTATION_BONUS_CHANGED, packCap::packetCapture);
-//        Register.INSTANCE.register(PacketType.VAULT_UPDATE, packCap::packetCapture);
-//
-//        Register.INSTANCE.register(PacketType.QUEST_FETCH_RESPONSE, QuestPackets::questPacket);
-//        Register.INSTANCE.register(PacketType.QUEST_REDEEM, QuestPackets::questPacket);
-//        Register.INSTANCE.register(PacketType.HELLO, QuestPackets::questPacket);
-//
-////        Register.INSTANCE.register(PacketType.NEWTICK, parse::packetCapture);
-////        Register.INSTANCE.register(PacketType.UPDATE, parse::packetCapture);
-////        Register.INSTANCE.register(PacketType.CREATE_SUCCESS, parse::packetCapture);
-//
-////        Register.INSTANCE.register(PacketType.VAULT_UPDATE, vault::vaultPacketUpdate);
-//    }
-
     /**
      * Asset loader from realm resources.
      */
@@ -206,33 +166,8 @@ public class Tomato {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            dpsLogger.clear();
+//            dpsLogger.clear(); // TODO clear tomatodata
         }
-    }
-
-    /**
-     * Clear the DPS logs.
-     */
-    public static void clearDpsLogs() {
-        dpsLogger.clearTextLogs();
-    }
-
-    /**
-     * Sets the flag for saving all packets related to dps logs to file.
-     *
-     * @param save If the dps logs should be saved to file.
-     */
-    public static void saveDpsLogsToFile(boolean save) {
-        dpsLogger.setSaveToFile(save);
-    }
-
-    /**
-     * Dps logger packets
-     *
-     * @param packet packets for dps logger.
-     */
-    private static void dpsLoggerPacket(Packet packet) {
-        dpsLogger.packetCapture(packet, true);
     }
 
     /**
@@ -280,26 +215,5 @@ public class Tomato {
                 }
             }
         }
-    }
-
-    /**
-     * Next dungeon displayed by dps calculator.
-     */
-    public static void nextDpsLogDungeon() {
-        dpsLogger.nextDisplay();
-    }
-
-    /**
-     * Previous dungeon displayed by dps calculator.
-     */
-    public static void previousDpsLogDungeon() {
-        dpsLogger.previousDisplay();
-    }
-
-    /**
-     * Previous dungeon displayed by dps calculator.
-     */
-    public static void updateDpsWindow() {
-        dpsLogger.updateFilter();
     }
 }

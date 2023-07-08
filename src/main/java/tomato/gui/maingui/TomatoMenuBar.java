@@ -3,6 +3,9 @@ package tomato.gui.maingui;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.*;
 import tomato.Tomato;
+import tomato.gui.TomatoGUI;
+import tomato.gui.dps.DpsDisplayOptions;
+import tomato.gui.dps.DpsGUI;
 import util.PropertiesManager;
 
 import javax.swing.*;
@@ -17,8 +20,8 @@ public class TomatoMenuBar implements ActionListener {
     private JRadioButtonMenuItem fontSize8, fontSize12, fontSize16, fontSize24, fontSize48, fontSizeCustom;
     private JRadioButtonMenuItem themeDarcula, themeighContrastDark, themeHighContrastLight, themeIntelliJ, themeSolarizedDark, themeSolarizedLight;
     private JRadioButtonMenuItem fontNameMonospaced, fontNameDialog, fontNameDialogInput, fontNameSerif, fontNameSansSerif, fontNameSegoe;
-    private JRadioButtonMenuItem dpsEquipmentNone, dpsEquipmentSimple, dpsEquipmentFullSingleRow, dpsEquipmentFullMultiRow;
-    private JCheckBoxMenuItem saveDpsToFile, fontStyleBold, fontStyleItalic;
+    private JRadioButtonMenuItem dpsEquipmentNone, dpsEquipmentSimple, dpsEquipmentFull;
+    private JCheckBoxMenuItem fontStyleBold, fontStyleItalic;
     private JMenu file, edit, info;
     private JMenuBar jMenuBar;
     private JFrame frame;
@@ -44,8 +47,6 @@ public class TomatoMenuBar implements ActionListener {
         clearChat.addActionListener(this);
         clearDpsLogs = new JMenuItem("Clear DPS Logs");
         clearDpsLogs.addActionListener(this);
-        saveDpsToFile = new JCheckBoxMenuItem("Save DPS Logs");
-        saveDpsToFile.addActionListener(this);
         theme = new JMenu("Theme");
         theme.addActionListener(this);
         fontMenu = new JMenu("Font");
@@ -57,7 +58,6 @@ public class TomatoMenuBar implements ActionListener {
         edit.add(borders);
         edit.add(clearChat);
         edit.add(clearDpsLogs);
-        edit.add(saveDpsToFile);
         edit.add(theme);
         edit.add(fontMenu);
         edit.add(dpsEquipment);
@@ -101,8 +101,7 @@ public class TomatoMenuBar implements ActionListener {
         ButtonGroup groupDpsEquipment = new ButtonGroup();
         dpsEquipmentNone = addRadioButtonMenuItem(groupDpsEquipment, dpsEquipment, "None");
         dpsEquipmentSimple = addRadioButtonMenuItem(groupDpsEquipment, dpsEquipment, "Simple");
-        dpsEquipmentFullSingleRow = addRadioButtonMenuItem(groupDpsEquipment, dpsEquipment, "Full Single-Row");
-        dpsEquipmentFullMultiRow = addRadioButtonMenuItem(groupDpsEquipment, dpsEquipment, "Full Multi-Row");
+        dpsEquipmentFull = addRadioButtonMenuItem(groupDpsEquipment, dpsEquipment, "Full");
         setEquipmentRadioButton();
 
         about = new JMenuItem("About");
@@ -270,10 +269,8 @@ public class TomatoMenuBar implements ActionListener {
                 dpsEquipmentNone.setSelected(true);
                 break;
             case "2":
-                dpsEquipmentFullSingleRow.setSelected(true);
+                dpsEquipmentFull.setSelected(true);
                 break;
-            case "3":
-                dpsEquipmentFullMultiRow.setSelected(true);
             default:
             case "1":
                 dpsEquipmentSimple.setSelected(true);
@@ -361,10 +358,7 @@ public class TomatoMenuBar implements ActionListener {
         } else if (e.getSource() == clearChat) { // clears the text chat
             TomatoGUI.clearTextAreaChat();
         } else if (e.getSource() == clearDpsLogs) { // clears the dps logs
-            Tomato.clearDpsLogs();
-        } else if (e.getSource() == saveDpsToFile) { // Toggle for saving dps logs
-            boolean save = saveDpsToFile.isSelected();
-            Tomato.saveDpsLogsToFile(save);
+            DpsGUI.clearDpsLogs();
         } else if (e.getSource() == themeDarcula) { // theme
             LafManager.install(new DarculaTheme());
             PropertiesManager.setProperties("theme", "darcula");
@@ -435,16 +429,16 @@ public class TomatoMenuBar implements ActionListener {
             PropertiesManager.setProperties("fontStyle", Integer.toString(getFontStyle()));
         } else if (e.getSource() == dpsEquipmentNone) { // dps equipment
             PropertiesManager.setProperties("equipment", "0");
-            Tomato.updateDpsWindow();
+            DpsDisplayOptions.equipmentOption = 0;
+            DpsGUI.update();
         } else if (e.getSource() == dpsEquipmentSimple) { // dps equipment
             PropertiesManager.setProperties("equipment", "1");
-            Tomato.updateDpsWindow();
-        } else if (e.getSource() == dpsEquipmentFullSingleRow) { // dps equipment
+            DpsDisplayOptions.equipmentOption = 1;
+            DpsGUI.update();
+        } else if (e.getSource() == dpsEquipmentFull) { // dps equipment
             PropertiesManager.setProperties("equipment", "2");
-            Tomato.updateDpsWindow();
-        } else if (e.getSource() == dpsEquipmentFullMultiRow) { // dps equipment
-            PropertiesManager.setProperties("equipment", "3");
-            Tomato.updateDpsWindow();
+            DpsDisplayOptions.equipmentOption = 2;
+            DpsGUI.update();
         } else if (e.getSource() == about) { // Opens about window
             new TomatoPopupAbout().addPopup(frame);
         } else if (e.getSource() == bandwidth) { // Opens bandwidth window

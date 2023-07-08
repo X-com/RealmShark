@@ -1,6 +1,6 @@
-package tomato.damagecalc;
+package experimental;
 
-import tomato.gui.maingui.TomatoGUI;
+import tomato.gui.dps.StringDpsGUI;
 import util.PropertiesManager;
 import packets.Packet;
 import packets.data.StatData;
@@ -38,7 +38,7 @@ public class DpsLogger {
     private final HashMap<Integer, Entity> entityHitList = new HashMap<>();
     private MapInfoPacket mapInfo;
     private Entity player;
-    private RNG rng;
+//    private RNG rng;
     private static boolean dammahCountered = false;
     private static HashMap<Integer, Integer> crystalList = new HashMap<>();
     private Filter filter;
@@ -62,7 +62,7 @@ public class DpsLogger {
             mapInfo = (MapInfoPacket) packet;
             entityList.clear();
             entityHitList.clear();
-            rng = new RNG(mapInfo.seed);
+//            rng = new RNG(mapInfo.seed);
             dammahCountered = false;
             if (filteredInstances(mapInfo.displayName)) {
                 mapInfo = null;
@@ -79,11 +79,11 @@ public class DpsLogger {
         } else if (packet instanceof PlayerShootPacket) {
             PlayerShootPacket p = (PlayerShootPacket) packet;
             Bullet bullet = new Bullet(p);
-            try {
-                calculateBulletDamage(bullet, rng, player, p.weaponId, p.projectileId);
-            } catch (AssetMissingException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                calculateBulletDamage(bullet, rng, player, p.weaponId, p.projectileId);
+//            } catch (AssetMissingException e) {
+//                e.printStackTrace();
+//            }
             player.setBullet(p.bulletId, bullet);
         } else if (packet instanceof ServerPlayerShootPacket) {
             ServerPlayerShootPacket p = (ServerPlayerShootPacket) packet;
@@ -350,26 +350,26 @@ public class DpsLogger {
      * @param weaponId     Weapon ID used (retrieved from packet being sent).
      * @param projectileId Projectile ID used (retrieved from packet being sent).
      */
-    private static void calculateBulletDamage(Bullet bullet, RNG rng, Entity player, int weaponId, int projectileId) throws AssetMissingException {
-        if (player == null || rng == null) return;
-
-        if (projectileId == -1) {
-            projectileId = 0;
-        }
-        int min = IdToAsset.getIdProjectileMinDmg(weaponId, projectileId);
-        int max = IdToAsset.getIdProjectileMaxDmg(weaponId, projectileId);
-        boolean ap = IdToAsset.getIdProjectileArmorPierces(weaponId, projectileId);
-        int dmg;
-        if (min != max) {
-            long r = rng.next();
-            dmg = (int) (min + r % (max - min));
-        } else {
-            dmg = min;
-        }
-        float f = playerStatsMultiplier(player);
-        bullet.totalDmg = (int) (dmg * f);
-        bullet.armorPiercing = ap;
-    }
+//    private static void calculateBulletDamage(Bullet bullet, RNG rng, Entity player, int weaponId, int projectileId) throws AssetMissingException {
+//        if (player == null || rng == null) return;
+//
+//        if (projectileId == -1) {
+//            projectileId = 0;
+//        }
+//        int min = IdToAsset.getIdProjectileMinDmg(weaponId, projectileId);
+//        int max = IdToAsset.getIdProjectileMaxDmg(weaponId, projectileId);
+//        boolean ap = IdToAsset.getIdProjectileArmorPierces(weaponId, projectileId);
+//        int dmg;
+//        if (min != max) {
+//            long r = rng.next();
+//            dmg = (int) (min + r % (max - min));
+//        } else {
+//            dmg = min;
+//        }
+//        float f = playerStatsMultiplier(player);
+//        bullet.totalDmg = (int) (dmg * f);
+//        bullet.armorPiercing = ap;
+//    }
 
     /**
      * Player entity stats multiplier such as attack, exalts and other buffs.
@@ -472,7 +472,7 @@ public class DpsLogger {
         entityList.clear();
         mapInfo = null;
         player = null;
-        rng = null;
+//        rng = null;
     }
 
     /**
@@ -481,7 +481,7 @@ public class DpsLogger {
     public void clearTextLogs() {
         entityLogs.clear();
         displayIndex = 1;
-        TomatoGUI.setTextAreaAndLabelDPS("", "1/1", false);
+//        StringDpsGUI.setTextAreaAndLabelDPS("", "1/1", false);
     }
 
     /**
@@ -493,11 +493,11 @@ public class DpsLogger {
             Entity[] e = entityLogs.get(displayIndex);
             String s = stringDmg(e, filter);
             String l = (displayIndex + 1) + "/" + (entityLogs.size() + 1);
-            TomatoGUI.setTextAreaAndLabelDPS(s, l, true);
+//            StringDpsGUI.setTextAreaAndLabelDPS(s, l, true);
         } else if (displayIndex < entityLogs.size()) {
             displayIndex++;
             String l = (displayIndex + 1) + "/" + (entityLogs.size() + 1);
-            TomatoGUI.setTextAreaAndLabelDPS(stringDmg(firstPage, filter), l, false);
+//            StringDpsGUI.setTextAreaAndLabelDPS(stringDmg(firstPage, filter), l, false);
         }
     }
 
@@ -510,7 +510,7 @@ public class DpsLogger {
             Entity[] e = entityLogs.get(displayIndex);
             String s = stringDmg(e, filter);
             String l = (displayIndex + 1) + "/" + (entityLogs.size() + 1);
-            TomatoGUI.setTextAreaAndLabelDPS(s, l, true);
+//            StringDpsGUI.setTextAreaAndLabelDPS(s, l, true);
         }
     }
 
@@ -525,7 +525,7 @@ public class DpsLogger {
         firstPage = new Entity[0];
         entityLogs.add(displayList());
         String labelText = (displayIndex + 1) + "/" + (entityLogs.size() + 1);
-        TomatoGUI.setTextAreaAndLabelDPS(text, labelText, selectable);
+//        StringDpsGUI.setTextAreaAndLabelDPS(text, labelText, selectable);
     }
 
     /**
@@ -534,7 +534,7 @@ public class DpsLogger {
     private void updateLogs() {
         if (displayIndex != entityLogs.size()) return;
         String firstPage = stringDmg(displayList(), filter);
-        TomatoGUI.setTextAreaAndLabelDPS(firstPage, null, displayIndex != entityLogs.size());
+//        StringDpsGUI.setTextAreaAndLabelDPS(firstPage, null, displayIndex != entityLogs.size());
     }
 
     public void updateFilter() {
@@ -542,7 +542,7 @@ public class DpsLogger {
         Entity[] list;
         if (entityLogs.size() > 0 && displayIndex < entityLogs.size()) list = entityLogs.get(displayIndex);
         else list = firstPage;
-        TomatoGUI.setTextAreaAndLabelDPS(stringDmg(list, filter), null, displayIndex != entityLogs.size());
+//        StringDpsGUI.setTextAreaAndLabelDPS(stringDmg(list, filter), null, displayIndex != entityLogs.size());
     }
 
     private void setProfileFilter() {

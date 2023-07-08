@@ -7,7 +7,8 @@ import packets.outgoing.EnemyHitPacket;
 import packets.outgoing.HelloPacket;
 import packets.outgoing.PlayerShootPacket;
 import tomato.backend.data.TomatoData;
-import tomato.gui.maingui.TomatoGUI;
+import tomato.gui.dps.DpsGUI;
+import tomato.gui.TomatoGUI;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -31,7 +32,7 @@ public class TomatoPacketCapture implements Controller {
         if (packet instanceof NewTickPacket) {
             NewTickPacket p = (NewTickPacket) packet;
             data.updateNewTick(p);
-            TomatoGUI.setTextAreaAndLabelDPS(DpsToString.stringDmg(data), "123", false);
+            DpsGUI.updateNewTickPacket(data);
         } else if (packet instanceof UpdatePacket) {
             UpdatePacket p = (UpdatePacket) packet;
             data.update(p);

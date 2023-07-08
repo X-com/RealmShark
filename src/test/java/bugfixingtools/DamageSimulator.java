@@ -1,6 +1,5 @@
 package bugfixingtools;
 
-import tomato.damagecalc.DpsLogger;
 import packets.Packet;
 import packets.PacketType;
 import packets.data.StatData;
@@ -46,7 +45,7 @@ public class DamageSimulator {
     }
 
     static ArrayList<BufferReader> injectData = new ArrayList<>();
-    public DpsLogger dpsLogger = new DpsLogger();
+//    public DpsLogger dpsLogger = new DpsLogger();
     HashMap<Integer, Entity> entityList = new HashMap<>();
     long serverTime = 0;
     long serverFirstTime = 0;
@@ -83,7 +82,7 @@ public class DamageSimulator {
                 Packet packet = PacketType.getPacket(type).factory();
                 packet.deserialize(pData);
 
-                dpsLogger.packetCapture(packet, false);
+//                dpsLogger.packetCapture(packet, false);
 //                packetCapture(packet);
             }
         }
