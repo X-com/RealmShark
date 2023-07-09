@@ -321,7 +321,7 @@ public class TomatoData {
      * @param p Text info.
      */
     public void text(TextPacket p) {
-
+        if (p.text.equals("I SAID DO NOT INTERRUPT ME! For this I shall hasten your end!")) Damage.dammahCountered = true;
     }
 
     /**
@@ -357,6 +357,7 @@ public class TomatoData {
         playerList.clear();
         crystalTracker.clear();
         playerListUpdated.clear();
+        Damage.dammahCountered = false;
         if (map != null && isLoggedDungeon(map.displayName)) {
             dpsData.add(new DpsData(map, entityHitList));
             DpsGUI.updateLabel();

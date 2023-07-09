@@ -134,6 +134,7 @@ public class Entity {
     }
 
     private void bossPhaseDamage(Damage damage) {
+        damage.oryx3GuardDmg = objectType == 45363 && stat.ANIMATION_ID != null && (stat.ANIMATION_ID.statValue == -935464302 || stat.ANIMATION_ID.statValue == -918686683);
         damage.walledGardenReflectors = objectType == 29039 && stat.ANIMATION_ID != null && (stat.ANIMATION_ID.statValue == -123818367 && tomatoData.floorPlanCrystals() == 12);
         damage.chancellorDammahDmg = objectType == 9635 && !Damage.dammahCountered;
     }

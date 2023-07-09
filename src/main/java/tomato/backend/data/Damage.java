@@ -1,11 +1,9 @@
 package tomato.backend.data;
 
-import javax.swing.plaf.synth.SynthUI;
-
 /**
  * Class used to store damage and counter info.
  */
-public class Damage implements Comparable {
+public class Damage {
     public Entity owner;
     public int[] ownerInv;
     public Projectile projectile;
@@ -13,6 +11,7 @@ public class Damage implements Comparable {
     public int damage;
     public int counterDmg;
     public int counterHits;
+    public boolean oryx3GuardDmg;
     public boolean chancellorDammahDmg;
     public boolean walledGardenReflectors;
     public static boolean dammahCountered;
@@ -51,11 +50,6 @@ public class Damage implements Comparable {
             System.out.println(o.stat.INVENTORY_0_STAT);
             System.out.println(o.stat.INVENTORY_0_STAT.statValue);
         }
-    }
-
-    @Override
-    public int compareTo(Object o) {
-        return ((Damage) o).damage - damage;
     }
 
     public int getDamage() {
