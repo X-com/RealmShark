@@ -56,12 +56,12 @@ public class Damage {
     }
 
     private void addCounters(Damage d) {
-        oryx3GuardDmg = d.oryx3GuardDmg;
-        walledGardenReflectors = d.walledGardenReflectors;
-        chancellorDammahDmg = d.chancellorDammahDmg;
-        if (oryx3GuardDmg || walledGardenReflectors || chancellorDammahDmg) {
+        if (d.oryx3GuardDmg || d.walledGardenReflectors || d.chancellorDammahDmg) {
             counterDmg += d.damage;
             counterHits++;
+            oryx3GuardDmg = d.oryx3GuardDmg;
+            walledGardenReflectors = d.walledGardenReflectors;
+            chancellorDammahDmg = d.chancellorDammahDmg;
         }
     }
 }
