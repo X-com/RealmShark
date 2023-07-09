@@ -119,10 +119,12 @@ public class DpsToString {
             int index = name.indexOf(',');
             if (index != -1) name = name.substring(0, index);
             float pers = ((float) dmg.damage * 100 / (float) entity.maxHp());
-            if (Damage.dammahCountered && dmg.chancellorDammahDmg) {
-                extra = String.format("[Dammah Counter Hits:%d Dmg:%d]", dmg.counterHits, dmg.counterDmg);
+            if (dmg.oryx3GuardDmg) {
+                extra = String.format("[Guarded Hits:%d Dmg:%d]", dmg.counterHits, dmg.counterDmg);
+            } else if (Damage.dammahCountered && dmg.chancellorDammahDmg) {
+                extra = String.format("[Dammah Hits:%d Dmg:%d]", dmg.counterHits, dmg.counterDmg);
             } else if (dmg.walledGardenReflectors) {
-                extra = String.format("[Garden Counter Hits:%d Dmg:%d]", dmg.counterHits, dmg.counterDmg);
+                extra = String.format("[Garden Hits:%d Dmg:%d]", dmg.counterHits, dmg.counterDmg);
             }
             String inv = showInv(DpsDisplayOptions.equipmentOption, dmg.owner, entity);
             sb.append(String.format("%s %3d %10s DMG: %7d %6.3f%% %s %s\n", isMe, counter, name, dmg.damage, pers, extra, inv));
