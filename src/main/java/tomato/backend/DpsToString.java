@@ -6,6 +6,7 @@ import tomato.backend.data.Damage;
 import tomato.gui.dps.DpsDisplayOptions;
 import tomato.backend.data.Entity;
 import tomato.backend.data.TomatoData;
+import tomato.realmshark.enums.CharacterClass;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,6 +32,7 @@ public class DpsToString {
         List<Entity> sortedList = Arrays.stream(data).sorted(Comparator.comparingLong(Entity::getLastDamageTaken).reversed()).collect(Collectors.toList());
         for (Entity e : sortedList) {
             if (e.maxHp() <= 0) continue;
+            if (CharacterClass.isPlayerCharacter(e.objectType)) continue;
             sb.append(display(e)).append("\n");
         }
 

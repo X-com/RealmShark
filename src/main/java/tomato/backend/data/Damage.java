@@ -38,17 +38,10 @@ public class Damage {
     }
 
     private void setInv(Entity o) {
-        try {
-            if (o != null) {
-                ownerInv = new int[]{o.stat.INVENTORY_0_STAT.statValue, o.stat.INVENTORY_1_STAT.statValue, o.stat.INVENTORY_2_STAT.statValue, o.stat.INVENTORY_3_STAT.statValue};
-            } else {
-                ownerInv = null;
-            }
-        } catch (Exception e) {
-            System.out.println(o);
-            System.out.println(o.stat);
-            System.out.println(o.stat.INVENTORY_0_STAT);
-            System.out.println(o.stat.INVENTORY_0_STAT.statValue);
+        if (o != null && o.stat != null) {
+            ownerInv = new int[]{o.stat.INVENTORY_0_STAT.statValue, o.stat.INVENTORY_1_STAT.statValue, o.stat.INVENTORY_2_STAT.statValue, o.stat.INVENTORY_3_STAT.statValue};
+        } else {
+            ownerInv = null;
         }
     }
 
@@ -58,5 +51,17 @@ public class Damage {
 
     public void add(Damage d) {
         damage += d.damage;
+
+        addCounters(d);
+    }
+
+    private void addCounters(Damage d) {
+        oryx3GuardDmg = d.oryx3GuardDmg;
+        walledGardenReflectors = d.walledGardenReflectors;
+        chancellorDammahDmg = d.chancellorDammahDmg;
+        if (oryx3GuardDmg || walledGardenReflectors || chancellorDammahDmg) {
+            counterDmg += d.damage;
+            counterHits++;
+        }
     }
 }

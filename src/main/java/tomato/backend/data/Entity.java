@@ -28,6 +28,13 @@ public class Entity {
     private boolean isPlayer;
     public long stasisTimer;
 
+    private final static int ORYX_THE_MAD_GOD = 45363;
+    private final static int ORYX_THE_MAD_GOD_GUARD_ANIMATION = -935464302;
+    private final static int ORYX_THE_MAD_GOD_GUARD_EXALTED_ANIMATION = -918686683;
+    private final static int CHANCELLOR_DAMMAH = 9635;
+    private final static int FORGOTTEN_KING = 29039;
+    private final static int FORGOTTEN_KING_REFLECTOR_ANIMATION = -123818367;
+
     public Entity(TomatoData tomatoData, int id, long time) {
         this.tomatoData = tomatoData;
         this.id = id;
@@ -134,9 +141,9 @@ public class Entity {
     }
 
     private void bossPhaseDamage(Damage damage) {
-        damage.oryx3GuardDmg = objectType == 45363 && stat.ANIMATION_ID != null && (stat.ANIMATION_ID.statValue == -935464302 || stat.ANIMATION_ID.statValue == -918686683);
-        damage.walledGardenReflectors = objectType == 29039 && stat.ANIMATION_ID != null && (stat.ANIMATION_ID.statValue == -123818367 && tomatoData.floorPlanCrystals() == 12);
-        damage.chancellorDammahDmg = objectType == 9635 && !Damage.dammahCountered;
+        damage.oryx3GuardDmg = objectType == ORYX_THE_MAD_GOD && stat.ANIMATION_ID != null && (stat.ANIMATION_ID.statValue == ORYX_THE_MAD_GOD_GUARD_ANIMATION || stat.ANIMATION_ID.statValue == ORYX_THE_MAD_GOD_GUARD_EXALTED_ANIMATION);
+        damage.walledGardenReflectors = objectType == FORGOTTEN_KING && stat.ANIMATION_ID != null && (stat.ANIMATION_ID.statValue == FORGOTTEN_KING_REFLECTOR_ANIMATION && tomatoData.floorPlanCrystals() == 12);
+        damage.chancellorDammahDmg = objectType == CHANCELLOR_DAMMAH && !Damage.dammahCountered;
     }
 
     public String name() {
