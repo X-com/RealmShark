@@ -1,6 +1,5 @@
 package tomato.gui.dps;
 
-import tomato.backend.DpsToString;
 import tomato.backend.data.Entity;
 import tomato.gui.TomatoGUI;
 
