@@ -4,6 +4,8 @@ import packets.Packet;
 import packets.reader.BufferReader;
 import packets.data.WorldPosData;
 
+import java.util.Arrays;
+
 /**
  * Sent when the player shoots a projectile.
  */
@@ -37,6 +39,7 @@ public class PlayerShootPacket extends Packet {
      * If the projectile is related to a burst weapon projectile.
      */
     public boolean isBurst;
+    public byte[] unknownBytes;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
@@ -47,6 +50,7 @@ public class PlayerShootPacket extends Packet {
         startingPos = new WorldPosData().deserialize(buffer);
         angle = buffer.readFloat();
         isBurst = buffer.readBoolean();
+        unknownBytes = buffer.readBytes(2);
     }
 
     @Override
@@ -58,6 +62,7 @@ public class PlayerShootPacket extends Packet {
                 "\n   projectileId=" + projectileId +
                 "\n   startingPos=" + startingPos +
                 "\n   angle=" + angle +
-                "\n   isBurst=" + isBurst;
+                "\n   isBurst=" + isBurst +
+                "\n   unknownBytes=" + Arrays.toString(unknownBytes);
     }
 }
