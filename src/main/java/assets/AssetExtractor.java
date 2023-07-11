@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,21 +38,31 @@ public class AssetExtractor {
 
     /**
      * Main loader for realm assets.
-     *
-     * @param buildVersion
      */
-    public static void checkForExtraction(String buildVersion) {
-        if (checkUpdateAssets(buildVersion) != 0) {
-            assetExtractionWindow(buildVersion);
+    public static void checkForExtraction() {
+        String lastModifiedTime = lastEdited();
+        if (checkUpdateAssets(lastModifiedTime) != 0) {
+            assetExtractionWindow(lastModifiedTime);
+        }
+    }
+
+    public static String lastEdited() {
+        File file = assetFile();
+        BasicFileAttributes attr;
+        try {
+            attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+            return attr.lastModifiedTime().toString();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
     /**
      * GUI dialog options for extracting the assets.
      *
-     * @param buildVersion Build version of realm.
+     * @param lastModifiedTime Last modified time of the assets file.
      */
-    private static void assetExtractionWindow(String buildVersion) {
+    private static void assetExtractionWindow(String lastModifiedTime) {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayout(2, 1));
 
@@ -152,7 +163,7 @@ public class AssetExtractor {
             File finalF = f;
             SwingUtilities.invokeLater(() -> {
                 try {
-                    extractAssets(finalF, buildVersion);
+                    extractAssets(finalF, lastModifiedTime);
                     extractAssetsFromXML();
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -174,6 +185,7 @@ public class AssetExtractor {
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.pack();
         dialog.setVisible(true);
+        optionPane.grabFocus();
     }
 
     /**
@@ -195,23 +207,23 @@ public class AssetExtractor {
      * Extracts assets using the UnityExtractor from realms resrouces.assets file into assets folder.
      *
      * @param file         File path to resrouces.assets.
-     * @param buildVersion Build version of current realm client.
+     * @param lastModifiedTime Last modified time of the assets file.
      */
-    private static void extractAssets(File file, String buildVersion) throws IOException {
+    private static void extractAssets(File file, String lastModifiedTime) throws IOException {
         new UnityExtractor().extract(file, ASSET_FOLDERS);
-        PropertiesManager.setProperties("buildVersion", buildVersion);
+        PropertiesManager.setProperties("lastModifiedTime", lastModifiedTime);
     }
 
     /**
      * Checks if asset folders exist and current build version is matching.
      *
-     * @param buildVersion Build version of current realm client.
+     * @param lastModifiedTime Last modified time of the assets file.
      * @return True if assets are missing.
      */
-    private static int checkUpdateAssets(String buildVersion) {
+    private static int checkUpdateAssets(String lastModifiedTime) {
         if (!new File(ASSETS_OBJECT_FILE_DIR_PATH).exists()) return 1;
         if (!new File(ASSETS_TILE_FILE_DIR_PATH).exists()) return 2;
-        if (!Objects.equals(PropertiesManager.getProperty("buildVersion"), buildVersion)) return 3;
+        if (!Objects.equals(PropertiesManager.getProperty("lastModifiedTime"), lastModifiedTime)) return 3;
         return 0;
     }
 
