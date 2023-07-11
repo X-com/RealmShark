@@ -1,4 +1,4 @@
-package packets.outgoing;
+package packets.incoming;
 
 import packets.Packet;
 import packets.reader.BufferReader;
