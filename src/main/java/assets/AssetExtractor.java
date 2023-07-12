@@ -63,9 +63,11 @@ public class AssetExtractor {
      * @param lastModifiedTime Last modified time of the assets file.
      */
     private static void assetExtractionWindow(String lastModifiedTime) {
+        JFrame frame = new JFrame("Realm Shark Asset Extractor");
+        frame.setVisible(true);
         Object[] options = {"Extract",
                 "Ignore"};
-        int n = JOptionPane.showOptionDialog(null,
+        int n = JOptionPane.showOptionDialog(frame,
                 "New update available\n"
                         + "Assets are needed for some features?",
                 "Asset Extractor",
@@ -80,6 +82,7 @@ public class AssetExtractor {
                 waitWhileExtracting(assetsFile, lastModifiedTime);
             }
         }
+        frame.dispose();
     }
 
     /**
