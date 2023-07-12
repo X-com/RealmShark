@@ -18,9 +18,8 @@ public class ParsePanelGUI extends JPanel {
 
     private static ParsePanelGUI INSTANCE;
 
-    private static int HEIGHT = 40;
+    private static int HEIGHT = 24;
 
-    private JScrollPane scroll;
     private static JPanel charPanel;
     private static HashMap<Integer, Player> playerDisplay;
 
@@ -36,7 +35,7 @@ public class ParsePanelGUI extends JPanel {
 
         validate();
 
-        scroll = new JScrollPane(charPanel);
+        JScrollPane scroll = new JScrollPane(charPanel);
         scroll.getVerticalScrollBar().setUnitIncrement(40);
         new SmartScroller(scroll);
         add(scroll, BorderLayout.CENTER);
@@ -61,11 +60,10 @@ public class ParsePanelGUI extends JPanel {
 
     private static JPanel createMainBox(Player p, Entity player) {
         JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(), BorderFactory.createEmptyBorder(-4, 0, 0, 0)));
+        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), BorderFactory.createEmptyBorder(0, 0, 0, 0)));
         panel.setPreferredSize(new Dimension(370, HEIGHT));
         panel.setMaximumSize(new Dimension(370, HEIGHT));
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-
 
         JPanel left = leftPanel(player);
         panel.add(left);
@@ -81,7 +79,7 @@ public class ParsePanelGUI extends JPanel {
 
     private static JPanel leftPanel(Entity player) {
         JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(110, 33));
+        panel.setPreferredSize(new Dimension(110, HEIGHT));
         panel.setLayout(new BorderLayout());
 
         try {
@@ -117,12 +115,10 @@ public class ParsePanelGUI extends JPanel {
 
     private static JPanel equipment(Player p, Entity player) {
         JPanel panel = new JPanel();
-        panel.setMaximumSize(new Dimension(120, HEIGHT));
-        panel.setPreferredSize(new Dimension(120, HEIGHT));
-
-        JPanel panelEquip = new JPanel();
-        panelEquip.setBorder(BorderFactory.createLineBorder(Color.black));
-        panelEquip.setPreferredSize(new Dimension(110, 33));
+        panel.setPreferredSize(new Dimension(110, HEIGHT));
+        panel.setLayout(new GridLayout(1,4));
+//        panelEquip.setBorder(BorderFactory.createLineBorder(Color.black));
+//        panelEquip.setPreferredSize(new Dimension(110, 33));
         p.inv[0] = player.stat.INVENTORY_0_STAT.statValue;
         p.inv[1] = player.stat.INVENTORY_1_STAT.statValue;
         p.inv[2] = player.stat.INVENTORY_2_STAT.statValue;
@@ -138,11 +134,10 @@ public class ParsePanelGUI extends JPanel {
                 }
                 p.icon[i] = new JLabel(new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT)));
                 p.icon[i].setToolTipText(IdToAsset.objectName(eq));
-                panelEquip.add(p.icon[i]);
+                panel.add(p.icon[i]);
             } catch (Exception e) {
             }
         }
-        panel.add(panelEquip);
 
         return panel;
     }
