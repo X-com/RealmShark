@@ -41,11 +41,10 @@ public class Tomato {
     public static URL imagePath = Tomato.class.getResource("/icon/tomatoIcon.png");
     private static final Pattern popperName = Pattern.compile("[^ ]*\"player\":\"([A-Za-z]*)[^ ]*");
     private static PacketProcessor packetProcessor;
-    private static final IPacketListener<Packet> loadAsset = Tomato::loadAssets;
     private static TomatoRootController rootController;
 
     public static void main(String[] args) {
-        Util.setSaveLogs(true); // turns the logger to, save in to files.
+        Util.setSaveLogs(false); // turns the logger to, save in to files.
         TcpStreamErrorHandler.INSTANCE.setErrorMessageHandler(Tomato::errorMessageHandler);
         TcpStreamErrorHandler.INSTANCE.setErrorStopHandler(TomatoMenuBar::stopPacketSniffer);
         load();
@@ -57,6 +56,8 @@ public class Tomato {
      */
     public static void load() {
         CrashLogger.loadThisClass();
+        TomatoGUI.loadThemePreset();
+        AssetExtractor.checkForExtraction();
         try {
             TomatoData data = new TomatoData();
             loadControllers(data);
@@ -100,7 +101,7 @@ public class Tomato {
      */
     private static void errorMessageHandler(String errorMsg, String dump) {
         TomatoGUI.appendTextAreaChat(errorMsg);
-        Util.print(dump);
+        Util.printLogs(dump);
     }
 
     /**
@@ -111,11 +112,8 @@ public class Tomato {
     private static void packetRegister(TomatoPacketCapture packCap) {
         Register.INSTANCE.subscribePacketLogger(TomatoBandwidth::setInfo);
 
-//        Register.INSTANCE.register(PacketType.MAPINFO, loadAsset);
-
-//        Register.INSTANCE.register(PacketType.TEXT, Tomato::textPacket);
-
-//        Register.INSTANCE.register(PacketType.NOTIFICATION, Tomato::notificationPacket);
+        Register.INSTANCE.register(PacketType.TEXT, Tomato::textPacket);
+        Register.INSTANCE.register(PacketType.NOTIFICATION, Tomato::notificationPacket);
 
         Register.INSTANCE.register(PacketType.CREATE_SUCCESS, packCap::packetCapture);
         Register.INSTANCE.register(PacketType.ENEMYHIT, packCap::packetCapture);
@@ -131,17 +129,6 @@ public class Tomato {
         Register.INSTANCE.register(PacketType.VAULT_UPDATE, packCap::packetCapture);
         Register.INSTANCE.register(PacketType.QUEST_FETCH_RESPONSE, packCap::packetCapture);
         Register.INSTANCE.register(PacketType.HELLO, packCap::packetCapture);
-    }
-
-    /**
-     * Asset loader from realm resources.
-     */
-    private static void loadAssets(Packet packet) {
-        if (packet instanceof MapInfoPacket) {
-            MapInfoPacket p = (MapInfoPacket) packet;
-            AssetExtractor.checkForExtraction(p.buildVersion);
-            Register.INSTANCE.unregister(PacketType.MAPINFO, loadAsset);
-        }
     }
 
     /**

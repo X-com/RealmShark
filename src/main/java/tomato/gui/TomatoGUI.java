@@ -50,7 +50,6 @@ public class TomatoGUI {
      * Create main panel and initializes the GUI for the example Tomato.
      */
     public void create() {
-        loadThemePreset();
         JTabbedPane tabbedPane = new JTabbedPane();
         textAreaChat = new JTextArea();
         tabbedPane.addTab("Chat", createTextArea(textAreaChat));
