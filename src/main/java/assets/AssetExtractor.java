@@ -63,129 +63,113 @@ public class AssetExtractor {
      * @param lastModifiedTime Last modified time of the assets file.
      */
     private static void assetExtractionWindow(String lastModifiedTime) {
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(2, 1));
-
-        JPanel lablePanel = new JPanel();
-        lablePanel.setLayout(new BoxLayout(lablePanel, BoxLayout.X_AXIS));
-        lablePanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        mainPanel.add(lablePanel);
-
-        JLabel l1 = new JLabel("New update available");
-        JLabel l2 = new JLabel("Assets are needed for some features");
-        JLabel l3 = new JLabel("Extracting assets");
-        l1.setBorder(BorderFactory.createEmptyBorder(5, 5, 1, 5));
-        l2.setBorder(BorderFactory.createEmptyBorder(1, 5, 5, 5));
-        l3.setBorder(BorderFactory.createEmptyBorder(1, 5, 5, 5));
-
-        JPanel labels = new JPanel();
-        labels.setLayout(new BoxLayout(labels, BoxLayout.Y_AXIS));
-        lablePanel.add(labels);
-        labels.add(l1);
-        labels.add(l2);
-
-        JPanel buttons = new JPanel();
-        buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
-
-        JButton extract = new JButton("Extract");
-        JButton close = new JButton("Ignore");
-        extract.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        close.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        buttons.add(Box.createHorizontalGlue());
-        buttons.add(extract);
-        buttons.add(close);
-        buttons.add(Box.createHorizontalGlue());
-
-        mainPanel.add(buttons);
-
-        JDialog dialog = new JDialog();
-        close.addActionListener(e -> {
-            dialog.dispose();
-        });
-        extract.addActionListener(e -> {
-            extract.setEnabled(false);
-            File f = assetFile();
-
-            if (!f.exists()) {
-                int i = JOptionPane.showOptionDialog(dialog, "Please select realm folder", "Realm folder not found", JOptionPane.ERROR_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{"Realm Folder", "Cancel"}, null);
-                if (i == 1) {
-                    dialog.dispose();
-                } else if (i == 0) {
-                    try {
-                        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-
-                    File path = FileSystemView.getFileSystemView().getDefaultDirectory();
-                    while (true) {
-                        JFileChooser fc = new JFileChooser();
-                        fc.setCurrentDirectory(path);
-                        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                        int returnVal = fc.showDialog(null, "Realm Folder");
-                        if (returnVal == JFileChooser.APPROVE_OPTION) {
-                            path = fc.getSelectedFile();
-
-                            try (Stream<Path> pathStream = Files.find(path.toPath(), 5, (p, basicFileAttributes) -> p.getFileName().toString().equalsIgnoreCase("resources.assets"))) {
-                                List<Path> list = pathStream.collect(Collectors.toList());
-                                if (list.size() == 1) {
-                                    Path p = list.get(0);
-                                    f = p.toFile();
-                                    PropertiesManager.setProperties("realmResPath", f.getPath());
-                                    break;
-                                }
-                            } catch (Exception ex) {
-                                continue;
-                            }
-                        } else if (returnVal == JFileChooser.CANCEL_OPTION) {
-                            dialog.dispose();
-                            return;
-                        }
-                    }
-                }
+        Object[] options = {"Extract",
+                "Ignore"};
+        int n = JOptionPane.showOptionDialog(null,
+                "New update available\n"
+                        + "Assets are needed for some features?",
+                "Asset Extractor",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,//do not use a custom Icon
+                options,//the titles of buttons
+                options[1]);//default button title
+        if (n == 0) {
+            File assetsFile = getAssetsFile();
+            if (assetsFile != null) {
+                waitWhileExtracting(assetsFile, lastModifiedTime);
             }
+        }
+    }
 
-            labels.removeAll();
-            buttons.removeAll();
+    /**
+     * Gets the asset file and if file is not found in default folder
+     * opens a file dialog window for user to give location of assets file.
+     *
+     * @return The resources.assets file used for extraction
+     */
+    private static File getAssetsFile() {
+        File f = assetFile();
 
-            labels.setLayout(new BoxLayout(labels, BoxLayout.Y_AXIS));
-            labels.add(l3);
-            buttons.add(Box.createHorizontalGlue());
-            close.setEnabled(false);
-            close.setText("Done");
-            buttons.add(close);
-            buttons.add(Box.createHorizontalGlue());
-
-            labels.revalidate();
-            buttons.revalidate();
-            dialog.repaint();
-
-            File finalF = f;
-            SwingUtilities.invokeLater(() -> {
+        if (!f.exists()) {
+            int i = JOptionPane.showOptionDialog(null, "Please select realm folder", "Realm folder not found", JOptionPane.ERROR_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{"Realm Folder", "Cancel"}, null);
+            if (i == 0) {
                 try {
-                    extractAssets(finalF, lastModifiedTime);
-                    extractAssetsFromXML();
-                } catch (IOException ex) {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
 
-                labels.removeAll();
-                labels.add(new JLabel("Done extracting assets."));
-                labels.add(new JLabel("Restart app if assets are missing."));
-                labels.revalidate();
-                dialog.repaint();
-                close.setEnabled(true);
-            });
-        });
+                File path = FileSystemView.getFileSystemView().getDefaultDirectory();
+                while (true) {
+                    JFileChooser fc = new JFileChooser();
+                    fc.setCurrentDirectory(path);
+                    fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                    int returnVal = fc.showDialog(null, "Realm Folder");
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        path = fc.getSelectedFile();
 
-        JOptionPane optionPane = new JOptionPane(mainPanel, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
-        dialog.setTitle("Asset Extraction");
-        dialog.setContentPane(optionPane);
-        dialog.setLocationRelativeTo(dialog.getOwner());
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.pack();
+                        try (Stream<Path> pathStream = Files.find(path.toPath(), 5, (p, basicFileAttributes) -> p.getFileName().toString().equalsIgnoreCase("resources.assets"))) {
+                            List<Path> list = pathStream.collect(Collectors.toList());
+                            if (list.size() == 1) {
+                                Path p = list.get(0);
+                                f = p.toFile();
+                                PropertiesManager.setProperties("realmResPath", f.getPath());
+                                break;
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (returnVal == JFileChooser.CANCEL_OPTION) {
+                        return null;
+                    }
+                }
+            }
+        }
+        return f;
+    }
+
+    /**
+     * Starts the extraction on the resources.assets file while
+     * creates dialog window for user to wait.
+     *
+     * @param assetsFile       The resources.assets file to be extracted.
+     * @param lastModifiedTime Last modified time used to keep track of updates on the assets file.
+     */
+    private static void waitWhileExtracting(File assetsFile, String lastModifiedTime) {
+        JPanel panel = new JPanel(new BorderLayout());
+        JButton ok = new JButton("OK");
+        ok.setEnabled(false);
+        JLabel text = new JLabel("Please wait while extracting.");
+        panel.add(text, BorderLayout.CENTER);
+        ok.addActionListener(e -> {
+            Component component = (Component) e.getSource();
+            if (component == null) {
+                return;
+            }
+            Window win = SwingUtilities.getWindowAncestor(component);
+            if (win == null) {
+                return;
+            }
+            win.dispose();
+        });
+        JOptionPane pane = new JOptionPane("Extracting. Please wait.", JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, new JButton[]{ok}, ok);
+        JDialog dialog = pane.createDialog(panel, "Extracting");
+        dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        new Thread(() -> {
+            try {
+                extractAssets(assetsFile, lastModifiedTime);
+                extractAssetsFromXML();
+                pane.setMessage("Finished extraction.");
+                ok.setEnabled(true);
+                System.out.println("done extracting.");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }).start();
+
         dialog.setVisible(true);
-        optionPane.grabFocus();
     }
 
     /**
@@ -206,7 +190,7 @@ public class AssetExtractor {
     /**
      * Extracts assets using the UnityExtractor from realms resrouces.assets file into assets folder.
      *
-     * @param file         File path to resrouces.assets.
+     * @param file             File path to resrouces.assets.
      * @param lastModifiedTime Last modified time of the assets file.
      */
     private static void extractAssets(File file, String lastModifiedTime) throws IOException {
