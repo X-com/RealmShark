@@ -60,7 +60,7 @@ public class ParsePanelGUI extends JPanel {
 
     private static JPanel createMainBox(Player p, Entity player) {
         JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), BorderFactory.createEmptyBorder(0, 0, 0, 0)));
+        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), BorderFactory.createEmptyBorder(0, 20, 0, 20)));
         panel.setPreferredSize(new Dimension(370, HEIGHT));
         panel.setMaximumSize(new Dimension(370, HEIGHT));
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
@@ -90,7 +90,10 @@ public class ParsePanelGUI extends JPanel {
             int level = player.stat.LEVEL_STAT.statValue;
             String name = player.stat.NAME_STAT.stringStatValue;
             JLabel characterLabel = new JLabel(name.split(",")[0] + " [" + level + "]", icon, JLabel.CENTER);
-            characterLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            characterLabel.setAlignmentX(JLabel.LEFT);
+            panel.setAlignmentX(JLabel.LEFT);
+            panel.setAlignmentX(LEFT_ALIGNMENT);
+            characterLabel.setHorizontalAlignment(SwingConstants.LEFT);
             panel.add(characterLabel);
 //            characterLabel.setToolTipText(exaltStats(c));
         } catch (Exception e) {
@@ -106,7 +109,7 @@ public class ParsePanelGUI extends JPanel {
         int stat = statsMaxed(player);
         JLabel stats = new JLabel(stat + " / 8");
         stats.setToolTipText(statMissing(player));
-        stats.setHorizontalAlignment(SwingConstants.CENTER);
+        stats.setHorizontalAlignment(SwingConstants.RIGHT);
 
         panel.add(stats);
 
@@ -115,7 +118,7 @@ public class ParsePanelGUI extends JPanel {
 
     private static JPanel equipment(Player p, Entity player) {
         JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(110, HEIGHT));
+        panel.setPreferredSize(new Dimension(100, HEIGHT));
         panel.setLayout(new GridLayout(1,4));
 //        panelEquip.setBorder(BorderFactory.createLineBorder(Color.black));
 //        panelEquip.setPreferredSize(new Dimension(110, 33));
