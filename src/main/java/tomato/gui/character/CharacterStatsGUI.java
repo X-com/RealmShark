@@ -83,12 +83,12 @@ public class CharacterStatsGUI extends JPanel {
             BufferedImage img;
             String name;
             int id = CharacterStatistics.DUNGEONS.get(j);
+            name = CharacterStatistics.getName(id);
             try {
-                name = IdToAsset.getDisplayName(id);
                 img = ImageBuffer.getImage(id);
             } catch (IOException | AssetMissingException e) {
                 e.printStackTrace();
-                return;
+                img = ImageBuffer.getEmptyImg();
             }
             ImageIcon icon = new ImageIcon(img.getScaledInstance(15, 15, Image.SCALE_DEFAULT));
             JLabel dungeonIcon = new JLabel(icon, JLabel.CENTER);
