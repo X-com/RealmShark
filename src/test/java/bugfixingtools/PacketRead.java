@@ -1,4 +1,4 @@
-package experimental;
+package bugfixingtools;
 
 import packets.Packet;
 import packets.data.GroundTileData;
@@ -156,7 +156,7 @@ public class PacketRead {
                 int id = od.status.objectId;
                 boolean isSeasonal = false;
                 for (StatData sd : od.status.stats) {
-                    if (sd.statType == StatType.UNKNOWN24) {
+                    if (sd.statType == StatType.SEASONAL) {
                         isSeasonal = sd.statValue == 1;
                     }
                 }
@@ -191,7 +191,7 @@ public class PacketRead {
                         System.out.println(stats);
 //                    } else if (stats.statType == StatType.UNKNOWN23) {
 //                        System.out.println(stats);
-                    } else if (stats.statType == StatType.UNKNOWN24) {
+                    } else if (stats.statType == StatType.SEASONAL) {
                         System.out.println(stats);
 //                    } else if(stats.statType == StatType.UNKNOWN25) {
 //                        System.out.println(stats);

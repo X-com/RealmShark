@@ -199,7 +199,7 @@ public class DpsLogger {
             for (byte b : p.getPayload()) {
                 sb.append(String.format("%02x", b));
             }
-            Util.print("dpsLogs/" + mapInfo.displayName, sb.toString());
+            Util.printLogs("dpsLogs/" + mapInfo.displayName, sb.toString());
         }
         logPackets.clear();
         System.out.println("saved: " + mapInfo.displayName);

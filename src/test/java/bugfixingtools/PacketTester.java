@@ -63,10 +63,7 @@ public class PacketTester {
     }
 
     public void crunch() {
-//        String s = "";
-        String s = "[0, 0, 0, 43, 55, 0, 55, -32, -68, 66, 32, 73, 37, 66, -123, 74, -37, 0, 0, 2, 38, 0, 15, 66, 64, 0, 0, 7, 7, 0, 0, 0, 2, 38, 0, 15, 66, 65, 0, 0, 10, 34, 0]";
-//        String s = "[0, 0, 0, 10, 61, 0, 0, 3, 22, 0]";
-//        String s = "[0, 0, 0, 31, 13, 2, -61, -121, 104, 0, 0, 2, 38, 0, 0, 0, 1, 0, 0, 12, 42, 0, 66, 114, 0, 0, 66, -123, 0, 0, 1]";
+        String s = "";
         byte[] data = getByteArray(s);
 //        byte[] data2 = getByteArray(s2);
 //        byte[] data3 = getByteArray(s3);
@@ -218,8 +215,8 @@ CREATE_SUCCESS : 5/159
                 }
             }
         } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException | NullPointerException e) {
-            Util.print(e.getMessage());
-            Util.print(Arrays.toString(packet.getPayload()));
+            Util.printLogs(e.getMessage());
+            Util.printLogs(Arrays.toString(packet.getPayload()));
             e.printStackTrace();
         }
     }
@@ -434,7 +431,7 @@ CREATE_SUCCESS : 5/159
                 if (pSize == 0) {
                     pSize = Util.decodeInt(bytes);
                     if (pSize > 200000) {
-                        Util.print("Oversize packet construction.");
+                        Util.printLogs("Oversize packet construction.");
                         pSize = 0;
                         return;
                     }
