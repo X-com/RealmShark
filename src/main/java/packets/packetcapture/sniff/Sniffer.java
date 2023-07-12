@@ -187,8 +187,8 @@ public class Sniffer {
                             }
                         }
                     } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException | NullPointerException e) {
-                        Util.print(e.getMessage());
-                        Util.print(Arrays.toString(packet.getPayload()));
+                        Util.printLogs(e.getMessage());
+                        Util.printLogs(Arrays.toString(packet.getPayload()));
                         e.printStackTrace();
                     }
                 }

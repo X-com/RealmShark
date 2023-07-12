@@ -75,7 +75,7 @@ public class TickAligner {
                         CURRENT_TICK = Util.decodeInt(tick);
                         System.out.println("Synced. offset: " + i + " tick: " + CURRENT_TICK);
                     } else {
-                        Util.print("Time Sync Failed");
+                        Util.printLogs("Time Sync Failed");
                     }
                     TickA = null;
                     packetBytes = 0;

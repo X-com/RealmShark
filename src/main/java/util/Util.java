@@ -39,52 +39,62 @@ public class Util {
      *
      * @param message The error message.
      */
-    public static void print(String message) {
-        print("error/error", message);
+    public static void printLogs(String message) {
+        printLogs("error/error", message);
     }
 
     /**
      * Print logs to console or to files in a folderAndName.
+     * Log printouts can be disabled.
+     *
+     * @param folderAndName The folder and the name to write the logs into.
+     * @param s             String of the log.
+     */
+    public static void printLogs(String folderAndName, String s) {
+        if (!saveLogs) {
+            System.out.println(s);
+        } else {
+            print(folderAndName, s);
+        }
+    }
+
+    /**
+     * Print any files in a folderAndName.
      *
      * @param folderAndName The folder and the name to write the logs into.
      * @param s             String of the log.
      */
     public static void print(String folderAndName, String s) {
-        if (!saveLogs) {
-            System.out.println(s);
-        } else {
-            // System.out.println(s);
-            PrintWriter printWriterObject = printWriter.get(folderAndName);
-            if (printWriterObject == null) {
-                try {
-                    DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss");
-                    LocalDateTime dateTime = LocalDateTime.now();
-                    String fileName;
-                    if(folderAndName.endsWith("-")){
-                        fileName = folderAndName.substring(0, folderAndName.length() - 1);
-                    }else{
-                        fileName = folderAndName + "-" + dateTimeFormat.format(dateTime) + ".data";
-                    }
-                    File file = new File(fileName);
-                    if (!file.getParentFile().exists()) {
-                        if (!file.getParentFile().mkdirs()) {
-                            System.out.println("[X] Failed to create path for logfile '" + fileName + "'.");
-                        }
-                        if (!file.createNewFile()) {
-                            System.out.println("[X] Failed to create logfile '" + fileName + "'.");
-                        }
-                    }
-                    FileWriter fileWriter = new FileWriter(file);
-                    printWriterObject = new PrintWriter(fileWriter);
-                    printWriter.put(folderAndName, printWriterObject);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return;
+        PrintWriter printWriterObject = printWriter.get(folderAndName);
+        if (printWriterObject == null) {
+            try {
+                DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss");
+                LocalDateTime dateTime = LocalDateTime.now();
+                String fileName;
+                if(folderAndName.endsWith("-")){
+                    fileName = folderAndName.substring(0, folderAndName.length() - 1);
+                }else{
+                    fileName = folderAndName + "-" + dateTimeFormat.format(dateTime) + ".data";
                 }
+                File file = new File(fileName);
+                if (!file.getParentFile().exists()) {
+                    if (!file.getParentFile().mkdirs()) {
+                        System.out.println("[X] Failed to create path for logfile '" + fileName + "'.");
+                    }
+                    if (!file.createNewFile()) {
+                        System.out.println("[X] Failed to create logfile '" + fileName + "'.");
+                    }
+                }
+                FileWriter fileWriter = new FileWriter(file);
+                printWriterObject = new PrintWriter(fileWriter);
+                printWriter.put(folderAndName, printWriterObject);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
             }
-            printWriterObject.print(s + "\n");
-            printWriterObject.flush();
         }
+        printWriterObject.print(s + "\n");
+        printWriterObject.flush();
     }
 
     /**

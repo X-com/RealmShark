@@ -214,8 +214,8 @@ CREATE_SUCCESS : 5/159
                 }
             }
         } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException | NullPointerException e) {
-            Util.print(e.getMessage());
-            Util.print(Arrays.toString(packet.getPayload()));
+            Util.printLogs(e.getMessage());
+            Util.printLogs(Arrays.toString(packet.getPayload()));
             e.printStackTrace();
         }
     }
@@ -412,7 +412,7 @@ CREATE_SUCCESS : 5/159
                 if (pSize == 0) {
                     pSize = Util.decodeInt(bytes);
                     if (pSize > 200000) {
-                        Util.print("Oversize packet construction.");
+                        Util.printLogs("Oversize packet construction.");
                         pSize = 0;
                         return;
                     }

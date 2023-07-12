@@ -231,8 +231,8 @@ public class BufferReader {
      * @param packet Packet type.
      */
     public void printError(Packet packet) {
-        Util.print(PacketType.byClass(packet) + " : " + buffer.position() + "/" + buffer.capacity());
-        Util.print(Arrays.toString(buffer.array()));
+        Util.printLogs(PacketType.byClass(packet) + " : " + buffer.position() + "/" + buffer.capacity());
+        Util.printLogs(Arrays.toString(buffer.array()));
     }
 
     public String toString() {
