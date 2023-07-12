@@ -130,7 +130,8 @@ public enum StatType {
     UNKNOWN123(123),
     UNKNOWN124(124),
     ANIMATION_ID(125),
-    UNKNOWN126(126);
+    UNKNOWN126(126),
+    ENCHANTMENT(127);
 
     private final int index;
 
