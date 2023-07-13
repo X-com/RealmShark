@@ -10,8 +10,7 @@ public class DpsData {
     public HashMap<Integer, Entity> hitList;
 
     public DpsData(MapInfoPacket m, HashMap<Integer, Entity> entityHitList) {
-        map = m;
-        hitList = entityHitList;
-
+        this.map = m;
+        this.hitList = entityHitList;
     }
 }

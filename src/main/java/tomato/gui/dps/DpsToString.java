@@ -3,6 +3,7 @@ package tomato.gui.dps;
 import assets.AssetMissingException;
 import assets.IdToAsset;
 import tomato.backend.data.Damage;
+import tomato.backend.data.Equipment;
 import tomato.gui.dps.DpsDisplayOptions;
 import tomato.backend.data.Entity;
 import tomato.backend.data.TomatoData;
@@ -133,27 +134,5 @@ public class DpsToString {
         }
         sb.append("\n");
         return sb.toString();
-    }
-
-    /**
-     * Class used to display player Equipment
-     */
-    private static class Equipment {
-        int id;
-        int count;
-        int dmg;
-        AtomicInteger totalDmg;
-
-        public Equipment(int id, AtomicInteger tot) {
-            this.id = id;
-            count = 0;
-            totalDmg = tot;
-        }
-
-        public void add(int damage) {
-            this.dmg += damage;
-            count++;
-            totalDmg.set(totalDmg.get() + damage);
-        }
     }
 }
