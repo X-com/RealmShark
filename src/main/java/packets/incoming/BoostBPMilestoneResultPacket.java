@@ -6,7 +6,7 @@ import packets.reader.BufferReader;
 /**
  * Packet received when redeeming battle pass items
  */
-public class AckBattlePassItemClaimedPacket extends Packet {
+public class BoostBPMilestoneResultPacket extends Packet {
     /**
      * Indicating if item is redeemed
      */
