@@ -123,7 +123,7 @@ public class DpsToString {
             float pers = ((float) dmg.damage * 100 / (float) entity.maxHp());
             if (dmg.oryx3GuardDmg) {
                 extra = String.format("[Guarded Hits:%d Dmg:%d]", dmg.counterHits, dmg.counterDmg);
-            } else if (Damage.dammahCountered && dmg.chancellorDammahDmg) {
+            } else if (entity.dammahCountered && dmg.chancellorDammahDmg) {
                 extra = String.format("[Dammah Hits:%d Dmg:%d]", dmg.counterHits, dmg.counterDmg);
             } else if (dmg.walledGardenReflectors) {
                 extra = String.format("[Garden Hits:%d Dmg:%d]", dmg.counterHits, dmg.counterDmg);

@@ -14,7 +14,6 @@ public class Damage {
     public boolean oryx3GuardDmg;
     public boolean chancellorDammahDmg;
     public boolean walledGardenReflectors;
-    public static boolean dammahCountered;
 
     public Damage(Entity o) {
         owner = o;
