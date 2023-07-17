@@ -1,12 +1,17 @@
 package tomato.backend.data;
 
+import assets.AssetMissingException;
 import assets.IdToAsset;
+import assets.ImageBuffer;
 import packets.data.ObjectStatusData;
 import packets.data.WorldPosData;
 import tomato.gui.character.CharacterStatMaxingGUI;
 import tomato.gui.security.ParsePanelGUI;
 import tomato.realmshark.RealmCharacter;
+import tomato.realmshark.enums.CharacterClass;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,6 +27,7 @@ public class Entity {
     private final ArrayList<Damage> damageList;
     private final HashMap<Integer, Damage> damagePlayer;
     private String name;
+    private BufferedImage img;
     private long lastDamageTaken;
     private int charId;
     public int[] baseStats;
@@ -52,9 +58,17 @@ public class Entity {
         try {
             if (type != -1) {
                 name = IdToAsset.objectName(type);
+                getImg(type);
             }
         } catch (Exception e) {
         }
+    }
+
+    private void getImg(int type) throws IOException, AssetMissingException {
+        if (CharacterClass.isPlayerCharacter(type)) {
+            type = stat.SKIN_ID.statValue == 0 ? type : stat.SKIN_ID.statValue;
+        }
+        img = ImageBuffer.getImage(type);
     }
 
     // TODO fix time
@@ -148,6 +162,9 @@ public class Entity {
     }
 
     public String name() {
+        if (CharacterClass.isPlayerCharacter(objectType) && stat.NAME_STAT != null) {
+            return stat.NAME_STAT.stringStatValue.split(",")[0];
+        }
         return name;
     }
 
@@ -248,5 +265,9 @@ public class Entity {
             r.wis = stats[7];
             CharacterStatMaxingGUI.updateRealmChars();
         }
+    }
+
+    public BufferedImage img() {
+        return img;
     }
 }
