@@ -1,14 +1,6 @@
 package tomato.gui.fame;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.RenderingHints;
-import java.awt.Stroke;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -38,14 +30,19 @@ public class GraphPanel extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        double xScale = ((double) getWidth() - (2 * padding) - labelPadding) / (scores.size() - 1);
-        double yScale = ((double) getHeight() - 2 * padding - labelPadding) / (getMaxScore() - getMinScore());
+        MinMax minMax = getMinMaxScore();
+        double xScale = ((double) getWidth() - (2 * padding) - labelPadding) / (minMax.maxScoreX - minMax.minScoreX);
+        double yScale = ((double) getHeight() - 2 * padding - labelPadding) / (minMax.maxScoreY - minMax.minScoreY);
 
         List<Point> graphPoints = new ArrayList<>();
-        for (int i = 0; i < scores.size(); i++) {
-            int x1 = (int) (i * xScale + padding + labelPadding);
-            int y1 = (int) ((getMaxScore() - scores.get(i).fame) * yScale + padding);
-            graphPoints.add(new Point(x1, y1));
+        int size = scores.size();
+        for (int i = 0; i < size; i++) {
+            double v = scores.get(i).time - minMax.minScoreX;
+            int x1 = (int) (v * xScale + padding + labelPadding);
+            double v1 = minMax.maxScoreY - scores.get(i).fame;
+            int y1 = (int) (v1 * yScale + padding);
+            Point e = new Point(x1, y1);
+            graphPoints.add(e);
         }
 
         // draw white background
@@ -59,11 +56,11 @@ public class GraphPanel extends JPanel {
             int x1 = pointWidth + padding + labelPadding;
             int y0 = getHeight() - ((i * (getHeight() - padding * 2 - labelPadding)) / numberYDivisions + padding + labelPadding);
             int y1 = y0;
-            if (scores.size() > 0) {
+            if (size > 0) {
                 g2.setColor(gridColor);
                 g2.drawLine(padding + labelPadding + 1 + pointWidth, y0, getWidth() - padding, y1);
                 g2.setColor(Color.BLACK);
-                String yLabel = ((int) ((getMinScore() + (getMaxScore() - getMinScore()) * ((i * 1.0) / numberYDivisions)) * 100)) / 100.0 + "";
+                String yLabel = String.valueOf(((int) ((minMax.minScoreY + (minMax.maxScoreY - minMax.minScoreY) * ((i * 1.0) / numberYDivisions)) * 100)) / 100);
                 FontMetrics metrics = g2.getFontMetrics();
                 int labelWidth = metrics.stringWidth(yLabel);
                 g2.drawString(yLabel, x0 - labelWidth - 5, y0 + (metrics.getHeight() / 2) - 3);
@@ -71,19 +68,51 @@ public class GraphPanel extends JPanel {
             g2.drawLine(x0, y0, x1, y1);
         }
 
+        int xWidth = getWidth() - labelPadding;
+
+        int seconds = (int) (minMax.maxScoreX - minMax.minScoreX) / 1000;
+        int minutes = seconds / 60;
+
+        int span;
+        int display;
+        String timeString;
+        if (minutes < 10) {
+            span = 60;
+            display = 1;
+            timeString = "(min)";
+        } else if (minutes < 60) {
+            span = 600;
+            display = 10;
+            timeString = "(min)";
+        } else if (minutes < 120) {
+            span = 1200;
+            display = 30;
+            timeString = "(min)";
+        } else {
+            span = 3600;
+            display = 1;
+            timeString = "(hour)";
+        }
+        g2.drawString(timeString, xWidth - padding - 9, getHeight() - padding - labelPadding - 5);
+
+        float fraction = (float) span / seconds;
+
         // and for x axis
-        for (int i = 0; i < scores.size(); i++) {
-            if (scores.size() > 1) {
-                int x0 = i * (getWidth() - padding * 2 - labelPadding) / (scores.size() - 1) + padding + labelPadding;
+        for (int i = 0; i < 100; i++) {
+            if (size > 1) {
+                int x0 = (int) (((i * (getWidth() - padding * 2 - labelPadding)) * fraction) + padding + labelPadding);
+                if (x0 >= xWidth) break;
                 int x1 = x0;
                 int y0 = getHeight() - padding - labelPadding;
                 int y1 = y0 - pointWidth;
-                if ((i % ((int) ((scores.size() / 20.0)) + 1)) == 0) {
+//                if ((i % ((int) ((size / 5.0)) + 1)) == 0) {
+                if (scores.size() > 0) {
                     g2.setColor(gridColor);
                     g2.drawLine(x0, getHeight() - padding - labelPadding - 1 - pointWidth, x1, padding);
                     g2.setColor(Color.BLACK);
-                    String xLabel = i + "";
+                    int sec = display * i;
                     FontMetrics metrics = g2.getFontMetrics();
+                    String xLabel = Integer.toString(sec);
                     int labelWidth = metrics.stringWidth(xLabel);
                     g2.drawString(xLabel, x0 - labelWidth / 2, y0 + metrics.getHeight() + 3);
                 }
@@ -117,20 +146,15 @@ public class GraphPanel extends JPanel {
         }
     }
 
-    private double getMinScore() {
-        double minScore = Double.MAX_VALUE;
+    private MinMax getMinMaxScore() {
+        MinMax minMax = new MinMax();
         for (Fame score : scores) {
-            minScore = Math.min(minScore, score.fame);
+            minMax.minScoreX = Math.min(minMax.minScoreX, score.time);
+            minMax.minScoreY = Math.min(minMax.minScoreY, score.fame);
+            minMax.maxScoreX = Math.max(minMax.maxScoreX, score.time);
+            minMax.maxScoreY = Math.max(minMax.maxScoreY, score.fame);
         }
-        return minScore;
-    }
-
-    private double getMaxScore() {
-        double maxScore = Double.MIN_VALUE;
-        for (Fame score : scores) {
-            maxScore = Math.max(maxScore, score.fame);
-        }
-        return maxScore;
+        return minMax;
     }
 
     public void setScores(ArrayList<Fame> scores) {
@@ -163,5 +187,12 @@ public class GraphPanel extends JPanel {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(GraphPanel::createAndShowGui);
+    }
+
+    private static class MinMax {
+        double minScoreX = Double.MAX_VALUE;
+        double minScoreY = Double.MAX_VALUE;
+        double maxScoreX = Double.MIN_VALUE;
+        double maxScoreY = Double.MIN_VALUE;
     }
 }

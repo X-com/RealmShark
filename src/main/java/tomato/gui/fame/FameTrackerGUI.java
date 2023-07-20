@@ -23,12 +23,15 @@ public class FameTrackerGUI extends JPanel {
 
 //        JButton button = new JButton("Test");
 //        button.addActionListener(e -> {
-////            scores.clear();
-//            System.out.println(scores);
+//            buttonLol();
 //        });
 //        add(button, BorderLayout.SOUTH);
-//
-//        add(graphPanel);
+
+        add(graphPanel);
+    }
+
+    private void buttonLol() {
+        graphPanel.repaint();
     }
 
     public static void updateFame(int charId, long fame, long time) {
