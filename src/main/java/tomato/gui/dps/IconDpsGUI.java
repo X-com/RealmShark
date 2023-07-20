@@ -38,27 +38,42 @@ public class IconDpsGUI extends DisplayDpsGUI {
         new SmartScroller(scroll);
         add(scroll, BorderLayout.CENTER);
 
-        JButton button = new JButton("Clear");
+        JButton button = new JButton("String Display");
         button.addActionListener(e -> clicked());
         add(button, BorderLayout.SOUTH);
     }
 
     private void clicked() {
-        long time = System.currentTimeMillis();
-        charPanel.removeAll();
-        System.out.println(System.currentTimeMillis() - time);
+        DpsGUI.setDisplayAsString();
+//        long time = System.currentTimeMillis();
+//        charPanel.removeAll();
+//        System.out.println(System.currentTimeMillis() - time);
 //        updateDps(data);
 //        guiUpdate();
     }
 
     private void updateDps(Entity[] data) {
         List<Entity> sortedList = Arrays.stream(data).sorted(Comparator.comparingLong(Entity::getLastDamageTaken).reversed()).collect(Collectors.toList());
+//        JPanel panel = new JPanel();
+//        panel.setLayout(new GridBagLayout());
+//        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+//        JScrollPane scroll = new JScrollPane(panel);
+//        scroll.getVerticalScrollBar().setUnitIncrement(40);
+//        new SmartScroller(scroll);
+//        addImpl(scroll, BorderLayout.CENTER, 0);
+
+        long time = System.currentTimeMillis();
         charPanel.removeAll();
+        System.out.println(System.currentTimeMillis() - time);
         for (Entity e : sortedList) {
             if (e.maxHp() <= 0) continue;
             if (CharacterClass.isPlayerCharacter(e.objectType)) continue;
             charPanel.add(createMainBox(e));
         }
+//        new Thread(() -> {
+//            charPanel.removeAll();
+//            charPanel = panel;
+//        }).start();
     }
 
     private void guiUpdate() {
@@ -169,7 +184,8 @@ public class IconDpsGUI extends DisplayDpsGUI {
         panel.setMaximumSize(new Dimension(100, HEIGHT));
         panel.setLayout(new GridLayout(1, 4));
 
-        if (equipmentFilter == 0 || owner.getStatName() == null) return panel;
+//        if (equipmentFilter == 0 || owner.getStatName() == null) return panel;
+        if (owner.getStatName() == null) return panel;
 
         HashMap<Integer, Equipment>[] inv = new HashMap[4];
 
@@ -184,52 +200,52 @@ public class IconDpsGUI extends DisplayDpsGUI {
             }
         }
 
-        if (equipmentFilter == 1) {
-            for (int i = 0; i < 4; i++) {
-                Equipment max = inv[i].values().stream().max(Comparator.comparingInt(e -> e.dmg)).orElseThrow(NoSuchElementException::new);
-                BufferedImage img;
-                try {
-                    int eq = max.id;
-                    if (eq == -1) {
-                        img = ImageBuffer.getEmptyImg();
-                    } else {
-                        img = ImageBuffer.getImage(eq);
-                    }
-                    JLabel icon = new JLabel(new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT)));
-                    icon.setToolTipText(IdToAsset.objectName(eq));
-                    panel.add(icon);
-                } catch (AssetMissingException | IOException ex) {
-                    throw new RuntimeException(ex);
+//        if (equipmentFilter == 1) {
+        for (int i = 0; i < 4; i++) {
+            Equipment max = inv[i].values().stream().max(Comparator.comparingInt(e -> e.dmg)).orElseThrow(NoSuchElementException::new);
+            BufferedImage img;
+            try {
+                int eq = max.id;
+                if (eq == -1) {
+                    img = ImageBuffer.getEmptyImg();
+                } else {
+                    img = ImageBuffer.getImage(eq);
                 }
+                JLabel icon = new JLabel(new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT)));
+                icon.setToolTipText(IdToAsset.objectName(eq));
+                panel.add(icon);
+            } catch (AssetMissingException | IOException ex) {
+                throw new RuntimeException(ex);
             }
-            return panel;
-        } else if (equipmentFilter == 2) {
-            StringBuilder s = new StringBuilder();
-            for (int i = 0; i < 4; i++) {
-                s.append("\n");
-                try {
-                    Collection<Equipment> list = inv[i].values();
-                    s.append("       ");
-                    boolean first = true;
-                    for (Equipment e : list) {
-                        if (list.size() > 1) {
-                            if (!first) s.append(" /");
-                            s.append(String.format(" %.1f%% ", 100f * e.dmg / e.totalDmg.get()));
-                            s.append(IdToAsset.objectName(e.id));
-                        } else {
-                            s.append(" ");
-                            s.append(IdToAsset.objectName(e.id));
-                        }
-                        first = false;
-                    }
-                } catch (AssetMissingException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-            return panel;
         }
-
         return panel;
+//        } else if (equipmentFilter == 2) {
+//            StringBuilder s = new StringBuilder();
+//            for (int i = 0; i < 4; i++) {
+//                s.append("\n");
+//                try {
+//                    Collection<Equipment> list = inv[i].values();
+//                    s.append("       ");
+//                    boolean first = true;
+//                    for (Equipment e : list) {
+//                        if (list.size() > 1) {
+//                            if (!first) s.append(" /");
+//                            s.append(String.format(" %.1f%% ", 100f * e.dmg / e.totalDmg.get()));
+//                            s.append(IdToAsset.objectName(e.id));
+//                        } else {
+//                            s.append(" ");
+//                            s.append(IdToAsset.objectName(e.id));
+//                        }
+//                        first = false;
+//                    }
+//                } catch (AssetMissingException ex) {
+//                    throw new RuntimeException(ex);
+//                }
+//            }
+//            return panel;
+//        }
+//
+//        return panel;
     }
 
     @Override

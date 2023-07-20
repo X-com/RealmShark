@@ -16,7 +16,8 @@ public class DpsGUI extends JPanel {
     private TomatoData data;
     private JButton next, prev;
     private StringDpsGUI displayString;
-    private DisplayDpsGUI display;
+    private DisplayDpsGUI displayIcon;
+    private DisplayDpsGUI centerDisplay;
     private static JTextField textFilter;
     private static JCheckBox textFilterToggle;
     private static JLabel dpsLabel;
@@ -78,13 +79,36 @@ public class DpsGUI extends JPanel {
         add(center, BorderLayout.CENTER);
 
         displayString = new StringDpsGUI();
-        display = new IconDpsGUI();
+        displayIcon = new IconDpsGUI();
+        centerDisplay = displayIcon;
         setCenterDisplay(displayString);
     }
 
     private void setCenterDisplay(DisplayDpsGUI display) {
+        Class c = display.getClass();
+        Class d = centerDisplay.getClass();
+        if (c == d) return;
+
+        centerDisplay = display;
+//        long time = System.currentTimeMillis();
         center.removeAll();
+//        System.out.println(System.currentTimeMillis() - time);
         center.add(display);
+        repaint();
+    }
+
+    public static void setDisplayAsIcon() {
+        if (INSTANCE.liveUpdates) return;
+        INSTANCE.setCenterDisplay(INSTANCE.displayIcon);
+        Entity[] entityHitList = INSTANCE.data.dpsData.get(INSTANCE.index).hitList.values().toArray(new Entity[0]);
+        INSTANCE.displayIcon.renderData(entityHitList, false);
+    }
+
+    public static void setDisplayAsString() {
+        if (INSTANCE.liveUpdates) return;
+        INSTANCE.setCenterDisplay(INSTANCE.displayString);
+        Entity[] entityHitList = INSTANCE.data.dpsData.get(INSTANCE.index).hitList.values().toArray(new Entity[0]);
+        INSTANCE.displayString.renderData(entityHitList, false);
     }
 
     public static void updateNewTickPacket(TomatoData data) {
@@ -93,7 +117,8 @@ public class DpsGUI extends JPanel {
     }
 
     public static void editFont(Font font) {
-        INSTANCE.display.editFont(font);
+        INSTANCE.displayIcon.editFont(font);
+        update();
     }
 
     /**
@@ -101,6 +126,7 @@ public class DpsGUI extends JPanel {
      */
     public static void clearDpsLogs() {
         INSTANCE.data.dpsData.clear();
+        update();
     }
 
     /**
@@ -152,24 +178,23 @@ public class DpsGUI extends JPanel {
             displayString.renderData(data.getEntityHitList(), true);
         } else {
             Entity[] entityHitList = data.dpsData.get(index).hitList.values().toArray(new Entity[0]);
-            display.renderData(entityHitList, false);
+            displayIcon.renderData(entityHitList, false);
         }
     }
 
     private void scrollData(int a) {
         int size = data.dpsData.size();
         index += a;
+        setCenterDisplay(displayString);
         if (liveUpdates) {
             if (a > 0 || size == 0) {
                 return;
             }
             index = size - 1;
             liveUpdates = false;
-            setCenterDisplay(display);
         } else if (index >= size) {
             liveUpdates = true;
             dpsLabel.setText("Live");
-            setCenterDisplay(displayString);
             return;
         } else if (index < 0) {
             index = 0;
@@ -178,6 +203,6 @@ public class DpsGUI extends JPanel {
         dpsLabel.setText((index + 1) + "/" + size);
 
         Entity[] entityHitList = data.dpsData.get(index).hitList.values().toArray(new Entity[0]);
-        display.renderData(entityHitList, false);
+        displayString.renderData(entityHitList, false);
     }
 }

@@ -15,6 +15,14 @@ public class StringDpsGUI extends DisplayDpsGUI {
         textAreaDPS = new JTextArea();
         add(TomatoGUI.createTextArea(textAreaDPS), BorderLayout.CENTER);
         textAreaDPS.setEnabled(false);
+
+        JButton button = new JButton("Experimental Icon Display (laggy)");
+        button.addActionListener(e -> clicked());
+        add(button, BorderLayout.SOUTH);
+    }
+
+    private void clicked() {
+        DpsGUI.setDisplayAsIcon();
     }
 
     /**
