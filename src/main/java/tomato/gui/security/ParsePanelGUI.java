@@ -2,6 +2,7 @@ package tomato.gui.security;
 
 import assets.IdToAsset;
 import assets.ImageBuffer;
+import packets.data.StatData;
 import tomato.backend.data.Entity;
 import tomato.gui.SmartScroller;
 import tomato.realmshark.enums.CharacterClass;
@@ -88,7 +89,13 @@ public class ParsePanelGUI extends JPanel {
             BufferedImage img = ImageBuffer.getImage(eq);
             ImageIcon icon = new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT));
             int level = player.stat.LEVEL_STAT.statValue;
-            String name = player.stat.NAME_STAT.stringStatValue;
+            StatData nameStat = player.stat.NAME_STAT;
+            String name;
+            if (nameStat != null) {
+                name = nameStat.stringStatValue;
+            } else {
+                name = "N/A";
+            }
             JLabel characterLabel = new JLabel(name.split(",")[0] + " [" + level + "]", icon, JLabel.CENTER);
             characterLabel.setAlignmentX(JLabel.LEFT);
             panel.setAlignmentX(JLabel.LEFT);
@@ -119,7 +126,7 @@ public class ParsePanelGUI extends JPanel {
     private static JPanel equipment(Player p, Entity player) {
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(100, HEIGHT));
-        panel.setLayout(new GridLayout(1,4));
+        panel.setLayout(new GridLayout(1, 4));
 //        panelEquip.setBorder(BorderFactory.createLineBorder(Color.black));
 //        panelEquip.setPreferredSize(new Dimension(110, 33));
         p.inv[0] = player.stat.INVENTORY_0_STAT.statValue;
