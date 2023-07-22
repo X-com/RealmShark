@@ -35,16 +35,16 @@ public class Potato {
             crashDialog();
         } catch (Exception e) {
             e.printStackTrace();
-            Util.print("Main crash:");
+            Util.printLogs("Main crash:");
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
-            Util.print(sw.toString());
+            Util.printLogs(sw.toString());
         }
     }
 
     private static void errorMessage(String errorMsg, String errorDump) {
-        Util.print(errorDump);
+        Util.printLogs(errorDump);
     }
 
     private static void crashDialog() {
