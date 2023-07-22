@@ -17,6 +17,8 @@ import static potato.view.opengl.OpenGLPotato.renderText;
 public class GLHeroes {
     private Vector2f zerozero = new Vector2f(0, 0);
     private Vector4f white = new Vector4f(1f, 1f, 1f, 1f);
+    private Vector4f insideCrystalTpRange = new Vector4f(0, 0.5f, 1f, 0.2f);
+    private Vector4f outsideCrystalTpRange = new Vector4f(1f, 1f, 0, 0.2f);
 
     public void drawHeros(ArrayList<HeroLocations> vaHero, Matrix4f mvp, int mapSize) {
         for (HeroLocations hero : vaHero) {
@@ -47,6 +49,17 @@ public class GLHeroes {
             Matrix4f poseShape = new Matrix4f().translate(drawX, drawY, 0);
             renderShape.drawText(hero.shape, poseShape.scale(Config.instance.shapeSize), mvp, zerozero, TextRenderer.TextBoundType.BOUNDING_BOX, white);
 //            System.out.println("draw " + drawX + " " + drawY);
+        }
+    }
+
+    public void drawCrystal(HashMap<Integer, Entity> entitys, float playerX, float playerY, Matrix4f mvp, int mapSize) {
+        for (Entity hero : entitys.values()) {
+            float drawX = hero.getX();
+            float drawY = mapSize - hero.getY();
+
+            boolean isInRange = Math.sqrt((playerX - hero.getX()) * (playerX - hero.getX()) + (playerY - hero.getY()) * (playerY - hero.getY())) < 120f;
+            Matrix4f poseShape = new Matrix4f().translate(drawX, drawY, 0);
+            renderShape.drawText(hero.shape, poseShape.scale(493), mvp, zerozero, TextRenderer.TextBoundType.BOUNDING_BOX, isInRange ? insideCrystalTpRange : outsideCrystalTpRange);
         }
     }
 }

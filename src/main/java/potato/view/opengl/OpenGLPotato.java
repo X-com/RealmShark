@@ -244,6 +244,8 @@ public class OpenGLPotato extends Thread {
                 heroes.drawHeros(model.mapHeroes(), mvp, mapSize);
             } else if (showHeroes && userShowHeroes && model.isShatters() && zoom != 1) {
                 heroes.drawShapes(model.mapEntitys(), mvp, mapSize);
+            } else if (showHeroes && userShowHeroes && model.isCrystal() && zoom != 1) {
+                heroes.drawCrystal(model.mapEntitys(), model.playerX, model.playerY, mvp, mapSize);
             }
 
             if (firstDisplay && !model.inRealm()) {

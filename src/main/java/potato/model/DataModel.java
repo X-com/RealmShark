@@ -33,6 +33,7 @@ public class DataModel {
     private int heroesLeft = 0;
     private boolean inRealm = false;
     private boolean isShatters = false;
+    private boolean isCrystal = false;
 
     private boolean newRealmCheck = false;
     private long seed;
@@ -200,6 +201,8 @@ public class DataModel {
         }
         entityList.clear();
         heroDetect.reset();
+        isShatters = false;
+        isCrystal = false;
     }
 
     private int findMapIndex(GroundTileData[] tiles) {
@@ -338,6 +341,16 @@ public class DataModel {
             for (int drop : drops) {
                 removeEntity(drop);
             }
+        } else if (isCrystal) {
+            for (ObjectData od : newObjects) {
+                if (od.objectType == 10025) { // Crystal Entity
+                    System.out.println("Crystal boss added");
+                    addEntity(od, "e");
+                }
+            }
+            for (int drop : drops) {
+                removeEntity(drop);
+            }
         }
     }
 
@@ -350,7 +363,6 @@ public class DataModel {
                     entityList.get(osd.objectId).move(osd.pos);
                 }
             }
-            renderer.renderMap(true);
         }
     }
 
@@ -432,6 +444,10 @@ public class DataModel {
         return isShatters;
     }
 
+    public boolean isCrystal() {
+        return isCrystal;
+    }
+
     public void setInShatters(long s, long gameOpenedTime, int width, int height) {
         isShatters = true;
         seed = s;
@@ -440,6 +456,18 @@ public class DataModel {
         mapWidth = width;
         mapHeight = height;
         setZoom(width);
+        renderer.renderMap(true);
+    }
+
+    public void setInCrystal(long s, long gameOpenedTime, int width, int height) {
+        isCrystal = true;
+        seed = s;
+        openTime = gameOpenedTime;
+        entityList.clear();
+        mapWidth = width;
+        mapHeight = height;
+        setZoom(width);
+        renderer.renderMap(true);
     }
 
     public void addEntity(ObjectData od, String shape) {

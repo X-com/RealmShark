@@ -61,6 +61,8 @@ public class PacketController {
                 model.setInRealm(p.realmName, p.seed, p.gameOpenedTime, p.width, p.height);
             } else if (p.displayName.equals("The Shatters")) {
                 model.setInShatters(p.seed, p.gameOpenedTime, p.width, p.height);
+            } else if (p.displayName.equals("Crystal Cavern")) {
+                model.setInCrystal(p.seed, p.gameOpenedTime, p.width, p.height);
             }
         } else if (packet instanceof CreateSuccessPacket) {
             CreateSuccessPacket p = (CreateSuccessPacket) packet;
