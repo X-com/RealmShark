@@ -17,8 +17,6 @@ import static potato.view.opengl.OpenGLPotato.renderText;
 public class GLHeroes {
     private Vector2f zerozero = new Vector2f(0, 0);
     private Vector4f white = new Vector4f(1f, 1f, 1f, 1f);
-    private Vector4f insideCrystalTpRange = new Vector4f(0, 0.5f, 1f, 0.2f);
-    private Vector4f outsideCrystalTpRange = new Vector4f(1f, 1f, 0, 0.2f);
 
     public void drawHeros(ArrayList<HeroLocations> vaHero, Matrix4f mvp, int mapSize) {
         for (HeroLocations hero : vaHero) {

@@ -241,8 +241,8 @@ public class DataModel {
         if (!name.equals("") && !name.equals(serverName)) {
             if (!serverName.equals("")) setTpCooldown = true;
             serverName = name;
-            castleTimer = 0;
         }
+        castleTimer = 0;
         serverIp = ip;
     }
 

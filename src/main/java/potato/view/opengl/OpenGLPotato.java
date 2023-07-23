@@ -243,8 +243,10 @@ public class OpenGLPotato extends Thread {
             if (showHeroes && userShowHeroes && model.inRealm() && zoom != 1) {
                 heroes.drawHeros(model.mapHeroes(), mvp, mapSize);
             } else if (showHeroes && userShowHeroes && model.isShatters() && zoom != 1) {
+                firstDisplay = false;
                 heroes.drawShapes(model.mapEntitys(), mvp, mapSize);
             } else if (showHeroes && userShowHeroes && model.isCrystal() && zoom != 1) {
+                firstDisplay = false;
                 heroes.drawCrystal(model.mapEntitys(), model.playerX, model.playerY, mvp, mapSize);
             }
 
@@ -252,15 +254,20 @@ public class OpenGLPotato extends Thread {
                 renderHud.drawText2D("Enter any realm or re-enter if starting in a realm.", 5, 3, 10, bottomLeftVec, TextRenderer.TextBoundType.BOUNDING_BOX, mainTextColor);
             } else if (userShowInfo && (Config.instance.alwaysShowCoords || model.inRealm())) {
                 firstDisplay = false;
-                if (model.renderCastleTimer() && !model.getCastleTimer().isEmpty()) {
-                    renderHud.drawText2D(model.getCastleTimer(), 5, Config.instance.mapHeight - 20, 20, bottomLeftVec, TextRenderer.TextBoundType.BOUNDING_BOX, mainTextColor);
+                if (model.renderCastleTimer()) {
+                    String s = String.format("%s%s", model.getCastleTimer(), Config.instance.saveMapInfo ? " R" : "");
+                    renderHud.drawText2D(s, 5, Config.instance.mapHeight - 20, 20, bottomLeftVec, TextRenderer.TextBoundType.BOUNDING_BOX, mainTextColor);
                 } else if (showHeroCount) {
-                    String r = Config.instance.saveMapInfo ? " R" : "";
-                    String h = String.format("[%d] Heroes:%d %s", mapIndex + 1, model.getHeroesLeft(), r);
+                    String h = String.format("[%d] Heroes:%d %s", mapIndex + 1, model.getHeroesLeft(), Config.instance.saveMapInfo ? " R" : "");
                     renderHud.drawText2D(h, 5, Config.instance.mapHeight - 23, 20, bottomLeftVec, TextRenderer.TextBoundType.BOUNDING_BOX, mainTextColor);
+                } else if (Config.instance.saveMapInfo) {
+                    renderHud.drawText2D("R", 5, Config.instance.mapHeight - 23, 20, bottomLeftVec, TextRenderer.TextBoundType.BOUNDING_BOX, mainTextColor);
                 }
                 String s = String.format("%s%s %s %s %s", model.getDungeonTime(), model.getPlayerCoordString(), model.getServerName(), model.getRealmName(), model.extraInfo());
                 renderHud.drawText2D(s, 5, 3, 10, bottomLeftVec, TextRenderer.TextBoundType.BOUNDING_BOX, mainTextColor);
+            } else if (Config.instance.saveMapInfo || model.renderCastleTimer()) {
+                String s = String.format("%s%s", model.getCastleTimer(), Config.instance.saveMapInfo ? " R" : "");
+                renderHud.drawText2D(s, 5, Config.instance.mapHeight - 23, 20, bottomLeftVec, TextRenderer.TextBoundType.BOUNDING_BOX, mainTextColor);
             }
             renderHud.render();
             renderText.render();
