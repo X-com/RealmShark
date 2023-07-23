@@ -1,6 +1,8 @@
 # RealmShark  
 ### A library/GUI packet sniffer for Realm of the Mad God built with Java.
 
+Discord link: https://discord.gg/E3PhDfEV
+
 RealmShark is a Java library/program created to read network packets at the kernel level without the the ability to modify, block or send packets. The library is EULA/copyright compliant because it does not use any game code or assets.  
 
 Given RealmShark reads packets directly from the network adapter it can even be used to listen on a PC that is not running the game. It is an independent program from the game and is completely extendable/customizable.  
