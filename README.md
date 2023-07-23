@@ -41,6 +41,8 @@ If there are errors running the program described above, please look under Troub
 
 ## Troubleshooting guide
 
+Join discord for live tech support: https://discord.gg/E3PhDfEV
+
 Windows troubleshooting guide:
 
 Some Windows 11 users have issues with Npcap 1.70. Try and uninstall 1.70 and install the 1.60 version. Link found here, [Npcap 1.60](https://www.mediafire.com/file/xkjmfz1v1b47e0a/npcap-1.60.exe/file).
