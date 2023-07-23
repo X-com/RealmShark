@@ -59,7 +59,7 @@ public class GLHeroes {
 
             boolean isInRange = Math.sqrt((playerX - hero.getX()) * (playerX - hero.getX()) + (playerY - hero.getY()) * (playerY - hero.getY())) < 120f;
             Matrix4f poseShape = new Matrix4f().translate(drawX, drawY, 0);
-            renderShape.drawText(hero.shape, poseShape.scale(493), mvp, zerozero, TextRenderer.TextBoundType.BOUNDING_BOX, isInRange ? insideCrystalTpRange : outsideCrystalTpRange);
+            renderShape.drawText(hero.shape, poseShape.scale(493), mvp, zerozero, TextRenderer.TextBoundType.BOUNDING_BOX, isInRange ? new Vector4f(Config.instance.visitedColorVec).setComponent(3, 0.2f) : new Vector4f(Config.instance.deadColorVec).setComponent(3, 0.2f));
         }
     }
 }
