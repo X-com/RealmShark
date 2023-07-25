@@ -39,4 +39,5 @@ public class IdData {
     public static final int DEATH_GRASS_MANOR = 6171;
     public static final int DEATH_TREE_MANOR = 6174;
     public static final int DEATH_FLOWER_MANOR = 6172;
+    public static final int DARK_ELF_QUEEN = 29839;
 }

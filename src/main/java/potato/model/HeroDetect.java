@@ -242,6 +242,8 @@ public class HeroDetect {
                     setDeadHeroes(HeroType.OASIS);
                 } else if (od.objectType == IdData.LICH || od.objectType == IdData.LICH_KILLABLE) { // remove ents too
                     setDeadHeroes(HeroType.ENT);
+                } else if (od.objectType == IdData.PHENIX_REBORN || od.objectType == IdData.DARK_ELF_QUEEN) { // remove all
+                    setDeadHeroes(HeroType.LICH);
                 }
             } else {
                 questArrowIdChecked = 0;
