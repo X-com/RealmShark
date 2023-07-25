@@ -332,7 +332,7 @@ public class DataModel {
             for (ObjectData od : newObjects) {
                 if (od.objectType == 20800) { // Ethereal Shrine
                     System.out.println("Ethereal Shrine added");
-                    addEntity(od, "i");
+                    addEntity(od, "d");
                 }
             }
         } else if (isShatters) {

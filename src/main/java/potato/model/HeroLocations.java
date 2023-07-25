@@ -2,12 +2,15 @@ package potato.model;
 
 import org.joml.Vector4f;
 import packets.data.ObjectData;
+import potato.model.data.HeroGroup;
 import potato.model.data.HeroState;
 import potato.model.data.HeroType;
 
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
+
+import static potato.model.data.HeroGroup.*;
 
 public class HeroLocations {
     private final int types;
@@ -78,45 +81,11 @@ public class HeroLocations {
     }
 
     private Vector4f getTypeColor(int t) {
-        switch (t) {
-            case 1:
-                return colorToVecColor(new Color(255, 0, 0));
-            case 2:
-                return colorToVecColor(new Color(255, 128, 0));
-            case 4:
-                return colorToVecColor(new Color(255, 0, 255));
-            case 8:
-                return colorToVecColor(new Color(255, 255, 0));
-            case 16:
-                return colorToVecColor(new Color(0, 255, 0));
-            case 32:
-                return colorToVecColor(new Color(0, 128, 255));
-            case 64:
-                return colorToVecColor(new Color(165, 42, 42));
-            default:
-                return colorToVecColor(new Color(255, 255, 255));
-        }
+        return colorToVecColor(HeroGroup.getColor(t));
     }
 
     private String getTypeShape(int t) {
-        switch (t) {
-            case 1:
-                return "a";
-            case 2:
-                return "b";
-            case 4:
-                return "c";
-            case 8:
-                return "d";
-            case 16:
-                return "e";
-            case 32:
-                return "f";
-            case 64:
-                return "g";
-            default:
-                return "e";
-        }
+        return HeroGroup.getShapeString(t);
     }
 
     private Vector4f getColor(boolean main) {
