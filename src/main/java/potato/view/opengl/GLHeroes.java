@@ -45,7 +45,7 @@ public class GLHeroes {
             float drawY = mapSize - hero.getY();
 
             Matrix4f poseShape = new Matrix4f().translate(drawX, drawY, 0);
-            renderShape.drawText(hero.shape, poseShape.scale(Config.instance.shapeSize), mvp, zerozero, TextRenderer.TextBoundType.BOUNDING_BOX, white);
+            renderShape.drawText(hero.shape, poseShape.scale(Config.instance.shapeSize * hero.size), mvp, zerozero, TextRenderer.TextBoundType.BOUNDING_BOX, white);
 //            System.out.println("draw " + drawX + " " + drawY);
         }
     }
