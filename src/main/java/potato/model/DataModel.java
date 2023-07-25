@@ -328,7 +328,14 @@ public class DataModel {
         for (ObjectData od : newObjects) {
             allEntitys.put(od.status.objectId, od);
         }
-        if (isShatters) {
+        if (inRealm) {
+            for (ObjectData od : newObjects) {
+                if (od.objectType == 20800) { // Ethereal Shrine
+                    System.out.println("Ethereal Shrine added");
+                    addEntity(od, "i");
+                }
+            }
+        } else if (isShatters) {
             for (ObjectData od : newObjects) {
                 if (od.objectType == 33445) { // Shatters Void Phantasm
                     System.out.println("Shatters Void Phantasm added");
@@ -338,9 +345,6 @@ public class DataModel {
                     addEntity(od, "a");
                 }
             }
-            for (int drop : drops) {
-                removeEntity(drop);
-            }
         } else if (isCrystal) {
             for (ObjectData od : newObjects) {
                 if (od.objectType == 10025) { // Crystal Entity
@@ -348,9 +352,9 @@ public class DataModel {
                     addEntity(od, "e");
                 }
             }
-            for (int drop : drops) {
-                removeEntity(drop);
-            }
+        }
+        for (int drop : drops) {
+            removeEntity(drop);
         }
     }
 
