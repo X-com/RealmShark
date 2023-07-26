@@ -266,7 +266,7 @@ public class TomatoData {
      * @param p Stasis packet
      */
     public void stasis(StasisPacket p) {
-        if (p.unknownByteArray[1] != 38) return;
+        if (p.unknownByteArray[1] != 22) return;
         float stasisDuration = p.stasisDuration;
 
         int[] itemId;
@@ -283,7 +283,7 @@ public class TomatoData {
         } else if (stasisDuration == 5.5f) {
             itemId = new int[]{2630}; // T5 Banishment Orb
         } else if (stasisDuration == 6.0f) {
-            itemId = new int[]{2630, 8334, 9058, 23352, 25752}; // T6 Planefetter Orb, UT Snowbound Orb, Soul of the Bearer, UT Karma Orb, Orb of the Sabbath
+            itemId = new int[]{2861, 8334, 9058, 23352, 25752}; // T6 Planefetter Orb, UT Snowbound Orb, Soul of the Bearer, UT Karma Orb, Orb of the Sabbath
         } else if (stasisDuration == 6.5f) {
             itemId = new int[]{8287}; // T7 Dimensiongate Orb
         } else if (stasisDuration == 7.0f) {
