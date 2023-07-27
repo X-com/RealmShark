@@ -5,6 +5,7 @@ import assets.IdToAsset;
 import assets.ImageBuffer;
 import packets.data.ObjectStatusData;
 import packets.data.WorldPosData;
+import tomato.backend.StasisCheck;
 import tomato.gui.character.CharacterStatMaxingGUI;
 import tomato.gui.security.ParsePanelGUI;
 import tomato.realmshark.RealmCharacter;
@@ -32,7 +33,7 @@ public class Entity {
     private int charId;
     public int[] baseStats;
     private boolean isPlayer;
-    public long stasisTimer;
+    public long stasisCounter;
     public boolean dammahCountered;
 
     private final static int ORYX_THE_MAD_GOD = 45363;
@@ -74,6 +75,7 @@ public class Entity {
     // TODO fix time
     public void updateStats(ObjectStatusData status, long time) {
         statUpdates.add(status);
+        StasisCheck.checkManaFromStasis(this, status.stats);
         stat.setStats(status.stats);
         if (status.stats.length > 0) {
             if (isUser) {

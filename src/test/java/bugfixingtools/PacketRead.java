@@ -1,8 +1,11 @@
 package bugfixingtools;
 
+import assets.AssetMissingException;
+import assets.IdToAsset;
 import packets.Packet;
 import packets.data.GroundTileData;
 import packets.data.ObjectData;
+import packets.data.ObjectStatusData;
 import packets.data.StatData;
 import packets.data.enums.StatType;
 import packets.incoming.*;
@@ -18,6 +21,7 @@ import util.Util;
 
 import java.awt.*;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class PacketRead {
@@ -118,6 +122,7 @@ public class PacketRead {
 
         if (packet instanceof NewTickPacket) {
 //            newtick((NewTickPacket) packet);
+//            updateEntity((NewTickPacket) packet);
             return;
         }
 
@@ -126,6 +131,8 @@ public class PacketRead {
 //            if (p.name.equals("Realm of the Mad God")) {
 //                System.out.println(p.seed + "   " + ip);
 //            }
+            types.clear();
+            System.out.println("clearconsole");
             return;
         }
 
@@ -133,8 +140,9 @@ public class PacketRead {
 //            crystalTPRange((UpdatePacket) packet);
 //            realmIdentifier((UpdatePacket) packet);
 //            showPlayer((UpdatePacket) packet);
-            countTiles((UpdatePacket) packet);
+//            countTiles((UpdatePacket) packet);
 //            isSeasonalCharacter((UpdatePacket) packet);
+//            entityName((UpdatePacket) packet);
             return;
         }
         if (packet instanceof VaultContentPacket) {
@@ -145,6 +153,31 @@ public class PacketRead {
         //RealmHeroesLeftPacket
 
         System.out.println(packet);
+    }
+
+    static HashSet<Integer> types = new HashSet<>();
+
+    private static void updateEntity(NewTickPacket packet) {
+        for (ObjectStatusData o : packet.status) {
+            if(o.objectId == 240694) {
+                System.out.println(o);
+            }
+        }
+    }
+
+    private static void entityName(UpdatePacket packet) {
+        for (ObjectData o : packet.newObjects) {
+            int objectType = o.objectType;
+            if (!types.contains(objectType)) {
+                types.add(objectType);
+                if(CharacterClass.isPlayerCharacter(objectType)) continue;
+                try {
+                    System.out.println(IdToAsset.objectName(objectType) + " " + objectType);
+                } catch (AssetMissingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
 
     static HashMap<Integer, Boolean> playerIsSeasonal = new HashMap<>();

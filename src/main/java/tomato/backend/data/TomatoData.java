@@ -34,12 +34,12 @@ public class TomatoData {
     protected MapInfoPacket map;
     protected int worldPlayerId;
     protected int charId;
-    protected long time;
+    public long time;
     protected Entity player;
     protected final int[][] mapTiles = new int[2048][2048];
     protected final HashMap<Integer, Entity> entityList = new HashMap<>();
     protected final HashMap<Integer, Entity> playerList = new HashMap<>();
-    protected final HashMap<Integer, Entity> playerListUpdated = new HashMap<>();
+    public final HashMap<Integer, Entity> playerListUpdated = new HashMap<>();
     protected final Projectile[] projectiles = new Projectile[512];
     protected RNG rng;
     protected HashSet<Integer> crystalTracker = new HashSet<>();
@@ -256,61 +256,6 @@ public class TomatoData {
             target.genericDamageHit(attacker, projectile, time);
             if (!entityHitList.containsKey(id) && !CharacterClass.isPlayerCharacter(id)) {
                 entityHitList.put(id, target);
-            }
-        }
-    }
-
-    /**
-     * Incoming packets updates after observing an entity becoming stasised.
-     *
-     * @param p Stasis packet
-     */
-    public void stasis(StasisPacket p) {
-        if (p.unknownByteArray[1] != 22) return;
-        float stasisDuration = p.stasisDuration;
-
-        int[] itemId;
-        if (stasisDuration == 3.0f) {
-            itemId = new int[]{2788, 306}; // T0 Stasis Orb, UT Orb of Sweet Demise
-        } else if (stasisDuration == 3.5f) {
-            itemId = new int[]{2626}; // T1 Suspension Orb
-        } else if (stasisDuration == 4.0f) {
-            itemId = new int[]{2627, 2111}; // T2 Imprisonment Orb, UT Enchantment Orb
-        } else if (stasisDuration == 4.5f) {
-            itemId = new int[]{2628}; // T3 Neutralization Orb
-        } else if (stasisDuration == 5.0f) {
-            itemId = new int[]{2629}; // T4 Timelock Orb
-        } else if (stasisDuration == 5.5f) {
-            itemId = new int[]{2630}; // T5 Banishment Orb
-        } else if (stasisDuration == 6.0f) {
-            itemId = new int[]{2861, 8334, 9058, 23352, 25752}; // T6 Planefetter Orb, UT Snowbound Orb, Soul of the Bearer, UT Karma Orb, Orb of the Sabbath
-        } else if (stasisDuration == 6.5f) {
-            itemId = new int[]{8287}; // T7 Dimensiongate Orb
-        } else if (stasisDuration == 7.0f) {
-            itemId = new int[]{3083, 29647}; // UT Orb of Conflict, UT Orb of Terror
-        } else {
-            return;
-        }
-
-        for (Entity player : playerListUpdated.values()) {
-            if (player.stasisTimer == time) continue;
-
-            for (int id : itemId) {
-                int statValue = player.stat.INVENTORY_1_STAT.statValue;
-                if (statValue == id) {
-                    player.stasisTimer = time;
-                    try {
-                        StringBuilder sb = new StringBuilder();
-                        sb.append("[").append(Util.getHourTime()).append("] ");
-                        String name = player.stat.NAME_STAT.stringStatValue;
-                        sb.append(name.split(",")[0]).append(": ");
-                        String item = IdToAsset.objectName(statValue);
-                        sb.append(item);
-                        SecurityGUI.updateAbilityUsage(sb.toString());
-                    } catch (AssetMissingException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
             }
         }
     }
