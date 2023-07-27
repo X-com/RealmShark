@@ -1,6 +1,7 @@
 package potato.control;
 
 import packets.Packet;
+import packets.data.enums.NotificationEffectType;
 import packets.incoming.*;
 import packets.incoming.ip.IpAddress;
 import packets.outgoing.HelloPacket;
@@ -43,6 +44,12 @@ public class PacketController {
         } else if (packet instanceof QuestObjectIdPacket) {
             QuestObjectIdPacket p = (QuestObjectIdPacket) packet;
             model.questArrow(p);
+        } else if (packet instanceof NotificationPacket) {
+            NotificationPacket p = (NotificationPacket) packet;
+            model.teleportTimer(p);
+        } else if (packet instanceof UnknownPacket169) {
+            UnknownPacket169 p = (UnknownPacket169) packet;
+            model.unknownPacket169(p);
         } else if (packet instanceof IpAddress) {
             IpAddress p = (IpAddress) packet;
             model.ipChanged(p.ipAddressName, p.srcAddressAsInt);

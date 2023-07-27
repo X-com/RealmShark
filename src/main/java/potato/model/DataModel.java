@@ -1,9 +1,8 @@
 package potato.model;
 
 import packets.data.*;
-import packets.incoming.MapInfoPacket;
-import packets.incoming.QuestObjectIdPacket;
-import packets.incoming.TextPacket;
+import packets.data.enums.NotificationEffectType;
+import packets.incoming.*;
 import potato.model.data.Entity;
 import potato.view.opengl.OpenGLPotato;
 import potato.control.InputController;
@@ -64,6 +63,7 @@ public class DataModel {
     private float zoomStep = 7.8f;
     private float zoomMax = 48f;
     private float zoom = 1f;
+    private int unknownPacket169;
 
 
     public DataModel() {
@@ -203,6 +203,7 @@ public class DataModel {
         heroDetect.reset();
         isShatters = false;
         isCrystal = false;
+        unknownPacket169 = 0;
     }
 
     private int findMapIndex(GroundTileData[] tiles) {
@@ -283,7 +284,7 @@ public class DataModel {
     }
 
     public String getPlayerCoordString() {
-        if (Config.instance.showPlayerCoords) return String.format(" x:%d y:%d", getIntPlayerX(), getIntPlayerY());
+        if (Config.instance.showPlayerCoords) return String.format(" x:%d y:%d %d", getIntPlayerX(), getIntPlayerY(), unknownPacket169);
         return "";
     }
 
@@ -360,7 +361,14 @@ public class DataModel {
 
     public void newTickUpdates(ObjectStatusData[] status) {
         heroDetect.newTickUpdates(status);
-        if (isShatters) {
+        if (inRealm) {
+            for (ObjectStatusData osd : status) {
+                int objectId = osd.objectId;
+                if (entityList.containsKey(objectId)) {
+                    entityList.get(osd.objectId).move(osd.pos);
+                }
+            }
+        } else if (isShatters) {
             for (ObjectStatusData osd : status) {
                 int objectId = osd.objectId;
                 if (entityList.containsKey(objectId)) {
@@ -498,5 +506,20 @@ public class DataModel {
             zoomMax = 3f;
             zoomStep = 1f;
         }
+    }
+
+    public void teleportTimer(NotificationPacket p) {
+        if (p.effect != NotificationEffectType.TeleportationError) return;
+        String[] s = p.message.split(" ");
+        if (s.length > 1) {
+            try {
+                tpCooldown = System.currentTimeMillis() + (Long.parseLong(s[1]) * 1000);
+            } catch (NumberFormatException ignore) {
+            }
+        }
+    }
+
+    public void unknownPacket169(UnknownPacket169 p) {
+        unknownPacket169 = p.unknownInt / 1000;
     }
 }

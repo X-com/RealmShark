@@ -1,7 +1,10 @@
-package experimental;
+package bugfixingtools;
 
+import assets.AssetMissingException;
+import assets.IdToAsset;
 import packets.Packet;
 import packets.data.ObjectData;
+import packets.data.ObjectStatusData;
 import packets.incoming.*;
 import packets.incoming.ip.IpAddress;
 import packets.incoming.pets.ActivePetPacket;
@@ -15,6 +18,7 @@ import java.awt.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class PacketRead {
@@ -108,6 +112,7 @@ public class PacketRead {
 
         if (packet instanceof NewTickPacket) {
 //            newtick((NewTickPacket) packet);
+//            entityString((NewTickPacket) packet);
             return;
         }
 
@@ -115,13 +120,17 @@ public class PacketRead {
 //            MapInfoPacket p = (MapInfoPacket) packet;
 //            if (p.name.equals("Realm of the Mad God")) {
 //                System.out.println(p.seed + "   " + ip);
-//            }
+//            }d
 //            return;
+//            types.clear();
+//            System.out.println("clearconsole");
+            return;
         }
 
         if (packet instanceof UpdatePacket) {
 //            crystalTPRange((UpdatePacket) packet);
 //            realmIdentifier((UpdatePacket) packet);
+//            entityString((UpdatePacket) packet);
             return;
         }
         if (packet instanceof VaultContentPacket) {
@@ -132,6 +141,30 @@ public class PacketRead {
         //RealmHeroesLeftPacket
 
         System.out.println(packet);
+    }
+
+    private static void entityString(NewTickPacket packet) {
+        for (ObjectStatusData o : packet.status) {
+            if (o.objectId == 565) {
+                System.out.println(o);
+            }
+        }
+    }
+
+    static HashSet<Integer> types = new HashSet<>();
+
+    private static void entityString(UpdatePacket packet) {
+        for (ObjectData o : packet.newObjects) {
+            int t = o.objectType;
+            if (!types.contains(t)) {
+                types.add(t);
+                try {
+                    String s = IdToAsset.objectName(t);
+                    System.out.println(s + " " + t + " " + o.status.objectId);
+                } catch (AssetMissingException e) {
+                }
+            }
+        }
     }
 
     static boolean log = false;
