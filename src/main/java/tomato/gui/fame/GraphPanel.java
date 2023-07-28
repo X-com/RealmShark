@@ -1,6 +1,9 @@
 package tomato.gui.fame;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -8,7 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-public class GraphPanel extends JPanel {
+public class GraphPanel extends JPanel implements MouseMotionListener {
 
     private int padding = 25;
     private int labelPadding = 25;
@@ -19,8 +22,16 @@ public class GraphPanel extends JPanel {
     private int pointWidth = 4;
     private int numberYDivisions = 10;
     private ArrayList<Fame> scores;
+    private int screenX;
+    private int screenXdragLeft;
+    private int screenXdragRight;
+    private Fame dragLeft;
+    private Fame dragRight;
+    private double hoverFame = -1;
+    private boolean pressed;
 
     public GraphPanel(ArrayList<Fame> scores) {
+        addMouseMotionListener(this);
         this.scores = scores;
     }
 
@@ -50,6 +61,30 @@ public class GraphPanel extends JPanel {
         g2.fillRect(padding + labelPadding, padding, getWidth() - (2 * padding) - labelPadding, getHeight() - 2 * padding - labelPadding);
         g2.setColor(Color.BLACK);
 
+        // draw selection box
+        int xWidth = getWidth() - labelPadding;
+        int x3 = padding * 2 + labelPadding - 12;
+        int y3 = padding + labelPadding - 5;
+        if (pressed) {
+            g2.setColor(new Color(160, 180, 240));
+            int w = screenXdragRight - screenXdragLeft;
+            int x;
+            if (w > 0) {
+                x = screenXdragLeft;
+            } else {
+                x = screenXdragRight;
+            }
+            String s = String.format("Fame / Min: %.3f", (Math.abs(dragLeft.fame - dragRight.fame) / (Math.abs(dragLeft.time - dragRight.time) / 60000f)));
+            g2.fillRect(x, padding, Math.abs(w), getHeight() - 2 * padding - labelPadding);
+            g2.setColor(Color.BLACK);
+
+            g2.drawString(s, x3, y3);
+        } else if (hoverFame >= 0) {
+            g2.drawLine(screenX, padding, screenX, getHeight() - padding - labelPadding);
+            String s = String.format("Fame: %.0f", hoverFame);
+            g2.drawString(s, x3, y3);
+        }
+
         // create hatch marks and grid lines for y axis.
         for (int i = 0; i < numberYDivisions + 1; i++) {
             int x0 = padding + labelPadding;
@@ -67,8 +102,6 @@ public class GraphPanel extends JPanel {
             }
             g2.drawLine(x0, y0, x1, y1);
         }
-
-        int xWidth = getWidth() - labelPadding;
 
         int seconds = (int) (minMax.maxScoreX - minMax.minScoreX) / 1000;
         int minutes = seconds / 60;
@@ -170,10 +203,14 @@ public class GraphPanel extends JPanel {
     private static void createAndShowGui() {
         ArrayList<Fame> scores = new ArrayList<>();
         Random random = new Random();
-        int maxDataPoints = 40;
-        int maxScore = 10;
+        int maxDataPoints = 400;
+        int maxScore = 10000;
+        int sumy = 0;
+        int sumx = 0;
         for (int i = 0; i < maxDataPoints; i++) {
-            scores.add(new Fame(random.nextDouble() * maxScore, 0));
+            sumy += random.nextDouble() * maxScore;
+            sumx += random.nextDouble() * maxScore * 3;
+            scores.add(new Fame(sumx, sumy));
         }
         GraphPanel mainPanel = new GraphPanel(scores);
         mainPanel.setPreferredSize(new Dimension(800, 600));
@@ -187,6 +224,49 @@ public class GraphPanel extends JPanel {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(GraphPanel::createAndShowGui);
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        if (!pressed) {
+            screenXdragLeft = e.getX();
+            dragLeft = getRange(screenXdragLeft);
+        }
+        if (dragLeft != null) pressed = true;
+        screenXdragRight = e.getX();
+        dragRight = getRange(screenXdragRight);
+        if (dragRight == null) pressed = false;
+        repaint();
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        pressed = false;
+        screenX = e.getX();
+        Fame f = getRange(screenX);
+        hoverFame = -1;
+        if (f != null) {
+            hoverFame = f.fame;
+        }
+        repaint();
+    }
+
+    public Fame getRange(int x) {
+        float dx = (float) (x - padding - labelPadding) / (getWidth() - labelPadding * 3);
+        if (dx < 0 || dx > 1) {
+            return null;
+        }
+        MinMax m = getMinMaxScore();
+        float ddx = (float) (m.maxScoreX - m.minScoreX) * dx;
+
+        Fame next = null;
+        for (Fame f : scores) {
+            if ((f.time - m.minScoreX) > ddx) {
+                break;
+            }
+            next = f;
+        }
+        return next;
     }
 
     private static class MinMax {
