@@ -16,7 +16,7 @@ public class DpsGUI extends JPanel {
     private TomatoData data;
     private JButton next, prev;
     private StringDpsGUI displayString;
-    private DisplayDpsGUI displayIcon;
+    private IconDpsGUI displayIcon;
     private DisplayDpsGUI centerDisplay;
     private static JTextField textFilter;
     private static JCheckBox textFilterToggle;
@@ -81,43 +81,39 @@ public class DpsGUI extends JPanel {
         displayString = new StringDpsGUI();
         displayIcon = new IconDpsGUI();
         centerDisplay = displayIcon;
-        setCenterDisplay(displayString);
+        setCenterDisplay();
     }
 
-    private void setCenterDisplay(DisplayDpsGUI display) {
-        Class c = display.getClass();
-        Class d = centerDisplay.getClass();
-        if (c == d) return;
+    private void setCenterDisplay() {
+        DisplayDpsGUI display;
+        if (liveUpdates || DpsDisplayOptions.equipmentOption < 3) {
+            display = displayString;
+        } else if (DpsDisplayOptions.equipmentOption == 3) {
+            display = displayIcon;
+        } else {
+            return;
+        }
+
+        if (display.getClass() == centerDisplay.getClass()) return;
 
         centerDisplay = display;
-//        long time = System.currentTimeMillis();
         center.removeAll();
-//        System.out.println(System.currentTimeMillis() - time);
         center.add(display);
         repaint();
     }
 
-    public static void setDisplayAsIcon() {
-        if (INSTANCE.liveUpdates) return;
-        INSTANCE.setCenterDisplay(INSTANCE.displayIcon);
-        Entity[] entityHitList = INSTANCE.data.dpsData.get(INSTANCE.index).hitList.values().toArray(new Entity[0]);
-        INSTANCE.displayIcon.renderData(entityHitList, false);
-    }
-
-    public static void setDisplayAsString() {
-        if (INSTANCE.liveUpdates) return;
-        INSTANCE.setCenterDisplay(INSTANCE.displayString);
-        Entity[] entityHitList = INSTANCE.data.dpsData.get(INSTANCE.index).hitList.values().toArray(new Entity[0]);
-        INSTANCE.displayString.renderData(entityHitList, false);
-    }
-
     public static void updateNewTickPacket(TomatoData data) {
         if (!INSTANCE.liveUpdates) return;
-        INSTANCE.displayString.renderData(data.getEntityHitList(), true);
+        INSTANCE.renderData(data.getEntityHitList(), true);
+    }
+
+    private void renderData(Entity[] entityHitList, boolean b) {
+        setCenterDisplay();
+        centerDisplay.renderData(entityHitList, b);
     }
 
     public static void editFont(Font font) {
-        INSTANCE.displayIcon.editFont(font);
+        INSTANCE.centerDisplay.editFont(font);
         update();
     }
 
@@ -175,17 +171,17 @@ public class DpsGUI extends JPanel {
 
     private void updateGui() {
         if (liveUpdates) {
-            displayString.renderData(data.getEntityHitList(), true);
+            renderData(data.getEntityHitList(), true);
         } else {
             Entity[] entityHitList = data.dpsData.get(index).hitList.values().toArray(new Entity[0]);
-            displayIcon.renderData(entityHitList, false);
+            renderData(entityHitList, false);
         }
     }
 
     private void scrollData(int a) {
         int size = data.dpsData.size();
         index += a;
-        setCenterDisplay(displayString);
+        setCenterDisplay();
         if (liveUpdates) {
             if (a > 0 || size == 0) {
                 return;
@@ -203,6 +199,6 @@ public class DpsGUI extends JPanel {
         dpsLabel.setText((index + 1) + "/" + size);
 
         Entity[] entityHitList = data.dpsData.get(index).hitList.values().toArray(new Entity[0]);
-        displayString.renderData(entityHitList, false);
+        renderData(entityHitList, false);
     }
 }

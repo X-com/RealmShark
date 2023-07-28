@@ -20,7 +20,7 @@ public class TomatoMenuBar implements ActionListener {
     private JRadioButtonMenuItem fontSize8, fontSize12, fontSize16, fontSize24, fontSize48, fontSizeCustom;
     private JRadioButtonMenuItem themeDarcula, themeighContrastDark, themeHighContrastLight, themeIntelliJ, themeSolarizedDark, themeSolarizedLight;
     private JRadioButtonMenuItem fontNameMonospaced, fontNameDialog, fontNameDialogInput, fontNameSerif, fontNameSansSerif, fontNameSegoe;
-    private JRadioButtonMenuItem dpsEquipmentNone, dpsEquipmentSimple, dpsEquipmentFull;
+    private JRadioButtonMenuItem dpsEquipmentNone, dpsEquipmentSimple, dpsEquipmentFull, dpsIcon;
     private JCheckBoxMenuItem fontStyleBold, fontStyleItalic;
     private JMenu file, edit, info;
     private JMenuBar jMenuBar;
@@ -102,6 +102,7 @@ public class TomatoMenuBar implements ActionListener {
         dpsEquipmentNone = addRadioButtonMenuItem(groupDpsEquipment, dpsEquipment, "None");
         dpsEquipmentSimple = addRadioButtonMenuItem(groupDpsEquipment, dpsEquipment, "Simple");
         dpsEquipmentFull = addRadioButtonMenuItem(groupDpsEquipment, dpsEquipment, "Full");
+        dpsIcon = addRadioButtonMenuItem(groupDpsEquipment, dpsEquipment, "Icon");
         setEquipmentRadioButton();
 
         about = new JMenuItem("About");
@@ -268,12 +269,15 @@ public class TomatoMenuBar implements ActionListener {
             case "0":
                 dpsEquipmentNone.setSelected(true);
                 break;
+            case "1":
+                dpsEquipmentSimple.setSelected(true);
+                break;
             case "2":
                 dpsEquipmentFull.setSelected(true);
                 break;
             default:
-            case "1":
-                dpsEquipmentSimple.setSelected(true);
+            case "3":
+                dpsIcon.setSelected(true);
                 break;
         }
     }
@@ -438,6 +442,10 @@ public class TomatoMenuBar implements ActionListener {
         } else if (e.getSource() == dpsEquipmentFull) { // dps equipment
             PropertiesManager.setProperties("equipment", "2");
             DpsDisplayOptions.equipmentOption = 2;
+            DpsGUI.update();
+        } else if (e.getSource() == dpsIcon) { // dps icon
+            PropertiesManager.setProperties("equipment", "3");
+            DpsDisplayOptions.equipmentOption = 3;
             DpsGUI.update();
         } else if (e.getSource() == about) { // Opens about window
             new TomatoPopupAbout().addPopup(frame);

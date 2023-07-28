@@ -21,9 +21,8 @@ import java.util.stream.Collectors;
 
 public class IconDpsGUI extends DisplayDpsGUI {
 
-    private static int HEIGHT = 24;
     private static JPanel charPanel;
-    Entity[] data;
+    private Entity[] data;
     private static Font mainFont;
 
     public IconDpsGUI() {
@@ -38,42 +37,23 @@ public class IconDpsGUI extends DisplayDpsGUI {
         new SmartScroller(scroll);
         add(scroll, BorderLayout.CENTER);
 
-        JButton button = new JButton("String Display");
-        button.addActionListener(e -> clicked());
-        add(button, BorderLayout.SOUTH);
+//        JButton button = new JButton("String Display");
+//        button.addActionListener(e -> clicked());
+//        add(button, BorderLayout.SOUTH);
     }
 
-    private void clicked() {
-        DpsGUI.setDisplayAsString();
-//        long time = System.currentTimeMillis();
-//        charPanel.removeAll();
-//        System.out.println(System.currentTimeMillis() - time);
-//        updateDps(data);
-//        guiUpdate();
-    }
+//    private void clicked() {
+//        DpsGUI.setDisplayAsString();
+//    }
 
     private void updateDps(Entity[] data) {
         List<Entity> sortedList = Arrays.stream(data).sorted(Comparator.comparingLong(Entity::getLastDamageTaken).reversed()).collect(Collectors.toList());
-//        JPanel panel = new JPanel();
-//        panel.setLayout(new GridBagLayout());
-//        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-//        JScrollPane scroll = new JScrollPane(panel);
-//        scroll.getVerticalScrollBar().setUnitIncrement(40);
-//        new SmartScroller(scroll);
-//        addImpl(scroll, BorderLayout.CENTER, 0);
-
-        long time = System.currentTimeMillis();
         charPanel.removeAll();
-        System.out.println(System.currentTimeMillis() - time);
         for (Entity e : sortedList) {
             if (e.maxHp() <= 0) continue;
             if (CharacterClass.isPlayerCharacter(e.objectType)) continue;
             charPanel.add(createMainBox(e));
         }
-//        new Thread(() -> {
-//            charPanel.removeAll();
-//            charPanel = panel;
-//        }).start();
     }
 
     private void guiUpdate() {
@@ -84,10 +64,11 @@ public class IconDpsGUI extends DisplayDpsGUI {
     private static JPanel createMainBox(Entity entity) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
         JPanel mobPanel = new JPanel();
         mobPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), BorderFactory.createEmptyBorder(0, 0, 0, 0)));
-        mobPanel.setPreferredSize(new Dimension(370, HEIGHT + HEIGHT));
-        mobPanel.setMaximumSize(new Dimension(370, HEIGHT));
+        mobPanel.setPreferredSize(new Dimension(370, 48));
+        mobPanel.setMaximumSize(new Dimension(370, 48));
         mobPanel.setLayout(new BoxLayout(mobPanel, BoxLayout.X_AXIS));
 
         StringBuilder sb = new StringBuilder();
@@ -98,29 +79,25 @@ public class IconDpsGUI extends DisplayDpsGUI {
         panel.add(mobPanel);
 
         List<Damage> playerDamageList = entity.getPlayerDamageList();
+
         JPanel panelAllPlayers = new JPanel();
-
-        GridBagConstraints g = new GridBagConstraints();
-        g.gridx = 0;
-        g.gridy = 0;
-        g.anchor = GridBagConstraints.WEST;
-        g.insets = new Insets(0, 5, 0, 0);
-
-        panelAllPlayers.setLayout(new GridBagLayout());
+        panelAllPlayers.setLayout(new BoxLayout(panelAllPlayers, BoxLayout.Y_AXIS));
+        panel.add(panelAllPlayers);
 
         int counter = 0;
+        int[] pref = new int[5];
+        ArrayList<JPanel>[] panels = new ArrayList[4];
+        panels[0] = new ArrayList<>();
+        panels[1] = new ArrayList<>();
+        panels[2] = new ArrayList<>();
+        panels[3] = new ArrayList<>();
         for (Damage dmg : playerDamageList) {
             counter++;
             String name = dmg.owner.name();
 
             if (filter(name)) continue;
 
-            JPanel playerPanel = new JPanel();
             JPanel inv = equipment(DpsDisplayOptions.equipmentOption, dmg.owner, entity);
-            playerPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), BorderFactory.createEmptyBorder(0, 0, 0, 0)));
-            playerPanel.setPreferredSize(new Dimension(370, HEIGHT));
-            playerPanel.setMaximumSize(new Dimension(370, HEIGHT));
-            playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.X_AXIS));
 
             String extra = "";
             if (dmg.oryx3GuardDmg) {
@@ -142,17 +119,38 @@ public class IconDpsGUI extends DisplayDpsGUI {
             player2.setFont(mainFont);
             player3.setFont(mainFont);
             player1.setHorizontalTextPosition(SwingConstants.LEFT);
-            g.gridx = 0;
-            panelAllPlayers.add(player1, g);
-            g.gridx = 1;
-            panelAllPlayers.add(player2, g);
-            g.gridx = 2;
-            panelAllPlayers.add(player3, g);
-            g.gridx = 3;
-            panelAllPlayers.add(inv, g);
-            g.gridy = counter;
+            if (pref[0] < player1.getPreferredSize().width) pref[0] = player1.getPreferredSize().width;
+            if (pref[1] < player2.getPreferredSize().width) pref[1] = player2.getPreferredSize().width;
+            if (pref[2] < player3.getPreferredSize().width) pref[2] = player3.getPreferredSize().width;
+            if (pref[3] < inv.getPreferredSize().width) pref[3] = inv.getPreferredSize().width;
+            if (pref[4] < player1.getPreferredSize().height) pref[4] = player1.getPreferredSize().height;
+
+            JPanel pp = new JPanel();
+            pp.setLayout(new BoxLayout(pp, BoxLayout.X_AXIS));
+            JPanel pp1 = new JPanel();
+            JPanel pp2 = new JPanel();
+            JPanel pp3 = new JPanel();
+            JPanel pp4 = new JPanel();
+            pp1.add(player1);
+            pp2.add(player2);
+            pp3.add(player3);
+            pp4.add(inv);
+            panels[0].add(pp1);
+            panels[1].add(pp2);
+            panels[2].add(pp3);
+            panels[3].add(pp4);
+            pp.add(pp1);
+            pp.add(pp2);
+            pp.add(pp3);
+            pp.add(pp4);
+            panelAllPlayers.add(pp);
         }
-        panel.add(panelAllPlayers);
+        for (int i = 0; i < 4; i++) {
+            for (JPanel p : panels[i]) {
+                p.setPreferredSize(new Dimension(pref[i] + 5, pref[4]));
+                p.setMaximumSize(new Dimension(pref[i] + 5, pref[4]));
+            }
+        }
 
         return panel;
     }
@@ -180,11 +178,9 @@ public class IconDpsGUI extends DisplayDpsGUI {
 
     private static JPanel equipment(int equipmentFilter, Entity owner, Entity entity) {
         JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(100, HEIGHT));
-        panel.setMaximumSize(new Dimension(100, HEIGHT));
+        panel.setPreferredSize(new Dimension(76, 16));
         panel.setLayout(new GridLayout(1, 4));
 
-//        if (equipmentFilter == 0 || owner.getStatName() == null) return panel;
         if (owner.getStatName() == null) return panel;
 
         HashMap<Integer, Equipment>[] inv = new HashMap[4];
@@ -200,7 +196,6 @@ public class IconDpsGUI extends DisplayDpsGUI {
             }
         }
 
-//        if (equipmentFilter == 1) {
         for (int i = 0; i < 4; i++) {
             Equipment max = inv[i].values().stream().max(Comparator.comparingInt(e -> e.dmg)).orElseThrow(NoSuchElementException::new);
             BufferedImage img;
@@ -211,41 +206,15 @@ public class IconDpsGUI extends DisplayDpsGUI {
                 } else {
                     img = ImageBuffer.getImage(eq);
                 }
-                JLabel icon = new JLabel(new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT)));
+                JLabel icon = new JLabel(new ImageIcon(img.getScaledInstance(16, 16, Image.SCALE_DEFAULT)));
                 icon.setToolTipText(IdToAsset.objectName(eq));
                 panel.add(icon);
             } catch (AssetMissingException | IOException ex) {
                 throw new RuntimeException(ex);
             }
         }
+
         return panel;
-//        } else if (equipmentFilter == 2) {
-//            StringBuilder s = new StringBuilder();
-//            for (int i = 0; i < 4; i++) {
-//                s.append("\n");
-//                try {
-//                    Collection<Equipment> list = inv[i].values();
-//                    s.append("       ");
-//                    boolean first = true;
-//                    for (Equipment e : list) {
-//                        if (list.size() > 1) {
-//                            if (!first) s.append(" /");
-//                            s.append(String.format(" %.1f%% ", 100f * e.dmg / e.totalDmg.get()));
-//                            s.append(IdToAsset.objectName(e.id));
-//                        } else {
-//                            s.append(" ");
-//                            s.append(IdToAsset.objectName(e.id));
-//                        }
-//                        first = false;
-//                    }
-//                } catch (AssetMissingException ex) {
-//                    throw new RuntimeException(ex);
-//                }
-//            }
-//            return panel;
-//        }
-//
-//        return panel;
     }
 
     @Override
