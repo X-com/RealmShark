@@ -157,7 +157,7 @@ public enum PacketType { //ChristmasTree™   ⛧   <-crown
                        UNKNOWN146(-110, Outgoing, UnknownPacket146::new),
                        UNKNOWN147(-109, Incoming, UnknownPacket147::new),
                 CLAIM_BATTLE_PASS(-107, Outgoing, ClaimBattlePassItemPacket::new),
-                  ACK_BATTLE_PASS(-106, Incoming, AckBattlePassItemClaimedPacket::new),
+        CLAIM_BP_MILESTONE_RESULT(-106, Incoming, ClaimBPMilestoneResultPacket::new),
                  CONVERT_SEASONAL(-102, Outgoing, ConvertSeasonalCharacterPacket::new),
                         UNKNOWN163(-93, Outgoing, UnknownPacket163::new),
                         UNKNOWN164(-92, Incoming, UnknownPacket164::new),
