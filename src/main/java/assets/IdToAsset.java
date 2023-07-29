@@ -215,13 +215,15 @@ public class IdToAsset {
      */
     private static Projectile[] parseProjectile(IdToAsset entity) throws AssetMissingException {
         String[] l = entity.projectile.split(",");
-        Projectile[] p = new Projectile[l.length / 3];
+        int slotType = Integer.parseInt(l[0]);
+        int length = l.length - 1;
+        Projectile[] p = new Projectile[length / 3];
         int index = 0;
-        for (int i = 0; i < l.length; i += 3) {
-            int min = Integer.parseInt(l[i]);
-            int max = Integer.parseInt(l[1 + i]);
-            boolean ap = l[2 + i].equals("1");
-            p[index] = new Projectile(min, max, ap);
+        for (int i = 0; i < length; i += 3) {
+            int min = Integer.parseInt(l[1 + i]);
+            int max = Integer.parseInt(l[2 + i]);
+            boolean ap = l[3 + i].equals("1");
+            p[index] = new Projectile(min, max, ap, slotType);
             index++;
         }
 
@@ -246,7 +248,7 @@ public class IdToAsset {
                 index++;
             }
         } catch (Exception e) {
-            System.out.println(entity);
+//            System.out.println(entity);
         }
         return t;
     }
@@ -288,6 +290,18 @@ public class IdToAsset {
         IdToAsset i = objectID.get(id);
         if (i.projectiles == null) i.projectiles = parseProjectile(i);
         return i.projectiles[projectileId].ap;
+    }
+
+    /**
+     * Inventory slot type of weapon.
+     *
+     * @param id Id of the weapon.
+     * @return Inventory slot type of weapon
+     */
+    public static int getIdProjectileSlotType(int id) throws AssetMissingException {
+        IdToAsset i = objectID.get(id);
+        if (i.projectiles == null) i.projectiles = parseProjectile(i);
+        return i.projectiles[0].slotType;
     }
 
     /**
@@ -369,11 +383,13 @@ public class IdToAsset {
         int min; // min dmg
         int max; // max dmg
         boolean ap; // armor piercing
+        int slotType; // weapon slot
 
-        public Projectile(int min, int max, boolean ap) {
+        public Projectile(int min, int max, boolean ap, int slotType) {
             this.min = min;
             this.max = max;
             this.ap = ap;
+            this.slotType = slotType;
         }
     }
 

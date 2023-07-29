@@ -367,6 +367,9 @@ public class AssetExtractor {
                 case "Tier":
                     ao.tier = value;
                     break;
+                case "SlotType":
+                    ao.slotType = value;
+                    break;
                 case "Projectile":
                     addProjectile(n, ao);
                     break;
@@ -477,6 +480,7 @@ public class AssetExtractor {
         String group = "";
         String labels = "";
         String tier = "";
+        String slotType = "";
 
         ArrayList<AssetProjectile> projectiles;
 
@@ -490,6 +494,7 @@ public class AssetExtractor {
 
             StringBuilder projectileString = new StringBuilder();
             if (projectiles != null) {
+                projectileString.append(slotType + ",");
                 for (AssetProjectile p : projectiles) {
                     projectileString.append(p);
                 }
