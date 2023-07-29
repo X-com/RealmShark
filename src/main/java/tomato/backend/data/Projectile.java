@@ -38,10 +38,13 @@ public class Projectile {
         int min = 0;
         int max = 0;
         boolean ap = false;
+        boolean mainWeapon = false;
         try {
             min = IdToAsset.getIdProjectileMinDmg(weaponId, projectileId);
             max = IdToAsset.getIdProjectileMaxDmg(weaponId, projectileId);
             ap = IdToAsset.getIdProjectileArmorPierces(weaponId, projectileId);
+            int slot = IdToAsset.getIdProjectileSlotType(weaponId);
+            mainWeapon = isMainWeapon(slot);
         } catch (AssetMissingException e) {
             e.printStackTrace();
         }
@@ -52,9 +55,23 @@ public class Projectile {
         } else {
             dmg = min;
         }
-        float f = player.playerStatsMultiplier();
+        float f = 1f;
+        if (mainWeapon) f = player.playerStatsMultiplier();
         damage = (int) (dmg * f);
         armorPiercing = ap;
+    }
+
+    private boolean isMainWeapon(int slot) {
+        switch (slot) {
+            case 1:
+            case 2:
+            case 3:
+            case 8:
+            case 17:
+            case 24:
+                return true;
+        }
+        return false;
     }
 
     /**
