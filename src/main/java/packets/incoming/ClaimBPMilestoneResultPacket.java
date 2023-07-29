@@ -6,7 +6,7 @@ import packets.reader.BufferReader;
 /**
  * Packet received when redeeming battle pass items
  */
-public class BoostBPMilestoneResultPacket extends Packet {
+public class ClaimBPMilestoneResultPacket extends Packet {
     /**
      * Indicating if item is redeemed
      */
@@ -19,7 +19,7 @@ public class BoostBPMilestoneResultPacket extends Packet {
 
     @Override
     public String toString() {
-        return "UnknownPacket150{" +
+        return "ClaimBPMilestoneResultPacket{" +
                 "\n   itemRedeemed=" + itemRedeemed;
     }
 }
