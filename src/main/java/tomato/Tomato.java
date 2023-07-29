@@ -177,7 +177,7 @@ public class Tomato {
     private static void notificationPacket(Packet packet) {
         if (packet instanceof NotificationPacket) {
             NotificationPacket nPacket = (NotificationPacket) packet;
-            if (nPacket.effect == NotificationEffectType.DungeonOpened) {
+            if (nPacket.effect == NotificationEffectType.PortalOpened) {
                 String msg = nPacket.message;
                 Matcher m = popperName.matcher(msg);
                 if (m.matches()) {
