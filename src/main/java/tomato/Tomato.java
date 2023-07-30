@@ -1,30 +1,21 @@
 package tomato;
 
 import assets.AssetExtractor;
-import assets.AssetMissingException;
-import assets.IdToAsset;
-import packets.Packet;
 import packets.PacketType;
-import packets.data.enums.NotificationEffectType;
-import packets.incoming.MapInfoPacket;
-import packets.incoming.NotificationPacket;
-import packets.incoming.TextPacket;
 import packets.packetcapture.PacketProcessor;
-import packets.packetcapture.register.IPacketListener;
 import packets.packetcapture.register.Register;
 import packets.packetcapture.sniff.assembly.TcpStreamErrorHandler;
-import tomato.gui.warnings.JavaOutOfMemoryGUI;
-import tomato.gui.maingui.TomatoBandwidth;
-import tomato.gui.TomatoGUI;
-import tomato.gui.maingui.TomatoMenuBar;
-import tomato.realmshark.CrashLogger;
 import tomato.backend.TomatoPacketCapture;
 import tomato.backend.TomatoRootController;
 import tomato.backend.data.TomatoData;
+import tomato.gui.TomatoGUI;
+import tomato.gui.maingui.TomatoBandwidth;
+import tomato.gui.maingui.TomatoMenuBar;
+import tomato.gui.warnings.JavaOutOfMemoryGUI;
+import tomato.realmshark.CrashLogger;
 import util.Util;
 
 import java.net.URL;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -39,7 +30,6 @@ import java.util.regex.Pattern;
  */
 public class Tomato {
     public static URL imagePath = Tomato.class.getResource("/icon/tomatoIcon.png");
-    private static final Pattern popperName = Pattern.compile("[^ ]*\"player\":\"([A-Za-z]*)[^ ]*");
     private static PacketProcessor packetProcessor;
     private static TomatoRootController rootController;
 
@@ -112,9 +102,6 @@ public class Tomato {
     private static void packetRegister(TomatoPacketCapture packCap) {
         Register.INSTANCE.subscribePacketLogger(TomatoBandwidth::setInfo);
 
-        Register.INSTANCE.register(PacketType.TEXT, Tomato::textPacket);
-        Register.INSTANCE.register(PacketType.NOTIFICATION, Tomato::notificationPacket);
-
         Register.INSTANCE.register(PacketType.CREATE_SUCCESS, packCap::packetCapture);
         Register.INSTANCE.register(PacketType.ENEMYHIT, packCap::packetCapture);
         Register.INSTANCE.register(PacketType.PLAYERSHOOT, packCap::packetCapture);
@@ -125,6 +112,7 @@ public class Tomato {
         Register.INSTANCE.register(PacketType.MAPINFO, packCap::packetCapture);
         Register.INSTANCE.register(PacketType.STASIS, packCap::packetCapture);
         Register.INSTANCE.register(PacketType.TEXT, packCap::packetCapture);
+        Register.INSTANCE.register(PacketType.NOTIFICATION, packCap::packetCapture);
         Register.INSTANCE.register(PacketType.EXALTATION_BONUS_CHANGED, packCap::packetCapture);
         Register.INSTANCE.register(PacketType.VAULT_UPDATE, packCap::packetCapture);
         Register.INSTANCE.register(PacketType.QUEST_FETCH_RESPONSE, packCap::packetCapture);
@@ -154,53 +142,6 @@ public class Tomato {
                 e.printStackTrace();
             }
 //            dpsLogger.clear(); // TODO clear tomatodata
-        }
-    }
-
-    /**
-     * Example method called when text packets are received.
-     *
-     * @param packet The text packet.
-     */
-    private static void textPacket(Packet packet) {
-        if (packet instanceof TextPacket) {
-            TextPacket tPacket = (TextPacket) packet;
-            TomatoGUI.appendTextAreaChat(String.format("[%s]: %s\n", tPacket.name, tPacket.text));
-        }
-    }
-
-    /**
-     * Example method called when event notifier packets are received.
-     *
-     * @param packet The event notifier packet.
-     */
-    private static void notificationPacket(Packet packet) {
-        if (packet instanceof NotificationPacket) {
-            NotificationPacket nPacket = (NotificationPacket) packet;
-            if (nPacket.effect == NotificationEffectType.PortalOpened) {
-                String msg = nPacket.message;
-                Matcher m = popperName.matcher(msg);
-                if (m.matches()) {
-                    String playerName = m.group(1);
-                    try {
-                        TomatoGUI.appendTextAreaKeypop(String.format("%s [%s]: %s\n", Util.getHourTime(), playerName, IdToAsset.objectName(nPacket.pictureType)));
-                    } catch (AssetMissingException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else if (nPacket.effect == NotificationEffectType.ServerMessage) {
-                String msg = nPacket.message;
-                if (msg.startsWith("Wine Cellar")) {
-                    String[] list = msg.split(" ");
-                    String playerName = list[list.length - 1];
-                    TomatoGUI.appendTextAreaKeypop(String.format("%s [%s]: Inc\n", Util.getHourTime(), playerName));
-                } else if (msg.contains("Monument has been activated by")) {
-                    String[] list = msg.split(" ");
-                    String playerName = list[list.length - 1];
-                    String type = list[1];
-                    TomatoGUI.appendTextAreaKeypop(String.format("%s [%s]: %s Rune\n", Util.getHourTime(), playerName, type));
-                }
-            }
         }
     }
 }
