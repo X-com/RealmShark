@@ -14,6 +14,9 @@ import util.Pair;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,7 +34,8 @@ public class Entity {
     public final HashMap<Integer, PlayerRemoved> playerDropped;
     private String name;
     private BufferedImage img;
-    private long lastDamageTaken;
+    private long firstDamageTaken = -1;
+    private long lastDamageTaken = -1;
     private int charId;
     public int[] baseStats;
     private boolean isPlayer;
@@ -105,6 +109,17 @@ public class Entity {
         return lastDamageTaken;
     }
 
+    public String getFightTimer() {
+        long time = lastDamageTaken - firstDamageTaken;
+        if (time == 0) return "";
+        long ms = time % 1000;
+        long s = time / 1000 % 60;
+        if (s == 0) return String.format(" [%dms]", ms);
+        long m = time / 60000;
+        if (m == 0) return String.format(" [%ds %dms]", s, ms);
+        return String.format(" [%dm %ds %dms]", m, s, ms);
+    }
+
     public void entityDropped(long time) {
 //        updates.add(status); // TODO fix time
     }
@@ -145,6 +160,9 @@ public class Entity {
             Damage damage = new Damage(attacker, projectile, time, dmg);
             bossPhaseDamage(damage);
             addPlayerDmg(damage);
+            if (firstDamageTaken == -1) {
+                firstDamageTaken = time;
+            }
             lastDamageTaken = time;
         }
     }

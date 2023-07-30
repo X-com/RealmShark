@@ -89,6 +89,7 @@ public class IconDpsGUI extends DisplayDpsGUI {
 
         StringBuilder sb = new StringBuilder();
         sb.append(entity.name()).append(" HP: ").append(entity.maxHp()).append("\n");
+        sb.append(entity.getFightTimer());
         JLabel l = new JLabel(sb.toString(), new ImageIcon(getScaledImg(entity.objectType, entity.img())), JLabel.LEFT);
         l.setFont(mainFont);
         mobPanel.add(l);

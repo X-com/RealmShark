@@ -185,16 +185,17 @@ public class DpsGUI extends JPanel {
     private void scrollData(int a) {
         int size = data.dpsData.size();
         index += a;
-        setCenterDisplay();
         if (liveUpdates) {
             if (a > 0 || size == 0) {
                 return;
             }
             index = size - 1;
             liveUpdates = false;
+            setCenterDisplay();
         } else if (index >= size) {
             liveUpdates = true;
             dpsLabel.setText("Live");
+            setCenterDisplay();
             return;
         } else if (index < 0) {
             index = 0;
