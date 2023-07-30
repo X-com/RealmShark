@@ -3,17 +3,22 @@ package tomato.gui.dps;
 import assets.AssetMissingException;
 import assets.IdToAsset;
 import assets.ImageBuffer;
+import packets.incoming.NotificationPacket;
 import tomato.backend.data.Damage;
 import tomato.backend.data.Entity;
 import tomato.backend.data.Equipment;
+import tomato.backend.data.PlayerRemoved;
 import tomato.gui.SmartScroller;
 import tomato.realmshark.enums.CharacterClass;
+import util.Pair;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,6 +29,8 @@ public class IconDpsGUI extends DisplayDpsGUI {
     private static JPanel charPanel;
     private Entity[] data;
     private static Font mainFont;
+    private ArrayList<NotificationPacket> notifications;
+    private static final DecimalFormat df = new DecimalFormat("#,###,###");
 
     public IconDpsGUI() {
         setLayout(new BorderLayout());
@@ -48,11 +55,20 @@ public class IconDpsGUI extends DisplayDpsGUI {
 
     private void updateDps(Entity[] data) {
         List<Entity> sortedList = Arrays.stream(data).sorted(Comparator.comparingLong(Entity::getLastDamageTaken).reversed()).collect(Collectors.toList());
+        ArrayList<Pair<String, Integer>> deaths = new ArrayList<>();
+        for (NotificationPacket n : notifications) {
+            String name = n.message.split("\"")[9];
+            int graveIcon = n.pictureType;
+            deaths.add(new Pair<>(name, graveIcon));
+        }
         charPanel.removeAll();
         for (Entity e : sortedList) {
             if (e.maxHp() <= 0) continue;
             if (CharacterClass.isPlayerCharacter(e.objectType)) continue;
-            charPanel.add(createMainBox(e));
+            JPanel panel = createMainBox(e, deaths);
+            if (panel != null) {
+                charPanel.add(panel);
+            }
         }
     }
 
@@ -61,7 +77,7 @@ public class IconDpsGUI extends DisplayDpsGUI {
         repaint();
     }
 
-    private static JPanel createMainBox(Entity entity) {
+    private static JPanel createMainBox(Entity entity, ArrayList<Pair<String, Integer>> deaths) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
@@ -85,12 +101,11 @@ public class IconDpsGUI extends DisplayDpsGUI {
         panel.add(panelAllPlayers);
 
         int counter = 0;
-        int[] pref = new int[5];
-        ArrayList<JPanel>[] panels = new ArrayList[4];
-        panels[0] = new ArrayList<>();
-        panels[1] = new ArrayList<>();
-        panels[2] = new ArrayList<>();
-        panels[3] = new ArrayList<>();
+        int[] pref = new int[7];
+        ArrayList<JPanel>[] panels = new ArrayList[6];
+        for (int i = 0; i < panels.length; i++) {
+            panels[i] = new ArrayList<>();
+        }
         for (Damage dmg : playerDamageList) {
             counter++;
             String name = dmg.owner.name();
@@ -109,50 +124,86 @@ public class IconDpsGUI extends DisplayDpsGUI {
             }
             float pers = ((float) dmg.damage * 100 / (float) entity.maxHp());
             boolean user = dmg.owner.isUser();
-            String s1 = String.format("%s%d", user ? ">" : " ", counter);
-            String s2 = String.format("DMG: %7d %6.3f%% %s", dmg.damage, pers, extra);
+            String userIndicator = String.format("%s%d", user ? ">" : " ", counter);
+            String s2 = String.format("DMG: %7d %6.3f%%", dmg.damage, pers);
 
-            JLabel player1 = new JLabel(s1, new ImageIcon(dmg.owner.img().getScaledInstance(20, 20, Image.SCALE_DEFAULT)), JLabel.LEFT);
-            JLabel player2 = new JLabel(name);
-            JLabel player3 = new JLabel(s2);
-            player1.setFont(mainFont);
-            player2.setFont(mainFont);
-            player3.setFont(mainFont);
-            player1.setHorizontalTextPosition(SwingConstants.LEFT);
-            if (pref[0] < player1.getPreferredSize().width) pref[0] = player1.getPreferredSize().width;
-            if (pref[1] < player2.getPreferredSize().width) pref[1] = player2.getPreferredSize().width;
-            if (pref[2] < player3.getPreferredSize().width) pref[2] = player3.getPreferredSize().width;
-            if (pref[3] < inv.getPreferredSize().width) pref[3] = inv.getPreferredSize().width;
-            if (pref[4] < player1.getPreferredSize().height) pref[4] = player1.getPreferredSize().height;
+            JLabel playerIconLabel = new JLabel(userIndicator, new ImageIcon(dmg.owner.img().getScaledInstance(16, 16, Image.SCALE_DEFAULT)), JLabel.LEFT);
+            JLabel nameLabel = new JLabel(name);
+            JLabel dpsDataLabel = new JLabel(s2);
+            JLabel deathNexusLabel = new JLabel();
+            for (int id : entity.playerDropped.keySet()) {
+                if (dmg.owner.id == id) {
+                    PlayerRemoved pr = entity.playerDropped.get(id);
+                    int dead = isDeadPlayer(name, deaths);
+                    if (dead != -1) {
+                        try {
+                            ImageIcon ii = new ImageIcon(ImageBuffer.getImage(dead).getScaledInstance(16, 16, Image.SCALE_DEFAULT));
+                            deathNexusLabel = new JLabel(ii);
+                        } catch (IOException | AssetMissingException e) {
+                            deathNexusLabel = new JLabel("Died");
+                        }
+                    } else {
+                        deathNexusLabel = new JLabel("Nexus");
+                    }
+                    deathNexusLabel.setToolTipText(String.format("%.2f%% [%s / %s]", ((float) pr.hp / pr.max) * 100, df.format(pr.hp).replaceAll(",", " "), df.format(pr.max).replaceAll(",", " ")));
+                }
+            }
+            JLabel counterLabel = new JLabel(extra);
+
+            playerIconLabel.setHorizontalTextPosition(SwingConstants.LEFT);
+            ArrayList<Component> list = new ArrayList();
+            list.add(deathNexusLabel);
+            list.add(playerIconLabel);
+            list.add(nameLabel);
+            list.add(dpsDataLabel);
+            list.add(counterLabel);
+            list.add(inv);
 
             JPanel pp = new JPanel();
             pp.setLayout(new BoxLayout(pp, BoxLayout.X_AXIS));
-            JPanel pp1 = new JPanel();
-            JPanel pp2 = new JPanel();
-            JPanel pp3 = new JPanel();
-            JPanel pp4 = new JPanel();
-            pp1.add(player1);
-            pp2.add(player2);
-            pp3.add(player3);
-            pp4.add(inv);
-            panels[0].add(pp1);
-            panels[1].add(pp2);
-            panels[2].add(pp3);
-            panels[3].add(pp4);
-            pp.add(pp1);
-            pp.add(pp2);
-            pp.add(pp3);
-            pp.add(pp4);
+            for (int i = 0; i < list.size(); i++) {
+                Component c = list.get(i);
+                c.setFont(mainFont);
+                int width = c.getPreferredSize().width + 5;
+                if (pref[i] < width) {
+                    pref[i] = width;
+                }
+                JPanel ppp = new JPanel();
+                if (i == 4 && extra.length() > 0) {
+                    ppp.setLayout(new BoxLayout(ppp, BoxLayout.X_AXIS));
+                    ppp.add(Box.createHorizontalGlue());
+                }
+                ppp.add(c);
+                panels[i].add(ppp);
+                pp.add(ppp);
+            }
+
+            int height = nameLabel.getPreferredSize().height;
+            if (pref[pref.length - 1] < height) {
+                pref[pref.length - 1] = height;
+            }
             panelAllPlayers.add(pp);
         }
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < panels.length; i++) {
             for (JPanel p : panels[i]) {
-                p.setPreferredSize(new Dimension(pref[i] + 5, pref[4]));
-                p.setMaximumSize(new Dimension(pref[i] + 5, pref[4]));
+                Dimension preferredSize = new Dimension(pref[i], pref[pref.length - 1] + 5);
+                p.setPreferredSize(preferredSize);
+                p.setMaximumSize(preferredSize);
             }
         }
 
+        if (panelAllPlayers.getComponents().length == 0) return null;
+
         return panel;
+    }
+
+    private static int isDeadPlayer(String name, ArrayList<Pair<String, Integer>> deaths) {
+        for (Pair<String, Integer> p : deaths) {
+            if (p.left().equals(name)) {
+                return p.right();
+            }
+        }
+        return -1;
     }
 
     private static HashMap<Integer, Image> imgMap = new HashMap<>();
@@ -218,8 +269,9 @@ public class IconDpsGUI extends DisplayDpsGUI {
     }
 
     @Override
-    protected void renderData(Entity[] data, boolean isLive) {
+    protected void renderData(Entity[] data, ArrayList<NotificationPacket> deathNotifications, boolean isLive) {
         this.data = data;
+        this.notifications = deathNotifications;
         updateDps(data);
         guiUpdate();
     }

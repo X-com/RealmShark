@@ -1,10 +1,12 @@
 package tomato.gui.dps;
 
+import packets.incoming.NotificationPacket;
 import tomato.backend.data.Entity;
 import tomato.gui.TomatoGUI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class StringDpsGUI extends DisplayDpsGUI {
 
@@ -37,8 +39,8 @@ public class StringDpsGUI extends DisplayDpsGUI {
     }
 
     @Override
-    protected void renderData(Entity[] data, boolean isLive) {
-        setTextAreaAndLabelDPS(DpsToString.stringDmgRealtime(data), !isLive);
+    protected void renderData(Entity[] data, ArrayList<NotificationPacket> notifications, boolean isLive) {
+        setTextAreaAndLabelDPS(DpsToString.stringDmgRealtime(data, notifications), !isLive);
     }
 
     /**

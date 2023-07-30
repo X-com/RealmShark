@@ -3,9 +3,12 @@ package tomato.backend.data;
 import assets.AssetMissingException;
 import assets.IdToAsset;
 import packets.data.ObjectData;
+import packets.data.ObjectStatusData;
+import packets.data.enums.NotificationEffectType;
 import packets.incoming.*;
 import packets.outgoing.EnemyHitPacket;
 import packets.outgoing.PlayerShootPacket;
+import tomato.gui.TomatoGUI;
 import tomato.gui.character.CharacterExaltGUI;
 import tomato.gui.character.CharacterPanelGUI;
 import tomato.gui.character.CharacterStatsGUI;
@@ -20,21 +23,23 @@ import util.RNG;
 import util.Util;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Main data class storing all incoming packet data regarding an instance the user is in.
  * Resets the data after leaving the instance.
  */
 public class TomatoData {
+    private static final Pattern popperName = Pattern.compile("[^ ]*\"player\":\"([A-Za-z]*)[^ ]*");
+
     private String token;
     protected MapInfoPacket map;
     protected int worldPlayerId;
     protected int charId;
     public long time;
+    public long timePc;
     protected Entity player;
     protected final int[][] mapTiles = new int[2048][2048];
     protected final HashMap<Integer, Entity> entityList = new HashMap<>();
@@ -50,6 +55,8 @@ public class TomatoData {
     public ArrayList<RealmCharacter> chars;
     public HashMap<Integer, RealmCharacter> charMap;
     public ArrayList<DpsData> dpsData = new ArrayList<>();
+    protected ArrayList<NotificationPacket> deathNotifications = new ArrayList<>();
+    protected final HashSet<Integer> dropList = new HashSet<>();
 
     /**
      * Sets the current realm.
@@ -95,6 +102,7 @@ public class TomatoData {
      */
     public void setTime(long serverRealTimeMS) {
         this.time = serverRealTimeMS;
+        this.timePc = System.currentTimeMillis();
     }
 
     /**
@@ -113,9 +121,18 @@ public class TomatoData {
         for (int i = 0; i < p.drops.length; i++) {
             int dropId = p.drops[i];
             crystalTracker.remove(dropId);
+            dropList.add(dropId);
             Entity e = entityList.get(dropId);
             if (e != null) {
-                e.entityDropped(time);
+//                e.entityDropped(timePc);
+                if (isPlayerEntity(e.objectType)) {
+                    for (Map.Entry<Integer, Entity> dropCheck : entityHitList.entrySet()) {
+                        int k = dropCheck.getKey();
+                        if (!dropList.contains(k)) {
+                            dropCheck.getValue().addPlayerDrop(dropId, timePc);
+                        }
+                    }
+                }
             }
             playerListUpdated.remove(dropId);
             ParsePanelGUI.removePlayer(dropId);
@@ -129,8 +146,8 @@ public class TomatoData {
      */
     private void entityUpdate(ObjectData object) {
         int id = object.status.objectId;
-        Entity entity = entityList.computeIfAbsent(id, idd -> new Entity(this, idd, time));
-        entity.entityUpdate(object.objectType, object.status, time);
+        Entity entity = entityList.computeIfAbsent(id, idd -> new Entity(this, idd, timePc));
+        entity.entityUpdate(object.objectType, object.status, timePc);
 
         if (isCrystal(id)) {
             crystalTracker.add(id);
@@ -198,8 +215,8 @@ public class TomatoData {
         setTime(p.serverRealTimeMS);
         for (int i = 0; i < p.status.length; i++) {
             int id = p.status[i].objectId;
-            Entity entity = entityList.computeIfAbsent(id, idd -> new Entity(this, idd, time));
-            entity.updateStats(p.status[i], time);
+            Entity entity = entityList.computeIfAbsent(id, idd -> new Entity(this, idd, timePc));
+            entity.updateStats(p.status[i], timePc);
         }
     }
 
@@ -234,9 +251,9 @@ public class TomatoData {
     public void enemtyHit(EnemyHitPacket p) {
         Projectile projectile = projectiles[p.bulletId];
         int id = p.targetId;
-        Entity target = entityList.computeIfAbsent(id, idd -> new Entity(this, idd, time));
+        Entity target = entityList.computeIfAbsent(id, idd -> new Entity(this, idd, timePc));
         Entity attacker = playerList.get(p.shooterID);
-        target.userProjectileHit(attacker, projectile, time);
+        target.userProjectileHit(attacker, projectile, timePc);
         if (!entityHitList.containsKey(id)) {
             entityHitList.put(id, target);
         }
@@ -251,25 +268,11 @@ public class TomatoData {
         if (p.damageAmount > 0) {
             Projectile projectile = new Projectile(p.damageAmount);
             int id = p.targetId;
-            Entity target = entityList.computeIfAbsent(id, idd -> new Entity(this, idd, time));
+            Entity target = entityList.computeIfAbsent(id, idd -> new Entity(this, idd, timePc));
             Entity attacker = playerList.get(p.objectId);
-            target.genericDamageHit(attacker, projectile, time);
+            target.genericDamageHit(attacker, projectile, timePc);
             if (!entityHitList.containsKey(id) && !CharacterClass.isPlayerCharacter(id)) {
                 entityHitList.put(id, target);
-            }
-        }
-    }
-
-    /**
-     * Incoming text data.
-     *
-     * @param p Text info.
-     */
-    public void text(TextPacket p) {
-        if (p.text.equals("I SAID DO NOT INTERRUPT ME! For this I shall hasten your end!")) {
-            Entity e = entityList.get(p.objectId);
-            if (e != null) {
-                e.dammahCountered = true;
             }
         }
     }
@@ -301,16 +304,19 @@ public class TomatoData {
         worldPlayerId = -1;
         charId = -1;
         time = -1;
+        timePc = -1;
         rng = null;
         player = null;
         entityList.clear();
         playerList.clear();
         crystalTracker.clear();
         playerListUpdated.clear();
+        dropList.clear();
         if (map != null && isLoggedDungeon(map.displayName)) {
-            dpsData.add(new DpsData(map, entityHitList));
+            dpsData.add(new DpsData(map, entityHitList, deathNotifications));
             DpsGUI.updateLabel();
         }
+        deathNotifications = new ArrayList<>();
         entityHitList = new HashMap<>();
         for (int[] row : mapTiles) {
             Arrays.fill(row, 0);

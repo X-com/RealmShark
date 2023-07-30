@@ -1,5 +1,7 @@
 package tomato.gui.dps;
 
+import packets.incoming.NotificationPacket;
+import tomato.backend.data.DpsData;
 import tomato.backend.data.Entity;
 import tomato.backend.data.TomatoData;
 import util.PropertiesManager;
@@ -8,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 public class DpsGUI extends JPanel {
 
@@ -104,12 +107,12 @@ public class DpsGUI extends JPanel {
 
     public static void updateNewTickPacket(TomatoData data) {
         if (!INSTANCE.liveUpdates) return;
-        INSTANCE.renderData(data.getEntityHitList(), true);
+        INSTANCE.renderData(data.getEntityHitList(), data.getDeathNotifications(), true);
     }
 
-    private void renderData(Entity[] entityHitList, boolean b) {
+    private void renderData(Entity[] entityHitList, ArrayList<NotificationPacket> notifications, boolean b) {
         setCenterDisplay();
-        centerDisplay.renderData(entityHitList, b);
+        centerDisplay.renderData(entityHitList, notifications, b);
     }
 
     public static void editFont(Font font) {
@@ -171,10 +174,11 @@ public class DpsGUI extends JPanel {
 
     private void updateGui() {
         if (liveUpdates) {
-            renderData(data.getEntityHitList(), true);
+            renderData(data.getEntityHitList(), data.getDeathNotifications(), true);
         } else {
-            Entity[] entityHitList = data.dpsData.get(index).hitList.values().toArray(new Entity[0]);
-            renderData(entityHitList, false);
+            DpsData dpsData = data.dpsData.get(index);
+            Entity[] entityHitList = dpsData.hitList.values().toArray(new Entity[0]);
+            renderData(entityHitList, dpsData.deathNotifications, false);
         }
     }
 
@@ -198,7 +202,8 @@ public class DpsGUI extends JPanel {
         }
         dpsLabel.setText((index + 1) + "/" + size);
 
-        Entity[] entityHitList = data.dpsData.get(index).hitList.values().toArray(new Entity[0]);
-        renderData(entityHitList, false);
+        DpsData dpsData = data.dpsData.get(index);
+        Entity[] entityHitList = dpsData.hitList.values().toArray(new Entity[0]);
+        renderData(entityHitList, dpsData.deathNotifications, false);
     }
 }

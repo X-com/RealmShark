@@ -10,6 +10,7 @@ import tomato.gui.character.CharacterStatMaxingGUI;
 import tomato.gui.security.ParsePanelGUI;
 import tomato.realmshark.RealmCharacter;
 import tomato.realmshark.enums.CharacterClass;
+import util.Pair;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -27,6 +28,7 @@ public class Entity {
     public final ArrayList<ObjectStatusData> statUpdates;
     private final ArrayList<Damage> damageList;
     private final HashMap<Integer, Damage> damagePlayer;
+    public final HashMap<Integer, PlayerRemoved> playerDropped;
     private String name;
     private BufferedImage img;
     private long lastDamageTaken;
@@ -51,6 +53,7 @@ public class Entity {
         statUpdates = new ArrayList<>();
         stat = new Stat();
         damagePlayer = new HashMap<>();
+        playerDropped = new HashMap<>();
     }
 
     public void entityUpdate(int type, ObjectStatusData status, long time) {
@@ -91,6 +94,11 @@ public class Entity {
     public int maxHp() {
         if (stat.MAX_HP_STAT == null) return 0;
         return stat.MAX_HP_STAT.statValue;
+    }
+
+    public int hp() {
+        if (stat.HP_STAT == null) return 0;
+        return stat.HP_STAT.statValue;
     }
 
     public long getLastDamageTaken() {
@@ -271,5 +279,13 @@ public class Entity {
 
     public BufferedImage img() {
         return img;
+    }
+
+    public void addPlayerDrop(int dropId, long time) {
+        int hp = hp();
+        int max = maxHp();
+        String name = name();
+        PlayerRemoved pr = new PlayerRemoved(dropId, hp, max, name, time);
+        playerDropped.put(dropId, pr);
     }
 }
