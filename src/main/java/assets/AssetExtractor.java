@@ -370,6 +370,9 @@ public class AssetExtractor {
                 case "SlotType":
                     ao.slotType = value;
                     break;
+                case "Subattack":
+                    addSubattack(n, ao);
+                    break;
                 case "Projectile":
                     addProjectile(n, ao);
                     break;
@@ -400,6 +403,18 @@ public class AssetExtractor {
                     break;
             }
         });
+    }
+
+    /**
+     * Subattack to be parsed.
+     *
+     * @param node The node to be parsed.
+     * @param ao   Asset objects to store the parsed data into.
+     */
+    private static void addSubattack(Node node, AssetObject ao) {
+        String s = node.getFirstChild().getNodeValue();
+        int i = Integer.parseInt(s);
+        ao.subattack.add(i);
     }
 
     /**
@@ -483,6 +498,7 @@ public class AssetExtractor {
         String slotType = "";
 
         ArrayList<AssetProjectile> projectiles;
+        ArrayList<Integer> subattack = new ArrayList<>();
 
         @Override
         public String toString() {
@@ -495,8 +511,14 @@ public class AssetExtractor {
             StringBuilder projectileString = new StringBuilder();
             if (projectiles != null) {
                 projectileString.append(slotType + ",");
-                for (AssetProjectile p : projectiles) {
-                    projectileString.append(p);
+                if (subattack.size() == 0) {
+                    for (AssetProjectile p : projectiles) {
+                        projectileString.append(p);
+                    }
+                } else {
+                    for (int i : subattack) {
+                        projectileString.append(projectiles.get(i));
+                    }
                 }
                 projectileString.deleteCharAt(projectileString.length() - 1);
             }
