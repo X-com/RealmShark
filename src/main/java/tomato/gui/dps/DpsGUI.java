@@ -11,6 +11,10 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class DpsGUI extends JPanel {
 
@@ -112,11 +116,25 @@ public class DpsGUI extends JPanel {
 
     private void renderData(Entity[] entityHitList, ArrayList<NotificationPacket> notifications, boolean b) {
         setCenterDisplay();
-        centerDisplay.renderData(entityHitList, notifications, b);
+        List<Entity> sortedEntityHitList = getSortedEntityList(entityHitList);
+        centerDisplay.renderData(sortedEntityHitList, notifications, b);
+    }
+
+    private List<Entity> getSortedEntityList(Entity[] entityHitList) {
+        if (DpsDisplayOptions.sortOption == 1) {
+            return Arrays.stream(entityHitList).sorted(Comparator.comparingLong(Entity::getFirstDamageTaken).reversed()).collect(Collectors.toList());
+        } else if (DpsDisplayOptions.sortOption == 2) {
+            return Arrays.stream(entityHitList).sorted(Comparator.comparingLong(Entity::maxHp).reversed()).collect(Collectors.toList());
+        } else if (DpsDisplayOptions.sortOption == 3) {
+            return Arrays.stream(entityHitList).sorted(Comparator.comparingLong(Entity::getFightTimer).reversed()).collect(Collectors.toList());
+        } else {
+            return Arrays.stream(entityHitList).sorted(Comparator.comparingLong(Entity::getLastDamageTaken).reversed()).collect(Collectors.toList());
+        }
     }
 
     public static void editFont(Font font) {
-        INSTANCE.centerDisplay.editFont(font);
+        INSTANCE.displayString.editFont(font);
+        INSTANCE.displayIcon.editFont(font);
         update();
     }
 

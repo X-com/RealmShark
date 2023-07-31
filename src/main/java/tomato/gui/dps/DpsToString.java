@@ -32,7 +32,7 @@ public class DpsToString {
      *
      * @return logged dps output as a string.
      */
-    public static String stringDmgRealtime(Entity[] data, ArrayList<NotificationPacket> notifications) {
+    public static String stringDmgRealtime(List<Entity> sortedEntityHitList, ArrayList<NotificationPacket> notifications) {
         StringBuilder sb = new StringBuilder();
 
         ArrayList<Pair<String, Integer>> deaths = new ArrayList<>();
@@ -41,8 +41,7 @@ public class DpsToString {
             int graveIcon = n.pictureType;
             deaths.add(new Pair<>(name, graveIcon));
         }
-        List<Entity> sortedList = Arrays.stream(data).sorted(Comparator.comparingLong(Entity::getLastDamageTaken).reversed()).collect(Collectors.toList());
-        for (Entity e : sortedList) {
+        for (Entity e : sortedEntityHitList) {
             if (e.maxHp() <= 0) continue;
             if (CharacterClass.isPlayerCharacter(e.objectType)) continue;
             sb.append(display(e, deaths)).append("\n");
@@ -112,7 +111,7 @@ public class DpsToString {
 
     public static String display(Entity entity, ArrayList<Pair<String, Integer>> deaths) {
         StringBuilder sb = new StringBuilder();
-        sb.append(entity.name()).append(" HP: ").append(entity.maxHp()).append("\n");
+        sb.append(entity.name()).append(" HP: ").append(entity.maxHp()).append(entity.getFightTimerString()).append("\n");
         List<Damage> playerDamageList = entity.getPlayerDamageList();
         int counter = 0;
         for (Damage dmg : playerDamageList) {

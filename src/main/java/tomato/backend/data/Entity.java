@@ -10,13 +10,9 @@ import tomato.gui.character.CharacterStatMaxingGUI;
 import tomato.gui.security.ParsePanelGUI;
 import tomato.realmshark.RealmCharacter;
 import tomato.realmshark.enums.CharacterClass;
-import util.Pair;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -109,15 +105,23 @@ public class Entity {
         return lastDamageTaken;
     }
 
-    public String getFightTimer() {
+    public long getFirstDamageTaken() {
+        return firstDamageTaken;
+    }
+
+    public String getFightTimerString() {
         long time = lastDamageTaken - firstDamageTaken;
-        if (time == 0) return "";
+        if (time == 0) return " [-]";
         long ms = time % 1000;
         long s = time / 1000 % 60;
         if (s == 0) return String.format(" [%dms]", ms);
         long m = time / 60000;
         if (m == 0) return String.format(" [%ds %dms]", s, ms);
         return String.format(" [%dm %ds %dms]", m, s, ms);
+    }
+
+    public long getFightTimer() {
+        return lastDamageTaken - firstDamageTaken;
     }
 
     public void entityDropped(long time) {

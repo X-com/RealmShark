@@ -16,11 +16,12 @@ import java.awt.event.ActionListener;
  * Menu bar builder class
  */
 public class TomatoMenuBar implements ActionListener {
-    private JMenuItem about, borders, clearChat, bandwidth, javav, clearDpsLogs, theme, fontMenu, dpsEquipment;
+    private JMenuItem about, borders, clearChat, bandwidth, javav, clearDpsLogs, theme, fontMenu, dpsOptions;
     private JRadioButtonMenuItem fontSize8, fontSize12, fontSize16, fontSize24, fontSize48, fontSizeCustom;
     private JRadioButtonMenuItem themeDarcula, themeighContrastDark, themeHighContrastLight, themeIntelliJ, themeSolarizedDark, themeSolarizedLight;
     private JRadioButtonMenuItem fontNameMonospaced, fontNameDialog, fontNameDialogInput, fontNameSerif, fontNameSansSerif, fontNameSegoe;
     private JRadioButtonMenuItem dpsEquipmentNone, dpsEquipmentSimple, dpsEquipmentFull, dpsIcon;
+    private JRadioButtonMenuItem dpsSortLastHit, dpsSortFirstHit, dpsSortMaxHp, dpsSortFightTimer;
     private JCheckBoxMenuItem fontStyleBold, fontStyleItalic;
     private JMenu file, edit, info;
     private JMenuBar jMenuBar;
@@ -51,8 +52,8 @@ public class TomatoMenuBar implements ActionListener {
         theme.addActionListener(this);
         fontMenu = new JMenu("Font");
         fontMenu.addActionListener(this);
-        dpsEquipment = new JMenu("DPS Equipment");
-        dpsEquipment.addActionListener(this);
+        dpsOptions = new JMenu("DPS Options");
+        dpsOptions.addActionListener(this);
 
         edit = new JMenu("Edit");
         edit.add(borders);
@@ -60,7 +61,7 @@ public class TomatoMenuBar implements ActionListener {
         edit.add(clearDpsLogs);
         edit.add(theme);
         edit.add(fontMenu);
-        edit.add(dpsEquipment);
+        edit.add(dpsOptions);
         jMenuBar.add(edit);
 
         ButtonGroup groupTheme = new ButtonGroup();
@@ -99,11 +100,20 @@ public class TomatoMenuBar implements ActionListener {
         setFontNameRadioButton();
 
         ButtonGroup groupDpsEquipment = new ButtonGroup();
-        dpsEquipmentNone = addRadioButtonMenuItem(groupDpsEquipment, dpsEquipment, "None");
-        dpsEquipmentSimple = addRadioButtonMenuItem(groupDpsEquipment, dpsEquipment, "Simple");
-        dpsEquipmentFull = addRadioButtonMenuItem(groupDpsEquipment, dpsEquipment, "Full");
-        dpsIcon = addRadioButtonMenuItem(groupDpsEquipment, dpsEquipment, "Icon");
+        dpsEquipmentNone = addRadioButtonMenuItem(groupDpsEquipment, dpsOptions, "None");
+        dpsEquipmentSimple = addRadioButtonMenuItem(groupDpsEquipment, dpsOptions, "Simple");
+        dpsEquipmentFull = addRadioButtonMenuItem(groupDpsEquipment, dpsOptions, "Full");
+        dpsIcon = addRadioButtonMenuItem(groupDpsEquipment, dpsOptions, "Icon");
         setEquipmentRadioButton();
+
+        dpsOptions.add(new JSeparator(SwingConstants.HORIZONTAL));
+
+        ButtonGroup groupDpsSort = new ButtonGroup();
+        dpsSortLastHit = addRadioButtonMenuItem(groupDpsSort, dpsOptions, "Last Hit");
+        dpsSortFirstHit = addRadioButtonMenuItem(groupDpsSort, dpsOptions, "First Hit");
+        dpsSortMaxHp = addRadioButtonMenuItem(groupDpsSort, dpsOptions, "Health Points");
+        dpsSortFightTimer = addRadioButtonMenuItem(groupDpsSort, dpsOptions, "Fight Time");
+        setDpsSortRadioButton();
 
         about = new JMenuItem("About");
         about.addActionListener(this);
@@ -282,6 +292,31 @@ public class TomatoMenuBar implements ActionListener {
         }
     }
 
+    private void setDpsSortRadioButton() {
+        String equipment = PropertiesManager.getProperty("sortDps");
+
+        if (equipment == null) {
+            dpsSortLastHit.setSelected(true);
+            return;
+        }
+
+        switch (equipment) {
+            case "1":
+                dpsSortFirstHit.setSelected(true);
+                break;
+            case "2":
+                dpsSortMaxHp.setSelected(true);
+                break;
+            case "3":
+                dpsSortFightTimer.setSelected(true);
+                break;
+            default:
+            case "0":
+                dpsSortLastHit.setSelected(true);
+                break;
+        }
+    }
+
     /**
      * Adds a radiobutton menu item for the user to select.
      *
@@ -446,6 +481,22 @@ public class TomatoMenuBar implements ActionListener {
         } else if (e.getSource() == dpsIcon) { // dps icon
             PropertiesManager.setProperties("equipment", "3");
             DpsDisplayOptions.equipmentOption = 3;
+            DpsGUI.update();
+        } else if (e.getSource() == dpsSortLastHit) { // dps sort getLastDamageTaken
+            PropertiesManager.setProperties("sortDps", "0");
+            DpsDisplayOptions.sortOption = 0;
+            DpsGUI.update();
+        } else if (e.getSource() == dpsSortFirstHit) { // dps sort getFirstDamageTaken
+            PropertiesManager.setProperties("sortDps", "1");
+            DpsDisplayOptions.sortOption = 1;
+            DpsGUI.update();
+        } else if (e.getSource() == dpsSortMaxHp) { // dps sort maxHp
+            PropertiesManager.setProperties("sortDps", "2");
+            DpsDisplayOptions.sortOption = 2;
+            DpsGUI.update();
+        } else if (e.getSource() == dpsSortFightTimer) { // dps sort getFightTimer
+            PropertiesManager.setProperties("sortDps", "3");
+            DpsDisplayOptions.sortOption = 3;
             DpsGUI.update();
         } else if (e.getSource() == about) { // Opens about window
             new TomatoPopupAbout().addPopup(frame);

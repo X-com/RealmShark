@@ -18,16 +18,14 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public class IconDpsGUI extends DisplayDpsGUI {
 
     private static JPanel charPanel;
-    private Entity[] data;
+    private List<Entity> sortedEntityHitList;
     private static Font mainFont;
     private ArrayList<NotificationPacket> notifications;
     private static final DecimalFormat df = new DecimalFormat("#,###,###");
@@ -53,8 +51,7 @@ public class IconDpsGUI extends DisplayDpsGUI {
 //        DpsGUI.setDisplayAsString();
 //    }
 
-    private void updateDps(Entity[] data) {
-        List<Entity> sortedList = Arrays.stream(data).sorted(Comparator.comparingLong(Entity::getLastDamageTaken).reversed()).collect(Collectors.toList());
+    private void updateDps(List<Entity> sortedEntityHitList) {
         ArrayList<Pair<String, Integer>> deaths = new ArrayList<>();
         for (NotificationPacket n : notifications) {
             String name = n.message.split("\"")[9];
@@ -62,7 +59,7 @@ public class IconDpsGUI extends DisplayDpsGUI {
             deaths.add(new Pair<>(name, graveIcon));
         }
         charPanel.removeAll();
-        for (Entity e : sortedList) {
+        for (Entity e : sortedEntityHitList) {
             if (e.maxHp() <= 0) continue;
             if (CharacterClass.isPlayerCharacter(e.objectType)) continue;
             JPanel panel = createMainBox(e, deaths);
@@ -89,7 +86,7 @@ public class IconDpsGUI extends DisplayDpsGUI {
 
         StringBuilder sb = new StringBuilder();
         sb.append(entity.name()).append(" HP: ").append(entity.maxHp()).append("\n");
-        sb.append(entity.getFightTimer());
+        sb.append(entity.getFightTimerString());
         JLabel l = new JLabel(sb.toString(), new ImageIcon(getScaledImg(entity.objectType, entity.img())), JLabel.LEFT);
         l.setFont(mainFont);
         mobPanel.add(l);
@@ -270,10 +267,9 @@ public class IconDpsGUI extends DisplayDpsGUI {
     }
 
     @Override
-    protected void renderData(Entity[] data, ArrayList<NotificationPacket> deathNotifications, boolean isLive) {
-        this.data = data;
+    protected void renderData(List<Entity> sortedEntityHitList, ArrayList<NotificationPacket> deathNotifications, boolean isLive) {
         this.notifications = deathNotifications;
-        updateDps(data);
+        updateDps(sortedEntityHitList);
         guiUpdate();
     }
 
