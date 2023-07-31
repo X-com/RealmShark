@@ -412,9 +412,17 @@ public class AssetExtractor {
      * @param ao   Asset objects to store the parsed data into.
      */
     private static void addSubattack(Node node, AssetObject ao) {
-        String s = node.getFirstChild().getNodeValue();
-        int i = Integer.parseInt(s);
-        ao.subattack.add(i);
+        NamedNodeMap attribNode = node.getAttributes();
+        for (int j = 0; j < attribNode.getLength(); j++) {
+            Node item = attribNode.item(j);
+            String name = item.getNodeName();
+            String value = item.getNodeValue();
+
+            if (name.equals("projectileId")) {
+                int i = Integer.parseInt(value);
+                ao.subattack.add(i);
+            }
+        }
     }
 
     /**
