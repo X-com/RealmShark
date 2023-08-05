@@ -1,18 +1,18 @@
 package tomato.gui.security;
 
+import assets.AssetMissingException;
 import assets.IdToAsset;
 import assets.ImageBuffer;
-import packets.data.StatData;
 import tomato.backend.data.Entity;
 import tomato.gui.SmartScroller;
 import tomato.realmshark.enums.CharacterClass;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class ParsePanelGUI extends JPanel {
@@ -24,6 +24,7 @@ public class ParsePanelGUI extends JPanel {
     private static JPanel charPanel;
     private static HashMap<Integer, Player> playerDisplay;
     private static Font mainFont;
+    private static String[] missingStrings = new String[]{"HP", "MP", "Ak", "Df", "Sd", "Dx", "Vt", "Ws"};
 
     public ParsePanelGUI() {
         INSTANCE = this;
@@ -41,17 +42,19 @@ public class ParsePanelGUI extends JPanel {
         new SmartScroller(scroll);
         add(scroll, BorderLayout.CENTER);
 
-//        JButton button = new JButton("Clear");
-//        button.addActionListener(e -> clicked());
-//        add(button, BorderLayout.SOUTH);
+        JButton button = new JButton("Copy to Clipboard");
+        button.addActionListener(e -> clicked());
+        add(button, BorderLayout.SOUTH);
     }
 
     private void clicked() {
-//        charPanel.removeAll();
-//        Player p = playerDisplay.get(552);
-//        JPanel panel = createMainBox(p, p.playerEntity);
-//        charPanel.add(panel);
-//        INSTANCE.updateUI();
+        StringBuilder sb = new StringBuilder();
+        for (Player player : playerDisplay.values()) {
+            sb.append(player).append("\n");
+        }
+        StringSelection stringSelection = new StringSelection(sb.toString());
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, null);
     }
 
     private void guiUpdate() {
@@ -109,7 +112,9 @@ public class ParsePanelGUI extends JPanel {
 
         int stat = statsMaxed(player);
         JLabel stats = new JLabel(stat + " / 8");
-        stats.setToolTipText(statMissing(player));
+        int[] stats1 = statMissing(player);
+        String toolTipStatString = getToolTipStatString(stats1);
+        stats.setToolTipText(java.lang.String.valueOf(toolTipStatString));
         stats.setHorizontalAlignment(SwingConstants.RIGHT);
         stats.setFont(mainFont);
 
@@ -150,17 +155,42 @@ public class ParsePanelGUI extends JPanel {
     /**
      * Computes the missing pots needed to max the character.
      */
-    public static String statMissing(Entity player) {
-        int life = (int) Math.ceil((CharacterClass.getLife(player.objectType) - player.baseStats[0]) / 5.0);
-        int mana = (int) Math.ceil((CharacterClass.getMana(player.objectType) - player.baseStats[1]) / 5.0);
-        int atk = CharacterClass.getAtk(player.objectType) - player.baseStats[2];
-        int def = CharacterClass.getDef(player.objectType) - player.baseStats[3];
-        int spd = CharacterClass.getSpd(player.objectType) - player.baseStats[4];
-        int dex = CharacterClass.getDex(player.objectType) - player.baseStats[5];
-        int vit = CharacterClass.getVit(player.objectType) - player.baseStats[6];
-        int wis = CharacterClass.getWis(player.objectType) - player.baseStats[7];
+    public static int[] statMissing(Entity player) {
+        int[] stats = new int[8];
+        stats[0] = (int) Math.ceil((CharacterClass.getLife(player.objectType) - player.baseStats[0]) / 5.0);
+        stats[1] = (int) Math.ceil((CharacterClass.getMana(player.objectType) - player.baseStats[1]) / 5.0);
+        stats[2] = CharacterClass.getAtk(player.objectType) - player.baseStats[2];
+        stats[3] = CharacterClass.getDef(player.objectType) - player.baseStats[3];
+        stats[4] = CharacterClass.getSpd(player.objectType) - player.baseStats[4];
+        stats[5] = CharacterClass.getDex(player.objectType) - player.baseStats[5];
+        stats[6] = CharacterClass.getVit(player.objectType) - player.baseStats[6];
+        stats[7] = CharacterClass.getWis(player.objectType) - player.baseStats[7];
 
-        return String.format("<html>Missing<br>%d :Life<br>%d :Mana<br>%d :Atk<br>%d :Def<br>%d :Dex<br>%d :Spd<br>%d :Vit<br>%d :Wis</html>", life, mana, atk, def, spd, dex, vit, wis);
+        return stats;
+    }
+
+    /**
+     * Gets the tool tip stats string from array of stats.
+     *
+     * @param stats Array of stats.
+     * @return Stats as tooltip string.
+     */
+    private static String getToolTipStatString(int[] stats) {
+        return String.format("<html>Missing<br>%d :Life<br>%d :Mana<br>%d :Atk<br>%d :Def<br>%d :Spd<br>%d :Dex<br>%d :Vit<br>%d :Wis</html>", stats[0], stats[1], stats[2], stats[3], stats[4], stats[5], stats[6], stats[7]);
+    }
+
+    /**
+     * Gets the tool tip stats string from array of stats.
+     *
+     * @param missing Array of stats.
+     * @return Stats as tooltip string.
+     */
+    private static String getMissingString(int[] missing) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 8; i++) {
+            if (missing[i] != 0) sb.append(missingStrings[i]).append(":").append(missing[i]).append(" ");
+        }
+        return sb.toString();
     }
 
     /**
@@ -187,7 +217,6 @@ public class ParsePanelGUI extends JPanel {
         p.panel = createMainBox(p, entity);
         playerDisplay.put(id, p);
         charPanel.add(p.panel);
-        charPanel.add(Box.createVerticalGlue());
 
         INSTANCE.guiUpdate();
     }
@@ -210,7 +239,6 @@ public class ParsePanelGUI extends JPanel {
     public static void clear() {
         playerDisplay.clear();
         charPanel.removeAll();
-        charPanel.add(Box.createVerticalGlue());
         INSTANCE.guiUpdate();
     }
 
@@ -258,6 +286,28 @@ public class ParsePanelGUI extends JPanel {
             } catch (Exception e) {
             }
             INSTANCE.updateUI();
+        }
+
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            int level = playerEntity.stat.LEVEL_STAT.statValue;
+            sb.append(playerEntity.name()).append(" (").append(level).append(") [");
+
+            for (int i = 0; i < 4; i++) {
+                try {
+                    if (i != 0) sb.append(" / ");
+                    sb.append(IdToAsset.objectName(inv[i]));
+                } catch (AssetMissingException ignored) {
+                }
+            }
+            sb.append("] [");
+
+            int stat = statsMaxed(playerEntity);
+            sb.append(stat).append(" / 8] ");
+            int[] missing = statMissing(playerEntity);
+            sb.append(getMissingString(missing));
+
+            return sb.toString();
         }
     }
 }
