@@ -10,6 +10,7 @@ import tomato.gui.fame.FameTrackerGUI;
 import tomato.gui.character.CharacterPanelGUI;
 import tomato.gui.maingui.TomatoMenuBar;
 import tomato.gui.quest.QuestGUI;
+import tomato.gui.security.ParsePanelGUI;
 import tomato.gui.security.SecurityGUI;
 import tomato.backend.data.TomatoData;
 import util.PropertiesManager;
@@ -222,6 +223,7 @@ public class TomatoGUI {
         textAreaChat.setFont(new Font(f.getName(), f.getStyle(), size));
         textAreaKeypop.setFont(new Font(f.getName(), f.getStyle(), size));
         DpsGUI.editFont(new Font(f.getName(), f.getStyle(), size));
+        ParsePanelGUI.editFont(new Font(f.getName(), f.getStyle(), size));
     }
 
     /**
@@ -232,6 +234,7 @@ public class TomatoGUI {
         textAreaChat.setFont(new Font(name, style, f.getSize()));
         textAreaKeypop.setFont(new Font(name, style, f.getSize()));
         DpsGUI.editFont(new Font(name, style, f.getSize()));
+        ParsePanelGUI.editFont(new Font(name, style, f.getSize()));
     }
 
     /**

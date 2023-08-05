@@ -23,6 +23,7 @@ public class ParsePanelGUI extends JPanel {
 
     private static JPanel charPanel;
     private static HashMap<Integer, Player> playerDisplay;
+    private static Font mainFont;
 
     public ParsePanelGUI() {
         INSTANCE = this;
@@ -30,7 +31,6 @@ public class ParsePanelGUI extends JPanel {
 
         playerDisplay = new HashMap<>();
         charPanel = new JPanel();
-        charPanel.setLayout(new GridBagLayout());
 
         charPanel.setLayout(new BoxLayout(charPanel, BoxLayout.Y_AXIS));
 
@@ -47,11 +47,11 @@ public class ParsePanelGUI extends JPanel {
     }
 
     private void clicked() {
-        charPanel.removeAll();
-        Player p = playerDisplay.get(552);
-        JPanel panel = createMainBox(p, p.playerEntity);
-        charPanel.add(panel);
-        INSTANCE.updateUI();
+//        charPanel.removeAll();
+//        Player p = playerDisplay.get(552);
+//        JPanel panel = createMainBox(p, p.playerEntity);
+//        charPanel.add(panel);
+//        INSTANCE.updateUI();
     }
 
     private void guiUpdate() {
@@ -62,8 +62,8 @@ public class ParsePanelGUI extends JPanel {
     private static JPanel createMainBox(Player p, Entity player) {
         JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), BorderFactory.createEmptyBorder(0, 20, 0, 20)));
-        panel.setPreferredSize(new Dimension(370, HEIGHT));
-        panel.setMaximumSize(new Dimension(370, HEIGHT));
+//        panel.setPreferredSize(new Dimension(370, HEIGHT));
+//        panel.setMaximumSize(new Dimension(370, HEIGHT));
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
         JPanel left = leftPanel(player);
@@ -89,18 +89,12 @@ public class ParsePanelGUI extends JPanel {
             BufferedImage img = ImageBuffer.getImage(eq);
             ImageIcon icon = new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT));
             int level = player.stat.LEVEL_STAT.statValue;
-            StatData nameStat = player.stat.NAME_STAT;
-            String name;
-            if (nameStat != null) {
-                name = nameStat.stringStatValue;
-            } else {
-                name = "N/A";
-            }
-            JLabel characterLabel = new JLabel(name.split(",")[0] + " [" + level + "]", icon, JLabel.CENTER);
+            JLabel characterLabel = new JLabel(player.name() + " [" + level + "]", icon, JLabel.CENTER);
             characterLabel.setAlignmentX(JLabel.LEFT);
             panel.setAlignmentX(JLabel.LEFT);
             panel.setAlignmentX(LEFT_ALIGNMENT);
             characterLabel.setHorizontalAlignment(SwingConstants.LEFT);
+            characterLabel.setFont(mainFont);
             panel.add(characterLabel);
 //            characterLabel.setToolTipText(exaltStats(c));
         } catch (Exception e) {
@@ -117,6 +111,7 @@ public class ParsePanelGUI extends JPanel {
         JLabel stats = new JLabel(stat + " / 8");
         stats.setToolTipText(statMissing(player));
         stats.setHorizontalAlignment(SwingConstants.RIGHT);
+        stats.setFont(mainFont);
 
         panel.add(stats);
 
@@ -192,6 +187,7 @@ public class ParsePanelGUI extends JPanel {
         p.panel = createMainBox(p, entity);
         playerDisplay.put(id, p);
         charPanel.add(p.panel);
+        charPanel.add(Box.createVerticalGlue());
 
         INSTANCE.guiUpdate();
     }
@@ -214,7 +210,23 @@ public class ParsePanelGUI extends JPanel {
     public static void clear() {
         playerDisplay.clear();
         charPanel.removeAll();
+        charPanel.add(Box.createVerticalGlue());
         INSTANCE.guiUpdate();
+    }
+
+    public static void editFont(Font font) {
+        mainFont = font;
+        INSTANCE.updateFont(charPanel);
+    }
+
+    private void updateFont(Component c) {
+        if (c instanceof JPanel) {
+            for (Component d : ((JPanel) c).getComponents()) {
+                updateFont(d);
+            }
+        } else if (c instanceof JLabel) {
+            c.setFont(mainFont);
+        }
     }
 
     public static class Player {
