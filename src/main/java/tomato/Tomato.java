@@ -13,6 +13,7 @@ import tomato.gui.maingui.TomatoBandwidth;
 import tomato.gui.maingui.TomatoMenuBar;
 import tomato.gui.warnings.JavaOutOfMemoryGUI;
 import tomato.realmshark.CrashLogger;
+import tomato.version.Version;
 import util.Util;
 
 import java.net.URL;
@@ -45,10 +46,10 @@ public class Tomato {
      * the data to the controllers and link the data to the view to be displayed.
      */
     public static void load() {
-        CrashLogger.loadThisClass();
-        TomatoGUI.loadThemePreset();
-        AssetExtractor.checkForExtraction();
         try {
+            CrashLogger.loadThisClass();
+            TomatoGUI.loadThemePreset();
+            AssetExtractor.checkForExtraction(Version.VERSION);
             TomatoData data = new TomatoData();
             loadControllers(data);
             new TomatoGUI(data).create();
