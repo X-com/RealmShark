@@ -2,7 +2,10 @@ package assets;
 
 import assets.resextractor.UnityExtractor;
 import org.w3c.dom.*;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import realmshark.version.Version;
 import util.PropertiesManager;
 import util.Util;
 
@@ -36,6 +39,10 @@ public class AssetExtractor {
     private static final String XML_DIR_PATH = "assets/xml";
     private static final File[] ASSET_FOLDERS = {new File("assets/json/"), new File("assets/sprites/"), new File("assets/xml/")};
     private static final String REALM_RES_PATH = "/RealmOfTheMadGod/Production/RotMG Exalt_Data/resources.assets";
+
+    public static void main(String[] args) throws UnsupportedLookAndFeelException, IOException, ParserConfigurationException, ClassNotFoundException, InterruptedException, InstantiationException, IllegalAccessException, SAXException {
+        checkForExtraction(Version.VERSION);
+    }
 
     /**
      * Main loader for realm assets.
@@ -157,7 +164,7 @@ public class AssetExtractor {
             try {
                 extractAssets(assetsFile, lastModifiedTime);
                 extractAssetsFromXML();
-            } catch (IOException | SAXException | ParserConfigurationException e) {
+            } catch (IOException | ParserConfigurationException e) {
                 throw new RuntimeException(e);
             }
             pane.setMessage("Finished extraction.");
@@ -168,6 +175,8 @@ public class AssetExtractor {
         extractThread.setUncaughtExceptionHandler((t, e) -> throwableReference.set(e));
 
         extractThread.start();
+        dialog.setVisible(true);
+
         extractThread.join();
         Throwable throwable = throwableReference.get();
         if (throwable != null) {
@@ -181,8 +190,6 @@ public class AssetExtractor {
                 throw (ParserConfigurationException) throwable;
             }
         }
-
-        dialog.setVisible(true);
     }
 
     /**
@@ -227,7 +234,7 @@ public class AssetExtractor {
     /**
      * Extracts assets from XML files.
      */
-    private static void extractAssetsFromXML() throws IOException, ParserConfigurationException, SAXException {
+    private static void extractAssetsFromXML() throws IOException, ParserConfigurationException {
         ArrayList<AssetObject> objectAssets = new ArrayList<>();
         ArrayList<AssetTile> tileAssets = new ArrayList<>();
         ArrayList<Path> files = new ArrayList<>();
@@ -235,7 +242,10 @@ public class AssetExtractor {
         Files.walk(Paths.get(XML_DIR_PATH)).filter(Files::isRegularFile).filter(p -> p.toString().endsWith("xml")).forEach(files::add);
 
         for (Path p : files) {
-            parseXML(p, objectAssets, tileAssets);
+            try {
+                parseXML(p, objectAssets, tileAssets);
+            } catch (SAXException e) {
+            }
         }
 
         objectAssets.sort(Comparator.comparing(a -> a.id));
@@ -266,6 +276,7 @@ public class AssetExtractor {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         DocumentBuilder db = dbf.newDocumentBuilder();
+        db.setErrorHandler(new IgnoreErrorHandler());
         Document doc = db.parse(new File(path.toAbsolutePath().toString()));
         doc.getDocumentElement().normalize();
         return doc;
@@ -590,6 +601,21 @@ public class AssetExtractor {
         @Override
         public String toString() {
             return index + "," + file + ",";
+        }
+    }
+
+    private static class IgnoreErrorHandler implements ErrorHandler {
+
+        @Override
+        public void warning(SAXParseException exception) throws SAXException {
+        }
+
+        @Override
+        public void error(SAXParseException exception) throws SAXException {
+        }
+
+        @Override
+        public void fatalError(SAXParseException exception) throws SAXException {
         }
     }
 }
