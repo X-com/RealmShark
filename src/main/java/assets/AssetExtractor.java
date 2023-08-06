@@ -21,6 +21,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,22 +40,18 @@ public class AssetExtractor {
     /**
      * Main loader for realm assets.
      */
-    public static void checkForExtraction() {
-        String lastModifiedTime = lastEdited();
+    public static void checkForExtraction(String version) throws IOException, UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException, InterruptedException, SAXException {
+        String lastModifiedTime = lastEdited(version);
         if (checkUpdateAssets(lastModifiedTime) != 0) {
             assetExtractionWindow(lastModifiedTime);
         }
     }
 
-    public static String lastEdited() {
+    public static String lastEdited(String version) throws IOException {
         File file = assetFile();
         BasicFileAttributes attr;
-        try {
-            attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
-            return attr.lastModifiedTime().toString();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+        return attr.lastModifiedTime().toString() + "-" + version;
     }
 
     /**
@@ -62,7 +59,7 @@ public class AssetExtractor {
      *
      * @param lastModifiedTime Last modified time of the assets file.
      */
-    private static void assetExtractionWindow(String lastModifiedTime) {
+    private static void assetExtractionWindow(String lastModifiedTime) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException, InterruptedException, IOException, ParserConfigurationException, SAXException {
         JFrame frame = new JFrame("Realm Shark Asset Extractor");
         frame.setVisible(true);
         Object[] options = {"Extract",
@@ -91,17 +88,13 @@ public class AssetExtractor {
      *
      * @return The resources.assets file used for extraction
      */
-    private static File getAssetsFile() {
+    private static File getAssetsFile() throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         File f = assetFile();
 
         if (!f.exists()) {
             int i = JOptionPane.showOptionDialog(null, "Please select realm folder", "Realm folder not found", JOptionPane.ERROR_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{"Realm Folder", "Cancel"}, null);
             if (i == 0) {
-                try {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
                 File path = FileSystemView.getFileSystemView().getDefaultDirectory();
                 while (true) {
@@ -139,7 +132,7 @@ public class AssetExtractor {
      * @param assetsFile       The resources.assets file to be extracted.
      * @param lastModifiedTime Last modified time used to keep track of updates on the assets file.
      */
-    private static void waitWhileExtracting(File assetsFile, String lastModifiedTime) {
+    private static void waitWhileExtracting(File assetsFile, String lastModifiedTime) throws InterruptedException, IOException, SAXException, ParserConfigurationException {
         JPanel panel = new JPanel(new BorderLayout());
         JButton ok = new JButton("OK");
         ok.setEnabled(false);
@@ -160,17 +153,34 @@ public class AssetExtractor {
         JDialog dialog = pane.createDialog(panel, "Extracting");
         dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-        new Thread(() -> {
+        Thread extractThread = new Thread(() -> {
             try {
                 extractAssets(assetsFile, lastModifiedTime);
                 extractAssetsFromXML();
-                pane.setMessage("Finished extraction.");
-                ok.setEnabled(true);
-                System.out.println("done extracting.");
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            } catch (IOException | SAXException | ParserConfigurationException e) {
+                throw new RuntimeException(e);
             }
-        }).start();
+            pane.setMessage("Finished extraction.");
+            ok.setEnabled(true);
+            System.out.println("done extracting.");
+        });
+        AtomicReference<Throwable> throwableReference = new AtomicReference<>();
+        extractThread.setUncaughtExceptionHandler((t, e) -> throwableReference.set(e));
+
+        extractThread.start();
+        extractThread.join();
+        Throwable throwable = throwableReference.get();
+        if (throwable != null) {
+            if (throwable instanceof RuntimeException) {
+                throw (RuntimeException) throwable;
+            } else if (throwable instanceof IOException) {
+                throw (IOException) throwable;
+            } else if (throwable instanceof SAXException) {
+                throw (SAXException) throwable;
+            } else if (throwable instanceof ParserConfigurationException) {
+                throw (ParserConfigurationException) throwable;
+            }
+        }
 
         dialog.setVisible(true);
     }
@@ -217,20 +227,15 @@ public class AssetExtractor {
     /**
      * Extracts assets from XML files.
      */
-    private static void extractAssetsFromXML() {
+    private static void extractAssetsFromXML() throws IOException, ParserConfigurationException, SAXException {
         ArrayList<AssetObject> objectAssets = new ArrayList<>();
         ArrayList<AssetTile> tileAssets = new ArrayList<>();
+        ArrayList<Path> files = new ArrayList<>();
 
-        try {
-            Files.walk(Paths.get(XML_DIR_PATH)).filter(Files::isRegularFile).filter(p -> p.toString().endsWith("xml")).forEach(path -> {
-                try {
-                    parseXML(path, objectAssets, tileAssets);
-                } catch (ParserConfigurationException | IOException | SAXException e) {
-//                    e.printStackTrace();
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
+        Files.walk(Paths.get(XML_DIR_PATH)).filter(Files::isRegularFile).filter(p -> p.toString().endsWith("xml")).forEach(files::add);
+
+        for (Path p : files) {
+            parseXML(p, objectAssets, tileAssets);
         }
 
         objectAssets.sort(Comparator.comparing(a -> a.id));
