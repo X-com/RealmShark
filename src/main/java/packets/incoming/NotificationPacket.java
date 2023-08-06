@@ -97,10 +97,13 @@ public class NotificationPacket extends Packet {
                 pictureType = buffer.readInt();
                 return;
             case 10:
-            case 11:
                 message = buffer.readString();
                 unknownInt1 = buffer.readInt();
                 unknownShort1 = buffer.readShort();
+                return;
+            case 11:
+                message = buffer.readString();
+                unknownInt1 = buffer.readInt();
                 return;
             case 12:
                 message = buffer.readString();
