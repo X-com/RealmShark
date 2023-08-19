@@ -39,6 +39,13 @@ public class PlayerShootPacket extends Packet {
      * If the projectile is related to a burst weapon projectile.
      */
     public boolean isBurst;
+    /**
+     * Unit vector of the projectile from the start position
+     */
+    public WorldPosData unitVector;
+    /**
+     * Unknown
+     */
     public byte[] unknownBytes;
 
     @Override
@@ -47,10 +54,11 @@ public class PlayerShootPacket extends Packet {
         bulletId = buffer.readShort();
         weaponId = buffer.readUnsignedShort();
         projectileId = buffer.readByte();
-        startingPos = new WorldPosData().deserialize(buffer);
+        unitVector = new WorldPosData().deserialize(buffer);
         angle = buffer.readFloat();
         isBurst = buffer.readBoolean();
         unknownBytes = buffer.readBytes(2);
+        startingPos = new WorldPosData().deserialize(buffer);
     }
 
     @Override
@@ -63,6 +71,7 @@ public class PlayerShootPacket extends Packet {
                 "\n   startingPos=" + startingPos +
                 "\n   angle=" + angle +
                 "\n   isBurst=" + isBurst +
-                "\n   unknownBytes=" + Arrays.toString(unknownBytes);
+                "\n   unknownBytes=" + Arrays.toString(unknownBytes) +
+                "\n   unitVector=" + unitVector;
     }
 }

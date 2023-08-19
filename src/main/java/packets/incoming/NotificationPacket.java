@@ -51,6 +51,10 @@ public class NotificationPacket extends Packet {
     /**
      * unknown
      */
+    public short unknownShort2;
+    /**
+     * unknown
+     */
     public int unknownInt2;
     /**
      * unknown
@@ -104,11 +108,13 @@ public class NotificationPacket extends Packet {
             case 11:
                 message = buffer.readString();
                 unknownInt1 = buffer.readInt();
+                unknownShort2 = buffer.readShort();
                 return;
             case 12:
                 message = buffer.readString();
                 unknownInt2 = buffer.readInt();
                 unknownInt3 = buffer.readInt();
+                return;
             case 13:
                 unknownInt4 = buffer.readInt();
                 unknownInt5 = buffer.readInt();
@@ -129,6 +135,7 @@ public class NotificationPacket extends Packet {
                 "\n   pictureType=" + pictureType +
                 "\n   unknownInt1=" + unknownInt1 +
                 "\n   unknownShort1=" + unknownShort1 +
+                "\n   unknownShort2=" + unknownShort2 +
                 "\n   unknownInt2=" + unknownInt2 +
                 "\n   unknownInt3=" + unknownInt3 +
                 "\n   unknownInt4=" + unknownInt4 +
