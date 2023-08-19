@@ -2,6 +2,7 @@ package tomato.gui.dps;
 
 import packets.incoming.NotificationPacket;
 import tomato.backend.data.Entity;
+import tomato.backend.data.TomatoData;
 import tomato.gui.TomatoGUI;
 
 import javax.swing.*;
@@ -12,8 +13,11 @@ import java.util.List;
 public class StringDpsGUI extends DisplayDpsGUI {
 
     private static JTextArea textAreaDPS;
+    private final TomatoData data;
 
-    public StringDpsGUI() {
+    public StringDpsGUI(TomatoData data) {
+        this.data = data;
+
         setLayout(new BorderLayout());
         textAreaDPS = new JTextArea();
         add(TomatoGUI.createTextArea(textAreaDPS), BorderLayout.CENTER);
@@ -41,7 +45,7 @@ public class StringDpsGUI extends DisplayDpsGUI {
 
     @Override
     protected void renderData(List<Entity> sortedEntityHitList, ArrayList<NotificationPacket> notifications, boolean isLive) {
-        setTextAreaAndLabelDPS(DpsToString.stringDmgRealtime(sortedEntityHitList, notifications), !isLive);
+        setTextAreaAndLabelDPS(DpsToString.stringDmgRealtime(sortedEntityHitList, notifications, data.player), !isLive);
     }
 
     /**

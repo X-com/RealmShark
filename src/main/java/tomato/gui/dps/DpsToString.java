@@ -2,20 +2,15 @@ package tomato.gui.dps;
 
 import assets.AssetMissingException;
 import assets.IdToAsset;
-import assets.ImageBuffer;
 import packets.incoming.NotificationPacket;
 import tomato.backend.data.*;
 import tomato.realmshark.enums.CharacterClass;
 import util.Pair;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 
 public class DpsToString {
@@ -32,7 +27,7 @@ public class DpsToString {
      *
      * @return logged dps output as a string.
      */
-    public static String stringDmgRealtime(List<Entity> sortedEntityHitList, ArrayList<NotificationPacket> notifications) {
+    public static String stringDmgRealtime(List<Entity> sortedEntityHitList, ArrayList<NotificationPacket> notifications, Entity player) {
         StringBuilder sb = new StringBuilder();
 
         ArrayList<Pair<String, Integer>> deaths = new ArrayList<>();
@@ -44,7 +39,7 @@ public class DpsToString {
         for (Entity e : sortedEntityHitList) {
             if (e.maxHp() <= 0) continue;
             if (CharacterClass.isPlayerCharacter(e.objectType)) continue;
-            sb.append(display(e, deaths)).append("\n");
+            sb.append(display(e, deaths, player)).append("\n");
         }
 
         return sb.toString();
@@ -109,26 +104,23 @@ public class DpsToString {
         return "";
     }
 
-    public static String display(Entity entity, ArrayList<Pair<String, Integer>> deaths) {
+    public static String display(Entity entity, ArrayList<Pair<String, Integer>> deaths, Entity player) {
         StringBuilder sb = new StringBuilder();
         sb.append(entity.name()).append(" HP: ").append(entity.maxHp()).append(entity.getFightTimerString()).append("\n");
         List<Damage> playerDamageList = entity.getPlayerDamageList();
         int counter = 0;
         for (Damage dmg : playerDamageList) {
+            boolean highlight = false;
             counter++;
-            String name = dmg.owner.getStatName();
-            if (DpsDisplayOptions.nameFilter && DpsDisplayOptions.filteredStrings.length > 0) {
-                boolean found = false;
-                for (String n : DpsDisplayOptions.filteredStrings) {
-                    if (name.toLowerCase().startsWith(n.toLowerCase())) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) continue;
+            int filter = Filter.filter(dmg.owner, player);
+            if (filter == 1) {
+                continue;
+            } else if (filter == 2) {
+                highlight = true;
             }
+            String name = dmg.owner.getStatName();
             String extra = "    ";
-            String isMe = dmg.owner.isUser() ? "->" : "  ";
+            String isMe = dmg.owner.isUser() ? " ->" : (highlight ? ">>>" : "   ");
             int index = name.indexOf(',');
             if (index != -1) name = name.substring(0, index);
             float pers = ((float) dmg.damage * 100 / (float) entity.maxHp());

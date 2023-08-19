@@ -8,74 +8,80 @@ import util.PropertiesManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.awt.event.ActionEvent;
+import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class DpsGUI extends JPanel {
 
+    private static final String DISABLE_FILTER = "Default";
     private static DpsGUI INSTANCE;
 
     private TomatoData data;
-    private JButton next, prev;
+    private JButton next, prev, live;
     private StringDpsGUI displayString;
     private IconDpsGUI displayIcon;
     private DisplayDpsGUI centerDisplay;
-    private static JTextField textFilter;
-    private static JCheckBox textFilterToggle;
     private static JLabel dpsLabel;
     private JPanel dpsTopPanel;
     private JPanel center;
     private boolean liveUpdates = true;
     private int index = 0;
+    private JComboBox<String> filterComboBox;
+    private HashMap<String, String> filterList = new HashMap<>();
 
     public DpsGUI(TomatoData data) {
         INSTANCE = this;
 
         this.data = data;
 
-        next = new JButton("  Next  ");
-        prev = new JButton("Previous");
+        next = new JButton(">");
+        prev = new JButton("<");
+        live = new JButton(">>>");
 
         next.addActionListener(event -> nextDpsLogDungeon());
         prev.addActionListener(event -> previousDpsLogDungeon());
+        live.addActionListener(event -> setLive());
 
         dpsLabel = new JLabel("Live");
-        textFilter = new JTextField();
-        textFilter.addKeyListener(new KeyAdapter() {
-            public void keyReleased(KeyEvent e) {
-                String text = textFilter.getText();
-                PropertiesManager.setProperties("nameFilter", text);
-                DpsDisplayOptions.filteredStrings = text.split(" ");
-                updateGui();
-            }
-        });
-        textFilterToggle = new JCheckBox();
-        textFilterToggle.setSelected(true);
-        textFilterToggle.addActionListener(event -> {
-            boolean selected = textFilterToggle.isSelected();
-            textFilter.setEnabled(selected);
-            PropertiesManager.setProperties("toggleFilter", selected ? "T" : "F");
-            DpsDisplayOptions.nameFilter = selected;
-            updateGui();
-        });
+//        textFilter = new JTextField();
+//        textFilter.addKeyListener(new KeyAdapter() {
+//            public void keyReleased(KeyEvent e) {
+//                String text = textFilter.getText();
+//                PropertiesManager.setProperties("nameFilter", text);
+//                DpsDisplayOptions.filteredStrings = text.split(" ");
+//                updateGui();
+//            }
+//        });
+//        textFilterToggle = new JCheckBox();
+//        textFilterToggle.setSelected(true);
+//        textFilterToggle.addActionListener(event -> {
+//            boolean selected = textFilterToggle.isSelected();
+//            textFilter.setEnabled(selected);
+//            PropertiesManager.setProperties("toggleFilter", selected ? "T" : "F");
+//            DpsDisplayOptions.nameFilter = selected;
+//            updateGui();
+//        });
+        JButton addFilter = new JButton("+");
+        addFilter.addActionListener(e -> openFilter());
+        filterComboBox = new JComboBox<>(new String[]{DISABLE_FILTER});
+        filterComboBox.setPreferredSize(new Dimension(10000, 0));
+        filterComboBox.addActionListener(DpsGUI::comboAction);
 
         dpsTopPanel = new JPanel();
         dpsTopPanel.setLayout(new BoxLayout(dpsTopPanel, BoxLayout.X_AXIS));
         dpsTopPanel.add(Box.createHorizontalGlue());
-        dpsTopPanel.add(textFilterToggle);
+        dpsTopPanel.add(addFilter);
         dpsTopPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-        dpsTopPanel.add(textFilter);
+        dpsTopPanel.add(filterComboBox);
         dpsTopPanel.add(Box.createRigidArea(new Dimension(10, 0)));
         dpsTopPanel.add(prev);
         dpsTopPanel.add(Box.createRigidArea(new Dimension(10, 0)));
         dpsTopPanel.add(dpsLabel);
         dpsTopPanel.add(Box.createRigidArea(new Dimension(10, 0)));
         dpsTopPanel.add(next);
+        dpsTopPanel.add(live);
         dpsTopPanel.add(Box.createHorizontalGlue());
 
         setLayout(new BorderLayout());
@@ -85,10 +91,30 @@ public class DpsGUI extends JPanel {
         center.setLayout(new BorderLayout());
         add(center, BorderLayout.CENTER);
 
-        displayString = new StringDpsGUI();
-        displayIcon = new IconDpsGUI();
+        displayString = new StringDpsGUI(data);
+        displayIcon = new IconDpsGUI(data);
         centerDisplay = displayIcon;
         setCenterDisplay();
+    }
+
+    private static void comboAction(ActionEvent actionEvent) {
+        JComboBox<String> combo = (JComboBox<String>) actionEvent.getSource();
+        String selectedItem = String.valueOf(combo.getSelectedItem());
+        setupFilter(selectedItem);
+        PropertiesManager.setProperties("filterName", selectedItem);
+    }
+
+    private static void setupFilter(String selectedItem) {
+        if (selectedItem.equals(DISABLE_FILTER)) {
+            Filter.disable();
+            return;
+        }
+        String s = INSTANCE.filterList.get(selectedItem);
+        Filter.selectFilter(s);
+    }
+
+    private void openFilter() {
+        FilterGUI.open(this, INSTANCE);
     }
 
     private void setCenterDisplay() {
@@ -138,6 +164,31 @@ public class DpsGUI extends JPanel {
         update();
     }
 
+    public String getFilterString(String a) {
+        return filterList.get(a);
+    }
+
+    public String[] getComboBoxStrings() {
+        return filterList.keySet().toArray(new String[0]);
+    }
+
+    public boolean addComboBox(String a, String b) {
+        boolean add = false;
+        if (!filterList.containsKey(a)) {
+            filterComboBox.addItem(a);
+            add = true;
+        }
+        filterList.put(a, b);
+        saveFilterProperty();
+        return add;
+    }
+
+    public void removeComboBox(String o) {
+        filterComboBox.removeItem(o);
+        filterList.remove(o);
+        saveFilterProperty();
+    }
+
     /**
      * Clear the DPS logs.
      */
@@ -160,6 +211,10 @@ public class DpsGUI extends JPanel {
         INSTANCE.scrollData(-1);
     }
 
+    private void setLive() {
+        INSTANCE.scrollData(1000000000);
+    }
+
     /**
      * Updates the display label tracking dungeon index.
      */
@@ -170,19 +225,40 @@ public class DpsGUI extends JPanel {
     }
 
     /**
+     * Saves the preset chosen by the user.
+     */
+    private void saveFilterProperty() {
+        StringBuilder sb = new StringBuilder();
+        for (String v : filterList.values()) {
+            sb.append(v).append("\n");
+        }
+        String substring;
+        if (sb.length() > 0) {
+            substring = sb.substring(0, sb.length() - 1);
+        } else {
+            substring = "";
+        }
+        PropertiesManager.setProperties("filters", substring);
+    }
+
+    /**
      * Loads the filter preset chosen by the user.
      */
     public static void loadFilterPreset() {
-        String nameFilter = PropertiesManager.getProperty("nameFilter");
-        String toggleFilter = PropertiesManager.getProperty("toggleFilter");
-
-        if (nameFilter != null) {
-            textFilter.setText(nameFilter);
+        String f = PropertiesManager.getProperty("filters");
+        if (f != null) {
+            String[] lines = f.split("\n");
+            for (String l : lines) {
+                String name = l.split(",")[0];
+                INSTANCE.filterList.put(name, l);
+                INSTANCE.filterComboBox.addItem(name);
+            }
         }
-        if (toggleFilter != null) {
-            boolean toggled = toggleFilter.equals("T");
-            textFilterToggle.setSelected(toggled);
-            textFilter.setEnabled(toggled);
+
+        String nameFilter = PropertiesManager.getProperty("filterName");
+        if (nameFilter != null) {
+            setupFilter(nameFilter);
+            INSTANCE.filterComboBox.setSelectedItem(nameFilter);
         }
     }
 

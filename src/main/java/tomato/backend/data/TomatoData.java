@@ -40,7 +40,7 @@ public class TomatoData {
     protected int charId;
     public long time;
     public long timePc;
-    protected Entity player;
+    public Entity player;
     protected final int[][] mapTiles = new int[2048][2048];
     protected final HashMap<Integer, Entity> entityList = new HashMap<>();
     protected final HashMap<Integer, Entity> playerList = new HashMap<>();

@@ -205,6 +205,11 @@ public class Entity {
         return stat.NAME_STAT.stringStatValue;
     }
 
+    public String getStatGuild() {
+        if (stat.GUILD_NAME_STAT == null) return null;
+        return stat.GUILD_NAME_STAT.stringStatValue;
+    }
+
     public ArrayList<Damage> getDamageList() {
         return damageList;
     }

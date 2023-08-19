@@ -4,10 +4,7 @@ import assets.AssetMissingException;
 import assets.IdToAsset;
 import assets.ImageBuffer;
 import packets.incoming.NotificationPacket;
-import tomato.backend.data.Damage;
-import tomato.backend.data.Entity;
-import tomato.backend.data.Equipment;
-import tomato.backend.data.PlayerRemoved;
+import tomato.backend.data.*;
 import tomato.gui.SmartScroller;
 import tomato.realmshark.enums.CharacterClass;
 import util.Pair;
@@ -25,12 +22,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class IconDpsGUI extends DisplayDpsGUI {
 
     private static JPanel charPanel;
+    private final TomatoData data;
     private List<Entity> sortedEntityHitList;
     private static Font mainFont;
     private ArrayList<NotificationPacket> notifications;
     private static final DecimalFormat df = new DecimalFormat("#,###,###");
 
-    public IconDpsGUI() {
+    public IconDpsGUI(TomatoData data) {
+        this.data = data;
+
         setLayout(new BorderLayout());
         charPanel = new JPanel();
         charPanel.setLayout(new GridBagLayout());
@@ -62,7 +62,7 @@ public class IconDpsGUI extends DisplayDpsGUI {
         for (Entity e : sortedEntityHitList) {
             if (e.maxHp() <= 0) continue;
             if (CharacterClass.isPlayerCharacter(e.objectType)) continue;
-            JPanel panel = createMainBox(e, deaths);
+            JPanel panel = createMainBox(e, deaths, data.player);
             if (panel != null) {
                 charPanel.add(panel);
             }
@@ -74,7 +74,7 @@ public class IconDpsGUI extends DisplayDpsGUI {
         repaint();
     }
 
-    private static JPanel createMainBox(Entity entity, ArrayList<Pair<String, Integer>> deaths) {
+    private static JPanel createMainBox(Entity entity, ArrayList<Pair<String, Integer>> deaths, Entity player) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
@@ -105,11 +105,19 @@ public class IconDpsGUI extends DisplayDpsGUI {
             panels[i] = new ArrayList<>();
         }
         for (Damage dmg : playerDamageList) {
+            int filter = Filter.filter(dmg.owner, player);
+
+            boolean user = dmg.owner.isUser();
+            boolean highlight = false;
             counter++;
+
+            if (filter == 1) {
+                continue;
+            } else if (filter == 2) {
+                highlight = true;
+            }
+
             String name = dmg.owner.name();
-
-            if (filter(name)) continue;
-
             JPanel inv = equipment(DpsDisplayOptions.equipmentOption, dmg.owner, entity);
 
             String extra = "";
@@ -121,8 +129,8 @@ public class IconDpsGUI extends DisplayDpsGUI {
                 extra = String.format("[Garden Hits:%d Dmg:%d]", dmg.counterHits, dmg.counterDmg);
             }
             float pers = ((float) dmg.damage * 100 / (float) entity.maxHp());
-            boolean user = dmg.owner.isUser();
-            String userIndicator = String.format("%s%d", user ? ">" : " ", counter);
+
+            String userIndicator = String.format("%s%d", user ? " ->" : (highlight ? ">>>" : "   "), counter);
             String s2 = String.format("DMG: %7d %6.3f%%", dmg.damage, pers);
 
             JLabel playerIconLabel = new JLabel(userIndicator, new ImageIcon(dmg.owner.img().getScaledInstance(16, 16, Image.SCALE_DEFAULT)), JLabel.LEFT);
