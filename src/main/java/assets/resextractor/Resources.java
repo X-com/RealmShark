@@ -1,5 +1,7 @@
 package assets.resextractor;
 
+import assets.AssetExtractor;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -14,14 +16,15 @@ public class Resources {
     TextAsset spritesheet;
     TextAsset manifest_json;
     TextAsset manifest_xml;
+    int counter = 0;
 
     public Resources(File file) throws IOException {
-            FileHeader header = new FileHeader(file);
-            if (header.type == FileHeader.ResourceFile) {
+        FileHeader header = new FileHeader(file);
+        if (header.type == FileHeader.ResourceFile) {
 //                endianBinaryReader
-            } else if (header.type == FileHeader.AssetsFile) {
-                extractAssets(file, header);
-            }
+        } else if (header.type == FileHeader.AssetsFile) {
+            extractAssets(file, header);
+        }
     }
 
     public void extractAssets(File f, FileHeader header) throws IOException {
@@ -31,6 +34,10 @@ public class Resources {
 
     public void parseAllResources(SerializedFile sf) throws IOException {
         for (ObjectReader o : sf.objects) {
+            counter++;
+            if (counter % 100 == 0) {
+                AssetExtractor.setDisplay(String.format("Extracting Assets %.1fK", counter / 1000.f));
+            }
             switch (o.type) {
                 case AudioClip:
                     break;

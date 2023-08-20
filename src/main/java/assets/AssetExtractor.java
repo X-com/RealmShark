@@ -39,15 +39,16 @@ public class AssetExtractor {
     private static final String XML_DIR_PATH = "assets/xml";
     private static final File[] ASSET_FOLDERS = {new File("assets/json/"), new File("assets/sprites/"), new File("assets/xml/")};
     private static final String REALM_RES_PATH = "/RealmOfTheMadGod/Production/RotMG Exalt_Data/resources.assets";
+    private static JOptionPane pane;
 
-    public static void main(String[] args) throws UnsupportedLookAndFeelException, IOException, ParserConfigurationException, ClassNotFoundException, InterruptedException, InstantiationException, IllegalAccessException, SAXException {
+    public static void main(String[] args) throws Throwable {
         checkForExtraction(Version.VERSION);
     }
 
     /**
      * Main loader for realm assets.
      */
-    public static void checkForExtraction(String version) throws IOException, UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException, InterruptedException, SAXException {
+    public static void checkForExtraction(String version) throws Throwable {
         String lastModifiedTime = lastEdited(version);
         if (checkUpdateAssets(lastModifiedTime) != 0) {
             assetExtractionWindow(lastModifiedTime);
@@ -66,7 +67,7 @@ public class AssetExtractor {
      *
      * @param lastModifiedTime Last modified time of the assets file.
      */
-    private static void assetExtractionWindow(String lastModifiedTime) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException, InterruptedException, IOException, ParserConfigurationException, SAXException {
+    private static void assetExtractionWindow(String lastModifiedTime) throws Throwable {
         JFrame frame = new JFrame("Realm Shark Asset Extractor");
         frame.setVisible(true);
         Object[] options = {"Extract",
@@ -83,7 +84,7 @@ public class AssetExtractor {
         if (n == 0) {
             File assetsFile = getAssetsFile();
             if (assetsFile != null) {
-                waitWhileExtracting(assetsFile, lastModifiedTime);
+                waitWhileExtracting(frame, assetsFile, lastModifiedTime);
             }
         }
         frame.dispose();
@@ -136,10 +137,11 @@ public class AssetExtractor {
      * Starts the extraction on the resources.assets file while
      * creates dialog window for user to wait.
      *
+     * @param frame
      * @param assetsFile       The resources.assets file to be extracted.
      * @param lastModifiedTime Last modified time used to keep track of updates on the assets file.
      */
-    private static void waitWhileExtracting(File assetsFile, String lastModifiedTime) throws InterruptedException, IOException, SAXException, ParserConfigurationException {
+    private static void waitWhileExtracting(JFrame frame, File assetsFile, String lastModifiedTime) throws Throwable {
         JPanel panel = new JPanel(new BorderLayout());
         JButton ok = new JButton("OK");
         ok.setEnabled(false);
@@ -156,8 +158,8 @@ public class AssetExtractor {
             }
             win.dispose();
         });
-        JOptionPane pane = new JOptionPane("Extracting. Please wait.", JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, new JButton[]{ok}, ok);
-        JDialog dialog = pane.createDialog(panel, "Extracting");
+        pane = new JOptionPane("Extracting. Please wait.", JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, new JButton[]{ok}, ok);
+        JDialog dialog = pane.createDialog(frame, "Extracting");
         dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         Thread extractThread = new Thread(() -> {
@@ -172,24 +174,20 @@ public class AssetExtractor {
             System.out.println("done extracting.");
         });
         AtomicReference<Throwable> throwableReference = new AtomicReference<>();
-        extractThread.setUncaughtExceptionHandler((t, e) -> throwableReference.set(e));
+        extractThread.setUncaughtExceptionHandler((t, e) -> {
+            dialog.dispose();
+            throwableReference.set(e);
+        });
 
         extractThread.start();
         dialog.setVisible(true);
 
         extractThread.join();
-        Throwable throwable = throwableReference.get();
-        if (throwable != null) {
-            if (throwable instanceof RuntimeException) {
-                throw (RuntimeException) throwable;
-            } else if (throwable instanceof IOException) {
-                throw (IOException) throwable;
-            } else if (throwable instanceof SAXException) {
-                throw (SAXException) throwable;
-            } else if (throwable instanceof ParserConfigurationException) {
-                throw (ParserConfigurationException) throwable;
-            }
-        }
+        throw throwableReference.get();
+    }
+
+    public static void setDisplay(String s) {
+        pane.setMessage("<html>Extracting. Please wait.<br/>" + s + "</html>");
     }
 
     /**
@@ -241,7 +239,10 @@ public class AssetExtractor {
 
         Files.walk(Paths.get(XML_DIR_PATH)).filter(Files::isRegularFile).filter(p -> p.toString().endsWith("xml")).forEach(files::add);
 
+        int counter = 0;
         for (Path p : files) {
+            counter++;
+            AssetExtractor.setDisplay("Parsing XML Files " + counter);
             try {
                 parseXML(p, objectAssets, tileAssets);
             } catch (SAXException e) {

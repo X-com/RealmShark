@@ -1,5 +1,7 @@
 package assets.resextractor;
 
+import assets.AssetExtractor;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -13,14 +15,19 @@ import java.util.Arrays;
  * Class extracted from UnityPy https://github.com/K0lb3/UnityPy
  */
 public class UnityExtractor {
+    int counter = 0;
 
     public void extract(File input, File[] output) throws IOException {
         Resources res = new Resources(input);
 
+        AssetExtractor.setDisplay("Creating Folders");
         createFolders(output);
 
+        AssetExtractor.setDisplay("Extracting Json File");
         extractSpritesheetJson(res, output[0]);
+        AssetExtractor.setDisplay("Extracting Sprites");
         extractSprites(res, output[1]);
+        AssetExtractor.setDisplay("Extracting Xml Files");
         extractXml(res, output[2]);
     }
 
@@ -32,10 +39,15 @@ public class UnityExtractor {
 
     private void extractXml(Resources res, File outputFolder) {
         for (TextAsset t : res.assetTextAsset) {
+            counter++;
+            AssetExtractor.setDisplay("Extracting Xml Files " + counter);
+
             if (!Arrays.asList(TextAsset.NON_XML_FILES).contains(t.name)) {
                 File outputFile = new File(outputFolder + "/" + t.name + ".xml");
-                try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+                try {
+                    FileOutputStream outputStream = new FileOutputStream(outputFile);
                     outputStream.write(t.m_Script);
+                    outputStream.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

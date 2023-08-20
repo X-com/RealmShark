@@ -1,5 +1,7 @@
 package assets.resextractor;
 
+import assets.AssetExtractor;
+
 import java.io.*;
 
 /**
@@ -60,6 +62,9 @@ public class SerializedFile {
         {
             objects = new ObjectReader[object_count];
             for (int i = 0; i < object_count; i++) {
+                if (i % 1000 == 0) {
+                    AssetExtractor.setDisplay("Reading Assets " + (i / 1000) + "K");
+                }
                 objects[i] = new ObjectReader(this, reader);
             }
         }
