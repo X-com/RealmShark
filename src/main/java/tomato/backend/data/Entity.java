@@ -7,6 +7,7 @@ import packets.data.ObjectStatusData;
 import packets.data.WorldPosData;
 import tomato.backend.StasisCheck;
 import tomato.gui.character.CharacterStatMaxingGUI;
+import tomato.gui.dps.DpsGUI;
 import tomato.gui.security.ParsePanelGUI;
 import tomato.realmshark.RealmCharacter;
 import tomato.realmshark.enums.CharacterClass;
@@ -111,13 +112,7 @@ public class Entity {
 
     public String getFightTimerString() {
         long time = lastDamageTaken - firstDamageTaken;
-        if (time == 0) return " [-]";
-        long ms = time % 1000;
-        long s = time / 1000 % 60;
-        if (s == 0) return String.format(" [%dms]", ms);
-        long m = time / 60000;
-        if (m == 0) return String.format(" [%ds %dms]", s, ms);
-        return String.format(" [%dm %ds %dms]", m, s, ms);
+        return DpsGUI.systemTimeToString(time);
     }
 
     public long getFightTimer() {

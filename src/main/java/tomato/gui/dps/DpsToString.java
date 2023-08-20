@@ -2,6 +2,7 @@ package tomato.gui.dps;
 
 import assets.AssetMissingException;
 import assets.IdToAsset;
+import packets.incoming.MapInfoPacket;
 import packets.incoming.NotificationPacket;
 import tomato.backend.data.*;
 import tomato.realmshark.enums.CharacterClass;
@@ -27,9 +28,12 @@ public class DpsToString {
      *
      * @return logged dps output as a string.
      */
-    public static String stringDmgRealtime(List<Entity> sortedEntityHitList, ArrayList<NotificationPacket> notifications, Entity player) {
+    public static String stringDmgRealtime(MapInfoPacket map, List<Entity> sortedEntityHitList, ArrayList<NotificationPacket> notifications, Entity player, long totalDungeonPcTime) {
         StringBuilder sb = new StringBuilder();
 
+        if (map != null) {
+            sb.append(map.name).append(" ").append(DpsGUI.systemTimeToString(totalDungeonPcTime)).append("\n\n");
+        }
         ArrayList<Pair<String, Integer>> deaths = new ArrayList<>();
         for (NotificationPacket n : notifications) {
             String name = n.message.split("\"")[9];

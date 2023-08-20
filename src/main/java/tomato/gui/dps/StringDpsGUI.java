@@ -1,5 +1,6 @@
 package tomato.gui.dps;
 
+import packets.incoming.MapInfoPacket;
 import packets.incoming.NotificationPacket;
 import tomato.backend.data.Entity;
 import tomato.backend.data.TomatoData;
@@ -44,8 +45,8 @@ public class StringDpsGUI extends DisplayDpsGUI {
     }
 
     @Override
-    protected void renderData(List<Entity> sortedEntityHitList, ArrayList<NotificationPacket> notifications, boolean isLive) {
-        setTextAreaAndLabelDPS(DpsToString.stringDmgRealtime(sortedEntityHitList, notifications, data.player), !isLive);
+    protected void renderData(MapInfoPacket map, List<Entity> sortedEntityHitList, ArrayList<NotificationPacket> notifications, long totalDungeonPcTime, boolean isLive) {
+        setTextAreaAndLabelDPS(DpsToString.stringDmgRealtime(map, sortedEntityHitList, notifications, data.player, totalDungeonPcTime), !isLive);
     }
 
     /**

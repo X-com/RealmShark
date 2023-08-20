@@ -1,5 +1,6 @@
 package tomato.gui.dps;
 
+import packets.incoming.MapInfoPacket;
 import packets.incoming.NotificationPacket;
 import tomato.backend.data.DpsData;
 import tomato.backend.data.Entity;
@@ -114,6 +115,18 @@ public class DpsGUI extends JPanel {
         Filter.selectFilter(s);
     }
 
+    public static String systemTimeToString(long time) {
+        if (time == 0) return " [-]";
+        long ms = time % 1000;
+        if (time < 1000) return String.format(" [%dms]", ms);
+        long s = time / 1000 % 60;
+        if (time < 60000) return String.format(" [%ds %dms]", s, ms);
+        long m = time / 60000 % 60;
+        if (time < 3600000) return String.format(" [%dm %ds %dms]", m, s, ms);
+        long h = time / 3600000;
+        return String.format(" [%dh %dm %ds %dms]", h, m, s, ms);
+    }
+
     private void openFilter() {
         FilterGUI.open(this, INSTANCE);
     }
@@ -138,13 +151,13 @@ public class DpsGUI extends JPanel {
 
     public static void updateNewTickPacket(TomatoData data) {
         if (!INSTANCE.liveUpdates) return;
-        INSTANCE.renderData(data.getEntityHitList(), data.getDeathNotifications(), true);
+        INSTANCE.renderData(data.map, data.getEntityHitList(), data.getDeathNotifications(), data.dungeonTime(), true);
     }
 
-    private void renderData(Entity[] entityHitList, ArrayList<NotificationPacket> notifications, boolean b) {
+    private void renderData(MapInfoPacket map, Entity[] entityHitList, ArrayList<NotificationPacket> notifications, long totalDungeonPcTime, boolean b) {
         setCenterDisplay();
         List<Entity> sortedEntityHitList = getSortedEntityList(entityHitList);
-        centerDisplay.renderData(sortedEntityHitList, notifications, b);
+        centerDisplay.renderData(map, sortedEntityHitList, notifications, totalDungeonPcTime, b);
     }
 
     private List<Entity> getSortedEntityList(Entity[] entityHitList) {
@@ -269,11 +282,11 @@ public class DpsGUI extends JPanel {
 
     private void updateGui() {
         if (liveUpdates) {
-            renderData(data.getEntityHitList(), data.getDeathNotifications(), true);
+            renderData(data.map, data.getEntityHitList(), data.getDeathNotifications(), data.dungeonTime(), true);
         } else {
             DpsData dpsData = data.dpsData.get(index);
             Entity[] entityHitList = dpsData.hitList.values().toArray(new Entity[0]);
-            renderData(entityHitList, dpsData.deathNotifications, false);
+            renderData(dpsData.map, entityHitList, dpsData.deathNotifications, dpsData.totalDungeonPcTime, false);
         }
     }
 
@@ -300,6 +313,6 @@ public class DpsGUI extends JPanel {
 
         DpsData dpsData = data.dpsData.get(index);
         Entity[] entityHitList = dpsData.hitList.values().toArray(new Entity[0]);
-        renderData(entityHitList, dpsData.deathNotifications, false);
+        renderData(dpsData.map, entityHitList, dpsData.deathNotifications, dpsData.totalDungeonPcTime, false);
     }
 }

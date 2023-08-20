@@ -3,6 +3,7 @@ package tomato.gui.dps;
 import assets.AssetMissingException;
 import assets.IdToAsset;
 import assets.ImageBuffer;
+import packets.incoming.MapInfoPacket;
 import packets.incoming.NotificationPacket;
 import tomato.backend.data.*;
 import tomato.gui.SmartScroller;
@@ -23,7 +24,6 @@ public class IconDpsGUI extends DisplayDpsGUI {
 
     private static JPanel charPanel;
     private final TomatoData data;
-    private List<Entity> sortedEntityHitList;
     private static Font mainFont;
     private ArrayList<NotificationPacket> notifications;
     private static final DecimalFormat df = new DecimalFormat("#,###,###");
@@ -51,7 +51,7 @@ public class IconDpsGUI extends DisplayDpsGUI {
 //        DpsGUI.setDisplayAsString();
 //    }
 
-    private void updateDps(List<Entity> sortedEntityHitList) {
+    private void updateDps(MapInfoPacket map, List<Entity> sortedEntityHitList, long totalDungeonPcTime) {
         ArrayList<Pair<String, Integer>> deaths = new ArrayList<>();
         for (NotificationPacket n : notifications) {
             String name = n.message.split("\"")[9];
@@ -59,6 +59,16 @@ public class IconDpsGUI extends DisplayDpsGUI {
             deaths.add(new Pair<>(name, graveIcon));
         }
         charPanel.removeAll();
+
+        {
+            JPanel dungeon = new JPanel();
+            dungeon.setBorder(BorderFactory.createTitledBorder(map.name + DpsGUI.systemTimeToString(totalDungeonPcTime)));
+            dungeon.setPreferredSize(new Dimension(320, 24));
+            dungeon.setMaximumSize(new Dimension(320, 24));
+            charPanel.add(dungeon);
+        }
+
+//        sb.append("Total time in dungeon:").append(DpsGUI.systemTimeToString(totalDungeonPcTime)).append("\n");
         for (Entity e : sortedEntityHitList) {
             if (e.maxHp() <= 0) continue;
             if (CharacterClass.isPlayerCharacter(e.objectType)) continue;
@@ -130,7 +140,7 @@ public class IconDpsGUI extends DisplayDpsGUI {
             }
             float pers = ((float) dmg.damage * 100 / (float) entity.maxHp());
 
-            String userIndicator = String.format("%s%d", user ? " ->" : (highlight ? ">>>" : "   "), counter);
+            String userIndicator = String.format("%s%d", user ? " ->" : (highlight ? ">>" : "  "), counter);
             String s2 = String.format("DMG: %7d %6.3f%%", dmg.damage, pers);
 
             JLabel playerIconLabel = new JLabel(userIndicator, new ImageIcon(dmg.owner.img().getScaledInstance(16, 16, Image.SCALE_DEFAULT)), JLabel.LEFT);
@@ -275,9 +285,9 @@ public class IconDpsGUI extends DisplayDpsGUI {
     }
 
     @Override
-    protected void renderData(List<Entity> sortedEntityHitList, ArrayList<NotificationPacket> deathNotifications, boolean isLive) {
+    protected void renderData(MapInfoPacket map, List<Entity> sortedEntityHitList, ArrayList<NotificationPacket> deathNotifications, long totalDungeonPcTime, boolean isLive) {
         this.notifications = deathNotifications;
-        updateDps(sortedEntityHitList);
+        updateDps(map, sortedEntityHitList, totalDungeonPcTime);
         guiUpdate();
     }
 

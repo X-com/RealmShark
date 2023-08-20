@@ -35,11 +35,12 @@ public class TomatoData {
     private static final Pattern popperName = Pattern.compile("[^ ]*\"player\":\"([A-Za-z]*)[^ ]*");
 
     private String token;
-    protected MapInfoPacket map;
+    public MapInfoPacket map;
     protected int worldPlayerId;
     protected int charId;
     public long time;
     public long timePc;
+    private long timePcFirst;
     public Entity player;
     protected final int[][] mapTiles = new int[2048][2048];
     protected final HashMap<Integer, Entity> entityList = new HashMap<>();
@@ -101,8 +102,9 @@ public class TomatoData {
      * @param serverRealTimeMS Server time in milliseconds.
      */
     public void setTime(long serverRealTimeMS) {
-        this.time = serverRealTimeMS;
-        this.timePc = System.currentTimeMillis();
+        time = serverRealTimeMS;
+        timePc = System.currentTimeMillis();
+        if (timePcFirst == -1) timePcFirst = timePc;
     }
 
     /**
@@ -304,7 +306,9 @@ public class TomatoData {
         worldPlayerId = -1;
         charId = -1;
         time = -1;
+        long totalDungeonPcTime = dungeonTime();
         timePc = -1;
+        timePcFirst = -1;
         rng = null;
         player = null;
         entityList.clear();
@@ -313,7 +317,7 @@ public class TomatoData {
         playerListUpdated.clear();
         dropList.clear();
         if (map != null && isLoggedDungeon(map.displayName)) {
-            dpsData.add(new DpsData(map, entityHitList, deathNotifications));
+            dpsData.add(new DpsData(map, entityHitList, deathNotifications, totalDungeonPcTime));
             DpsGUI.updateLabel();
         }
         deathNotifications = new ArrayList<>();
@@ -449,5 +453,9 @@ public class TomatoData {
 
     public ArrayList<NotificationPacket> getDeathNotifications() {
         return deathNotifications;
+    }
+
+    public long dungeonTime() {
+        return timePc - timePcFirst;
     }
 }

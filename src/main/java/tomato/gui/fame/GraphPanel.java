@@ -68,13 +68,6 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
         int y3 = padding + labelPadding + 5;
         if (pressed) {
             g2.setColor(new Color(160, 180, 240));
-            int w = screenXdragRight - screenXdragLeft;
-            int x;
-            if (w > 0) {
-                x = screenXdragLeft;
-            } else {
-                x = screenXdragRight;
-            }
             double dfame = Math.abs(dragLeft.fame - dragRight.fame);
             long dtime = Math.abs(dragLeft.time - dragRight.time);
             double f = (dfame / (dtime / 60000f));
