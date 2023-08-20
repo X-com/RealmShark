@@ -183,6 +183,7 @@ public class AssetExtractor {
         dialog.setVisible(true);
 
         extractThread.join();
+        if (throwableReference.get() == null) return;
         throw throwableReference.get();
     }
 
