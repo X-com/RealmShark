@@ -12,6 +12,8 @@ import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
@@ -34,7 +36,6 @@ public class ParsePanelGUI extends JPanel {
         charPanel = new JPanel();
 
         charPanel.setLayout(new BoxLayout(charPanel, BoxLayout.Y_AXIS));
-
         validate();
 
         JScrollPane scroll = new JScrollPane(charPanel);
@@ -52,7 +53,11 @@ public class ParsePanelGUI extends JPanel {
         for (Player player : playerDisplay.values()) {
             sb.append(player).append("\n");
         }
-        StringSelection stringSelection = new StringSelection(sb.toString());
+        copyToClipboard(String.valueOf(sb));
+    }
+
+    private static void copyToClipboard(String s) {
+        StringSelection stringSelection = new StringSelection(s);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, null);
     }
@@ -65,8 +70,7 @@ public class ParsePanelGUI extends JPanel {
     private static JPanel createMainBox(Player p, Entity player) {
         JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), BorderFactory.createEmptyBorder(0, 20, 0, 20)));
-//        panel.setPreferredSize(new Dimension(370, HEIGHT));
-//        panel.setMaximumSize(new Dimension(370, HEIGHT));
+        panel.setMaximumSize(new Dimension(10000000, HEIGHT));
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
         JPanel left = leftPanel(player);
@@ -93,6 +97,12 @@ public class ParsePanelGUI extends JPanel {
             ImageIcon icon = new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT));
             int level = player.stat.LEVEL_STAT.statValue;
             JLabel characterLabel = new JLabel(player.name() + " [" + level + "]", icon, JLabel.CENTER);
+            characterLabel.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    copyToClipboard(player.name());
+                }
+            });
+
             characterLabel.setAlignmentX(JLabel.LEFT);
             panel.setAlignmentX(JLabel.LEFT);
             panel.setAlignmentX(LEFT_ALIGNMENT);
@@ -217,6 +227,7 @@ public class ParsePanelGUI extends JPanel {
         p.panel = createMainBox(p, entity);
         playerDisplay.put(id, p);
         charPanel.add(p.panel);
+        charPanel.add(Box.createVerticalGlue());
 
         INSTANCE.guiUpdate();
     }
