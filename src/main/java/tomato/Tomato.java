@@ -55,9 +55,13 @@ public class Tomato {
             new TomatoGUI(data).create();
         } catch (OutOfMemoryError e) {
             JavaOutOfMemoryGUI.crashDialog();
+            System.exit(0);
         } catch (Exception e) {
             e.printStackTrace();
             CrashLogger.printCrash(e);
+        } catch (Throwable e) {
+            e.printStackTrace();
+            CrashLogger.printCrash((Exception) e);
         } finally {
             dispose();
         }
