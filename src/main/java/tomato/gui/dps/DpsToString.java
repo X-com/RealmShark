@@ -113,7 +113,7 @@ public class DpsToString {
             boolean highlight = false;
             counter++;
             int filter = Filter.filter(dmg.owner, player);
-            if (filter == 1) {
+            if (Filter.shouldFilter() && filter != 1) {
                 continue;
             } else if (filter == 2) {
                 highlight = true;

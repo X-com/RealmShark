@@ -102,6 +102,7 @@ public class DpsGUI extends JPanel {
         String selectedItem = String.valueOf(combo.getSelectedItem());
         setupFilter(selectedItem);
         PropertiesManager.setProperties("filterName", selectedItem);
+        update();
     }
 
     private static void setupFilter(String selectedItem) {

@@ -114,6 +114,8 @@ public class FilterGUI extends JPanel {
         String n = String.valueOf(filterComboBox.getSelectedItem());
         if (n.equals("null")) return;
         newButton();
+        namePanelBody.removeAll();
+        guildPanelBody.removeAll();
         String ss = dpsGui.getFilterString(n);
         int part = 0;
         int fieldIndex = 0;

@@ -39,6 +39,10 @@ public class Filter {
         return 0;
     }
 
+    public static boolean shouldFilter() {
+        return filter == 1;
+    }
+
     public static void disable() {
         filter = 0;
     }
@@ -60,9 +64,9 @@ public class Filter {
                 if (s.equals("F")) filter = 1;
                 if (s.equals("H")) filter = 2;
             } else if (part == 2) {
-                filterNames.add(s);
+                filterNames.add(s.toLowerCase());
             } else if (part == 3) {
-                filterGuilds.add(s);
+                filterGuilds.add(s.toLowerCase());
             } else if (part == 4) {
                 if (fieldIndex == 0 && s.equals("1")) {
                     myGuildFilter = true;

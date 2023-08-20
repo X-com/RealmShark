@@ -111,7 +111,7 @@ public class IconDpsGUI extends DisplayDpsGUI {
             boolean highlight = false;
             counter++;
 
-            if (filter == 1) {
+            if (Filter.shouldFilter() && filter != 1) {
                 continue;
             } else if (filter == 2) {
                 highlight = true;
