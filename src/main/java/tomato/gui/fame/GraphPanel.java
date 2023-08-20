@@ -2,7 +2,6 @@ package tomato.gui.fame;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,14 +12,14 @@ import javax.swing.SwingUtilities;
 
 public class GraphPanel extends JPanel implements MouseMotionListener {
 
-    private int padding = 25;
-    private int labelPadding = 25;
-    private Color lineColor = new Color(44, 102, 230, 180);
-    private Color pointColor = new Color(100, 100, 100, 180);
-    private Color gridColor = new Color(200, 200, 200, 200);
+    private final int padding = 25;
+    private final int labelPadding = 25;
+    private final Color lineColor = new Color(44, 102, 230, 180);
+    private final Color pointColor = new Color(100, 100, 100, 180);
+    private final Color gridColor = new Color(200, 200, 200, 200);
     private static final Stroke GRAPH_STROKE = new BasicStroke(2f);
-    private int pointWidth = 4;
-    private int numberYDivisions = 10;
+    private final int pointSize = 4;
+    private final int numberYDivisions = 10;
     private ArrayList<Fame> scores;
     private int screenX;
     private int screenXdragLeft;
@@ -29,6 +28,8 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
     private Fame dragRight;
     private double hoverFame = -1;
     private boolean pressed;
+    private int rightSelectionValue;
+    private int leftSelectionValue;
 
     public GraphPanel(ArrayList<Fame> scores) {
         addMouseMotionListener(this);
@@ -47,10 +48,10 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
 
         List<Point> graphPoints = new ArrayList<>();
         int size = scores.size();
-        for (int i = 0; i < size; i++) {
-            double v = scores.get(i).time - minMax.minScoreX;
+        for (Fame score : scores) {
+            double v = score.time - minMax.minScoreX;
             int x1 = (int) (v * xScale + padding + labelPadding);
-            double v1 = minMax.maxScoreY - scores.get(i).fame;
+            double v1 = minMax.maxScoreY - score.fame;
             int y1 = (int) (v1 * yScale + padding);
             Point e = new Point(x1, y1);
             graphPoints.add(e);
@@ -64,7 +65,7 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
         // draw selection box
         int xWidth = getWidth() - labelPadding;
         int x3 = padding * 2 + labelPadding - 12;
-        int y3 = padding + labelPadding - 5;
+        int y3 = padding + labelPadding + 5;
         if (pressed) {
             g2.setColor(new Color(160, 180, 240));
             int w = screenXdragRight - screenXdragLeft;
@@ -74,11 +75,22 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
             } else {
                 x = screenXdragRight;
             }
-            String s = String.format("Fame / Min: %.3f", (Math.abs(dragLeft.fame - dragRight.fame) / (Math.abs(dragLeft.time - dragRight.time) / 60000f)));
-            g2.fillRect(x, padding, Math.abs(w), getHeight() - 2 * padding - labelPadding);
+            double dfame = Math.abs(dragLeft.fame - dragRight.fame);
+            long dtime = Math.abs(dragLeft.time - dragRight.time);
+            double f = (dfame / (dtime / 60000f));
+            String s1 = String.format("D-fame: %.0f", f);
+            String s2 = String.format("D-time: %.2f min ( %.1f sec )", (dtime / 60000f), (dtime / 1000f));
+            String s3 = String.format("Fame / Min: %.3f ( %.1f f/h )", f, f * 3600);
+            int leftSelection = graphPoints.get(leftSelectionValue).x;
+            int rightSelection = graphPoints.get(rightSelectionValue).x;
+            int selectionWidth = leftSelection - rightSelection;
+            g2.fillRect(leftSelection, padding, Math.abs(selectionWidth), getHeight() - 2 * padding - labelPadding);
             g2.setColor(Color.BLACK);
 
-            g2.drawString(s, x3, y3);
+            g2.drawString(s1, x3, y3);
+            g2.drawString(s2, x3, y3 + 14);
+            g2.drawString(s3, x3, y3 + 28);
+            g2.drawLine(screenX, padding, screenX, getHeight() - padding - labelPadding);
         } else if (hoverFame >= 0) {
             g2.drawLine(screenX, padding, screenX, getHeight() - padding - labelPadding);
             String s = String.format("Fame: %.0f", hoverFame);
@@ -88,23 +100,23 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
         // create hatch marks and grid lines for y axis.
         for (int i = 0; i < numberYDivisions + 1; i++) {
             int x0 = padding + labelPadding;
-            int x1 = pointWidth + padding + labelPadding;
+            int x1 = pointSize + padding + labelPadding;
             int y0 = getHeight() - ((i * (getHeight() - padding * 2 - labelPadding)) / numberYDivisions + padding + labelPadding);
-            int y1 = y0;
             if (size > 0) {
                 g2.setColor(gridColor);
-                g2.drawLine(padding + labelPadding + 1 + pointWidth, y0, getWidth() - padding, y1);
+                g2.drawLine(padding + labelPadding + 1 + pointSize, y0, getWidth() - padding, y0);
                 g2.setColor(Color.BLACK);
                 String yLabel = String.valueOf(((int) ((minMax.minScoreY + (minMax.maxScoreY - minMax.minScoreY) * ((i * 1.0) / numberYDivisions)) * 100)) / 100);
                 FontMetrics metrics = g2.getFontMetrics();
                 int labelWidth = metrics.stringWidth(yLabel);
                 g2.drawString(yLabel, x0 - labelWidth - 5, y0 + (metrics.getHeight() / 2) - 3);
             }
-            g2.drawLine(x0, y0, x1, y1);
+            g2.drawLine(x0, y0, x1, y0);
         }
 
         int seconds = (int) (minMax.maxScoreX - minMax.minScoreX) / 1000;
         int minutes = seconds / 60;
+        int hours = minutes / 60;
 
         int span;
         int display;
@@ -121,9 +133,17 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
             span = 1200;
             display = 30;
             timeString = "(min)";
-        } else {
+        } else if (hours < 20) {
             span = 3600;
             display = 1;
+            timeString = "(hour)";
+        } else if (hours < 60) {
+            display = 3;
+            span = 3600 * display;
+            timeString = "(hour)";
+        } else {
+            display = 9;
+            span = 3600 * display;
             timeString = "(hour)";
         }
         g2.drawString(timeString, xWidth - padding - 9, getHeight() - padding - labelPadding - 5);
@@ -135,13 +155,12 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
             if (size > 1) {
                 int x0 = (int) (((i * (getWidth() - padding * 2 - labelPadding)) * fraction) + padding + labelPadding);
                 if (x0 >= xWidth) break;
-                int x1 = x0;
                 int y0 = getHeight() - padding - labelPadding;
-                int y1 = y0 - pointWidth;
+                int y1 = y0 - pointSize;
 //                if ((i % ((int) ((size / 5.0)) + 1)) == 0) {
                 if (scores.size() > 0) {
                     g2.setColor(gridColor);
-                    g2.drawLine(x0, getHeight() - padding - labelPadding - 1 - pointWidth, x1, padding);
+                    g2.drawLine(x0, getHeight() - padding - labelPadding - 1 - pointSize, x0, padding);
                     g2.setColor(Color.BLACK);
                     int sec = display * i;
                     FontMetrics metrics = g2.getFontMetrics();
@@ -149,7 +168,7 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
                     int labelWidth = metrics.stringWidth(xLabel);
                     g2.drawString(xLabel, x0 - labelWidth / 2, y0 + metrics.getHeight() + 3);
                 }
-                g2.drawLine(x0, y0, x1, y1);
+                g2.drawLine(x0, y0, x0, y1);
             }
         }
 
@@ -165,17 +184,16 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
             int y1 = graphPoints.get(i).y;
             int x2 = graphPoints.get(i + 1).x;
             int y2 = graphPoints.get(i + 1).y;
-            g2.drawLine(x1, y1, x2, y2);
+            g2.drawLine(x1, y1, x2, y1);
+            g2.drawLine(x2, y1, x2, y2);
         }
 
         g2.setStroke(oldStroke);
         g2.setColor(pointColor);
-        for (int i = 0; i < graphPoints.size(); i++) {
-            int x = graphPoints.get(i).x - pointWidth / 2;
-            int y = graphPoints.get(i).y - pointWidth / 2;
-            int ovalW = pointWidth;
-            int ovalH = pointWidth;
-            g2.fillOval(x, y, ovalW, ovalH);
+        for (Point graphPoint : graphPoints) {
+            int x = graphPoint.x - pointSize / 2;
+            int y = graphPoint.y - pointSize / 2;
+            g2.fillOval(x, y, pointSize, pointSize);
         }
     }
 
@@ -196,15 +214,11 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
         this.repaint();
     }
 
-    public ArrayList<Fame> getScores() {
-        return scores;
-    }
-
     private static void createAndShowGui() {
         ArrayList<Fame> scores = new ArrayList<>();
         Random random = new Random();
-        int maxDataPoints = 400;
-        int maxScore = 10000;
+        int maxDataPoints = 10;
+        int maxScore = 300000000;
         int sumy = 0;
         int sumx = 0;
         for (int i = 0; i < maxDataPoints; i++) {
@@ -230,12 +244,18 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
     public void mouseDragged(MouseEvent e) {
         if (!pressed) {
             screenXdragLeft = e.getX();
-            dragLeft = getRange(screenXdragLeft);
         }
         if (dragLeft != null) pressed = true;
         screenXdragRight = e.getX();
-        dragRight = getRange(screenXdragRight);
+        if (screenXdragLeft < screenXdragRight) {
+            dragLeft = getRange(screenXdragLeft, false);
+            dragRight = getRange(screenXdragRight, true);
+        } else {
+            dragLeft = getRange(screenXdragLeft, true);
+            dragRight = getRange(screenXdragRight, false);
+        }
         if (dragRight == null) pressed = false;
+        screenX = e.getX();
         repaint();
     }
 
@@ -243,7 +263,7 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
     public void mouseMoved(MouseEvent e) {
         pressed = false;
         screenX = e.getX();
-        Fame f = getRange(screenX);
+        Fame f = getRange(screenX, false);
         hoverFame = -1;
         if (f != null) {
             hoverFame = f.fame;
@@ -251,7 +271,7 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
         repaint();
     }
 
-    public Fame getRange(int x) {
+    public Fame getRange(int x, boolean b) {
         float dx = (float) (x - padding - labelPadding) / (getWidth() - labelPadding * 3);
         if (dx < 0 || dx > 1) {
             return null;
@@ -259,14 +279,27 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
         MinMax m = getMinMaxScore();
         float ddx = (float) (m.maxScoreX - m.minScoreX) * dx;
 
-        Fame next = null;
-        for (Fame f : scores) {
-            if ((f.time - m.minScoreX) > ddx) {
+        int f = 0;
+        for (int i = 0; i < scores.size(); i++) {
+            Fame fame = scores.get(i);
+            if ((fame.time - m.minScoreX) > ddx) {
                 break;
             }
-            next = f;
+            f = i;
         }
-        return next;
+
+        if (b) {
+            f++;
+            rightSelectionValue = f;
+        } else {
+            leftSelectionValue = f;
+        }
+
+        if (scores.size() > 0 && f < scores.size()) {
+            return scores.get(f);
+        } else {
+            return null;
+        }
     }
 
     private static class MinMax {
