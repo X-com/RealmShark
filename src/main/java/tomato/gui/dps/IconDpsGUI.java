@@ -202,6 +202,7 @@ public class IconDpsGUI extends DisplayDpsGUI {
             }
             panelAllPlayers.add(pp);
         }
+        pref[0] = 40;
         for (int i = 0; i < panels.length; i++) {
             for (JPanel p : panels[i]) {
                 Dimension preferredSize = new Dimension(pref[i], pref[pref.length - 1] + 5);
