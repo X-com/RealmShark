@@ -3,6 +3,7 @@ package tomato.gui.dps;
 import assets.AssetMissingException;
 import assets.IdToAsset;
 import assets.ImageBuffer;
+import javafx.scene.layout.Border;
 import packets.incoming.MapInfoPacket;
 import packets.incoming.NotificationPacket;
 import tomato.backend.data.*;
@@ -12,6 +13,7 @@ import util.Pair;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -62,9 +64,9 @@ public class IconDpsGUI extends DisplayDpsGUI {
 
         {
             JPanel dungeon = new JPanel();
-            dungeon.setBorder(BorderFactory.createTitledBorder(map.name + DpsGUI.systemTimeToString(totalDungeonPcTime)));
-            dungeon.setPreferredSize(new Dimension(320, 24));
-            dungeon.setMaximumSize(new Dimension(320, 24));
+            dungeon.setBorder(BorderFactory.createTitledBorder(null, map.name + DpsGUI.systemTimeToString(totalDungeonPcTime), TitledBorder.CENTER, TitledBorder.CENTER, mainFont));
+//            dungeon.setBorder(BorderFactory.createTitledBorder(name));
+//            dungeon.setPreferredSize(new Dimension(320, 24));
             charPanel.add(dungeon);
         }
 
