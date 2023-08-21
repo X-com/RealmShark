@@ -273,6 +273,9 @@ public class DpsGUI extends JPanel {
         if (nameFilter != null) {
             setupFilter(nameFilter);
             INSTANCE.filterComboBox.setSelectedItem(nameFilter);
+        } else {
+            Filter.disable();
+            INSTANCE.filterComboBox.setSelectedItem(DISABLE_FILTER);
         }
     }
 
