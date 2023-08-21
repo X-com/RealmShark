@@ -71,9 +71,9 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
             double dfame = Math.abs(dragLeft.fame - dragRight.fame);
             long dtime = Math.abs(dragLeft.time - dragRight.time);
             double f = (dfame / (dtime / 60000f));
-            String s1 = String.format("D-fame: %.0f", f);
-            String s2 = String.format("D-time: %.2f min ( %.1f sec )", (dtime / 60000f), (dtime / 1000f));
-            String s3 = String.format("Fame / Min: %.3f ( %.1f f/h )", f, f * 3600);
+            String s1 = String.format("Selected fame: %.0f", f);
+            String s2 = String.format("Selected time: %.2f min ( %.1f sec )", (dtime / 60000f), (dtime / 1000f));
+            String s3 = String.format("Fame / Min: %.3f ( %.1f f/h )", f, f * 60);
             int leftSelection = graphPoints.get(leftSelectionValue).x;
             int rightSelection = graphPoints.get(rightSelectionValue).x;
             int selectionWidth = leftSelection - rightSelection;
