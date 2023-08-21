@@ -108,7 +108,7 @@ public class NotificationPacket extends Packet {
             case 11:
                 message = buffer.readString();
                 unknownInt1 = buffer.readInt();
-                unknownShort2 = buffer.readShort();
+//                unknownShort2 = buffer.readShort();
                 return;
             case 12:
                 message = buffer.readString();
