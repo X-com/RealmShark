@@ -205,6 +205,11 @@ public class Entity {
         return stat.GUILD_NAME_STAT.stringStatValue;
     }
 
+    public boolean isSeasonal() {
+        if (stat.SEASONAL == null) return false;
+        return stat.SEASONAL.statValue == 1;
+    }
+
     public ArrayList<Damage> getDamageList() {
         return damageList;
     }

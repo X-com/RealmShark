@@ -15,13 +15,14 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ParsePanelGUI extends JPanel {
 
     private static ParsePanelGUI INSTANCE;
 
-    private static int HEIGHT = 24;
+    private static Color seasonalColor = new Color(21, 220, 166);
 
     private static JPanel charPanel;
     private static HashMap<Integer, Player> playerDisplay;
@@ -63,103 +64,163 @@ public class ParsePanelGUI extends JPanel {
     }
 
     private void guiUpdate() {
-        validate();
+        revalidate();
         repaint();
     }
 
     private static JPanel createMainBox(Player p, Entity player) {
-        JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), BorderFactory.createEmptyBorder(0, 20, 0, 20)));
-        panel.setMaximumSize(new Dimension(10000000, HEIGHT));
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        JPanel mainPanel = new JPanel();
+        mainPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), BorderFactory.createEmptyBorder(0, 20, 0, 20)));
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
+        BufferedImage ig = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = ig.createGraphics();
+        FontMetrics fm = g2d.getFontMetrics(mainFont);
+        int y = Math.max(24, fm.getHeight());
+        int width = 70;
 
-        JPanel left = leftPanel(player);
-        panel.add(left);
+        mainPanel.add(Box.createHorizontalGlue());
+        {
+            JPanel panel = new JPanel();
 
-        JPanel inv = equipment(p, player);
-        panel.add(inv);
+            int x = 10;
+            width += x;
 
-        JPanel stat = rightPanel(player);
-        panel.add(stat);
+            panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            panel.setBackground(player.isSeasonal() ? seasonalColor : Color.WHITE);
 
-        return panel;
-    }
-
-    private static JPanel leftPanel(Entity player) {
-        JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(110, HEIGHT));
-        panel.setLayout(new BorderLayout());
-
-        try {
-            int eq = player.stat.SKIN_ID.statValue;
-            if (eq == 0) eq = player.objectType;
-            BufferedImage img = ImageBuffer.getImage(eq);
-            ImageIcon icon = new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-            int level = player.stat.LEVEL_STAT.statValue;
-            JLabel characterLabel = new JLabel(player.name() + " [" + level + "]", icon, JLabel.CENTER);
-            characterLabel.addMouseListener(new MouseAdapter() {
-                public void mouseClicked(MouseEvent e) {
-                    copyToClipboard(player.name());
-                }
-            });
-
-            characterLabel.setAlignmentX(JLabel.LEFT);
-            panel.setAlignmentX(JLabel.LEFT);
-            panel.setAlignmentX(LEFT_ALIGNMENT);
-            characterLabel.setHorizontalAlignment(SwingConstants.LEFT);
-            characterLabel.setFont(mainFont);
-            panel.add(characterLabel);
-//            characterLabel.setToolTipText(exaltStats(c));
-        } catch (Exception e) {
-            e.printStackTrace();
+            panel.setPreferredSize(new Dimension(10, 10));
+            panel.setMaximumSize(new Dimension(10, 10));
+            mainPanel.add(panel);
         }
-        return panel;
-    }
+        mainPanel.add(Box.createHorizontalStrut(5));
 
-    private static JPanel rightPanel(Entity player) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
+        {
+            JPanel panel = new JPanel();
+//            panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        int stat = statsMaxed(player);
-        JLabel stats = new JLabel(stat + " / 8");
-        int[] stats1 = statMissing(player);
-        String toolTipStatString = getToolTipStatString(stats1);
-        stats.setToolTipText(java.lang.String.valueOf(toolTipStatString));
-        stats.setHorizontalAlignment(SwingConstants.RIGHT);
-        stats.setFont(mainFont);
+            int x = fm.stringWidth("12345678901234567890123") + 2;
+            width += x;
 
-        panel.add(stats);
+            panel.setPreferredSize(new Dimension(x, y));
+            panel.setMaximumSize(new Dimension(x, y));
+            panel.setLayout(new BorderLayout());
 
-        return panel;
-    }
-
-    private static JPanel equipment(Player p, Entity player) {
-        JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(100, HEIGHT));
-        panel.setLayout(new GridLayout(1, 4));
-//        panelEquip.setBorder(BorderFactory.createLineBorder(Color.black));
-//        panelEquip.setPreferredSize(new Dimension(110, 33));
-        p.inv[0] = player.stat.INVENTORY_0_STAT.statValue;
-        p.inv[1] = player.stat.INVENTORY_1_STAT.statValue;
-        p.inv[2] = player.stat.INVENTORY_2_STAT.statValue;
-        p.inv[3] = player.stat.INVENTORY_3_STAT.statValue;
-        for (int i = 0; i < 4; i++) {
-            int eq = p.inv[i];
             try {
-                BufferedImage img;
-                if (eq == -1) {
-                    img = ImageBuffer.getEmptyImg();
-                } else {
-                    img = ImageBuffer.getImage(eq);
-                }
-                p.icon[i] = new JLabel(new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT)));
-                p.icon[i].setToolTipText(IdToAsset.objectName(eq));
-                panel.add(p.icon[i]);
-            } catch (Exception e) {
-            }
-        }
+                int eq = player.stat.SKIN_ID.statValue;
+                if (eq == 0) eq = player.objectType;
+                BufferedImage img = ImageBuffer.getImage(eq);
+                ImageIcon icon = new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+                int level = player.stat.LEVEL_STAT.statValue;
+                String text = player.name() + " [" + level + "]";
+                JLabel characterLabel = new JLabel(text, icon, JLabel.CENTER);
+                characterLabel.addMouseListener(new MouseAdapter() {
+                    public void mouseClicked(MouseEvent e) {
+                        copyToClipboard(player.name());
+                    }
+                });
 
-        return panel;
+                characterLabel.setAlignmentX(JLabel.LEFT);
+                panel.setAlignmentX(JLabel.LEFT);
+                panel.setAlignmentX(LEFT_ALIGNMENT);
+                characterLabel.setHorizontalAlignment(SwingConstants.LEFT);
+                characterLabel.setFont(mainFont);
+                panel.add(characterLabel);
+//            characterLabel.setToolTipText(exaltStats(c));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            mainPanel.add(panel);
+        }
+        mainPanel.add(Box.createHorizontalStrut(5));
+
+        {
+            JPanel panel = new JPanel();
+//            panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+            int x = fm.stringWidth("12345678901234567890123") + 2;
+            width += x;
+
+            panel.setPreferredSize(new Dimension(x, y));
+            panel.setMaximumSize(new Dimension(x, y));
+            panel.setLayout(new BorderLayout());
+
+            try {
+                String text = player.getStatGuild();
+                JLabel characterLabel = new JLabel(text, JLabel.CENTER);
+
+                characterLabel.setAlignmentX(JLabel.LEFT);
+                panel.setAlignmentX(JLabel.LEFT);
+                panel.setAlignmentX(LEFT_ALIGNMENT);
+                characterLabel.setHorizontalAlignment(SwingConstants.LEFT);
+                characterLabel.setFont(mainFont);
+                panel.add(characterLabel);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            mainPanel.add(panel);
+        }
+        mainPanel.add(Box.createHorizontalStrut(5));
+
+        {
+            JPanel panel = new JPanel();
+//            panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            width += 100;
+
+            panel.setPreferredSize(new Dimension(100, 24));
+            panel.setMaximumSize(new Dimension(100, 24));
+            panel.setLayout(new GridLayout(1, 4));
+            p.inv[0] = player.stat.INVENTORY_0_STAT.statValue;
+            p.inv[1] = player.stat.INVENTORY_1_STAT.statValue;
+            p.inv[2] = player.stat.INVENTORY_2_STAT.statValue;
+            p.inv[3] = player.stat.INVENTORY_3_STAT.statValue;
+            for (int i = 0; i < 4; i++) {
+                int eq = p.inv[i];
+                try {
+                    BufferedImage img;
+                    if (eq == -1) {
+                        img = ImageBuffer.getEmptyImg();
+                    } else {
+                        img = ImageBuffer.getImage(eq);
+                    }
+                    p.icon[i] = new JLabel(new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT)));
+                    p.icon[i].setToolTipText(IdToAsset.objectName(eq));
+                    panel.add(p.icon[i]);
+                } catch (Exception e) {
+                }
+            }
+            mainPanel.add(panel);
+        }
+        mainPanel.add(Box.createHorizontalStrut(5));
+
+        {
+            JPanel panel = new JPanel();
+//            panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+            int x = fm.stringWidth("8 / 8") + 2;
+            width += x;
+
+            panel.setPreferredSize(new Dimension(x, y));
+            panel.setMaximumSize(new Dimension(x, y));
+            panel.setLayout(new BorderLayout());
+
+            int stat = statsMaxed(player);
+            JLabel stats = new JLabel(stat + " / 8");
+            int[] stats1 = statMissing(player);
+            String toolTipStatString = getToolTipStatString(stats1);
+            stats.setToolTipText(java.lang.String.valueOf(toolTipStatString));
+            stats.setHorizontalAlignment(SwingConstants.RIGHT);
+            stats.setFont(mainFont);
+
+            panel.add(stats);
+            mainPanel.add(panel);
+        }
+        mainPanel.add(Box.createHorizontalGlue());
+
+        mainPanel.setMaximumSize(new Dimension(width, y));
+
+        g2d.dispose();
+
+        return mainPanel;
     }
 
     /**
@@ -227,7 +288,6 @@ public class ParsePanelGUI extends JPanel {
         p.panel = createMainBox(p, entity);
         playerDisplay.put(id, p);
         charPanel.add(p.panel);
-        charPanel.add(Box.createVerticalGlue());
 
         INSTANCE.guiUpdate();
     }
@@ -259,12 +319,10 @@ public class ParsePanelGUI extends JPanel {
     }
 
     private void updateFont(Component c) {
-        if (c instanceof JPanel) {
-            for (Component d : ((JPanel) c).getComponents()) {
-                updateFont(d);
-            }
-        } else if (c instanceof JLabel) {
-            c.setFont(mainFont);
+        charPanel.removeAll();
+        for (Player p : playerDisplay.values()) {
+            p.panel = createMainBox(p, p.playerEntity);
+            charPanel.add(p.panel);
         }
     }
 
