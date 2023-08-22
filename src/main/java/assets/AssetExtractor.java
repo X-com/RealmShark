@@ -18,6 +18,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -69,6 +70,7 @@ public class AssetExtractor {
      */
     private static void assetExtractionWindow(String lastModifiedTime) throws Throwable {
         JFrame frame = new JFrame("Realm Shark Asset Extractor");
+        frame.setResizable(false);
         frame.setVisible(true);
         Object[] options = {"Extract",
                 "Ignore"};
@@ -183,8 +185,13 @@ public class AssetExtractor {
         dialog.setVisible(true);
 
         extractThread.join();
-        if (throwableReference.get() == null) return;
-        throw throwableReference.get();
+        Throwable throwable = throwableReference.get();
+        if (throwable == null) return;
+        if (throwable instanceof AccessDeniedException) {
+            JOptionPane.showMessageDialog(pane, "<html>Extraction access denied, failed to extract!<br/>Please move Tomato to a different folder,<br/>Windows is blocking access in current folder.</html>\"");
+            System.exit(0);
+        }
+        throw throwable;
     }
 
     public static void setDisplay(String s) {

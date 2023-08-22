@@ -18,10 +18,10 @@ public class UnityExtractor {
     int counter = 0;
 
     public void extract(File input, File[] output) throws IOException {
-        Resources res = new Resources(input);
-
         AssetExtractor.setDisplay("Creating Folders");
         createFolders(output);
+
+        Resources res = new Resources(input);
 
         AssetExtractor.setDisplay("Extracting Json File");
         extractSpritesheetJson(res, output[0]);
