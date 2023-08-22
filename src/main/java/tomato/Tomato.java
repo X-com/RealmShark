@@ -16,7 +16,9 @@ import tomato.realmshark.CrashLogger;
 import tomato.version.Version;
 import util.Util;
 
+import javax.swing.*;
 import java.net.URL;
+import java.nio.file.AccessDeniedException;
 import java.util.regex.Pattern;
 
 /**
@@ -53,8 +55,11 @@ public class Tomato {
             TomatoData data = new TomatoData();
             loadControllers(data);
             new TomatoGUI(data).create();
-        } catch (OutOfMemoryError e) {
+        } catch (OutOfMemoryError | StackOverflowError e) {
             JavaOutOfMemoryGUI.crashDialog();
+            System.exit(0);
+        } catch (AccessDeniedException e) {
+            JOptionPane.showMessageDialog(null, "<html>Extraction access denied, failed to extract!<br/>Please move Tomato to a different folder,<br/>Windows is blocking access in current folder.</html>\"");
             System.exit(0);
         } catch (Exception e) {
             e.printStackTrace();
