@@ -3,6 +3,7 @@ package assets.resextractor;
 import assets.AssetExtractor;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.*;
@@ -34,6 +35,18 @@ public class UnityExtractor {
     private void createFolders(File[] output) {
         for (File f : output) {
             boolean b = f.mkdirs();
+
+            try {
+                File ff = new File(f + "/temp");
+                ff.createNewFile();
+                ff.delete();
+            } catch (IOException e) {
+                String s = e.getMessage();
+                if (s.equals("The system cannot find the path specified")) {
+                    JOptionPane.showMessageDialog(null, "<html>Extraction access denied, failed to extract!<br/>Please move Tomato to a different folder,<br/>Windows is blocking access in current folder.</html>\"");
+                    System.exit(0);
+                }
+            }
         }
     }
 
