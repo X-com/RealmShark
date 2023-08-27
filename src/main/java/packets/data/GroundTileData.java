@@ -4,10 +4,12 @@ import packets.reader.BufferReader;
 import assets.AssetMissingException;
 import assets.IdToAsset;
 
+import java.io.Serializable;
+
 /**
  * Tile data class storing tile coordinates (x and y) and type of each tile.
  */
-public class GroundTileData {
+public class GroundTileData implements Serializable {
     /**
      * The X coordinate of this tile.
      */

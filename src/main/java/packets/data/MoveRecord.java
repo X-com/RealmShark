@@ -2,10 +2,12 @@ package packets.data;
 
 import packets.reader.BufferReader;
 
+import java.io.Serializable;
+
 /**
  * Movement data of entity moving to point x and y with delta time.
  */
-public class MoveRecord {
+public class MoveRecord implements Serializable {
     /**
      * The client time of this move record.
      */

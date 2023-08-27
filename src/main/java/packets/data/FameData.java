@@ -2,10 +2,12 @@ package packets.data;
 
 import packets.reader.BufferReader;
 
+import java.io.Serializable;
+
 /**
  * Death fame data storing name and fame given on death
  */
-public class FameData {
+public class FameData implements Serializable {
 
     /**
      * Name of the achievement.

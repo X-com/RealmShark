@@ -1,6 +1,8 @@
 package packets.data.enums;
 
-public enum TradeResult {
+import java.io.Serializable;
+
+public enum TradeResult implements Serializable {
     Successful(0),
     PlayerCancelled(1);
 

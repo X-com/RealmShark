@@ -7,7 +7,9 @@ import packets.reader.BufferReader;
 import assets.AssetMissingException;
 import assets.IdToAsset;
 
-public class StatData {
+import java.io.Serializable;
+
+public class StatData implements Serializable {
     /**
      * The type of stat
      */

@@ -1,9 +1,11 @@
 package packets.data.enums;
 
+import java.io.Serializable;
+
 /**
  * The error codes of messages which can be received in the FailurePacket
  */
-public enum FailureCode {
+public enum FailureCode implements Serializable {
     /**
      * Received when the game version sent in the HelloPacket is not updated
      */

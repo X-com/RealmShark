@@ -1,6 +1,8 @@
 package packets.data.enums;
 
-public enum PaymentType {
+import java.io.Serializable;
+
+public enum PaymentType implements Serializable {
     Invalid(-1),
     Gold(0),
     Fame(1),

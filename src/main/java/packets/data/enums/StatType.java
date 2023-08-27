@@ -1,9 +1,11 @@
 package packets.data.enums;
 
+import java.io.Serializable;
+
 /**
  * Ordinal of stats.
  */
-public enum StatType {
+public enum StatType implements Serializable {
     MAX_HP_STAT(0),
     HP_STAT(1),
     SIZE_STAT(2),

@@ -4,7 +4,9 @@ import packets.reader.BufferReader;
 import assets.AssetMissingException;
 import assets.IdToAsset;
 
-public class ObjectData {
+import java.io.Serializable;
+
+public class ObjectData implements Serializable {
     /**
      * The type of this object
      */

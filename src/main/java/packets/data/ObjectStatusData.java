@@ -3,7 +3,9 @@ package packets.data;
 import packets.reader.BufferReader;
 import util.Util;
 
-public class ObjectStatusData {
+import java.io.Serializable;
+
+public class ObjectStatusData implements Serializable {
     /**
      * The object id of the object which this status is for
      */

@@ -1,6 +1,8 @@
 package packets.data.enums;
 
-public enum PetUpgradeType {
+import java.io.Serializable;
+
+public enum PetUpgradeType implements Serializable {
     PetYard(1),
     FeedPet(2),
     FusePet(3);

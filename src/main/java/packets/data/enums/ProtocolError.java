@@ -1,9 +1,11 @@
 package packets.data.enums;
 
+import java.io.Serializable;
+
 /**
  * Most possible protocol error codes and their meaning
  */
-public enum ProtocolError {
+public enum ProtocolError implements Serializable {
     /**
      * Received if you send a MOVE packet not in response to a new tick
      */

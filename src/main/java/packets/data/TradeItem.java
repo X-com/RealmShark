@@ -2,7 +2,9 @@ package packets.data;
 
 import packets.reader.BufferReader;
 
-public class TradeItem {
+import java.io.Serializable;
+
+public class TradeItem implements Serializable {
     /**
      * The item id
      */

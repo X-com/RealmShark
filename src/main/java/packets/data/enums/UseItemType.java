@@ -1,10 +1,12 @@
 package packets.data.enums;
 
 
+import java.io.Serializable;
+
 /*
  * A class representation of the `useItemType` packet variable with helper functions.
  */
-public enum UseItemType {
+public enum UseItemType implements Serializable {
     INVALID(-1, "Invalid"),
     /**
      * Sent for consumables and single-use abilities such as spells and tomes.

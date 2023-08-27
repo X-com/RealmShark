@@ -2,7 +2,9 @@ package packets.data;
 
 import packets.reader.BufferReader;
 
-public class SlotObjectData {
+import java.io.Serializable;
+
+public class SlotObjectData implements Serializable {
     /**
      * The object id of the entity which owns the slot
      */

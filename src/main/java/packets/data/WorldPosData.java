@@ -2,12 +2,13 @@ package packets.data;
 
 import packets.reader.BufferReader;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * Coordinate data of world objects.
  */
-public class WorldPosData {
+public class WorldPosData implements Serializable {
     /**
      * Position x
      */

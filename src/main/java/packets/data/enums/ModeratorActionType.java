@@ -1,6 +1,8 @@
 package packets.data.enums;
 
-public enum ModeratorActionType {
+import java.io.Serializable;
+
+public enum ModeratorActionType implements Serializable {
     MUTE(0, "MuteAccount"),
     UNMUTE(1, "UnmuteAccount"),
     KICK(2, "Kick"),

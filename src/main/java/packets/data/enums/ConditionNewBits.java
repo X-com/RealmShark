@@ -1,9 +1,10 @@
 package packets.data.enums;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public enum ConditionNewBits {
+public enum ConditionNewBits implements Serializable {
     WEAK(0x8),
     CURSED(0x40),
     EXPOSED(0x20000);

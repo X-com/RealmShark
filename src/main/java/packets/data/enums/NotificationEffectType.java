@@ -1,6 +1,8 @@
 package packets.data.enums;
 
-public enum NotificationEffectType {
+import java.io.Serializable;
+
+public enum NotificationEffectType implements Serializable {
     StatIncrease(0),
     ServerMessage(1),
     ErrorMessage(2),

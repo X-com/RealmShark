@@ -1,6 +1,8 @@
 package packets.data.enums;
 
-public enum ActivePetUpdateType {
+import java.io.Serializable;
+
+public enum ActivePetUpdateType implements Serializable {
     Follow(0),
     Release(1),
     Unfollow(2),

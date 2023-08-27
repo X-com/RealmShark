@@ -2,9 +2,10 @@ package packets.data;
 
 import packets.reader.BufferReader;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class QuestData {
+public class QuestData implements Serializable {
     /**
      * The id of this quest
      */
