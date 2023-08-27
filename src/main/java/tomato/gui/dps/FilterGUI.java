@@ -77,8 +77,8 @@ public class FilterGUI extends JPanel {
 
         add(top, BorderLayout.NORTH);
 
-        JPanel right = new JPanel();
-        JScrollPane scrollPane = new JScrollPane(right);
+        JPanel boxScroll = new JPanel();
+        JScrollPane scrollPane = new JScrollPane(boxScroll);
         int w = 260;
         int h = 200;
         scrollPane.setBounds(0, 0, w + 15, h);
@@ -88,7 +88,7 @@ public class FilterGUI extends JPanel {
         contentPane.add(scrollPane);
         add(contentPane, BorderLayout.CENTER);
 
-        largeMethod(right);
+        largeMethod(boxScroll);
 
         loadButton.addActionListener(e -> {
             loadButton();
@@ -298,7 +298,7 @@ public class FilterGUI extends JPanel {
         return comp;
     }
 
-    public static void open(DpsGUI dpsGui, JPanel INSTANCE) {
+    public static void open(DpsGUI dpsGui) {
         FilterGUI filter = new FilterGUI(dpsGui);
         JPanel p = new JPanel();
         p.add(new TextArea());
@@ -310,7 +310,7 @@ public class FilterGUI extends JPanel {
             pane.setValue(-1);
             w.dispose();
         });
-        JDialog dialog = pane.createDialog(INSTANCE, "Filter Options");
+        JDialog dialog = pane.createDialog(dpsGui, "Filter Options");
 //        dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         dialog.setVisible(true);
     }

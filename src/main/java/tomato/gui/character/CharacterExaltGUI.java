@@ -66,7 +66,7 @@ public class CharacterExaltGUI extends JPanel {
             JLabel exalts = new JLabel(ex);
 
             JPanel p = new JPanel();
-            p.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.BLACK));
+            p.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.gray));
             p.add(exalts);
             p.setPreferredSize(new Dimension(35, 27));
             top.add(p);
@@ -86,7 +86,7 @@ public class CharacterExaltGUI extends JPanel {
                 classes = new JLabel("Missing");
             }
             JPanel p = new JPanel(new GridBagLayout());
-            p.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.BLACK));
+            p.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.gray));
             p.setPreferredSize(new Dimension(110, 27));
             p.add(classes);
 
@@ -100,7 +100,7 @@ public class CharacterExaltGUI extends JPanel {
         for (int i = 0; i < charListSize + 2; i++) {
             for (int j = 0; j < 8; j++) {
                 JPanel p = new JPanel();
-                p.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.BLACK));
+                p.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.gray));
                 grid[i][j] = new JLabel("-");
                 p.add(grid[i][j]);
                 right.add(p);

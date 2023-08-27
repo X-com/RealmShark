@@ -70,7 +70,7 @@ public class ParsePanelGUI extends JPanel {
 
     private static JPanel createMainBox(Player p, Entity player) {
         JPanel mainPanel = new JPanel();
-        mainPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), BorderFactory.createEmptyBorder(0, 20, 0, 20)));
+        mainPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.gray), BorderFactory.createEmptyBorder(0, 20, 0, 20)));
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
         BufferedImage ig = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = ig.createGraphics();

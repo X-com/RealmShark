@@ -109,7 +109,7 @@ public class CharacterStatsGUI extends JPanel {
             });
 
             JPanel p = new JPanel();
-            p.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.BLACK));
+            p.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.gray));
             p.add(dungeonIcon);
             p.setPreferredSize(new Dimension(35, 37));
             top.add(p);
@@ -166,7 +166,7 @@ public class CharacterStatsGUI extends JPanel {
             RealmCharacter c = data.chars.get(i);
             JLabel player = playerIcon(c);
             JPanel p = new JPanel(new GridBagLayout());
-            p.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.BLACK));
+            p.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.gray));
             p.setPreferredSize(new Dimension(150, 27));
             p.add(player);
 
@@ -191,7 +191,7 @@ public class CharacterStatsGUI extends JPanel {
             for (int j = 0; j < dungeonCount; j++) {
                 int v = c.charStats.dungeonStats[j];
                 JPanel p2 = new JPanel();
-                p2.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.BLACK));
+                p2.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.gray));
                 labels[i][j] = new JLabel("" + v);
                 p2.add(labels[i][j]);
                 p2.setPreferredSize(new Dimension(35, 27));

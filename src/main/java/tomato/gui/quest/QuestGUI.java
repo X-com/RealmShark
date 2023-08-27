@@ -42,9 +42,9 @@ public class QuestGUI extends JPanel {
     private JPanel addQuest(QuestData q) {
         JPanel panel = new JPanel();
 
-        panel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+        panel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.gray));
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-        panel.setMaximumSize(new Dimension(400, 200));
+        panel.setMaximumSize(new Dimension(420, 200));
 
         panel.add(new JLabel(q.name + "  "));
         try {
