@@ -12,14 +12,15 @@ import javax.swing.SwingUtilities;
 
 public class GraphPanel extends JPanel implements MouseMotionListener {
 
+    private static final int POINT_SIZE = 4;
+    private static final int NUMBER_Y_DIVISIONS = 10;
+
     private final int padding = 25;
     private final int labelPadding = 25;
     private final Color lineColor = new Color(44, 102, 230, 180);
     private final Color pointColor = new Color(100, 100, 100, 180);
     private final Color gridColor = new Color(200, 200, 200, 200);
     private static final Stroke GRAPH_STROKE = new BasicStroke(2f);
-    private final int pointSize = 4;
-    private final int numberYDivisions = 10;
     private ArrayList<Fame> scores;
     private int screenX;
     private int screenXdragLeft;
@@ -66,13 +67,13 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
         int xWidth = getWidth() - labelPadding;
         int x3 = padding * 2 + labelPadding - 12;
         int y3 = padding + labelPadding + 5;
-        if (pressed) {
+        if (pressed && dragLeft != null && dragRight != null) {
             g2.setColor(new Color(160, 180, 240));
             double dfame = Math.abs(dragLeft.fame - dragRight.fame);
             long dtime = Math.abs(dragLeft.time - dragRight.time);
             double f = (dfame / (dtime / 60000f));
-            String s1 = String.format("Selected fame: %.0f", f);
-            String s2 = String.format("Selected time: %.2f min ( %.1f sec )", (dtime / 60000f), (dtime / 1000f));
+            String s1 = String.format("Selected fame: %.0f", dfame);
+            String s2 = String.format("Selected time: %.2f min ( %.1f h )", (dtime / 60000f), (dtime / 3600000f));
             String s3 = String.format("Fame / Min: %.3f ( %.1f f/h )", f, f * 60);
             int leftSelection = graphPoints.get(leftSelectionValue).x;
             int rightSelection = graphPoints.get(rightSelectionValue).x;
@@ -91,15 +92,15 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
         }
 
         // create hatch marks and grid lines for y axis.
-        for (int i = 0; i < numberYDivisions + 1; i++) {
+        for (int i = 0; i < NUMBER_Y_DIVISIONS + 1; i++) {
             int x0 = padding + labelPadding;
-            int x1 = pointSize + padding + labelPadding;
-            int y0 = getHeight() - ((i * (getHeight() - padding * 2 - labelPadding)) / numberYDivisions + padding + labelPadding);
+            int x1 = POINT_SIZE + padding + labelPadding;
+            int y0 = getHeight() - ((i * (getHeight() - padding * 2 - labelPadding)) / NUMBER_Y_DIVISIONS + padding + labelPadding);
             if (size > 0) {
                 g2.setColor(gridColor);
-                g2.drawLine(padding + labelPadding + 1 + pointSize, y0, getWidth() - padding, y0);
+                g2.drawLine(padding + labelPadding + 1 + POINT_SIZE, y0, getWidth() - padding, y0);
                 g2.setColor(Color.BLACK);
-                String yLabel = String.valueOf(((int) ((minMax.minScoreY + (minMax.maxScoreY - minMax.minScoreY) * ((i * 1.0) / numberYDivisions)) * 100)) / 100);
+                String yLabel = String.valueOf(((int) ((minMax.minScoreY + (minMax.maxScoreY - minMax.minScoreY) * ((i * 1.0) / NUMBER_Y_DIVISIONS)) * 100)) / 100);
                 FontMetrics metrics = g2.getFontMetrics();
                 int labelWidth = metrics.stringWidth(yLabel);
                 g2.drawString(yLabel, x0 - labelWidth - 5, y0 + (metrics.getHeight() / 2) - 3);
@@ -149,11 +150,11 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
                 int x0 = (int) (((i * (getWidth() - padding * 2 - labelPadding)) * fraction) + padding + labelPadding);
                 if (x0 >= xWidth) break;
                 int y0 = getHeight() - padding - labelPadding;
-                int y1 = y0 - pointSize;
+                int y1 = y0 - POINT_SIZE;
 //                if ((i % ((int) ((size / 5.0)) + 1)) == 0) {
                 if (scores.size() > 0) {
                     g2.setColor(gridColor);
-                    g2.drawLine(x0, getHeight() - padding - labelPadding - 1 - pointSize, x0, padding);
+                    g2.drawLine(x0, getHeight() - padding - labelPadding - 1 - POINT_SIZE, x0, padding);
                     g2.setColor(Color.BLACK);
                     int sec = display * i;
                     FontMetrics metrics = g2.getFontMetrics();
@@ -184,9 +185,9 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
         g2.setStroke(oldStroke);
         g2.setColor(pointColor);
         for (Point graphPoint : graphPoints) {
-            int x = graphPoint.x - pointSize / 2;
-            int y = graphPoint.y - pointSize / 2;
-            g2.fillOval(x, y, pointSize, pointSize);
+            int x = graphPoint.x - POINT_SIZE / 2;
+            int y = graphPoint.y - POINT_SIZE / 2;
+            g2.fillOval(x, y, POINT_SIZE, POINT_SIZE);
         }
     }
 
@@ -247,7 +248,6 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
             dragLeft = getRange(screenXdragLeft, true);
             dragRight = getRange(screenXdragRight, false);
         }
-        if (dragRight == null) pressed = false;
         screenX = e.getX();
         repaint();
     }
@@ -265,9 +265,18 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
     }
 
     public Fame getRange(int x, boolean b) {
+        if (scores.size() == 0) return null;
         float dx = (float) (x - padding - labelPadding) / (getWidth() - labelPadding * 3);
-        if (dx < 0 || dx > 1) {
-            return null;
+        if (dx < 0) {
+            if (b) {
+                rightSelectionValue = 0;
+            }
+            return scores.get(0);
+        } else if (dx > 1) {
+            if (b) {
+                rightSelectionValue = scores.size() - 1;
+            }
+            return scores.get(scores.size() - 1);
         }
         MinMax m = getMinMaxScore();
         float ddx = (float) (m.maxScoreX - m.minScoreX) * dx;
@@ -288,8 +297,11 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
             leftSelectionValue = f;
         }
 
-        if (scores.size() > 0 && f < scores.size()) {
+        if (f < scores.size()) {
             return scores.get(f);
+        } else if (f == scores.size()) {
+            rightSelectionValue--;
+            return scores.get(scores.size() - 1);
         } else {
             return null;
         }
