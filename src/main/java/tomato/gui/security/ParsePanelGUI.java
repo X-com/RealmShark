@@ -44,15 +44,22 @@ public class ParsePanelGUI extends JPanel {
         new SmartScroller(scroll);
         add(scroll, BorderLayout.CENTER);
 
-        JButton button = new JButton("Copy to Clipboard");
-        button.addActionListener(e -> clicked());
-        add(button, BorderLayout.SOUTH);
+        JPanel bottons = new JPanel();
+        bottons.setLayout(new GridLayout(1, 2));
+        JButton buttonLeft = new JButton("Copy names to Clipboard");
+        JButton buttonRight = new JButton("Copy all to Clipboard");
+        buttonLeft.addActionListener(e -> clicked(false));
+        buttonRight.addActionListener(e -> clicked(true));
+        bottons.add(buttonLeft);
+        bottons.add(buttonRight);
+        add(bottons, BorderLayout.SOUTH);
     }
 
-    private void clicked() {
+    private void clicked(boolean full) {
         StringBuilder sb = new StringBuilder();
         for (Player player : playerDisplay.values()) {
-            sb.append(player).append("\n");
+            if (full) sb.append(player).append("\n");
+            else sb.append(player.playerEntity.name()).append(", ");
         }
         copyToClipboard(String.valueOf(sb));
     }
