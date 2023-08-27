@@ -1,9 +1,11 @@
 package tomato.backend.data;
 
+import java.io.Serializable;
+
 /**
  * Class used to store damage and counter info.
  */
-public class Damage {
+public class Damage implements Serializable {
     public Entity owner;
     public int[] ownerInv;
     public Projectile projectile;

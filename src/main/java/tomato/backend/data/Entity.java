@@ -14,13 +14,14 @@ import tomato.realmshark.enums.CharacterClass;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Entity {
+public class Entity implements Serializable {
     private boolean isUser;
     public final Stat stat;
-    private final TomatoData tomatoData;
+    transient private final TomatoData tomatoData;
     public final int id;
     public int objectType;
     private long creationTime;
@@ -30,7 +31,7 @@ public class Entity {
     private final HashMap<Integer, Damage> damagePlayer;
     public final HashMap<Integer, PlayerRemoved> playerDropped;
     private String name;
-    private BufferedImage img;
+    transient private BufferedImage img;
     private long firstDamageTaken = -1;
     private long lastDamageTaken = -1;
     private int charId;
@@ -305,6 +306,13 @@ public class Entity {
     }
 
     public BufferedImage img() {
+        if (img == null) {
+            try {
+                getImg(objectType);
+            } catch (IOException | AssetMissingException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return img;
     }
 

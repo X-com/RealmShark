@@ -306,7 +306,10 @@ public class TomatoData {
         worldPlayerId = -1;
         charId = -1;
         time = -1;
-        long totalDungeonPcTime = dungeonTime();
+        if (map != null && isLoggedDungeon(map.displayName)) {
+            dpsData.add(new DpsData(map, entityHitList, deathNotifications, dungeonTime(), timePcFirst));
+            DpsGUI.updateLabel();
+        }
         timePc = -1;
         timePcFirst = -1;
         rng = null;
@@ -316,10 +319,6 @@ public class TomatoData {
         crystalTracker.clear();
         playerListUpdated.clear();
         dropList.clear();
-        if (map != null && isLoggedDungeon(map.displayName)) {
-            dpsData.add(new DpsData(map, entityHitList, deathNotifications, totalDungeonPcTime));
-            DpsGUI.updateLabel();
-        }
         deathNotifications = new ArrayList<>();
         entityHitList = new HashMap<>();
         for (int[] row : mapTiles) {

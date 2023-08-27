@@ -4,7 +4,9 @@ import assets.AssetMissingException;
 import assets.IdToAsset;
 import util.RNG;
 
-public class Projectile {
+import java.io.Serializable;
+
+public class Projectile implements Serializable {
 
     private int damage;
     private boolean armorPiercing;

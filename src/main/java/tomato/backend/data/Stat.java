@@ -2,7 +2,9 @@ package tomato.backend.data;
 
 import packets.data.StatData;
 
-public class Stat {
+import java.io.Serializable;
+
+public class Stat implements Serializable {
     public StatData MAX_HP_STAT; // 0
     public StatData HP_STAT; // 1
     public StatData SIZE_STAT; // 2

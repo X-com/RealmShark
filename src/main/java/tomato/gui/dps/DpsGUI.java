@@ -20,11 +20,10 @@ public class DpsGUI extends JPanel {
     private static DpsGUI INSTANCE;
 
     private TomatoData data;
-    private JButton next, prev, live;
+    private JButton next, prev, live, dList;
     private StringDpsGUI displayString;
     private IconDpsGUI displayIcon;
     private DisplayDpsGUI centerDisplay;
-    private static JLabel dpsLabel;
     private JPanel dpsTopPanel;
     private JPanel center;
     private boolean liveUpdates = true;
@@ -40,12 +39,13 @@ public class DpsGUI extends JPanel {
         next = new JButton(">");
         prev = new JButton("<");
         live = new JButton(">>>");
+        dList = new JButton("Live");
 
         next.addActionListener(event -> nextDpsLogDungeon());
         prev.addActionListener(event -> previousDpsLogDungeon());
         live.addActionListener(event -> setLive());
+        dList.addActionListener(event -> dListButton(dList));
 
-        dpsLabel = new JLabel("Live");
 //        textFilter = new JTextField();
 //        textFilter.addKeyListener(new KeyAdapter() {
 //            public void keyReleased(KeyEvent e) {
@@ -68,7 +68,7 @@ public class DpsGUI extends JPanel {
         addFilter.addActionListener(e -> openFilter());
         filterComboBox = new JComboBox<>(new String[]{DISABLE_FILTER});
         filterComboBox.setPreferredSize(new Dimension(10000, 0));
-        filterComboBox.addActionListener(DpsGUI::comboAction);
+        filterComboBox.addActionListener(this::comboAction);
 
         dpsTopPanel = new JPanel();
         dpsTopPanel.setLayout(new BoxLayout(dpsTopPanel, BoxLayout.X_AXIS));
@@ -78,9 +78,7 @@ public class DpsGUI extends JPanel {
         dpsTopPanel.add(filterComboBox);
         dpsTopPanel.add(Box.createRigidArea(new Dimension(10, 0)));
         dpsTopPanel.add(prev);
-        dpsTopPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-        dpsTopPanel.add(dpsLabel);
-        dpsTopPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+        dpsTopPanel.add(dList);
         dpsTopPanel.add(next);
         dpsTopPanel.add(live);
         dpsTopPanel.add(Box.createHorizontalGlue());
@@ -98,7 +96,11 @@ public class DpsGUI extends JPanel {
         setCenterDisplay();
     }
 
-    private static void comboAction(ActionEvent actionEvent) {
+    private void dListButton(JButton dpsLabel) {
+        DungeonListGUI.open(this, data);
+    }
+
+    private void comboAction(ActionEvent actionEvent) {
         JComboBox<String> combo = (JComboBox<String>) actionEvent.getSource();
         String selectedItem = String.valueOf(combo.getSelectedItem());
         setupFilter(selectedItem);
@@ -128,7 +130,7 @@ public class DpsGUI extends JPanel {
     }
 
     private void openFilter() {
-        FilterGUI.open(this, INSTANCE);
+        FilterGUI.open(this);
     }
 
     private void setCenterDisplay() {
@@ -208,6 +210,8 @@ public class DpsGUI extends JPanel {
      */
     public static void clearDpsLogs() {
         INSTANCE.data.dpsData.clear();
+        INSTANCE.liveUpdates = true;
+        INSTANCE.dList.setText("Live");
         update();
     }
 
@@ -235,7 +239,7 @@ public class DpsGUI extends JPanel {
     public static void updateLabel() {
         if (INSTANCE.liveUpdates) return;
         int size = INSTANCE.data.dpsData.size();
-        dpsLabel.setText((INSTANCE.index + 1) + "/" + size);
+        INSTANCE.dList.setText((INSTANCE.index + 1) + "/" + size);
     }
 
     /**
@@ -293,6 +297,30 @@ public class DpsGUI extends JPanel {
         }
     }
 
+    public int getIndex() {
+        if (liveUpdates) return -1;
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+
+        if (index == -1) {
+            liveUpdates = true;
+            dList.setText("Live");
+            return;
+        } else {
+            liveUpdates = false;
+            int size = data.dpsData.size();
+            dList.setText((index + 1) + "/" + size);
+        }
+
+        setCenterDisplay();
+        DpsData dpsData = data.dpsData.get(index);
+        Entity[] entityHitList = dpsData.hitList.values().toArray(new Entity[0]);
+        renderData(dpsData.map, entityHitList, dpsData.deathNotifications, dpsData.totalDungeonPcTime, false);
+    }
+
     private void scrollData(int a) {
         int size = data.dpsData.size();
         index += a;
@@ -305,14 +333,14 @@ public class DpsGUI extends JPanel {
             setCenterDisplay();
         } else if (index >= size) {
             liveUpdates = true;
-            dpsLabel.setText("Live");
+            dList.setText("Live");
             setCenterDisplay();
             return;
         } else if (index < 0) {
             index = 0;
             return;
         }
-        dpsLabel.setText((index + 1) + "/" + size);
+        dList.setText((index + 1) + "/" + size);
 
         DpsData dpsData = data.dpsData.get(index);
         Entity[] entityHitList = dpsData.hitList.values().toArray(new Entity[0]);

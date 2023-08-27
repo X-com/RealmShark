@@ -29,6 +29,7 @@ public class IconDpsGUI extends DisplayDpsGUI {
     private static Font mainFont;
     private ArrayList<NotificationPacket> notifications;
     private static final DecimalFormat df = new DecimalFormat("#,###,###");
+    private static HashMap<Integer, Image> imgMap = new HashMap<>();
 
     public IconDpsGUI(TomatoData data) {
         this.data = data;
@@ -224,8 +225,6 @@ public class IconDpsGUI extends DisplayDpsGUI {
         }
         return -1;
     }
-
-    private static HashMap<Integer, Image> imgMap = new HashMap<>();
 
     private static Image getScaledImg(int id, BufferedImage img) {
         if (imgMap.containsKey(id)) {

@@ -1,6 +1,8 @@
 package tomato.backend.data;
 
-public class PlayerRemoved {
+import java.io.Serializable;
+
+public class PlayerRemoved implements Serializable {
     public int dropId;
     public int hp;
     public int max;
