@@ -2,10 +2,12 @@ package packets;
 
 import packets.reader.BufferReader;
 
+import java.io.Serializable;
+
 /**
  * Abstract packet class for all incoming or outgoing packets.
  */
-public abstract class Packet {
+public abstract class Packet implements Serializable {
 
     private byte[] data;
 
