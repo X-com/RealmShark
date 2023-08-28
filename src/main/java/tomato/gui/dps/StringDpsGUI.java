@@ -34,9 +34,11 @@ public class StringDpsGUI extends DisplayDpsGUI {
     private void clicked() {
         if (freeze) {
             button.setText("Freeze");
+            if (textAreaDPS != null) textAreaDPS.setEnabled(false);
             freeze = false;
         } else {
             button.setText("Unfreeze");
+            if (textAreaDPS != null) textAreaDPS.setEnabled(true);
             freeze = true;
         }
     }
@@ -58,7 +60,7 @@ public class StringDpsGUI extends DisplayDpsGUI {
             return;
         }
         button.setVisible(isLive);
-        setTextAreaAndLabelDPS(DpsToString.stringDmgRealtime(map, sortedEntityHitList, notifications, data.player, totalDungeonPcTime), !isLive);
+        setTextAreaAndLabelDPS(DpsToString.stringDmgRealtime(map, sortedEntityHitList, notifications, data.player, totalDungeonPcTime), !isLive || freeze);
     }
 
     /**
