@@ -15,6 +15,8 @@ public class StringDpsGUI extends DisplayDpsGUI {
 
     private static JTextArea textAreaDPS;
     private final TomatoData data;
+    private final JButton button;
+    private boolean freeze;
 
     public StringDpsGUI(TomatoData data) {
         this.data = data;
@@ -24,14 +26,20 @@ public class StringDpsGUI extends DisplayDpsGUI {
         add(TomatoGUI.createTextArea(textAreaDPS), BorderLayout.CENTER);
         textAreaDPS.setEnabled(false);
 
-//        JButton button = new JButton("Experimental Icon Display (laggy)");
-//        button.addActionListener(e -> clicked());
-//        add(button, BorderLayout.SOUTH);
+        button = new JButton("Freeze");
+        button.addActionListener(e -> clicked());
+        add(button, BorderLayout.SOUTH);
     }
 
-//    private void clicked() {
-//        DpsGUI.setDisplayAsIcon();
-//    }
+    private void clicked() {
+        if (freeze) {
+            button.setText("Freeze");
+            freeze = false;
+        } else {
+            button.setText("Unfreeze");
+            freeze = true;
+        }
+    }
 
     /**
      * Sets the text of DPS logger text area.
@@ -46,6 +54,10 @@ public class StringDpsGUI extends DisplayDpsGUI {
 
     @Override
     protected void renderData(MapInfoPacket map, List<Entity> sortedEntityHitList, ArrayList<NotificationPacket> notifications, long totalDungeonPcTime, boolean isLive) {
+        if (freeze && isLive && button.isVisible()) {
+            return;
+        }
+        button.setVisible(isLive);
         setTextAreaAndLabelDPS(DpsToString.stringDmgRealtime(map, sortedEntityHitList, notifications, data.player, totalDungeonPcTime), !isLive);
     }
 
