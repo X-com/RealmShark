@@ -23,28 +23,12 @@ public class DungeonListGUI extends JPanel {
     private JPanel livePanel;
     private ArrayList<JPanel> pList = new ArrayList<>();
     private static ArrayList<DpsDungeon> selectionList = new ArrayList<>();
-    private JScrollPane scrollPane;
     private JPanel boxScroll;
 
     public DungeonListGUI(DpsGUI dps, TomatoData data) {
         this.dps = dps;
         this.data = data;
-        JPanel main = new JPanel(new BorderLayout());
-
-        selectionList.clear();
-        boxScroll = new JPanel();
-        scrollPane = new JScrollPane(boxScroll);
-        scrollPane.setBounds(0, 0, 300, 200);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(40);
-        JPanel contentPane = new JPanel(null);
-        contentPane.setPreferredSize(new Dimension(300, 200));
-        contentPane.add(scrollPane);
-        main.add(contentPane, BorderLayout.CENTER);
-
-        boxScroll.setLayout(new BoxLayout(boxScroll, BoxLayout.Y_AXIS));
-
-        index = dps.getIndex();
-        createDungeonList();
+        setLayout(new BorderLayout());
 
         JPanel buttons = new JPanel();
         JButton load = new JButton("Load");
@@ -53,14 +37,21 @@ public class DungeonListGUI extends JPanel {
         buttons.add(save);
         load.addActionListener(e -> loadButton());
         save.addActionListener(e -> saveButton());
-        main.add(buttons, BorderLayout.NORTH);
-        add(main);
+        add(buttons, BorderLayout.NORTH);
 
-        addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent componentEvent) {
-                resized(componentEvent);
-            }
-        });
+        selectionList.clear();
+        boxScroll = new JPanel();
+        JScrollPane scrollPane = new JScrollPane(boxScroll);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(40);
+        JPanel contentPane = new JPanel(new BorderLayout());
+        contentPane.setPreferredSize(new Dimension(300, 200));
+        contentPane.add(scrollPane);
+        add(contentPane, BorderLayout.CENTER);
+
+        boxScroll.setLayout(new BoxLayout(boxScroll, BoxLayout.Y_AXIS));
+
+        index = dps.getIndex();
+        createDungeonList();
     }
 
     private void reCreateDungeonList() {
@@ -91,12 +82,6 @@ public class DungeonListGUI extends JPanel {
         JPanel p1 = dungeonSelection(dps, d, i, String.format(" %d / %d", i + 1, dataSize), name);
         pList.add(p1);
         boxScroll.add(p1);
-    }
-
-    private void resized(ComponentEvent componentEvent) {
-        int height = componentEvent.getComponent().getHeight() - 45;
-        scrollPane.setBounds(0, 0, 300, height);
-        scrollPane.getParent().setPreferredSize(new Dimension(300, height));
     }
 
     private JPanel dungeonSelection(DpsGUI dps, DpsData data, int i, String s, String name) {
@@ -224,6 +209,7 @@ public class DungeonListGUI extends JPanel {
             w.dispose();
         });
         JDialog dialog = pane.createDialog(dps, "Dungeon List");
+        dialog.pack();
         dialog.setResizable(true);
         dialog.setVisible(true);
     }
