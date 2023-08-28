@@ -30,6 +30,7 @@ public class IconDpsGUI extends DisplayDpsGUI {
     private ArrayList<NotificationPacket> notifications;
     private static final DecimalFormat df = new DecimalFormat("#,###,###");
     private static HashMap<Integer, Image> imgMap = new HashMap<>();
+    private static final BufferedImage ig = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 
     public IconDpsGUI(TomatoData data) {
         this.data = data;
@@ -92,15 +93,19 @@ public class IconDpsGUI extends DisplayDpsGUI {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
         JPanel mobPanel = new JPanel();
-        mobPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), BorderFactory.createEmptyBorder(0, 0, 0, 0)));
-        mobPanel.setPreferredSize(new Dimension(370, 48));
-        mobPanel.setMaximumSize(new Dimension(370, 48));
+        mobPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.GRAY), BorderFactory.createEmptyBorder(0, 0, 0, 0)));
+
         mobPanel.setLayout(new BoxLayout(mobPanel, BoxLayout.X_AXIS));
 
         StringBuilder sb = new StringBuilder();
         sb.append(entity.name()).append(" HP: ").append(entity.maxHp()).append("\n");
         sb.append(entity.getFightTimerString());
-        JLabel l = new JLabel(sb.toString(), new ImageIcon(getScaledImg(entity.objectType, entity.img())), JLabel.LEFT);
+        String mobName = sb.toString();
+        JLabel l = new JLabel(mobName, new ImageIcon(getScaledImg(entity.objectType, entity.img())), JLabel.LEFT);
+        int mobNameStringSize = getStringSize(mobName) + 48;
+        mobPanel.setPreferredSize(new Dimension(mobNameStringSize, 48));
+        mobPanel.setMaximumSize(new Dimension(mobNameStringSize, 48));
+
         l.setFont(mainFont);
         mobPanel.add(l);
         panel.add(mobPanel);
@@ -215,6 +220,14 @@ public class IconDpsGUI extends DisplayDpsGUI {
         if (panelAllPlayers.getComponents().length == 0) return null;
 
         return panel;
+    }
+
+    private static int getStringSize(String str) {
+        Graphics2D g2d = ig.createGraphics();
+        FontMetrics fm = g2d.getFontMetrics(mainFont);
+        int size = fm.stringWidth(str);
+        g2d.dispose();
+        return size;
     }
 
     private static int isDeadPlayer(String name, ArrayList<Pair<String, Integer>> deaths) {
