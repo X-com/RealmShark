@@ -84,7 +84,7 @@ public class CharacterPanelGUI extends JPanel {
      */
     static JPanel createMainBox() {
         JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+        panel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.GRAY));
         panel.setPreferredSize(new Dimension(370, CHAR_PANEL_SIZE));
         panel.setMaximumSize(new Dimension(370, CHAR_PANEL_SIZE));
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));

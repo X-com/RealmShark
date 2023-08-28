@@ -72,7 +72,7 @@ public class CharacterListGUI extends JPanel {
         panel.setPreferredSize(new Dimension(120, CharacterPanelGUI.CHAR_PANEL_SIZE));
 
         JPanel panelEquip = new JPanel();
-        panelEquip.setBorder(BorderFactory.createLineBorder(Color.black));
+        panelEquip.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         panelEquip.setPreferredSize(new Dimension(90, 30));
         for (int i = 0; i < 4; i++) {
             int eq = c.equipment[i];
@@ -92,7 +92,7 @@ public class CharacterListGUI extends JPanel {
         panel.add(panelEquip);
 
         JPanel panelBelt = new JPanel();
-        panelBelt.setBorder(BorderFactory.createLineBorder(Color.black));
+        panelBelt.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         int add = c.qs3 ? 40 : 0;
         panelBelt.setPreferredSize(new Dimension(80 + add, 30));
         for (String eqs : c.equipQS) {
@@ -126,7 +126,7 @@ public class CharacterListGUI extends JPanel {
         panel.setPreferredSize(new Dimension(90, 50));
         panel.setMaximumSize(new Dimension(120, 50));
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBorder(BorderFactory.createLineBorder(Color.black));
+        panel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         int b = backpack ? 8 : 0;
 
