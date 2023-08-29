@@ -151,7 +151,9 @@ public class CharacterStatsGUI extends JPanel {
 
             for (int j = 0; j < dungeonCount; j++) {
                 int v = c.charStats.dungeonStats[j];
-                labels[i][j].setText("" + v);
+                if (labels[i][j] != null) {
+                    labels[i][j].setText("" + v);
+                }
             }
         }
     }

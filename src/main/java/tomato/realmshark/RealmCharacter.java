@@ -1,6 +1,5 @@
 package tomato.realmshark;
 
-import tomato.realmshark.RealmCharacterStats;
 import tomato.realmshark.enums.CharacterClass;
 
 import java.util.Arrays;

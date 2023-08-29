@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 public class CharacterExaltGUI extends JPanel {
 
     private static CharacterExaltGUI INSTANCE;
+    private static final int[] exaltOrder = {7, 6, 5, 4, 1, 0, 2, 3};
 
     private final JLabel[][] grid;
     private final TomatoData data;
@@ -128,16 +129,18 @@ public class CharacterExaltGUI extends JPanel {
     private void update() {
         if (data.chars == null) return;
 
-        int[][] exalts = RealmCharacter.exalts.values().toArray(new int[0][]);
         int[] sum = new int[8];
         int[] missing = new int[8];
 
-        for (int i = 0; i < exalts.length; i++) {
-            int[] e = exalts[i];
+        for (int i = 0; i < CharacterClass.CHAR_CLASS_LIST.length; i++) {
+            CharacterClass clazz = CharacterClass.CHAR_CLASS_LIST[i];
+            int[] e = RealmCharacter.exalts.get(clazz.getId());
+            if (e == null) continue;
             for (int j = 0; j < 8; j++) {
-                sum[j] += e[j];
-                missing[j] += Math.max(75 - e[j], 0);
-                grid[i][j].setText("" + e[j]);
+                int v = e[exaltOrder[j]];
+                sum[j] += v;
+                missing[j] += Math.max(75 - v, 0);
+                grid[i][j].setText("" + v);
             }
         }
 

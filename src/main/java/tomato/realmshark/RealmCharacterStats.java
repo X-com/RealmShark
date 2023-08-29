@@ -45,6 +45,8 @@ public class RealmCharacterStats {
      * Dungeon completes
      */
     public int abyss_of_demons;
+    public int advanced_kogbold_steamworks;
+    public int advanced_nest;
     public int ancient_ruins;
     public int battle_for_the_nexus;
     public int beachzone;
@@ -116,10 +118,20 @@ public class RealmCharacterStats {
         byte[] data = PcStatsDecoder.sixBitStringToBytes(pcStats);
         BufferReader reader = new BufferReader(ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN));
 
-        int unknown = reader.readInt();
-
-        boolean[] bitArray = parseBits(reader);
-        parseStats(reader, bitArray);
+        int flag = reader.readInt();
+        if (flag != 0) {
+            try {
+                boolean[] bitArray = parseBits(reader);
+                for (int i = 0; i < bitArray.length; i++) {
+                    if (CharacterStatistics.getName(i) == null && bitArray[i]) {
+                        System.out.println(i);
+                    }
+                }
+                parseStats(reader, bitArray);
+            } catch (Exception e) {
+                System.out.println(pcStats);
+            }
+        }
         updateStats();
     }
 
@@ -156,6 +168,8 @@ public class RealmCharacterStats {
 
         dungeonStats = new int[]{
                 abyss_of_demons,
+                advanced_kogbold_steamworks,
+                advanced_nest,
                 ancient_ruins,
                 battle_for_the_nexus,
                 beachzone,
@@ -551,6 +565,8 @@ public class RealmCharacterStats {
                 "\n   minutes_active=" + minutes_active +
                 "\n   dungeon_types_completed=" + dungeon_types_completed +
                 "\n   abyss_of_demons=" + abyss_of_demons +
+                "\n   advanced_kogbold_steamworks=" + advanced_kogbold_steamworks +
+                "\n   advanced_nest=" + advanced_nest +
                 "\n   ancient_ruins=" + ancient_ruins +
                 "\n   battle_for_the_nexus=" + battle_for_the_nexus +
                 "\n   beachzone=" + beachzone +
