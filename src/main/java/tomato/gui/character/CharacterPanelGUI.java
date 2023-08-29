@@ -4,7 +4,6 @@ import tomato.backend.data.TomatoData;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
 import java.awt.*;
 
 /**
@@ -41,9 +40,9 @@ public class CharacterPanelGUI extends JPanel {
 //                mainMaxingPanel.revalidate();
 //                java.io.InputStream is = Util.resourceFilePath("char");
 
-//                java.io.FileInputStream is = new java.io.FileInputStream("tiles/assets/request");
+//                java.io.InputStream is = CharacterStatsGUI.class.getClassLoader().getResourceAsStream("f");
 //                String result = new java.io.BufferedReader(new java.io.InputStreamReader(is)).lines().collect(java.util.stream.Collectors.joining("\n"));
-//                java.util.ArrayList<tomato.logic.backend.data.RealmCharacter> l = tomato.logic.HttpCharListRequest.getCharList(result);
+//                java.util.ArrayList<tomato.realmshark.RealmCharacter> l = tomato.realmshark.HttpCharListRequest.getCharList(result);
 //                data.characterListUpdate(l);
 
 //                chars = l;

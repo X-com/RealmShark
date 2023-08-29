@@ -1,7 +1,6 @@
 package tomato.gui.character;
 
 import assets.AssetMissingException;
-import assets.IdToAsset;
 import assets.ImageBuffer;
 import tomato.realmshark.RealmCharacter;
 import tomato.backend.data.TomatoData;
@@ -26,6 +25,7 @@ public class CharacterStatsGUI extends JPanel {
     private final TomatoData data;
     private int charCount;
     private JLabel[][] labels;
+    private JLabel topLeftLabel;
 
     public CharacterStatsGUI(TomatoData data) {
         INSTANCE = this;
@@ -45,6 +45,8 @@ public class CharacterStatsGUI extends JPanel {
         spRight.getVerticalScrollBar().setUnitIncrement(9);
 
         spLeft.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        spLeft.getVerticalScrollBar().setUnitIncrement(9);
+
         spRight.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         spRight.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         spTop.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
@@ -56,7 +58,21 @@ public class CharacterStatsGUI extends JPanel {
         rightBar.setLayout(new BorderLayout());
         add(leftBar, BorderLayout.WEST);
         add(rightBar, BorderLayout.CENTER);
-        topLeft.setPreferredSize(new Dimension(0, 37));
+        topLeft.setPreferredSize(new Dimension(37, 37));
+        topLeftLabel = new JLabel(getImageIcon(810), JLabel.CENTER);
+        topLeft.add(topLeftLabel);
+        topLeftLabel.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (data.chars == null) return;
+                sortOrder = !sortOrder;
+                if (sortOrder) {
+                    data.chars.sort(Comparator.comparingLong(o -> -o.fame));
+                } else {
+                    data.chars.sort(Comparator.comparingLong(o -> o.fame));
+                }
+                update();
+            }
+        });
 
         leftBar.add(topLeft, BorderLayout.NORTH);
         leftBar.add(spLeft, BorderLayout.CENTER);
@@ -164,6 +180,7 @@ public class CharacterStatsGUI extends JPanel {
     private void updatePlayerList() {
         left.removeAll();
 
+        int totalFame = 0;
         for (int i = 0; i < charCount; i++) {
             RealmCharacter c = data.chars.get(i);
             JLabel player = playerIcon(c);
@@ -173,7 +190,9 @@ public class CharacterStatsGUI extends JPanel {
             p.add(player);
 
             left.add(p);
+            totalFame += c.fame;
         }
+        topLeftLabel.setText("Total Fame: " + totalFame);
     }
 
     /**
@@ -212,18 +231,21 @@ public class CharacterStatsGUI extends JPanel {
         try {
             int eq = c.skin;
             if (eq == 0) eq = c.classNum;
-            BufferedImage img = ImageBuffer.getImage(eq);
-            ImageIcon icon = new ImageIcon(img.getScaledInstance(15, 15, Image.SCALE_DEFAULT));
+            ImageIcon icon = getImageIcon(eq);
             JLabel characterLabel = new JLabel(c.classString + " " + c.fame, icon, JLabel.CENTER);
             characterLabel.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
                     if (data.chars == null) return;
-                    sortOrder = !sortOrder;
-                    if (sortOrder) {
-                        data.chars.sort(Comparator.comparingLong(o -> -o.fame));
-                    } else {
-                        data.chars.sort(Comparator.comparingLong(o -> o.fame));
+                    boolean b = data.chars.remove(c);
+                    if (b) {
+                        data.chars.add(0, c);
                     }
+//                    sortOrder = !sortOrder;
+//                    if (sortOrder) {
+//                        data.chars.sort(Comparator.comparingLong(o -> -o.fame));
+//                    } else {
+//                        data.chars.sort(Comparator.comparingLong(o -> o.fame));
+//                    }
                     update();
                 }
             });
@@ -231,6 +253,21 @@ public class CharacterStatsGUI extends JPanel {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    /**
+     * Gets image from image ID.
+     *
+     * @param imageId ID of image to grab
+     * @return Icon to be added to the label
+     */
+    private static ImageIcon getImageIcon(int imageId) {
+        try {
+            BufferedImage img = ImageBuffer.getImage(imageId);
+            return new ImageIcon(img.getScaledInstance(15, 15, Image.SCALE_DEFAULT));
+        } catch (IOException | AssetMissingException e) {
+            throw new RuntimeException(e);
         }
     }
 }
