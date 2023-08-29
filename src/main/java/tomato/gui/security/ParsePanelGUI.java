@@ -367,7 +367,8 @@ public class ParsePanelGUI extends JPanel {
         public String toString() {
             StringBuilder sb = new StringBuilder();
             int level = playerEntity.stat.LEVEL_STAT.statValue;
-            sb.append(playerEntity.name()).append(" (").append(level).append(") [");
+            sb.append(playerEntity.name()).append(" (").append(level).append(") ");
+            sb.append(playerEntity.getStatGuild()).append(" [");
 
             for (int i = 0; i < 4; i++) {
                 try {
