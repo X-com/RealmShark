@@ -78,12 +78,12 @@ public class PcStatsDecoder {
     }
 
     private static int charValue(char c) {
-        if (c >= 48 && c <= 57) return c + 4;
-        if (c >= 65 && c <= 90) return c - 65;
-        if (c >= 97 && c <= 122) return c - 71;
-        if (c == '-') return 62;
-        if (c == '_') return 63;
-        if (c == '=') return 0;
+        if (c >= 48 && c <= 57) return c + 4; // 0(52) - 9(61)
+        if (c >= 65 && c <= 90) return c - 65; // A(0) - Z(25)
+        if (c >= 97 && c <= 122) return c - 71; // a(26) - z(51)
+        if (c == '-') return 62; // (62)
+        if (c == '_') return 63; // (63)
+        if (c == '=') return 0; // (padding)
         return c;
     }
 }
