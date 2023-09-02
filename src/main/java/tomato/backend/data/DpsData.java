@@ -1,5 +1,6 @@
 package tomato.backend.data;
 
+import packets.Packet;
 import packets.incoming.MapInfoPacket;
 import packets.incoming.NotificationPacket;
 
@@ -14,12 +15,14 @@ public class DpsData implements Serializable {
     public ArrayList<NotificationPacket> deathNotifications;
     public long totalDungeonPcTime;
     public long dungeonStartTime;
+    public ArrayList<Packet> debugPackets;
 
-    public DpsData(MapInfoPacket m, HashMap<Integer, Entity> entityHitList, ArrayList<NotificationPacket> deathNotifications, long totalDungeonPcTime, long timePcFirst) {
+    public DpsData(MapInfoPacket m, HashMap<Integer, Entity> entityHitList, ArrayList<NotificationPacket> deathNotifications, long totalDungeonPcTime, long timePcFirst, ArrayList<Packet> dpsPacketLog) {
         this.map = m;
         this.hitList = entityHitList;
         this.deathNotifications = deathNotifications;
         this.totalDungeonPcTime = totalDungeonPcTime;
         this.dungeonStartTime = timePcFirst;
+        debugPackets = dpsPacketLog;
     }
 }

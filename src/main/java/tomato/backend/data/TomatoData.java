@@ -2,8 +2,8 @@ package tomato.backend.data;
 
 import assets.AssetMissingException;
 import assets.IdToAsset;
+import packets.Packet;
 import packets.data.ObjectData;
-import packets.data.ObjectStatusData;
 import packets.data.enums.NotificationEffectType;
 import packets.incoming.*;
 import packets.outgoing.EnemyHitPacket;
@@ -14,7 +14,6 @@ import tomato.gui.character.CharacterPanelGUI;
 import tomato.gui.character.CharacterStatsGUI;
 import tomato.gui.dps.DpsGUI;
 import tomato.gui.security.ParsePanelGUI;
-import tomato.gui.security.SecurityGUI;
 import tomato.realmshark.HttpCharListRequest;
 import tomato.realmshark.RealmCharacter;
 import tomato.realmshark.RealmCharacterStats;
@@ -58,6 +57,7 @@ public class TomatoData {
     public ArrayList<DpsData> dpsData = new ArrayList<>();
     protected ArrayList<NotificationPacket> deathNotifications = new ArrayList<>();
     protected final HashSet<Integer> dropList = new HashSet<>();
+    private ArrayList<Packet> dpsPacketLog = new ArrayList<>();
 
     /**
      * Sets the current realm.
@@ -307,9 +307,10 @@ public class TomatoData {
         charId = -1;
         time = -1;
         if (map != null && isLoggedDungeon(map.displayName)) {
-            dpsData.add(new DpsData(map, entityHitList, deathNotifications, dungeonTime(), timePcFirst));
+            dpsData.add(new DpsData(map, entityHitList, deathNotifications, dungeonTime(), timePcFirst, dpsPacketLog));
             DpsGUI.updateLabel();
         }
+        dpsPacketLog = new ArrayList<>();
         timePc = -1;
         timePcFirst = -1;
         rng = null;
@@ -456,5 +457,9 @@ public class TomatoData {
 
     public long dungeonTime() {
         return timePc - timePcFirst;
+    }
+
+    public void logPacket(Packet packet) {
+        dpsPacketLog.add(packet);
     }
 }

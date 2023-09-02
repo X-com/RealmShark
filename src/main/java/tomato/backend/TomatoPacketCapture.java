@@ -33,33 +33,42 @@ public class TomatoPacketCapture implements Controller {
             NewTickPacket p = (NewTickPacket) packet;
             data.updateNewTick(p);
             DpsGUI.updateNewTickPacket(data);
+            data.logPacket(packet);
         } else if (packet instanceof UpdatePacket) {
             UpdatePacket p = (UpdatePacket) packet;
             data.update(p);
+            data.logPacket(packet);
         } else if (packet instanceof PlayerShootPacket) {
             PlayerShootPacket p = (PlayerShootPacket) packet;
             data.playerShoot(p);
+            data.logPacket(packet);
         } else if (packet instanceof ServerPlayerShootPacket) {
             ServerPlayerShootPacket p = (ServerPlayerShootPacket) packet;
             data.serverPlayerShoot(p);
+            data.logPacket(packet);
         } else if (packet instanceof EnemyHitPacket) {
             EnemyHitPacket p = (EnemyHitPacket) packet;
             data.enemtyHit(p);
+            data.logPacket(packet);
         } else if (packet instanceof DamagePacket) {
             DamagePacket p = (DamagePacket) packet;
             data.damage(p);
+            data.logPacket(packet);
         } else if (packet instanceof TextPacket) {
             TextPacket p = (TextPacket) packet;
             data.text(p);
+            data.logPacket(packet);
         } else if (packet instanceof StasisPacket) {
             StasisPacket p = (StasisPacket) packet;
             StasisCheck.stasis(p, data);
         } else if (packet instanceof MapInfoPacket) {
             MapInfoPacket p = (MapInfoPacket) packet;
             data.setNewRealm(p);
+            data.logPacket(packet);
         } else if (packet instanceof CreateSuccessPacket) {
             CreateSuccessPacket p = (CreateSuccessPacket) packet;
             data.setUserId(p.objectId, p.charId, p.str);
+            data.logPacket(packet);
         } else if (packet instanceof ExaltationUpdatePacket) {
             ExaltationUpdatePacket p = (ExaltationUpdatePacket) packet;
             data.exaltUpdate(p);
