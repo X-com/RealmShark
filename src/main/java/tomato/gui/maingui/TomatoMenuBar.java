@@ -504,9 +504,9 @@ public class TomatoMenuBar implements ActionListener {
             TomatoBandwidth.make(frame);
         } else if (e.getSource() == javav) { // Opens bandwidth window
             String version = System.getProperty("java.version");
-            System.out.println("Java version: " + version);
+            String bit = System.getProperty("sun.arch.data.model");
             JFrame frame = new JFrame("Java version");
-            JOptionPane.showMessageDialog(frame, "Java version: " + version);
+            JOptionPane.showMessageDialog(frame, String.format("Java version: %s (%s-bit)", version, bit));
         }
     }
 
