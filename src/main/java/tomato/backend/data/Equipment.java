@@ -10,10 +10,12 @@ public class Equipment implements Serializable {
     public int id;
     public int count;
     public int dmg;
+    public String enchant;
     public AtomicInteger totalDmg;
 
-    public Equipment(int id, AtomicInteger tot) {
+    public Equipment(int id, String enchant, AtomicInteger tot) {
         this.id = id;
+        this.enchant = enchant;
         count = 0;
         totalDmg = tot;
     }

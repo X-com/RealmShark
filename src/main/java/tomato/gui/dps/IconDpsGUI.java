@@ -3,16 +3,15 @@ package tomato.gui.dps;
 import assets.AssetMissingException;
 import assets.IdToAsset;
 import assets.ImageBuffer;
-import javafx.scene.layout.Border;
 import packets.incoming.MapInfoPacket;
 import packets.incoming.NotificationPacket;
 import tomato.backend.data.*;
 import tomato.gui.SmartScroller;
+import tomato.realmshark.ParseEnchants;
 import tomato.realmshark.enums.CharacterClass;
 import util.Pair;
 
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -271,9 +270,10 @@ public class IconDpsGUI extends DisplayDpsGUI {
             AtomicInteger tot = new AtomicInteger(0);
             if (inv[i] == null) inv[i] = new HashMap<>();
             for (Damage d : entity.getDamageList()) {
-                if (d.owner == null || d.owner.id != owner.id || d.ownerInv == null) continue;
+                if (d.owner == null || d.owner.id != owner.id || d.ownerInvntory == null) continue;
 
-                Equipment equipment = inv[i].computeIfAbsent(d.ownerInv[i], id -> new Equipment(id, tot));
+                int finalI = i;
+                Equipment equipment = inv[i].computeIfAbsent(d.ownerInvntory[i], id -> new Equipment(id, d.ownerEnchants[finalI], tot));
                 equipment.add(d.damage);
             }
         }
@@ -289,7 +289,7 @@ public class IconDpsGUI extends DisplayDpsGUI {
                     img = ImageBuffer.getImage(eq);
                 }
                 JLabel icon = new JLabel(new ImageIcon(img.getScaledInstance(16, 16, Image.SCALE_DEFAULT)));
-                icon.setToolTipText(IdToAsset.objectName(eq));
+                icon.setToolTipText(String.format("<html>%s<br>%s</html>", IdToAsset.objectName(eq), ParseEnchants.parse(max.enchant)));
                 panel.add(icon);
             } catch (AssetMissingException | IOException ex) {
                 throw new RuntimeException(ex);

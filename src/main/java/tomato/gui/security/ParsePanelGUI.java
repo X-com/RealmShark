@@ -5,17 +5,17 @@ import assets.IdToAsset;
 import assets.ImageBuffer;
 import tomato.backend.data.Entity;
 import tomato.gui.SmartScroller;
+import tomato.realmshark.ParseEnchants;
 import tomato.realmshark.enums.CharacterClass;
 
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.HashMap;
 
 public class ParsePanelGUI extends JPanel {
@@ -190,11 +190,13 @@ public class ParsePanelGUI extends JPanel {
                         img = ImageBuffer.getImage(eq);
                     }
                     p.icon[i] = new JLabel(new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT)));
-                    p.icon[i].setToolTipText(IdToAsset.objectName(eq));
+                    p.itemName[i] = IdToAsset.objectName(eq);
                     panel.add(p.icon[i]);
-                } catch (Exception e) {
+                } catch (IOException | AssetMissingException e) {
+                    e.printStackTrace();
                 }
             }
+            p.updateToolTipText();
             mainPanel.add(panel);
         }
         mainPanel.add(Box.createHorizontalStrut(5));
@@ -336,6 +338,7 @@ public class ParsePanelGUI extends JPanel {
     public static class Player {
         int[] inv = new int[4];
         JLabel[] icon = new JLabel[4];
+        String[] itemName = new String[4];
         int id;
         Entity playerEntity;
         JPanel panel;
@@ -345,11 +348,13 @@ public class ParsePanelGUI extends JPanel {
             setIcon(1, player.stat.INVENTORY_1_STAT.statValue);
             setIcon(2, player.stat.INVENTORY_2_STAT.statValue);
             setIcon(3, player.stat.INVENTORY_3_STAT.statValue);
+            updateToolTipText();
         }
 
         private void setIcon(int i, int eq) {
             if (inv[i] == eq) return;
             inv[i] = eq;
+
             try {
                 BufferedImage img;
                 if (eq == -1) {
@@ -358,10 +363,20 @@ public class ParsePanelGUI extends JPanel {
                     img = ImageBuffer.getImage(eq);
                 }
                 icon[i].setIcon(new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT)));
-                icon[i].setToolTipText(IdToAsset.objectName(eq));
+//                icon[i].setToolTipText(String.format("<html>%s<br>%s</html>", IdToAsset.objectName(eq), enchant));
+                itemName[i] = IdToAsset.objectName(eq);
             } catch (Exception e) {
+                e.printStackTrace();
             }
             INSTANCE.updateUI();
+        }
+
+        private void updateToolTipText() {
+            String[] enchant = ParseEnchants.extractEnchants(playerEntity);
+
+            for (int i = 0; i < 4; i++) {
+                icon[i].setToolTipText(String.format("<html>%s<br>%s</html>", itemName[i], enchant[i]));
+            }
         }
 
         public String toString() {

@@ -82,19 +82,19 @@ public class HttpCharListRequest {
         StringXML base;
         ArrayList<RealmCharacter> listChars = new ArrayList<>();
 
-        if (r == null) {
-            r = "";
-            try {
-                BufferedReader br = new BufferedReader(new InputStreamReader(Util.resourceFilePath("temp"), StandardCharsets.UTF_8));
-                String line;
-                while ((line = br.readLine()) != null) {
-                    r += line;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
+//        if (r == null) {
+//            r = "";
+//            try {
+//                BufferedReader br = new BufferedReader(new InputStreamReader(Util.resourceFilePath("temp"), StandardCharsets.UTF_8));
+//                String line;
+//                while ((line = br.readLine()) != null) {
+//                    r += line;
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                return null;
+//            }
+//        }
 
         try {
             base = StringXML.getParsedXML(r);

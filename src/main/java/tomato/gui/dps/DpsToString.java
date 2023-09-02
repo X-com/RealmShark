@@ -58,9 +58,10 @@ public class DpsToString {
             AtomicInteger tot = new AtomicInteger(0);
             if (inv[i] == null) inv[i] = new HashMap<>();
             for (Damage d : entity.getDamageList()) {
-                if (d.owner == null || d.owner.id != owner.id || d.ownerInv == null) continue;
+                if (d.owner == null || d.owner.id != owner.id || d.ownerInvntory == null) continue;
 
-                Equipment equipment = inv[i].computeIfAbsent(d.ownerInv[i], id -> new Equipment(id, tot));
+                int finalI = i;
+                Equipment equipment = inv[i].computeIfAbsent(d.ownerInvntory[i], id -> new Equipment(id, d.ownerEnchants[finalI], tot));
                 equipment.add(d.damage);
             }
         }

@@ -1,5 +1,7 @@
 package tomato.backend.data;
 
+import tomato.realmshark.ParseEnchants;
+
 import java.io.Serializable;
 
 /**
@@ -7,7 +9,8 @@ import java.io.Serializable;
  */
 public class Damage implements Serializable {
     public Entity owner;
-    public int[] ownerInv;
+    public int[] ownerInvntory;
+    public String[] ownerEnchants;
     public Projectile projectile;
     public long time;
     public int damage;
@@ -40,9 +43,10 @@ public class Damage implements Serializable {
 
     private void setInv(Entity o) {
         if (o != null && o.stat != null) {
-            ownerInv = new int[]{o.stat.INVENTORY_0_STAT.statValue, o.stat.INVENTORY_1_STAT.statValue, o.stat.INVENTORY_2_STAT.statValue, o.stat.INVENTORY_3_STAT.statValue};
+            ownerInvntory = new int[]{o.stat.INVENTORY_0_STAT.statValue, o.stat.INVENTORY_1_STAT.statValue, o.stat.INVENTORY_2_STAT.statValue, o.stat.INVENTORY_3_STAT.statValue};
+            ownerEnchants = ParseEnchants.getEnchantStrings(o);
         } else {
-            ownerInv = null;
+            ownerInvntory = null;
         }
     }
 

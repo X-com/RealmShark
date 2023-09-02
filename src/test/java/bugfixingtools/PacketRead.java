@@ -107,7 +107,7 @@ public class PacketRead {
         if (packet instanceof GroundDamagePacket) return;
         if (packet instanceof TeleportPacket) return;
         // unknown
-        if (packet instanceof UnknownPacket139) return;
+//        if (packet instanceof UnknownPacket139) return;
         if (packet instanceof GotoAckPacket) return;
         // RealmHeroesLeftPacket
         if (packet instanceof RealmHeroesLeftPacket) return;
@@ -122,7 +122,7 @@ public class PacketRead {
 
         if (packet instanceof NewTickPacket) {
 //            newtick((NewTickPacket) packet);
-//            updateEntity((NewTickPacket) packet);
+            updateEntity((NewTickPacket) packet);
             return;
         }
 
@@ -147,7 +147,7 @@ public class PacketRead {
         }
         if (packet instanceof VaultContentPacket) {
 //            countPots((VaultContentPacket) packet);
-//            return;
+            return;
         }
 
         //RealmHeroesLeftPacket
@@ -159,7 +159,7 @@ public class PacketRead {
 
     private static void updateEntity(NewTickPacket packet) {
         for (ObjectStatusData o : packet.status) {
-            if(o.objectId == 240694) {
+            if (o.objectId == 240694) {
                 System.out.println(o);
             }
         }
@@ -168,14 +168,17 @@ public class PacketRead {
     private static void entityName(UpdatePacket packet) {
         for (ObjectData o : packet.newObjects) {
             int objectType = o.objectType;
-            if (!types.contains(objectType)) {
-                types.add(objectType);
-                if(CharacterClass.isPlayerCharacter(objectType)) continue;
-                try {
-                    System.out.println(IdToAsset.objectName(objectType) + " " + objectType);
-                } catch (AssetMissingException e) {
-                    throw new RuntimeException(e);
-                }
+//            if (!types.contains(objectType)) {
+//                types.add(objectType);
+//                if(CharacterClass.isPlayerCharacter(objectType)) continue;
+//                try {
+//                    System.out.println(IdToAsset.objectName(objectType) + " " + objectType);
+//                } catch (AssetMissingException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+            if (CharacterClass.isPlayerCharacter(objectType)) {
+                System.out.println(o);
             }
         }
     }
