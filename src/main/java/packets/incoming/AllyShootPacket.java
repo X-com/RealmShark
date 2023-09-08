@@ -18,24 +18,24 @@ public class AllyShootPacket extends Packet {
     /**
      * The item id of the weapon used to fire the projectile.
      */
-    public short containerType;
+    public int containerType;
     /**
      * The angle at which the projectile was fired.
      */
     public float angle;
 
     /**
-     * Whether or not the shot is affected by the 'Inspired' buff (presumably).
+     * Inspired buff increasing the range of the weapon.
      */
-    public boolean bard;
+    public boolean inspiredBuff;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
-        bulletId = buffer.readUnsignedByte();
+        bulletId = buffer.readUnsignedShort();
         ownerId = buffer.readInt();
-        containerType = buffer.readShort();
+        containerType = buffer.readInt();
         angle = buffer.readFloat();
-        bard = buffer.readBoolean();
+        inspiredBuff = buffer.readBoolean();
     }
 
     @Override
@@ -45,6 +45,6 @@ public class AllyShootPacket extends Packet {
                 "\n   ownerId=" + ownerId +
                 "\n   containerType=" + containerType +
                 "\n   angle=" + angle +
-                "\n   bard=" + bard;
+                "\n   inspiredBuff=" + inspiredBuff;
     }
 }
