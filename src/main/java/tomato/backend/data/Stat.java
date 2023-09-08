@@ -85,7 +85,7 @@ public class Stat implements Serializable {
     public StatData BACKPACK_6_STAT; // 77
     public StatData BACKPACK_7_STAT; // 78
     public StatData HASBACKPACK_STAT; // 79
-    public StatData TEXTURE_STAT; // 80
+    public StatData ENCHANTMENTS; // 80
     public StatData PET_INSTANCEID_STAT; // 81
     public StatData PET_NAME_STAT; // 82
     public StatData PET_TYPE_STAT; // 83
@@ -383,8 +383,8 @@ public class Stat implements Serializable {
                 case HASBACKPACK_STAT:
                     HASBACKPACK_STAT = sd;
                     break;
-                case TEXTURE_STAT:
-                    TEXTURE_STAT = sd;
+                case ENCHANTMENTS:
+                    ENCHANTMENTS = sd;
                     break;
                 case PET_INSTANCEID_STAT:
                     PET_INSTANCEID_STAT = sd;

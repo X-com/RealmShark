@@ -219,7 +219,7 @@ public class ParseEnchants {
      * @return Four strings representing the equipment enchants if they have any. Starting with weapon, ability, armor, ring.
      */
     public static String[] extractEnchants(Entity player) {
-        StatData textureStat = player.stat.TEXTURE_STAT;
+        StatData textureStat = player.stat.ENCHANTMENTS;
         String[] slotEnchant = {"", "", "", ""};
         if (textureStat != null) {
             String s = textureStat.stringStatValue;
@@ -241,7 +241,7 @@ public class ParseEnchants {
      * @return Four encoded enchantment strings of equipped player
      */
     public static String[] getEnchantStrings(Entity player) {
-        StatData textureStat = player.stat.TEXTURE_STAT;
+        StatData textureStat = player.stat.ENCHANTMENTS;
         String[] slotEnchant = {"", "", "", ""};
 
         if (textureStat != null) {
