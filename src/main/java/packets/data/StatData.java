@@ -54,11 +54,12 @@ public class StatData implements Serializable {
                 || StatType.ACCOUNT_ID_STAT.get() == statTypeNum // 38
                 || StatType.OWNER_ACCOUNT_ID_STAT.get() == statTypeNum // 54
                 || StatType.GUILD_NAME_STAT.get() == statTypeNum // 62
-                || StatType.TEXTURE_STAT.get() == statTypeNum // 80
+                || StatType.ENCHANTMENTS.get() == statTypeNum // 80
                 || StatType.PET_NAME_STAT.get() == statTypeNum // 82
                 || StatType.GRAVE_ACCOUNT_ID.get() == statTypeNum // 115
                 || StatType.UNKNOWN121.get() == statTypeNum // 121
-                || StatType.ENCHANTMENT.get() == statTypeNum // 127
+                || StatType.UNKNOWN127.get() == statTypeNum // 127
+                || StatType.UNKNOWN128.get() == statTypeNum // 128
         ) {
             return true;
         }
@@ -83,6 +84,6 @@ public class StatData implements Serializable {
             }
             stringExtra += " " + name;
         }
-        return "      " + statType + " = " + statValue + secondValue + stringValue + stringExtra;
+        return "      " + statType + "(" + statTypeNum + ") = " + statValue + secondValue + stringValue + stringExtra;
     }
 }

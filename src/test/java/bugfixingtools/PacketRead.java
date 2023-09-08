@@ -16,6 +16,7 @@ import java.awt.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class PacketRead {
@@ -97,6 +98,13 @@ public class PacketRead {
         // RealmHeroesLeftPacket
         if (packet instanceof RealmHeroesLeftPacket) return;
         if (packet instanceof CreateSuccessPacket) return;
+        if (packet instanceof AllyShootPacket) {
+            AllyShootPacket p = (AllyShootPacket) packet;
+//            System.out.println(p.bulletId);
+//            System.out.println(p.ownerId);
+//            System.out.println(p.containerType);
+            return;
+        }
         if (packet instanceof IpAddress) {
             IpAddress p = (IpAddress) packet;
             ip = p.srcAddressAsInt;
@@ -121,6 +129,7 @@ public class PacketRead {
         if (packet instanceof UpdatePacket) {
 //            crystalTPRange((UpdatePacket) packet);
 //            realmIdentifier((UpdatePacket) packet);
+            playerIds((UpdatePacket) packet);
             return;
         }
         if (packet instanceof VaultContentPacket) {
@@ -131,6 +140,18 @@ public class PacketRead {
         //RealmHeroesLeftPacket
 
         System.out.println(packet);
+    }
+
+    static HashSet<Integer> readIds = new HashSet<>();
+
+    private static void playerIds(UpdatePacket packet) {
+        for(ObjectData o : packet.newObjects){
+            int objectId = o.status.objectId;
+            int type = o.objectType;
+            if(!readIds.contains(objectId) && (type > 750) && type < 850){
+                System.out.println(objectId);
+            }
+        }
     }
 
     static boolean log = false;

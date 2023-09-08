@@ -86,7 +86,7 @@ public enum StatType implements Serializable {
     BACKPACK_6_STAT(77),
     BACKPACK_7_STAT(78),
     HASBACKPACK_STAT(79),
-    TEXTURE_STAT(80),
+    ENCHANTMENTS(80),
     PET_INSTANCEID_STAT(81),
     PET_NAME_STAT(82),
     PET_TYPE_STAT(83),
@@ -133,7 +133,9 @@ public enum StatType implements Serializable {
     UNKNOWN124(124),
     ANIMATION_ID(125),
     UNKNOWN126(126),
-    ENCHANTMENT(127);
+    UNKNOWN127(127),
+    UNKNOWN128(128),
+    ;
 
     private final int index;
 
