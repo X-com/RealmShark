@@ -2,6 +2,7 @@ package packets.packetcapture.sniff.assembly;
 
 import packets.packetcapture.sniff.netpackets.TcpPacket;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -48,13 +49,17 @@ public class TcpStreamBuilder {
 
         TcpStreamErrorHandler.INSTANCE.errorChecker(this);
 
-        while (packetMap.containsKey(sequenseNumber)) {
-            TcpPacket packetSeqed = packetMap.remove(sequenseNumber);
-            idNumber = packetSeqed.getIp4Packet().getIdentification();
-            if (packet.getPayload() != null) {
-                sequenseNumber += packetSeqed.getPayloadSize();
-                packetStream.stream(packetSeqed.getPayload(), packetSeqed.getIp4Packet().getSrcAddr());
+        try {
+            while (packetMap.containsKey(sequenseNumber)) {
+                TcpPacket packetSeqed = packetMap.remove(sequenseNumber);
+                idNumber = packetSeqed.getIp4Packet().getIdentification();
+                if (packet.getPayload() != null) {
+                    sequenseNumber += packetSeqed.getPayloadSize();
+                    packetStream.stream(packetSeqed.getPayload(), packetSeqed.getIp4Packet().getSrcAddr());
+                }
             }
+        } catch (Exception e) {
+            TcpStreamErrorHandler.INSTANCE.dumpData("Sequence error dumping. \n " + Arrays.toString(e.getStackTrace()));
         }
     }
 
