@@ -447,7 +447,7 @@ public class OptionsMenu {
         Config.instance.showInfo = true;
 
         Config.instance.keyValues = new int[]{200, 201, 0, 0, 0, 0};
-        Config.instance.keyString = new String[]{"MW_UP", "MW_DOWN", "", "", "", ""};
+        Config.instance.keyString = new String[]{"MW_UP", "MW_DOWN", "", "", "", "", ""};
 
         Config.instance.textSize = 32;
         Config.instance.shapeSize = 32;
