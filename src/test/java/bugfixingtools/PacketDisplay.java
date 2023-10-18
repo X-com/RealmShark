@@ -201,7 +201,6 @@ public class PacketDisplay {
         int[] compInt = readCompressedInt(bytes, i);
         if (compInt[0] == -1) return row;
         JCheckBox compIntBox = new JCheckBox("Comp:     " + compInt[0]);
-        System.out.println(compInt[1]);
         Grouping.add(i, compIntBox, compInt[1], byteDisplay);
         row.add(compIntBox);
 
