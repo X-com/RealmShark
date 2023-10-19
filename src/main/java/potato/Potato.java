@@ -27,6 +27,8 @@ public class Potato {
     PacketController controller;
 
     public static void main(String[] args) {
+        System.out.println("Java Version: " + System.getProperty("java.version") + " : (" + System.getProperty("sun.arch.data.model") + " - bit)");
+
         Util.setSaveLogs(true); // turns the logger to, save in to files.
         TcpStreamErrorHandler.INSTANCE.setErrorMessageHandler(Potato::errorMessage);
         try {
