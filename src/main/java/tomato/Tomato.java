@@ -37,6 +37,8 @@ public class Tomato {
     private static TomatoRootController rootController;
 
     public static void main(String[] args) {
+        System.out.println("Java Version: " + System.getProperty("java.version") + " : (" + System.getProperty("sun.arch.data.model") + " - bit)");
+
         Util.setSaveLogs(false); // turns the logger to, save in to files.
         TcpStreamErrorHandler.INSTANCE.setErrorMessageHandler(Tomato::errorMessageHandler);
         TcpStreamErrorHandler.INSTANCE.setErrorStopHandler(TomatoMenuBar::stopPacketSniffer);
