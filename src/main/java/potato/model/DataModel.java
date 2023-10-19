@@ -41,6 +41,7 @@ public class DataModel {
     private MapInfoPacket mapPacketData;
 
     private final HashSet<Integer>[] mapTileData;
+    private final HashSet<Integer>[] spawnData;
     private final ArrayList<HeroLocations>[] mapHeroes;
     private final HashMap<Integer, Entity> entityList;
     private int mapIndex = 0;
@@ -70,6 +71,7 @@ public class DataModel {
         entityList = new HashMap<>();
         mapHeroes = Bootloader.loadMapCoords();
         mapTileData = Bootloader.loadTiles();
+        spawnData = Bootloader.loadSpawnCoords();
 
         renderer = new OpenGLPotato(this);
         heroDetect = new HeroDetect(this);
@@ -230,12 +232,26 @@ public class DataModel {
 
     public void newRealm(GroundTileData[] tiles, WorldPosData pos) {
         if (!newRealmCheck) return;
-        playerX = (int) pos.x;
-        playerY = (int) pos.y;
-        mapIndex = findMapIndex(tiles);
+        playerX = pos.x;
+        playerY = pos.y;
+        mapIndex = getMap((int) playerX, (int) playerY, tiles);
         server.startSynch(myId, serverIp, seed, mapIndex, (int) pos.x, (int) pos.y);
 
         newRealmCheck = false;
+    }
+
+    private int getMap(int x, int y, GroundTileData[] tiles) {
+        int hash = x + y * 2048;
+        for (int i = 0; i < spawnData.length; i++) {
+            HashSet<Integer> map = spawnData[i];
+            if (map.contains(hash)) {
+                System.out.println("Map found " + i);
+                return i;
+            }
+        }
+        int mapIndex1 = findMapIndex(tiles);
+        System.out.println("Tile map scan: " + mapIndex1);
+        return mapIndex1;
     }
 
     public void ipChanged(String name, int ip) {
@@ -284,7 +300,8 @@ public class DataModel {
     }
 
     public String getPlayerCoordString() {
-        if (Config.instance.showPlayerCoords) return String.format(" x:%d y:%d %d", getIntPlayerX(), getIntPlayerY(), unknownPacket169);
+        if (Config.instance.showPlayerCoords)
+            return String.format(" x:%d y:%d %d", getIntPlayerX(), getIntPlayerY(), unknownPacket169);
         return "";
     }
 

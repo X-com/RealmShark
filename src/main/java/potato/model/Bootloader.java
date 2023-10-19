@@ -3,6 +3,7 @@ package potato.model;
 import util.Util;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -110,5 +111,34 @@ public class Bootloader {
             e.printStackTrace();
         }
         return tiles;
+    }
+
+    public static HashSet<Integer>[] loadSpawnCoords() {
+        @SuppressWarnings("unchecked")
+        HashSet<Integer>[] spawnCoords = new HashSet[13];
+        for (int i = 0; i < 13; i++) {
+            spawnCoords[i] = new HashSet<>();
+        }
+        try {
+            String file = "potatoRes/map/spawnCoords.txt";
+            InputStream is = Util.resourceFilePath(file);
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            String line;
+            while ((line = br.readLine()) != null) {
+                try {
+                    String[] s = line.split(" ");
+                    int map = Integer.parseInt(s[0]) - 1;
+                    int x = Integer.parseInt(s[1]);
+                    int y = Integer.parseInt(s[2]);
+                    spawnCoords[map].add(x + y * 2048);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            spawnCoords = null;
+        }
+        return spawnCoords;
     }
 }
