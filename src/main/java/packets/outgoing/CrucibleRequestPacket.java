@@ -23,7 +23,7 @@ public class CrucibleRequestPacket extends Packet {
 
     @Override
     public String toString() {
-        return "UnknownPacket182{" +
+        return "CrucibleRequestPacket{" +
                 "\n   unknownBytes=" + Arrays.toString(unknownBytes);
     }
 }
