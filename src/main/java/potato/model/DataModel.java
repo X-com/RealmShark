@@ -27,7 +27,7 @@ public class DataModel {
 
     public float playerX;
     public float playerY;
-    public boolean serverOffline = false;
+    public boolean isServerOnline = false;
 
     private long serverTime;
     private int heroesLeft = 0;

@@ -51,6 +51,9 @@ public class OptionsMenu {
         makeOptionsWindow();
     }
 
+    public static void load() {
+    }
+
     private static void makeOptionsWindow() {
         resetButton();
         alwaysCoordsButton();
@@ -535,7 +538,6 @@ public class OptionsMenu {
         Transferable t = c.getContents(null);
         if (t == null)
             return;
-        String ip;
         try {
             String s = (String) t.getTransferData(DataFlavor.stringFlavor);
             String filtered = s.replaceAll(" ", "");

@@ -63,6 +63,7 @@ public class ServerSynch {
 
     private void setServerOffline() {
         model.serverOffline = true;
+        model.isServerOnline = false;
     }
 
     public void startSynch(int myId, int locationIp, long seed, int map, int x, int y) {

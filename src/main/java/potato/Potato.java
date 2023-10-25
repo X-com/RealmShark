@@ -8,6 +8,7 @@ import potato.control.PacketController;
 import potato.model.Config;
 import potato.model.DataModel;
 import potato.view.GUIBase;
+import potato.view.OptionsMenu;
 import util.Util;
 
 import javax.swing.*;
@@ -65,7 +66,7 @@ public class Potato {
     }
 
     public void run() {
-        Config.load();
+        OptionsMenu.load();
         dataModel = new DataModel();
         new GUIBase(dataModel);
         controller = new PacketController(dataModel);
