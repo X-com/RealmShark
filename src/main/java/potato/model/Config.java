@@ -13,6 +13,8 @@ public class Config implements Serializable {
     public boolean showHeroes = true;
     public boolean showInfo = true;
 
+    public String serverIp = "217.27.177.69:6000";
+
     public int[] keyValues = {200, 201, 0, 0, 0, 0, 0};
     public String[] keyString = {"MW_UP", "MW_DOWN", "", "", "", "", ""};
 

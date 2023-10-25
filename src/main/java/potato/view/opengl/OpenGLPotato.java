@@ -259,7 +259,7 @@ public class OpenGLPotato extends Thread {
                     String s = String.format("%s%s", model.getCastleTimer(), Config.instance.saveMapInfo ? " R" : "");
                     renderHud.drawText2D(s, 5, Config.instance.mapHeight - 20, 20, bottomLeftVec, TextRenderer.TextBoundType.BOUNDING_BOX, mainTextColor);
                 } else if (showHeroCount) {
-                    String h = String.format("[%d] Heroes:%d %s", mapIndex + 1, model.getHeroesLeft(), Config.instance.saveMapInfo ? " R" : "");
+                    String h = String.format("[%d] Heroes:%d %s%s", mapIndex + 1, model.getHeroesLeft(), !model.serverOffline ? " Offline" : "", Config.instance.saveMapInfo ? " R" : "");
                     renderHud.drawText2D(h, 5, Config.instance.mapHeight - 23, 20, bottomLeftVec, TextRenderer.TextBoundType.BOUNDING_BOX, mainTextColor);
                 } else if (Config.instance.saveMapInfo) {
                     renderHud.drawText2D("R", 5, Config.instance.mapHeight - 23, 20, bottomLeftVec, TextRenderer.TextBoundType.BOUNDING_BOX, mainTextColor);

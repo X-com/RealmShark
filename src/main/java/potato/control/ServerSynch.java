@@ -1,6 +1,7 @@
 package potato.control;
 
 import com.google.gson.*;
+import potato.model.Config;
 import potato.model.DataModel;
 
 import java.net.URISyntaxException;
@@ -8,7 +9,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 public class ServerSynch {
-    static private final String urlString = "ws://217.27.177.69:6000";
+
+    private static ServerSynch instance;
     private final DataModel model;
     private WebSocket webSocket;
 
@@ -29,12 +31,28 @@ public class ServerSynch {
     }
 
     public ServerSynch(DataModel model) {
+        instance = this;
         this.model = model;
+        connect();
+    }
+
+    public static void connectServer() {
+        if (instance != null) instance.connect();
+    }
+
+    public void connect() {
+        if (webSocket != null && webSocket.isConnected) return;
+
         try {
-            webSocket = new WebSocket(urlString) {
+            webSocket = new WebSocket("ws://" + Config.instance.serverIp) {
                 @Override
                 public void onMessage(String message) {
                     incoming(message);
+                }
+
+                @Override
+                public void closed() {
+                    setServerOffline();
                 }
             };
             webSocket.connectBlocking(10, TimeUnit.SECONDS);
@@ -43,9 +61,15 @@ public class ServerSynch {
         }
     }
 
+    private void setServerOffline() {
+        model.serverOffline = true;
+    }
+
     public void startSynch(int myId, int locationIp, long seed, int map, int x, int y) {
         if (synchRequests) return;
         synchRequests = true;
+
+        if (webSocket.isConnected) model.serverOffline = false;
 
         sub(myId, locationIp, seed, map, x, y);
     }
@@ -57,6 +81,7 @@ public class ServerSynch {
 
     public void uploadSingleHero(int myId, int markIndex, int colorIndex) {
         if (!synchRequests) return;
+
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("packet", "hero");
         jsonObject.addProperty("user", myId);

@@ -27,6 +27,7 @@ public class DataModel {
 
     public float playerX;
     public float playerY;
+    public boolean serverOffline = false;
 
     private long serverTime;
     private int heroesLeft = 0;
@@ -57,6 +58,8 @@ public class DataModel {
     private int keyTime;
     private long openTime;
 
+    private final HashMap<Integer, MapInfo> mapData = new HashMap<>();
+    private MapInfo currentMap = new MapInfo();
     private final HashMap<Integer, ObjectData> allEntitys = new HashMap<>();
     private final int[][] mapTiles = new int[2048][2048];
     private float mapWidth;
@@ -141,6 +144,7 @@ public class DataModel {
         this.mapIndex = mapIndex;
         for (int i = 0; i < mapHeroes[this.mapIndex].size() && i < markers.length; i++) {
             mapHeroes[this.mapIndex].get(i).setMarker(markers[i], false);
+            currentMap.locations[i] = markers[i];
         }
         renderer.setMap(mapIndex);
         renderer.setCamera(playerX, playerY, zoom);
@@ -148,6 +152,7 @@ public class DataModel {
     }
 
     public void heroSynch(int heroId, int heroState) {
+        currentMap.locations[heroId] = heroState;
         mapHeroes[this.mapIndex].get(heroId).setMarker(heroState, false);
     }
 
@@ -235,9 +240,24 @@ public class DataModel {
         playerX = pos.x;
         playerY = pos.y;
         mapIndex = getMap((int) playerX, (int) playerY, tiles);
-        server.startSynch(myId, serverIp, seed, mapIndex, (int) pos.x, (int) pos.y);
+
+        realmConnection(pos);
 
         newRealmCheck = false;
+    }
+
+    private void realmConnection(WorldPosData pos) {
+        if (!mapData.containsKey(serverIp)) {
+            mapData.put(serverIp, new MapInfo());
+        } else {
+            currentMap = mapData.get(serverIp);
+            if (currentMap.seed != seed) {
+                currentMap.seed = seed;
+                Arrays.fill(currentMap.locations, 0);
+            }
+        }
+        initSynch(mapIndex, currentMap.locations);
+        server.startSynch(myId, serverIp, seed, mapIndex, (int) pos.x, (int) pos.y);
     }
 
     private int getMap(int x, int y, GroundTileData[] tiles) {
@@ -396,6 +416,7 @@ public class DataModel {
     }
 
     public void uploadSingleHero(HeroLocations h) {
+        currentMap.locations[h.getIndex()] = h.getState();
         server.uploadSingleHero(myId, h.getIndex(), h.getState());
     }
 

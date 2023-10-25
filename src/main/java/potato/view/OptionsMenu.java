@@ -4,6 +4,7 @@ import lc.kra.system.keyboard.event.GlobalKeyEvent;
 import lc.kra.system.mouse.event.GlobalMouseEvent;
 import potato.Potato;
 import potato.control.InputController;
+import potato.control.ServerSynch;
 import potato.model.Config;
 import potato.view.opengl.OpenGLPotato;
 
@@ -12,6 +13,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.*;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -54,6 +58,7 @@ public class OptionsMenu {
         shapes();
         colors();
         alignment();
+        addServer();
         addPanels();
     }
 
@@ -446,6 +451,8 @@ public class OptionsMenu {
         Config.instance.showHeroes = true;
         Config.instance.showInfo = true;
 
+        Config.instance.serverIp = "217.27.177.69:6000";
+
         Config.instance.keyValues = new int[]{200, 201, 0, 0, 0, 0, 0};
         Config.instance.keyString = new String[]{"MW_UP", "MW_DOWN", "", "", "", "", ""};
 
@@ -484,6 +491,85 @@ public class OptionsMenu {
         frame.setVisible(true);
     }
 
+    private static void addServer() {
+        label("Server");
+
+        JPanel con = new JPanel();
+
+        JButton connect = new JButton("Connect");
+        connect.setPreferredSize(new Dimension(90, 20));
+        connect.addActionListener(e -> ServerSynch.connectServer());
+
+        con.add(connect);
+
+        panels.add(con);
+        JPanel server = new JPanel();
+        server.setLayout(new GridLayout(1, 3));
+        server.setPreferredSize(new Dimension(70, 18));
+
+        JPanel left = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JLabel field = new JLabel("Server Ip:");
+
+        JLabel serverIpLabel = new JLabel();
+        serverIpLabel.setText(Config.instance.serverIp);
+
+        field.setHorizontalAlignment(SwingConstants.RIGHT);
+        field.setBorder(new EmptyBorder(0, 0, 0, 5));
+        left.add(field);
+
+        server.add(left);
+
+        JButton paste = new JButton("Paste");
+        paste.setPreferredSize(new Dimension(90, 20));
+        paste.addActionListener(e -> pasteServerIp(serverIpLabel));
+        JPanel right = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        right.add(serverIpLabel);
+        right.add(paste);
+        server.add(right);
+
+        panels.add(server);
+    }
+
+    private static void pasteServerIp(JLabel serverIpLabel) {
+        Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Transferable t = c.getContents(null);
+        if (t == null)
+            return;
+        String ip;
+        try {
+            String s = (String) t.getTransferData(DataFlavor.stringFlavor);
+            String filtered = s.replaceAll(" ", "");
+            String[] dotSplit = filtered.split("\\.");
+            if (dotSplit.length == 4) {
+                String[] colunSplit = dotSplit[3].split(":");
+                if (colunSplit.length == 2) {
+                    for (int i = 0; i < 3; i++) {
+                        int num = Integer.parseInt(dotSplit[i]);
+                        if (num < 0 || num > 255) {
+                            JOptionPane.showMessageDialog(null, "Can't paste non-ip values, copy the server ip with the port then click paste. Ip example: 111.222.333.444:5555", "Non IP paste error", JOptionPane.INFORMATION_MESSAGE);
+                            return;
+                        }
+                    }
+
+                    int num4 = Integer.parseInt(colunSplit[0]);
+                    if (num4 >= 0 && num4 <= 255) {
+                        int port = Integer.parseInt(colunSplit[1]);
+                        if (port >= 0 && port <= 65535) {
+                            Config.instance.serverIp = filtered;
+                            serverIpLabel.setText(Config.instance.serverIp);
+                            Config.save();
+                            return;
+                        }
+                    }
+                }
+            }
+            System.out.println(filtered);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        JOptionPane.showMessageDialog(null, "Can't paste non-ip values, copy the server ip with the port then click paste. Ip example: 111.222.333.444:5555", "Non IP paste error", JOptionPane.INFORMATION_MESSAGE);
+    }
+
     private static void addPanels() {
         int size = panels.size();
         JPanel panel = new JPanel();
@@ -502,7 +588,7 @@ public class OptionsMenu {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        frame.setSize(500, 850);
+        frame.setSize(500, 950);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
     }

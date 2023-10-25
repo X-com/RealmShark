@@ -46,6 +46,10 @@ public class WebSocket extends WebSocketClient {
     public void onClose(int code, String reason, boolean remote) {
         System.out.println("Connection closed by " + (remote ? "remote peer" : "us") + " Code: " + code + " Reason: " + reason);
         isConnected = false;
+        closed();
+    }
+
+    public void closed() {
     }
 
     @Override
