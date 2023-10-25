@@ -62,7 +62,6 @@ public class ServerSynch {
     }
 
     private void setServerOffline() {
-        model.serverOffline = true;
         model.isServerOnline = false;
     }
 
@@ -70,7 +69,7 @@ public class ServerSynch {
         if (synchRequests) return;
         synchRequests = true;
 
-        if (webSocket.isConnected) model.serverOffline = false;
+        if (webSocket.isConnected) model.isServerOnline = true;
 
         sub(myId, locationIp, seed, map, x, y);
     }
