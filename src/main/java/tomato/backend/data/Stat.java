@@ -142,6 +142,7 @@ public class Stat implements Serializable {
 
     public void setStats(StatData[] stats) {
         for (StatData sd : stats) {
+            if (sd.statType == null) continue;
             switch (sd.statType) {
                 case MAX_HP_STAT:
                     MAX_HP_STAT = sd;
