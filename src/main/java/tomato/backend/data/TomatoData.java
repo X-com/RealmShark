@@ -13,6 +13,7 @@ import tomato.gui.character.CharacterExaltGUI;
 import tomato.gui.character.CharacterPanelGUI;
 import tomato.gui.character.CharacterStatsGUI;
 import tomato.gui.dps.DpsGUI;
+import tomato.gui.keypop.KeypopGUI;
 import tomato.gui.security.ParsePanelGUI;
 import tomato.realmshark.HttpCharListRequest;
 import tomato.realmshark.RealmCharacter;
@@ -31,8 +32,6 @@ import java.util.regex.Pattern;
  * Resets the data after leaving the instance.
  */
 public class TomatoData {
-    private static final Pattern popperName = Pattern.compile("[^ ]*\"player\":\"([A-Za-z]*)[^ ]*");
-
     private String token;
     public MapInfoPacket map;
     protected int worldPlayerId;
@@ -425,30 +424,8 @@ public class TomatoData {
     public void notification(NotificationPacket packet) {
         if (packet.effect == NotificationEffectType.Death) {
             deathNotifications.add(packet);
-        } else if (packet.effect == NotificationEffectType.PortalOpened) {
-            String msg = packet.message;
-            Matcher m = popperName.matcher(msg);
-            if (m.matches()) {
-                String playerName = m.group(1);
-                try {
-                    TomatoGUI.appendTextAreaKeypop(String.format("%s [%s]: %s\n", Util.getHourTime(), playerName, IdToAsset.objectName(packet.pictureType)));
-                } catch (AssetMissingException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (packet.effect == NotificationEffectType.ServerMessage) {
-            String msg = packet.message;
-            if (msg.startsWith("Wine Cellar")) {
-                String[] list = msg.split(" ");
-                String playerName = list[list.length - 1];
-                TomatoGUI.appendTextAreaKeypop(String.format("%s [%s]: Inc\n", Util.getHourTime(), playerName));
-            } else if (msg.contains("Monument has been activated by")) {
-                String[] list = msg.split(" ");
-                String playerName = list[list.length - 1];
-                String type = list[1];
-                TomatoGUI.appendTextAreaKeypop(String.format("%s [%s]: %s Rune\n", Util.getHourTime(), playerName, type));
-            }
         }
+        KeypopGUI.packet(packet);
     }
 
     public ArrayList<NotificationPacket> getDeathNotifications() {

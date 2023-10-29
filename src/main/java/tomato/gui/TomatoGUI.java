@@ -8,6 +8,7 @@ import tomato.gui.dps.DpsDisplayOptions;
 import tomato.gui.dps.DpsGUI;
 import tomato.gui.fame.FameTrackerGUI;
 import tomato.gui.character.CharacterPanelGUI;
+import tomato.gui.keypop.KeypopGUI;
 import tomato.gui.maingui.TomatoMenuBar;
 import tomato.gui.quest.QuestGUI;
 import tomato.gui.security.ParsePanelGUI;
@@ -29,7 +30,6 @@ public class TomatoGUI {
     private static int fontStyle = 0;
     private static String fontName = "Monospaced";
     private static JTextArea textAreaChat;
-    private static JTextArea textAreaKeypop;
     private static JLabel statusLabel;
     private static JFrame frame;
     private static SecurityGUI securityPanel;
@@ -55,8 +55,7 @@ public class TomatoGUI {
         textAreaChat = new JTextArea();
         tabbedPane.addTab("Chat", createTextArea(textAreaChat));
 
-        textAreaKeypop = new JTextArea();
-        tabbedPane.addTab("Key-pops", createTextArea(textAreaKeypop));
+        tabbedPane.addTab("Key-pops", new KeypopGUI());
 
         securityPanel = new SecurityGUI();
         tabbedPane.addTab("Security", securityPanel);
@@ -221,7 +220,7 @@ public class TomatoGUI {
     public static void fontSizeTextAreas(int size) {
         Font f = textAreaChat.getFont();
         textAreaChat.setFont(new Font(f.getName(), f.getStyle(), size));
-        textAreaKeypop.setFont(new Font(f.getName(), f.getStyle(), size));
+        KeypopGUI.editFont(new Font(f.getName(), f.getStyle(), size));
         DpsGUI.editFont(new Font(f.getName(), f.getStyle(), size));
         ParsePanelGUI.editFont(new Font(f.getName(), f.getStyle(), size));
     }
@@ -232,18 +231,9 @@ public class TomatoGUI {
     public static void fontNameTextAreas(String name, int style) {
         Font f = textAreaChat.getFont();
         textAreaChat.setFont(new Font(name, style, f.getSize()));
-        textAreaKeypop.setFont(new Font(name, style, f.getSize()));
+        KeypopGUI.editFont(new Font(name, style, f.getSize()));
         DpsGUI.editFont(new Font(name, style, f.getSize()));
         ParsePanelGUI.editFont(new Font(name, style, f.getSize()));
-    }
-
-    /**
-     * Add text to the key pop text area.
-     *
-     * @param s The text to be added at the end of text area.
-     */
-    public static void appendTextAreaKeypop(String s) {
-        if (textAreaKeypop != null) textAreaKeypop.append(s);
     }
 
     /**

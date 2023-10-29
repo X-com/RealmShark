@@ -86,14 +86,17 @@ public class PacketRead {
         if (packet instanceof ReconnectPacket) return;
         if (packet instanceof ExaltationUpdatePacket) return;
         if (packet instanceof ShootAckCounterPacket) return;
-        if (packet instanceof NotificationPacket) return;
+        if (packet instanceof NotificationPacket) {
+            filterNotificationPacket((NotificationPacket) packet);
+            return;
+        }
         if (packet instanceof ForgeUnlockedBlueprints) return;
         if (packet instanceof QuestFetchResponsePacket) return;
         if (packet instanceof QueueInfoPacket) return;
         if (packet instanceof FailurePacket) return;
         if (packet instanceof HelloPacket) {
             tileCounter = 0;
-            System.out.println(((HelloPacket) packet).accessToken);
+//            System.out.println(((HelloPacket) packet).accessToken);
             return;
         }
         // usage
@@ -114,6 +117,9 @@ public class PacketRead {
         if (packet instanceof CreateSuccessPacket) return;
         if (packet instanceof CreepMoveMessagePacket) return;
         if (packet instanceof StasisPacket) return;
+        if (packet instanceof UnknownPacket139) return;
+        if (packet instanceof CrucibleRequestPacket) return;
+        if (packet instanceof CrucibleResponsePacket) return;
         if (packet instanceof IpAddress) {
             IpAddress p = (IpAddress) packet;
             ip = p.srcAddressAsInt;
@@ -152,6 +158,17 @@ public class PacketRead {
 
         //RealmHeroesLeftPacket
 
+        System.out.println(packet);
+    }
+
+    private static void filterNotificationPacket(NotificationPacket packet) {
+        String m = packet.message;
+        if (m == null) {
+        } else if (m.startsWith("{\"k\":\"s.plus_symbol")) {
+            return;
+        } else if (m.startsWith("{\"k\":\"s.no_effect\"}")) {
+            return;
+        }
         System.out.println(packet);
     }
 
