@@ -122,11 +122,11 @@ public class RealmCharacterStats {
         if (flag != 0) {
             try {
                 boolean[] bitArray = parseBits(reader);
-                for (int i = 0; i < bitArray.length; i++) {
-                    if (CharacterStatistics.getName(i) == null && bitArray[i]) {
-                        System.out.println(i);
-                    }
-                }
+//                for (int i = 0; i < bitArray.length; i++) {
+//                    if (CharacterStatistics.getName(i) == null && bitArray[i]) {
+//                        System.out.println(i);
+//                    }
+//                }
                 parseStats(reader, bitArray);
             } catch (Exception e) {
                 System.out.println(pcStats);
