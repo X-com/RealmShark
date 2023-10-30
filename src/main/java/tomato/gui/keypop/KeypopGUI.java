@@ -43,7 +43,6 @@ public class KeypopGUI extends JPanel {
             String msg = packet.message;
             Matcher m = keypopParse.matcher(msg);
             if (m.matches()) {
-                System.out.println("popparino");
                 String playerName = m.group(1);
                 try {
                     appendTextAreaKeypop(String.format("%s [%s]: %s\n", Util.getHourTime(), playerName, IdToAsset.objectName(packet.pictureType)));
