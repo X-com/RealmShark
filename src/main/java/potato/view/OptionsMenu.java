@@ -454,7 +454,7 @@ public class OptionsMenu {
         Config.instance.showHeroes = true;
         Config.instance.showInfo = true;
 
-        Config.instance.serverIp = "217.27.177.69:6000";
+        Config.instance.serverIp = "167.114.3.98:6000";
 
         Config.instance.keyValues = new int[]{200, 201, 0, 0, 0, 0, 0};
         Config.instance.keyString = new String[]{"MW_UP", "MW_DOWN", "", "", "", "", ""};
