@@ -11,6 +11,7 @@ import java.awt.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+//message={"k":"s.dungeon_opened_by","t":{"player":"PLAYERNAME",}}   key pop
 //message={"k":"s.something_by_player","t":{"name":"The Shield Monument has been activated","player":"PLAYERNAME",}}  rune pop
 //message={"k":"s.dungeon_unlocked_by","t":{"name":"The Void","player":"PLAYERNAME",}}   vial pop
 //message={"k":"s.dungeon_unlocked_by","t":{"name":"Wine Cellar","player":"PLAYERNAME",}}   Inc pop
@@ -22,10 +23,13 @@ public class KeypopGUI extends JPanel {
 
     private static JTextArea textAreaKeypop;
 
-    private static final Pattern pattern = Pattern.compile("[^*]\"player\":\"([A-Za-z]*)[^ ]*");
+    private static final Pattern keypopParse = Pattern.compile("[^ ]*\"player\":\"([A-Za-z]*)[^ ]*");
+    private static final Pattern nonkeypopParse = Pattern.compile("[^ ]*\"name\":\"([A-Za-z ]*)\",\"player\":\"([A-Za-z]*)[^ ]*");
 
     public KeypopGUI() {
+        setLayout(new BorderLayout());
         textAreaKeypop = new JTextArea();
+        textAreaKeypop.setEditable(false);
         add(textAreaKeypop);
     }
 
@@ -37,8 +41,9 @@ public class KeypopGUI extends JPanel {
     public static void packet(NotificationPacket packet) {
         if (packet.effect == NotificationEffectType.PortalOpened) {
             String msg = packet.message;
-            Matcher m = pattern.matcher(msg);
+            Matcher m = keypopParse.matcher(msg);
             if (m.matches()) {
+                System.out.println("popparino");
                 String playerName = m.group(1);
                 try {
                     appendTextAreaKeypop(String.format("%s [%s]: %s\n", Util.getHourTime(), playerName, IdToAsset.objectName(packet.pictureType)));
@@ -48,13 +53,13 @@ public class KeypopGUI extends JPanel {
             }
         } else if (packet.effect == NotificationEffectType.ServerMessage && packet.message != null) {
             String msg = packet.message;
-            Matcher m = pattern.matcher(msg);
+            Matcher m = nonkeypopParse.matcher(msg);
             if (m.matches()) {
                 String type = m.group(1);
                 String playerName = m.group(2);
                 String pop = null;
-                if (type.equals("The Shield Monument has been activated")) {
-                    pop = "Rune";
+                if (type.contains("Monument has been activated")) {
+                    pop = type.split(" ")[1] + " Rune";
                 } else if (type.equals("The Void")) {
                     pop = "Vial";
                 } else if (type.equals("Wine Cellar")) {
