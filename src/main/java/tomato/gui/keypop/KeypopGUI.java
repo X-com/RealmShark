@@ -4,6 +4,7 @@ import assets.AssetMissingException;
 import assets.IdToAsset;
 import packets.data.enums.NotificationEffectType;
 import packets.incoming.NotificationPacket;
+import tomato.gui.TomatoGUI;
 import util.Util;
 
 import javax.swing.*;
@@ -29,8 +30,7 @@ public class KeypopGUI extends JPanel {
     public KeypopGUI() {
         setLayout(new BorderLayout());
         textAreaKeypop = new JTextArea();
-        textAreaKeypop.setEditable(false);
-        add(textAreaKeypop);
+        add(TomatoGUI.createTextArea(textAreaKeypop));
     }
 
     /**
