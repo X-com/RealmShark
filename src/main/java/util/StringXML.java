@@ -34,7 +34,7 @@ public class StringXML implements Iterable<StringXML> {
      */
     public static StringXML getParsedXML(String rawXMLString) throws ParserConfigurationException, IOException, SAXException {
         Document doc = loadXMLFromString(rawXMLString);
-        return next(doc.getDocumentElement(), null);
+        return next(doc.getDocumentElement(), null, true);
     }
 
     /**
@@ -59,7 +59,7 @@ public class StringXML implements Iterable<StringXML> {
      * @param parrentNode Parrent XMLString object stored in the child.
      * @return Return the XMLString object to be added to the parrent.
      */
-    private static StringXML next(Node node, StringXML parrentNode) {
+    private static StringXML next(Node node, StringXML parrentNode, boolean firstChild) {
         StringXML thisXMLString = new StringXML();
 
         thisXMLString.parrent = parrentNode;
@@ -84,10 +84,21 @@ public class StringXML implements Iterable<StringXML> {
         }
 
         Node c = node.getFirstChild();
-        if (c != null) thisXMLString.children.add(next(c, thisXMLString));
+        if (c != null) thisXMLString.children.add(next(c, thisXMLString, true));
 
-        Node s = node.getNextSibling();
-        if (s != null) parrentNode.children.add(next(s, parrentNode));
+        if (!firstChild) return thisXMLString;
+
+        ArrayList<Node> nodeList = new ArrayList<>();
+        {
+            Node s = node.getNextSibling();
+            while (s != null) {
+                nodeList.add(s);
+                s = s.getNextSibling();
+            }
+        }
+        for (Node s : nodeList) {
+            parrentNode.children.add(next(s, parrentNode, false));
+        }
 
         return thisXMLString;
     }
