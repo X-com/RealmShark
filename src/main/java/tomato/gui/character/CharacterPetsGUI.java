@@ -32,15 +32,15 @@ public class CharacterPetsGUI extends JPanel {
     private static final HashMap<Integer, Integer> feedCost = new HashMap<>();
 
     static {
-        petAbilitys.put(402, "Attack Close");
-        petAbilitys.put(404, "Attack Mid");
-        petAbilitys.put(405, "Attack Far");
-        petAbilitys.put(406, "Electric");
+        petAbilitys.put(402, "A. Close");
+        petAbilitys.put(404, "A. Mid");
+        petAbilitys.put(405, "A. Far");
+        petAbilitys.put(406, "Elec");
         petAbilitys.put(407, "Heal");
-        petAbilitys.put(408, "Magic Heal");
+        petAbilitys.put(408, "M. Heal");
         petAbilitys.put(409, "Savage");
         petAbilitys.put(410, "Decoy");
-        petAbilitys.put(411, "Rising Fury");
+        petAbilitys.put(411, "R. Fury");
 
         feedMax.put(0, -1);
         feedMax.put(30, 2000);
@@ -127,24 +127,17 @@ public class CharacterPetsGUI extends JPanel {
         JPanel box = CharacterPanelGUI.createMainBox();
 
         box.setLayout(new GridBagLayout());
-//        box.setBorder(BorderFactory.createLineBorder(Color.black));
 
         GridBagConstraints g = new GridBagConstraints();
         g.gridwidth = 2;
         g.gridheight = 1;
-//        g.weightx = 0.3f;
         try {
             int skin = pet.skin();
             BufferedImage img = ImageBuffer.getImage(skin);
             ImageIcon icon = new ImageIcon(img.getScaledInstance(40, 40, Image.SCALE_DEFAULT));
 //            JLabel petIcon = new JLabel(pet.name(), icon, JLabel.CENTER);
             JLabel petIcon = new JLabel(icon, JLabel.CENTER);
-//            JPanel lab = new JPanel(new BorderLayout());
-//            lab.setBorder(BorderFactory.createLineBorder(Color.black));
-//            lab.add(petIcon);
             box.add(petIcon, g);
-
-//            characterLabel.setToolTipText(exaltStats(c));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -156,18 +149,6 @@ public class CharacterPetsGUI extends JPanel {
         petPanel.add(box);
 
         validate();
-    }
-
-    private Component leftColumn() {
-        return null;
-    }
-
-    private Component rightColumn() {
-        return null;
-    }
-
-    public static void updatePet(ObjectData object) {
-
     }
 
     public static void clearPets() {
@@ -243,55 +224,26 @@ public class CharacterPetsGUI extends JPanel {
             if (stat.PET_SECONDABILITY_TYPE_STAT != null) a[7] = stat.PET_SECONDABILITY_TYPE_STAT.statValue;
             if (stat.PET_THIRDABILITY_TYPE_STAT != null) a[8] = stat.PET_THIRDABILITY_TYPE_STAT.statValue;
 
-            labels[0].setText(String.format("%s ", petAbilitys.get(a[6])));
-            labels[1].setText(String.format("[Level: %d]", a[3]));
-            labels[2].setText(String.format("FP: %d", a[0]));
+            for (int i = 0; i < 3; i++) {
+                labels[i * 5].setText(String.format("%s ", petAbilitys.get(a[i + 6])));
+                labels[i * 5 + 1].setText(String.format("[Level: %d]", a[i + 3]));
+                labels[i * 5 + 2].setText(String.format("FP: %d", a[i]));
 
-            if (maxing != -1 && feedAmount != -1) {
-                int points = a[0];
-                int left = maxing - points;
-                int count = left / feedAmount;
+                if (i == 1 && maxLevel < 50) continue;
+                if (i == 2 && maxLevel < 90) continue;
 
-                if (left > 0) {
-                    labels[3].setText(String.format("#: %d", count));
-                    labels[4].setText(String.format("F: %d", count * cost));
-                } else {
-                    labels[3].setText("-");
-                    labels[4].setText("-");
-                }
-            }
+                if (maxing != -1 && feedAmount != -1) {
+                    int points = a[i];
+                    int left = maxing - points;
+                    int count = (int) (left / (feedAmount * feedMultiplier[i]));
 
-            labels[5].setText(String.format("%s ", petAbilitys.get(a[7])));
-            labels[6].setText(String.format("[Level: %d]", a[4]));
-            labels[7].setText(String.format("FP: %.0f", a[1] / feedMultiplier[1]));
-            labels[8].setText("-");
-            labels[9].setText("-");
-
-            if (maxing != -1 && feedAmount != -1 && maxLevel >= 50) {
-                int points = a[1];
-                int left = maxing - points;
-                int count = (int) (left / (feedAmount * 0.65f));
-
-                if (left > 0) {
-                    labels[8].setText(String.format("#: %d", count));
-                    labels[9].setText(String.format("F: %d", count * cost));
-                }
-            }
-
-            labels[10].setText(String.format("%s ", petAbilitys.get(a[8])));
-            labels[11].setText(String.format("[Level: %d]", a[5]));
-            labels[12].setText(String.format("FP: %.0f", a[2] / feedMultiplier[2]));
-            labels[13].setText("-");
-            labels[14].setText("-");
-
-            if (maxing != -1 && feedAmount != -1 && maxLevel >= 90) {
-                int points = a[2];
-                int left = maxing - points;
-                int count = (int) (left / (feedAmount * 0.3f));
-
-                if (left > 0) {
-                    labels[13].setText(String.format("#: %d", count));
-                    labels[14].setText(String.format("F: %d", count * cost));
+                    if (left > 0) {
+                        labels[i * 5 + 3].setText(String.format(" Items: %d", count));
+                        labels[i * 5 + 4].setText(String.format(" F: %d", count * cost));
+                    } else {
+                        labels[i * 5 + 3].setText(" -");
+                        labels[i * 5 + 4].setText(" -");
+                    }
                 }
             }
         }
