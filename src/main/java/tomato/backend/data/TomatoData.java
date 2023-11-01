@@ -74,6 +74,9 @@ public class TomatoData {
         if (map.displayName.equals("Pet Yard")) {
             petyard = true;
             CharacterPetsGUI.clearPets();
+            charListHttpRequest();
+        } else if (map.displayName.equals("Daily Quest Room")) {
+            charListHttpRequest();
         }
     }
 

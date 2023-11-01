@@ -85,8 +85,6 @@ public class TomatoPacketCapture implements Controller {
             QuestFetchResponsePacket p = (QuestFetchResponsePacket) packet;
             Stream<QuestData> list = Arrays.stream(p.quests).sorted(Comparator.comparing(questData -> questData.category));
             TomatoGUI.updateQuests(list.toArray(QuestData[]::new));
-
-            data.charListHttpRequest();
         }
     }
 
