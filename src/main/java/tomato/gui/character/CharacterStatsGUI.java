@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Comparator;
@@ -36,12 +37,13 @@ public class CharacterStatsGUI extends JPanel {
         right = new JPanel();
         JPanel topLeft = new JPanel();
 
-        JScrollPane spTop = new JScrollPane(top);
+        HorizontalJScrollPane spTop = new HorizontalJScrollPane(top);
         JScrollPane spLeft = new JScrollPane(left);
         JScrollPane spRight = new JScrollPane(right);
 
         spRight.getHorizontalScrollBar().setModel(spTop.getHorizontalScrollBar().getModel());
         spRight.getVerticalScrollBar().setModel(spLeft.getVerticalScrollBar().getModel());
+        spTop.getHorizontalScrollBar().setUnitIncrement(3);
         spRight.getVerticalScrollBar().setUnitIncrement(9);
 
         spLeft.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -66,9 +68,9 @@ public class CharacterStatsGUI extends JPanel {
                 if (data.chars == null) return;
                 sortOrder = !sortOrder;
                 if (sortOrder) {
-                    data.chars.sort(Comparator.comparingLong(o -> -o.fame));
-                } else {
                     data.chars.sort(Comparator.comparingLong(o -> o.fame));
+                } else {
+                    data.chars.sort(Comparator.comparingLong(o -> -o.fame));
                 }
                 update();
             }
@@ -268,6 +270,36 @@ public class CharacterStatsGUI extends JPanel {
             return new ImageIcon(img.getScaledInstance(15, 15, Image.SCALE_DEFAULT));
         } catch (IOException | AssetMissingException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Horizontal scroll class
+     */
+    class HorizontalJScrollPane extends JScrollPane {
+        public HorizontalJScrollPane(Component component) {
+            super(component);
+            final JScrollBar horizontalScrollBar = getHorizontalScrollBar();
+            setWheelScrollingEnabled(false);
+            addMouseWheelListener(new MouseAdapter() {
+                public void mouseWheelMoved(MouseWheelEvent evt) {
+
+                    int iScrollAmount = horizontalScrollBar.getUnitIncrement();
+                    if (evt.getWheelRotation() >= 1)//mouse wheel was rotated down/ towards the user
+                    {
+                        int iNewValue = horizontalScrollBar.getValue() + horizontalScrollBar.getBlockIncrement() * iScrollAmount * Math.abs(evt.getWheelRotation());
+                        if (iNewValue <= horizontalScrollBar.getMaximum()) {
+                            horizontalScrollBar.setValue(iNewValue);
+                        }
+                    } else if (evt.getWheelRotation() <= -1)//mouse wheel was rotated up/away from the user
+                    {
+                        int iNewValue = horizontalScrollBar.getValue() - horizontalScrollBar.getBlockIncrement() * iScrollAmount * Math.abs(evt.getWheelRotation());
+                        if (iNewValue >= 0) {
+                            horizontalScrollBar.setValue(iNewValue);
+                        }
+                    }
+                }
+            });
         }
     }
 }
