@@ -4,6 +4,7 @@ import assets.AssetMissingException;
 import assets.IdToAsset;
 import packets.Packet;
 import packets.data.ObjectData;
+import packets.data.StatData;
 import packets.data.enums.NotificationEffectType;
 import packets.incoming.*;
 import packets.outgoing.EnemyHitPacket;
@@ -11,6 +12,7 @@ import packets.outgoing.PlayerShootPacket;
 import tomato.gui.TomatoGUI;
 import tomato.gui.character.CharacterExaltGUI;
 import tomato.gui.character.CharacterPanelGUI;
+import tomato.gui.character.CharacterPetsGUI;
 import tomato.gui.character.CharacterStatsGUI;
 import tomato.gui.dps.DpsGUI;
 import tomato.gui.keypop.KeypopGUI;
@@ -57,6 +59,7 @@ public class TomatoData {
     protected ArrayList<NotificationPacket> deathNotifications = new ArrayList<>();
     protected final HashSet<Integer> dropList = new HashSet<>();
     private ArrayList<Packet> dpsPacketLog = new ArrayList<>();
+    private boolean petyard;
 
     /**
      * Sets the current realm.
@@ -68,6 +71,10 @@ public class TomatoData {
         ParsePanelGUI.clear();
         this.map = map;
         rng = new RNG(map.seed);
+        if (map.displayName.equals("Pet Yard")) {
+            petyard = true;
+            CharacterPetsGUI.clearPets();
+        }
     }
 
     /**
@@ -150,10 +157,11 @@ public class TomatoData {
         Entity entity = entityList.computeIfAbsent(id, idd -> new Entity(this, idd, timePc));
         entity.entityUpdate(object.objectType, object.status, timePc);
 
-        if (isCrystal(id)) {
+        if (petyard) {
+            addPet(object);
+        } else if (isCrystal(id)) {
             crystalTracker.add(id);
-        }
-        if (isPlayerEntity(object.objectType)) {
+        } else if (isPlayerEntity(object.objectType)) {
             playerList.put(id, entity);
             playerListUpdated.put(id, entity);
             if (id == worldPlayerId) {
@@ -164,6 +172,10 @@ public class TomatoData {
             }
             ParsePanelGUI.addPlayer(id, entity);
         }
+    }
+
+    private void addPet(ObjectData object) {
+        CharacterPetsGUI.addPet(object);
     }
 
     /**
@@ -327,6 +339,7 @@ public class TomatoData {
         for (Projectile p : projectiles) {
             if (p != null) p.clear();
         }
+        petyard = false;
     }
 
     public Entity[] getEntityHitList() {

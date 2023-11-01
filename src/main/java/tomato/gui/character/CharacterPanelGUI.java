@@ -24,12 +24,15 @@ public class CharacterPanelGUI extends JPanel {
 
         CharacterStatsGUI characterStatsGUI = new CharacterStatsGUI(data);
 
+        CharacterPetsGUI characterPetsGUI = new CharacterPetsGUI(data);
+
         JTabbedPane tabbedPane = new JTabbedPane();
         add(tabbedPane);
         tabbedPane.addTab("Characters", charListPanel);
         tabbedPane.addTab("Statistics", characterStatsGUI);
         tabbedPane.addTab("Exalts", exalts);
         tabbedPane.addTab("Stat Maxing", mainMaxingPanel);
+        tabbedPane.addTab("Pets", characterPetsGUI);
 
 //        JButton button = new JButton("Test");
 //        button.addActionListener(e -> {

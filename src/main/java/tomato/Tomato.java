@@ -19,7 +19,6 @@ import util.Util;
 import javax.swing.*;
 import java.net.URL;
 import java.nio.file.AccessDeniedException;
-import java.util.regex.Pattern;
 
 /**
  * Tomato is an EXAMPLE MOD built on top of RealmShark, an API used to

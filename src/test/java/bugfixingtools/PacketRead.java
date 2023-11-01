@@ -36,10 +36,15 @@ public class PacketRead {
 
     public static void readAll(Packet packet) {
 
-//        if(true){
-//            System.out.println(packet);
-//            return;
-//        }
+        if (true) {
+            if (packet instanceof PingPacket) return;
+            if (packet instanceof PongPacket) return;
+            if (packet instanceof MovePacket) return;
+            if (packet instanceof PlayerShootPacket) return;
+            if (packet instanceof ServerPlayerShootPacket) return;
+            System.out.println(packet);
+            return;
+        }
 
         // spammy
         if (packet instanceof PingPacket) return;
@@ -87,7 +92,7 @@ public class PacketRead {
         if (packet instanceof ExaltationUpdatePacket) return;
         if (packet instanceof ShootAckCounterPacket) return;
         if (packet instanceof NotificationPacket) {
-            filterNotificationPacket((NotificationPacket) packet);
+//            filterNotificationPacket((NotificationPacket) packet);
             return;
         }
         if (packet instanceof ForgeUnlockedBlueprints) return;

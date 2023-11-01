@@ -2,13 +2,16 @@ package tomato.realmshark;
 
 import org.xml.sax.SAXException;
 import util.StringXML;
-import util.Util;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -79,6 +82,8 @@ public class HttpCharListRequest {
      * @return List of Character data parsed from the XML string.
      */
     public static ArrayList<RealmCharacter> getCharList(String r) {
+//        prettyXML(r);
+
         StringXML base;
         ArrayList<RealmCharacter> listChars = new ArrayList<>();
 
@@ -189,5 +194,29 @@ public class HttpCharListRequest {
             }
         }
         return listChars;
+    }
+
+    /**
+     * Pretty prints XML
+     *
+     * @param input Ugly XML text
+     */
+    private static void prettyXML(String input) {
+        try {
+            Source xmlInput = new StreamSource(new StringReader(input));
+            StringWriter stringWriter = new StringWriter();
+            StreamResult xmlOutput = new StreamResult(stringWriter);
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            transformerFactory.setAttribute("indent-number", 4);
+            transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.transform(xmlInput, xmlOutput);
+            String out = xmlOutput.getWriter().toString();
+            System.out.println(out);
+        } catch (Exception e) {
+            throw new RuntimeException(e); // simple exception handling, please review it
+        }
     }
 }
