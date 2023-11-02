@@ -10,10 +10,7 @@ import packets.incoming.*;
 import packets.outgoing.EnemyHitPacket;
 import packets.outgoing.PlayerShootPacket;
 import tomato.gui.TomatoGUI;
-import tomato.gui.character.CharacterExaltGUI;
-import tomato.gui.character.CharacterPanelGUI;
-import tomato.gui.character.CharacterPetsGUI;
-import tomato.gui.character.CharacterStatsGUI;
+import tomato.gui.character.*;
 import tomato.gui.dps.DpsGUI;
 import tomato.gui.keypop.KeypopGUI;
 import tomato.gui.security.ParsePanelGUI;
@@ -102,6 +99,7 @@ public class TomatoData {
         if (!Arrays.equals(newStats.dungeonStats, r.charStats.dungeonStats)) {
             r.charStats = newStats;
             CharacterStatsGUI.updateRealmChars();
+            CharacterCollectionGUI.updateRealmChars();
         }
     }
 
