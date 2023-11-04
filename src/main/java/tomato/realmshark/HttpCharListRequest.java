@@ -224,8 +224,15 @@ public class HttpCharListRequest {
             } else if (Objects.equals(xml.name, "PowerUpStats")) {
                 for (StringXML info : xml) {
                     if (Objects.equals(info.name, "ClassStats")) {
-                        int clazz = Integer.parseInt(info.children.get(0).value);
-                        int[] exalts = Arrays.stream(info.children.get(1).value.split(",")).mapToInt(Integer::parseInt).toArray();
+                        int clazz = 0;
+                        int[] exalts = null;
+                        for (StringXML c : info) {
+                            if (Objects.equals(c.name, "class")) {
+                                clazz = Integer.parseInt(c.value);
+                            } else if (Objects.equals(c.name, "#text")) {
+                                exalts = Arrays.stream(c.value.split(",")).mapToInt(Integer::parseInt).toArray();
+                            }
+                        }
                         RealmCharacter.exalts.put(clazz, exalts);
                     }
                 }
