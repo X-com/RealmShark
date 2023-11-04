@@ -69,6 +69,7 @@ public class TomatoPacketCapture implements Controller {
             CreateSuccessPacket p = (CreateSuccessPacket) packet;
             data.setUserId(p.objectId, p.charId, p.str);
             data.logPacket(packet);
+            data.webRequest();
         } else if (packet instanceof ExaltationUpdatePacket) {
             ExaltationUpdatePacket p = (ExaltationUpdatePacket) packet;
             data.exaltUpdate(p);

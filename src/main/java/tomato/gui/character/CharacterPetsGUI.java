@@ -5,11 +5,11 @@ import assets.IdToAsset;
 import assets.ImageBuffer;
 import packets.data.ObjectData;
 import packets.data.StatData;
+import tomato.backend.data.Entity;
 import tomato.backend.data.Stat;
 import tomato.backend.data.TomatoData;
 
 import javax.swing.*;
-import javax.swing.plaf.synth.SynthUI;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
@@ -96,11 +96,11 @@ public class CharacterPetsGUI extends JPanel {
     }
 
     private void add(ObjectData object) {
-        int objectId = object.status.objectId;
-        if (petList.containsKey(objectId)) {
-            Pet oldPet = petList.get(objectId);
+        Stat stat = new Stat(object.status.stats);
+        StatData id = stat.PET_INSTANCEID_STAT;
+        if (id != null && petList.containsKey(id.statValue)) {
+            Pet oldPet = petList.get(id.statValue);
             if (oldPet != null) {
-                Stat stat = new Stat(object.status.stats);
                 if (
                         oldPet.stat.PET_FIRSTABILITY_POINT_STAT.statValue != stat.PET_FIRSTABILITY_POINT_STAT.statValue ||
                                 oldPet.stat.PET_SECONDABILITY_POINT_STAT.statValue != stat.PET_SECONDABILITY_POINT_STAT.statValue ||
@@ -116,7 +116,7 @@ public class CharacterPetsGUI extends JPanel {
             if (sd.statTypeNum > 80 && sd.statTypeNum < 96) {
                 Pet newPet = new Pet(object);
 
-                petList.put(objectId, newPet);
+                petList.put(newPet.getId(), newPet);
                 addPetToPanel(newPet);
                 return;
             }
@@ -156,6 +156,17 @@ public class CharacterPetsGUI extends JPanel {
         INSTANCE.petPanel.removeAll();
     }
 
+    public static void updateEquipedPet() {
+        INSTANCE.addPacketPet();
+    }
+
+    private void addPacketPet() {
+        Pet newPet = new Pet(data.pet);
+
+        petList.put(newPet.getId(), newPet);
+        addPetToPanel(newPet);
+    }
+
     private class Pet {
         Stat stat;
         JLabel[] labels = new JLabel[15];
@@ -168,6 +179,19 @@ public class CharacterPetsGUI extends JPanel {
                 labels[i] = new JLabel();
                 info.add(labels[i]);
             }
+        }
+
+        public Pet(Entity object) {
+            stat = object.stat;
+            for (int i = 0; i < labels.length; i++) {
+                labels[i] = new JLabel();
+                info.add(labels[i]);
+            }
+        }
+
+        public Integer getId() {
+            if (stat.PET_INSTANCEID_STAT == null) return -1;
+            return stat.PET_INSTANCEID_STAT.statValue;
         }
 
         public JPanel getInfoPanel() {

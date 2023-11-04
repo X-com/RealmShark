@@ -39,6 +39,7 @@ public class TomatoData {
     public long timePc;
     private long timePcFirst;
     public Entity player;
+    public Entity pet;
     protected final int[][] mapTiles = new int[2048][2048];
     protected final HashMap<Integer, Entity> entityList = new HashMap<>();
     protected final HashMap<Integer, Entity> playerList = new HashMap<>();
@@ -68,13 +69,6 @@ public class TomatoData {
         ParsePanelGUI.clear();
         this.map = map;
         rng = new RNG(map.seed);
-        if (map.displayName.equals("Pet Yard")) {
-            petyard = true;
-            CharacterPetsGUI.clearPets();
-            charListHttpRequest();
-        } else if (map.displayName.equals("Daily Quest Room")) {
-            charListHttpRequest();
-        }
     }
 
     /**
@@ -88,6 +82,16 @@ public class TomatoData {
         this.worldPlayerId = objectId;
         this.charId = charId;
         updateDungeonStats(charId, str);
+    }
+
+    public void webRequest() {
+        if (map.displayName.equals("Pet Yard")) {
+            petyard = true;
+            CharacterPetsGUI.clearPets();
+            charListHttpRequest();
+        } else if (map.displayName.equals("Daily Quest Room")) {
+            charListHttpRequest();
+        }
     }
 
     private void updateDungeonStats(int charId, String str) {
@@ -386,7 +390,48 @@ public class TomatoData {
                 regularVault.updateCharInventory(c);
             }
         }
+        if (charId != -1) {
+            makePet(charMap.get(charId));
+        }
         CharacterPanelGUI.updateRealmChars();
+    }
+
+    private void makePet(RealmCharacter currentChar) {
+        pet = new Entity(this, -1, time);
+
+        pet.stat.SKIN_ID = new StatData();
+        pet.stat.PET_TYPE_STAT = new StatData();
+        pet.stat.PET_NAME_STAT = new StatData();
+        pet.stat.PET_RARITY_STAT = new StatData();
+        pet.stat.PET_INSTANCEID_STAT = new StatData();
+        pet.stat.PET_MAXABILITYPOWER_STAT = new StatData();
+        pet.stat.PET_FIRSTABILITY_POINT_STAT = new StatData();
+        pet.stat.PET_FIRSTABILITY_POWER_STAT = new StatData();
+        pet.stat.PET_FIRSTABILITY_TYPE_STAT = new StatData();
+        pet.stat.PET_SECONDABILITY_POINT_STAT = new StatData();
+        pet.stat.PET_SECONDABILITY_POWER_STAT = new StatData();
+        pet.stat.PET_SECONDABILITY_TYPE_STAT = new StatData();
+        pet.stat.PET_THIRDABILITY_POINT_STAT = new StatData();
+        pet.stat.PET_THIRDABILITY_POWER_STAT = new StatData();
+        pet.stat.PET_THIRDABILITY_TYPE_STAT = new StatData();
+
+        pet.stat.SKIN_ID.statValue = currentChar.petSkin;
+        pet.stat.PET_TYPE_STAT.statValue = currentChar.petType;
+        pet.stat.PET_NAME_STAT.stringStatValue = currentChar.petName;
+        pet.stat.PET_RARITY_STAT.statValue = currentChar.petRarity;
+        pet.stat.PET_INSTANCEID_STAT.statValue = currentChar.petInstanceId;
+        pet.stat.PET_MAXABILITYPOWER_STAT.statValue = currentChar.petMaxAbilityPower;
+
+        System.out.println(Arrays.toString(currentChar.petAbilitys));
+        pet.stat.PET_FIRSTABILITY_POINT_STAT.statValue = currentChar.petAbilitys[0];
+        pet.stat.PET_FIRSTABILITY_POWER_STAT.statValue = currentChar.petAbilitys[1];
+        pet.stat.PET_FIRSTABILITY_TYPE_STAT.statValue = currentChar.petAbilitys[2];
+        pet.stat.PET_SECONDABILITY_POINT_STAT.statValue = currentChar.petAbilitys[3];
+        pet.stat.PET_SECONDABILITY_POWER_STAT.statValue = currentChar.petAbilitys[4];
+        pet.stat.PET_SECONDABILITY_TYPE_STAT.statValue = currentChar.petAbilitys[5];
+        pet.stat.PET_THIRDABILITY_POINT_STAT.statValue = currentChar.petAbilitys[6];
+        pet.stat.PET_THIRDABILITY_POWER_STAT.statValue = currentChar.petAbilitys[7];
+        pet.stat.PET_THIRDABILITY_TYPE_STAT.statValue = currentChar.petAbilitys[8];
     }
 
     /**

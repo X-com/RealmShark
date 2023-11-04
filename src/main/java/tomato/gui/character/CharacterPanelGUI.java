@@ -125,5 +125,6 @@ public class CharacterPanelGUI extends JPanel {
         CharacterExaltGUI.updateRealmChars();
         CharacterStatMaxingGUI.updateRealmChars();
         CharacterCollectionGUI.updateRealmChars();
+        CharacterPetsGUI.updateEquipedPet();
     }
 }

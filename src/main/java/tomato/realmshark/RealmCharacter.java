@@ -45,6 +45,15 @@ public class RealmCharacter {
     public String pcStats;
     public RealmCharacterStats charStats;
 
+    public String petName;
+    public String petCreatedOn;
+    public int petSkin;
+    public int petType;
+    public int petInstanceId;
+    public int petMaxAbilityPower;
+    public int petRarity;
+    public int[] petAbilitys;
+
     /**
      * Simple setter for the class string from the class id.
      */
@@ -66,7 +75,7 @@ public class RealmCharacter {
 
     @Override
     public String toString() {
-        return "Character{" +
+        return "RealmCharacter{" +
                 "\n   charId=" + charId +
                 "\n   classNum=" + classNum +
                 "\n   classString=" + classString +
@@ -89,6 +98,14 @@ public class RealmCharacter {
                 "\n   vit=" + vit +
                 "\n   wis=" + wis +
                 "\n   pcStats=" + pcStats +
-                "\n" + charStats;
+                "\n   charStats=" + charStats +
+                "\n   petName=" + petName +
+                "\n   petCreatedOn=" + petCreatedOn +
+                "\n   petSkin=" + petSkin +
+                "\n   petType=" + petType +
+                "\n   petInstanceId=" + petInstanceId +
+                "\n   petMaxAbilityPower=" + petMaxAbilityPower +
+                "\n   petRarity=" + petRarity +
+                "\n   petAbilitys=" + Arrays.toString(petAbilitys);
     }
 }
