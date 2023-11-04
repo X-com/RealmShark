@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * HTTP Requests character data from realm servers and converts data to character info.
@@ -179,6 +180,43 @@ public class HttpCharListRequest {
                             case "PCStats":
                                 character.pcStats = v.value;
                                 character.setCharacterStats();
+                                break;
+                            case "Pet":
+                                for (StringXML pet : info) {
+                                    switch (pet.name) {
+                                        case "createdOn":
+                                            character.petCreatedOn = pet.value;
+                                            break;
+                                        case "instanceId":
+                                            character.petInstanceId = Integer.parseInt(pet.value);
+                                            break;
+                                        case "maxAbilityPower":
+                                            character.petMaxAbilityPower = Integer.parseInt(pet.value);
+                                            break;
+                                        case "name":
+                                            character.petName = pet.value;
+                                            break;
+                                        case "rarity":
+                                            character.petRarity = Integer.parseInt(pet.value);
+                                            break;
+                                        case "skin":
+                                            character.petSkin = Integer.parseInt(pet.value);
+                                            break;
+                                        case "type":
+                                            character.petType = Integer.parseInt(pet.value);
+                                            break;
+                                        case "Abilities":
+                                            int[] a = new int[9];
+                                            int i = 0;
+                                            for (StringXML abilitys : pet) {
+                                                for (StringXML ability : abilitys) {
+                                                    a[i++] = Integer.parseInt(ability.value);
+                                                }
+                                            }
+                                            character.petAbilitys = a;
+                                    }
+                                }
+                                break;
                         }
                     }
                 }
@@ -218,5 +256,15 @@ public class HttpCharListRequest {
         } catch (Exception e) {
             throw new RuntimeException(e); // simple exception handling, please review it
         }
+    }
+
+    /**
+     * Test function
+     */
+    public static void main(String[] args) throws FileNotFoundException {
+        FileInputStream file = new FileInputStream("tiles/httpraw");
+        String s = new BufferedReader(new InputStreamReader(file)).lines().collect(Collectors.joining("\n"));
+
+        getCharList(s);
     }
 }
