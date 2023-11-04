@@ -84,20 +84,22 @@ public class StringXML implements Iterable<StringXML> {
         }
 
         Node c = node.getFirstChild();
-        if (c != null) thisXMLString.children.add(next(c, thisXMLString, true));
+        if (c != null) thisXMLString.children.add(0, next(c, thisXMLString, true));
 
-        if (!firstChild) return thisXMLString;
+        if (!firstChild) {
+            return thisXMLString;
+        } else {
+            ArrayList<Node> nodeList = new ArrayList<>();
 
-        ArrayList<Node> nodeList = new ArrayList<>();
-        {
             Node s = node.getNextSibling();
             while (s != null) {
                 nodeList.add(s);
                 s = s.getNextSibling();
             }
-        }
-        for (Node s : nodeList) {
-            parrentNode.children.add(next(s, parrentNode, false));
+
+            for (Node n : nodeList) {
+                parrentNode.children.add(next(n, parrentNode, false));
+            }
         }
 
         return thisXMLString;
