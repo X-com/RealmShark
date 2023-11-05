@@ -6,8 +6,6 @@ import tomato.backend.data.TomatoData;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
@@ -180,13 +178,17 @@ public class DungeonListGUI extends JPanel {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        fc.setAccessory(new CheckBoxAccessory());
+
         int returnVal = fc.showSaveDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
+            CheckBoxAccessory cba = (CheckBoxAccessory)fc.getAccessory();
+            boolean saveDebugData = cba.isBoxSelected();
+
             File folder = fc.getSelectedFile();
-            System.out.println(folder);
             for (DpsDungeon d : selectionList) {
                 if (d.checkBox != null && d.checkBox.isSelected()) {
-                    d.save(folder);
+                    d.save(folder, saveDebugData);
                 }
             }
         }
@@ -230,7 +232,7 @@ public class DungeonListGUI extends JPanel {
             this.name = name;
         }
 
-        public void save(File folder) {
+        public void save(File folder, boolean saveDebugData) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss");
             Date date = new Date(data.dungeonStartTime);
             String fileName = folder + "\\" + name + " " + simpleDateFormat.format(date) + ".dps ";
@@ -238,7 +240,8 @@ public class DungeonListGUI extends JPanel {
             try {
                 FileOutputStream f = new FileOutputStream(fileName);
                 ObjectOutputStream o = new ObjectOutputStream(f);
-                o.writeObject(data);
+                DpsData saveData = data.getSaveFile(saveDebugData);
+                o.writeObject(saveData);
                 o.close();
                 f.close();
             } catch (IOException e) {
@@ -280,6 +283,29 @@ public class DungeonListGUI extends JPanel {
                 p2.setBackground(c);
                 p3.setBackground(c);
             }
+        }
+    }
+
+    public class CheckBoxAccessory extends JComponent {
+        JCheckBox checkBox;
+        boolean checkBoxInit = false;
+
+        int preferredWidth = 150;
+        int preferredHeight = 100;
+        int checkBoxPosX = 5;
+        int checkBoxPosY = 20;
+        int checkBoxWidth = preferredWidth;
+        int checkBoxHeight = 20;
+
+        public CheckBoxAccessory() {
+            setPreferredSize(new Dimension(preferredWidth, preferredHeight));
+            checkBox = new JCheckBox("Save Debug Data", checkBoxInit);
+            checkBox.setBounds(checkBoxPosX, checkBoxPosY, checkBoxWidth, checkBoxHeight);
+            add(checkBox);
+        }
+
+        public boolean isBoxSelected() {
+            return checkBox.isSelected();
         }
     }
 }

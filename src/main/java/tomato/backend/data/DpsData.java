@@ -25,4 +25,12 @@ public class DpsData implements Serializable {
         this.dungeonStartTime = timePcFirst;
         debugPackets = dpsPacketLog;
     }
+
+    public DpsData getSaveFile(boolean saveDebugData) {
+        ArrayList<Packet> debug = null;
+        if (saveDebugData) {
+            debug = debugPackets;
+        }
+        return new DpsData(map, hitList, deathNotifications, totalDungeonPcTime, dungeonStartTime, debug);
+    }
 }
