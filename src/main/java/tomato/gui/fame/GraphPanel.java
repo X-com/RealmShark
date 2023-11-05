@@ -59,9 +59,9 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
         }
 
         // draw white background
-        g2.setColor(Color.WHITE);
-        g2.fillRect(padding + labelPadding, padding, getWidth() - (2 * padding) - labelPadding, getHeight() - 2 * padding - labelPadding);
-        g2.setColor(Color.BLACK);
+//        g2.setColor(Color.WHITE);
+//        g2.fillRect(padding + labelPadding, padding, getWidth() - (2 * padding) - labelPadding, getHeight() - 2 * padding - labelPadding);
+        g2.setColor(Color.GRAY);
 
         // draw selection box
         int xWidth = getWidth() - labelPadding;
@@ -79,7 +79,7 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
             int rightSelection = graphPoints.get(rightSelectionValue).x;
             int selectionWidth = leftSelection - rightSelection;
             g2.fillRect(leftSelection, padding, Math.abs(selectionWidth), getHeight() - 2 * padding - labelPadding);
-            g2.setColor(Color.BLACK);
+            g2.setColor(Color.GRAY);
 
             g2.drawString(s1, x3, y3);
             g2.drawString(s2, x3, y3 + 14);
@@ -99,7 +99,7 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
             if (size > 0) {
                 g2.setColor(gridColor);
                 g2.drawLine(padding + labelPadding + 1 + POINT_SIZE, y0, getWidth() - padding, y0);
-                g2.setColor(Color.BLACK);
+                g2.setColor(Color.GRAY);
                 String yLabel = String.valueOf(((int) ((minMax.minScoreY + (minMax.maxScoreY - minMax.minScoreY) * ((i * 1.0) / NUMBER_Y_DIVISIONS)) * 100)) / 100);
                 FontMetrics metrics = g2.getFontMetrics();
                 int labelWidth = metrics.stringWidth(yLabel);
@@ -155,7 +155,7 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
                 if (scores.size() > 0) {
                     g2.setColor(gridColor);
                     g2.drawLine(x0, getHeight() - padding - labelPadding - 1 - POINT_SIZE, x0, padding);
-                    g2.setColor(Color.BLACK);
+                    g2.setColor(Color.GRAY);
                     int sec = display * i;
                     FontMetrics metrics = g2.getFontMetrics();
                     String xLabel = Integer.toString(sec);
