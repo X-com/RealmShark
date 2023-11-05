@@ -68,6 +68,7 @@ public class MyDamageGUI extends JPanel {
         icons[4].setToolTipText("Enter Pet Yard to update pet");
 
         Weapon w = Equip.get(slots[0]);
+        if (w == null) return;
         float exaltDmg = exalt / 1000f;
 
         StringBuilder sb = new StringBuilder();
@@ -76,7 +77,7 @@ public class MyDamageGUI extends JPanel {
         sb.append("Wis: ").append(wis).append("\n");
         sb.append("Exalt Bonus: ").append(exaltDmg).append("x\n");
         sb.append("\n");
-        sb.append(w.name).append("\n");
+        sb.append(w.displayName != null ? w.displayName : w.name).append("\n");
 
         //(((Average Weapon Damage per Shot * (0.5 + ATT/50)) - Enemy DEF) * Number of Shots) * ((1.5 + 6.5*(DEX/75)) * Weapon Rate of Fire (in decimal; 100% RoF should be written as 1.00)) = Damage per Second
 

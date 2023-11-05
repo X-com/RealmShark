@@ -17,7 +17,7 @@ public class Equip {
     private static final String PETS_XML_PATH = "assets/xml/equip.xml";
     public static HashMap<Integer, Weapon> weapons = new HashMap<>();
 
-    public static void main(String[] args) {
+    static {
         load();
     }
 
