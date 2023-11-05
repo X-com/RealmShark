@@ -10,6 +10,7 @@ import tomato.gui.fame.FameTrackerGUI;
 import tomato.gui.character.CharacterPanelGUI;
 import tomato.gui.keypop.KeypopGUI;
 import tomato.gui.maingui.TomatoMenuBar;
+import tomato.gui.mydmg.MyDamageGUI;
 import tomato.gui.quest.QuestGUI;
 import tomato.gui.security.ParsePanelGUI;
 import tomato.gui.security.SecurityGUI;
@@ -35,6 +36,7 @@ public class TomatoGUI {
     private static SecurityGUI securityPanel;
     private static CharacterPanelGUI characterPanel;
     private static QuestGUI questPanel;
+    private static MyDamageGUI myDmg;
     private static FameTrackerGUI fameTracker;
     private JMenuBar jMenuBar;
     private JPanel mainPanel, dpsPanel;
@@ -68,6 +70,9 @@ public class TomatoGUI {
 
         questPanel = new QuestGUI();
         tabbedPane.addTab("Daily Quests", questPanel);
+
+        myDmg = new MyDamageGUI(data);
+        tabbedPane.addTab("My Dmg", myDmg);
 
         dpsPanel = new DpsGUI(data);
         tabbedPane.addTab("DPS Logger", dpsPanel);

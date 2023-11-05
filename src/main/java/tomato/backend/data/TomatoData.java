@@ -1,7 +1,5 @@
 package tomato.backend.data;
 
-import assets.AssetMissingException;
-import assets.IdToAsset;
 import packets.Packet;
 import packets.data.ObjectData;
 import packets.data.StatData;
@@ -13,18 +11,16 @@ import tomato.gui.TomatoGUI;
 import tomato.gui.character.*;
 import tomato.gui.dps.DpsGUI;
 import tomato.gui.keypop.KeypopGUI;
+import tomato.gui.mydmg.MyDamageGUI;
 import tomato.gui.security.ParsePanelGUI;
 import tomato.realmshark.HttpCharListRequest;
 import tomato.realmshark.RealmCharacter;
 import tomato.realmshark.RealmCharacterStats;
 import tomato.realmshark.enums.CharacterClass;
 import util.RNG;
-import util.Util;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Main data class storing all incoming packet data regarding an instance the user is in.
@@ -172,6 +168,7 @@ public class TomatoData {
             if (id == worldPlayerId) {
                 player = entity;
                 entity.setUser(charId);
+                MyDamageGUI.updatePlayer(player);
             } else {
                 entity.isPlayer();
             }
@@ -390,8 +387,10 @@ public class TomatoData {
                 regularVault.updateCharInventory(c);
             }
         }
-        if (charId != -1) {
-            makePet(charMap.get(charId));
+        RealmCharacter currentChar = charMap.get(charId);
+        if (charId != -1 && currentChar != null) {
+            makePet(currentChar);
+            MyDamageGUI.updatePet(pet);
         }
         CharacterPanelGUI.updateRealmChars();
     }
@@ -422,7 +421,6 @@ public class TomatoData {
         pet.stat.PET_INSTANCEID_STAT.statValue = currentChar.petInstanceId;
         pet.stat.PET_MAXABILITYPOWER_STAT.statValue = currentChar.petMaxAbilityPower;
 
-        System.out.println(Arrays.toString(currentChar.petAbilitys));
         pet.stat.PET_FIRSTABILITY_POINT_STAT.statValue = currentChar.petAbilitys[0];
         pet.stat.PET_FIRSTABILITY_POWER_STAT.statValue = currentChar.petAbilitys[1];
         pet.stat.PET_FIRSTABILITY_TYPE_STAT.statValue = currentChar.petAbilitys[2];
