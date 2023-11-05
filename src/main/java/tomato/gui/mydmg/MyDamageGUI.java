@@ -86,7 +86,7 @@ public class MyDamageGUI extends JPanel {
         for (Bullet b : w.bullets) {
             float avg = (b.min + b.max) / 2f;
             float dps = ((avg * exaltDmg * (0.5f + atk / 50f) - def) * b.numProj) * (1.5f + 6.5f * (dex / 75f)) * b.rof;
-            sb.append(String.format("Bullet: %sx  %s - %s   Rof: %s  %.1f\n", b.numProj, b.min, b.max, Float.toString(b.rof), dps));
+            sb.append(String.format("Bullet: %sx  %s - %s   Rof: %s  Dps: %.1f\n", b.numProj, b.min, b.max, Float.toString(b.rof), dps));
             total += dps;
         }
         sb.append("\n");
