@@ -54,6 +54,8 @@ public class PacketRead {
         if (packet instanceof PlayerHitPacket) return;
         if (packet instanceof PlayerTextPacket) return;
         if (packet instanceof GotoPacket) return;
+        if (packet instanceof CrucibleRequestPacket) return;
+        if (packet instanceof CrucibleResponsePacket) return;
         // death and create new char
         if (packet instanceof EditAccountListPacket) return;
         if (packet instanceof NewCharacterInfoPacket) return;
@@ -92,9 +94,12 @@ public class PacketRead {
         if (packet instanceof InvSwapPacket) return;
         if (packet instanceof GroundDamagePacket) return;
         if (packet instanceof TeleportPacket) return;
+        if (packet instanceof GotoAckPacket) return;
+        if (packet instanceof SquareHitPacket) return;
+        if (packet instanceof StasisPacket) return;
         // unknown
         if (packet instanceof UnknownPacket139) return;
-        if (packet instanceof GotoAckPacket) return;
+        if (packet instanceof UnknownPacket165) return;
         // RealmHeroesLeftPacket
         if (packet instanceof RealmHeroesLeftPacket) return;
         if (packet instanceof CreateSuccessPacket) return;
@@ -129,7 +134,7 @@ public class PacketRead {
         if (packet instanceof UpdatePacket) {
 //            crystalTPRange((UpdatePacket) packet);
 //            realmIdentifier((UpdatePacket) packet);
-            playerIds((UpdatePacket) packet);
+//            playerIds((UpdatePacket) packet);
             return;
         }
         if (packet instanceof VaultContentPacket) {

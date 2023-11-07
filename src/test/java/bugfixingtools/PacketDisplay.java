@@ -175,7 +175,7 @@ public class PacketDisplay {
     private JPanel addedSection(int i, int length) {
         JPanel row = new JPanel();
         row.setLayout(new BoxLayout(row, BoxLayout.Y_AXIS));
-        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+//        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
 //        row.setBorder(BorderFactory.createLineBorder(Color.gray));
         JCheckBox byteBox = new JCheckBox("Byte:        " + bytes[i] + "    [" + Byte.toUnsignedInt(bytes[i]) + "]");
         row.add(byteBox);
