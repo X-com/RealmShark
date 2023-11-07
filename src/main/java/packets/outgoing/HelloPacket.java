@@ -69,7 +69,6 @@ public class HelloPacket extends Packet {
         platformToken = buffer.readString();
         clientToken = buffer.readString();
         userToken = buffer.readString();
-        System.out.println(this);
     }
 
     @Override
