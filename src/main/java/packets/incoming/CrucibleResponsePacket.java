@@ -23,7 +23,7 @@ public class CrucibleResponsePacket extends Packet {
 
     @Override
     public String toString() {
-        return "CruciblePacket{" +
+        return "CrucibleResponsePacket{" +
                 "\n   unknownBytes=" + Arrays.toString(unknownBytes) +
                 "\n   crucibleJsonString1=" + crucibleJsonString1 +
                 "\n   crucibleJsonString2=" + crucibleJsonString2;
