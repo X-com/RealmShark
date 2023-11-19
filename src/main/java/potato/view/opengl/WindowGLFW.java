@@ -16,13 +16,14 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.system.windows.User32.WS_EX_APPWINDOW;
 import static org.lwjgl.system.windows.User32.WS_EX_TOOLWINDOW;
 
-public class Window {
+public class WindowGLFW {
 
-    private static Window instance;
+    private static WindowGLFW instance;
     private static boolean userShowAll = true;
     private long window;
+    private boolean viewChanged;
 
-    public Window() {
+    public WindowGLFW() {
         instance = this;
 
         if (!glfwInit()) {
@@ -91,12 +92,6 @@ public class Window {
         }
     }
 
-    public void setWindow() {
-        glfwSetWindowPos(window, Config.instance.mapTopLeftX, Config.instance.mapTopLeftY);
-        glfwSetWindowSize(window, Config.instance.mapWidth, Config.instance.mapHeight);
-        glViewport(0, 0, Config.instance.mapWidth, Config.instance.mapHeight);
-    }
-
     public static void toggleShowAll() {
         if (userShowAll) {
             instance.hide();
@@ -104,6 +99,19 @@ public class Window {
         } else {
             instance.show();
             userShowAll = true;
+        }
+    }
+
+    public static void viewChanged() {
+        instance.viewChanged = true;
+    }
+
+    public void checkViewChange() {
+        if (viewChanged) {
+            glfwSetWindowPos(window, Config.instance.mapTopLeftX, Config.instance.mapTopLeftY);
+            glfwSetWindowSize(window, Config.instance.mapWidth, Config.instance.mapHeight);
+            glViewport(0, 0, Config.instance.mapWidth, Config.instance.mapHeight);
+            viewChanged = false;
         }
     }
 }

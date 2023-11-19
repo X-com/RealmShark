@@ -2,6 +2,7 @@ package potato.view;
 
 import potato.model.Config;
 import potato.view.opengl.OpenGLPotato;
+import potato.view.opengl.WindowGLFW;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -128,25 +129,25 @@ public class Alignment {
         up.addActionListener(e -> {
             Config.instance.mapTopLeftY -= increments;
             mapTopLeftYLabel.setText(" " + Config.instance.mapTopLeftY);
-            OpenGLPotato.viewChanged();
+            WindowGLFW.viewChanged();
             Config.save();
         });
         left.addActionListener(e -> {
             Config.instance.mapTopLeftX -= increments;
             mapTopLeftXLabel.setText(" " + Config.instance.mapTopLeftX);
-            OpenGLPotato.viewChanged();
+            WindowGLFW.viewChanged();
             Config.save();
         });
         right.addActionListener(e -> {
             Config.instance.mapTopLeftX += increments;
             mapTopLeftXLabel.setText(" " + Config.instance.mapTopLeftX);
-            OpenGLPotato.viewChanged();
+            WindowGLFW.viewChanged();
             Config.save();
         });
         down.addActionListener(e -> {
             Config.instance.mapTopLeftY += increments;
             mapTopLeftYLabel.setText(" " + Config.instance.mapTopLeftY);
-            OpenGLPotato.viewChanged();
+            WindowGLFW.viewChanged();
             Config.save();
         });
 
@@ -180,26 +181,26 @@ public class Alignment {
             Config.instance.mapHeight -= increments;
             if (Config.instance.mapHeight < 20) Config.instance.mapHeight = 20;
             mapHeightLabel.setText(" " + Config.instance.mapHeight);
-            OpenGLPotato.viewChanged();
+            WindowGLFW.viewChanged();
             Config.save();
         });
         left.addActionListener(e -> {
             Config.instance.mapWidth -= increments;
             if (Config.instance.mapWidth < 20) Config.instance.mapWidth = 20;
             mapWidthLabel.setText(" " + Config.instance.mapWidth);
-            OpenGLPotato.viewChanged();
+            WindowGLFW.viewChanged();
             Config.save();
         });
         right.addActionListener(e -> {
             Config.instance.mapWidth += increments;
             mapWidthLabel.setText(" " + Config.instance.mapWidth);
-            OpenGLPotato.viewChanged();
+            WindowGLFW.viewChanged();
             Config.save();
         });
         down.addActionListener(e -> {
             Config.instance.mapHeight += increments;
             mapHeightLabel.setText(" " + Config.instance.mapHeight);
-            OpenGLPotato.viewChanged();
+            WindowGLFW.viewChanged();
             Config.save();
         });
 

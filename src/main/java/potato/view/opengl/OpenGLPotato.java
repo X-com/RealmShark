@@ -26,7 +26,6 @@ public class OpenGLPotato extends Thread {
     private Texture[] textureMaps;
     private Matrix4f mvp;
     public static Matrix4f proj;
-    private boolean viewChanged;
     private int backgroundChange;
     private int mapIndex = 0;
 
@@ -75,25 +74,9 @@ public class OpenGLPotato extends Thread {
     }
 
     public void run() {
-        Window window = new Window();
-        vertexMap();
-        setupShaders();
-        setupTextures();
-        preRender();
-        font();
-        waitfor = false;
-        running = true;
+        WindowGLFW window = new WindowGLFW();
 
-        do {
-            tick(window);
-
-            window.swapBuffer();
-        } while (running && !window.shouldWindowClose());
-
-        glfwTerminate();
-    }
-
-    private void vertexMap() {
+        //vertexMap();
         float[] mapVertices = new float[]{0, 0, 0, 1, 2048, 0, 1, 1, 2048, 2048, 1, 0, 0, 2048, 0, 0};
 
         int[] mapIndexes = new int[]{0, 1, 2, 2, 3, 0};
@@ -106,16 +89,18 @@ public class OpenGLPotato extends Thread {
         layout.addFloat(2); //vertex coords
         layout.addFloat(2); //texture coords
         vaMap.addVertexBuffer(vb, layout);
-    }
+        // ----
 
-    private void setupShaders() {
+
+        // setupShaders();
         shaderMap = new Shader("shader/map.vert", "shader/map.frag");
         shaderMap.bind();
         shaderMap.setUniform1i("uTexImage", 0);
         shaderMap.setUniform1f("alpha", Config.instance.mapTransparency / 255f);
-    }
+        // ----
 
-    private void setupTextures() {
+
+        // setupTextures();
         BufferedImage[] maps = Bootloader.loadMaps();
         textureMaps = new Texture[maps.length];
         for (int i = 0; i < maps.length; i++) {
@@ -125,9 +110,9 @@ public class OpenGLPotato extends Thread {
             b.getGraphics().drawImage(maps[i], 0, 0, null);
             textureMaps[i] = new Texture(b, false);
         }
-    }
+        // ----
 
-    private void preRender() {
+        // preRender();
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_COLOR);
         glEnable(GL_BLEND);
 
@@ -142,29 +127,31 @@ public class OpenGLPotato extends Thread {
         shaderMap.setUniformMat4f("uMVP", mvp);
 
         heroes = new GLHeroes();
-    }
+        // ----
 
-    private void font() {
+        // font();
         vectorFont = new VectorFont("/font/ariblk.ttf");
         vectorShapes = new VectorFont("/font/shapes.ttf");
         renderHud = new TextRenderer(vectorFont);
         renderText = new TextRenderer(vectorFont);
         renderShape = new TextRenderer(vectorShapes);
+        // ----
+
+        waitfor = false;
+        running = true;
+
+        do {
+            window.checkViewChange();
+
+            tick();
+
+            window.swapBuffer();
+        } while (running && !window.shouldWindowClose());
+
+        glfwTerminate();
     }
 
-//    private void setWindow(long window) {
-////        ratio = (float) Config.instance.mapWidth / Config.instance.mapHeight;
-//        glfwSetWindowPos(window, Config.instance.mapTopLeftX, Config.instance.mapTopLeftY);
-//        glfwSetWindowSize(window, Config.instance.mapWidth, Config.instance.mapHeight);
-////        proj = new Matrix4f();
-////        System.out.println(ratio);
-////        proj.ortho(-1024f, 1024f, -1024f / ratio, 1024f / ratio, -1.0f, 1.0f); // x*h/w or y*w/h
-////        mvp = proj;
-//        glViewport(0, 0, Config.instance.mapWidth, Config.instance.mapHeight);
-//    }
-
-
-    private void tick(Window window) {
+    private void tick() {
         //            fps();
 
         GLRenderer.clear();
@@ -172,11 +159,6 @@ public class OpenGLPotato extends Thread {
         if (backgroundChange != 0) {
             clearColors(backgroundChange);
             backgroundChange = 0;
-        }
-
-        if (viewChanged) {
-            window.setWindow();
-            viewChanged = false;
         }
 
         if (refresh) {
@@ -226,10 +208,6 @@ public class OpenGLPotato extends Thread {
         renderHud.render();
         renderText.render();
         renderShape.render();
-    }
-
-    public static void viewChanged() {
-        instance.viewChanged = true;
     }
 
     public static void setColor(int color) {

@@ -3,6 +3,7 @@ package potato.control;
 import potato.model.Config;
 import potato.view.OptionsMenu;
 import potato.view.opengl.OpenGLPotato;
+import potato.view.opengl.WindowGLFW;
 
 import javax.swing.*;
 import java.awt.*;
@@ -119,7 +120,7 @@ public class ScreenLocatorController {
         Config.instance.mapHeight = height;
         Config.instance.mapTopLeftX = x;
         Config.instance.mapTopLeftY = y;
-        OpenGLPotato.viewChanged();
+        WindowGLFW.viewChanged();
     }
 
     private void notFound(int i, String s) {
