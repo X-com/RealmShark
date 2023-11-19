@@ -10,6 +10,7 @@ import potato.model.Config;
 import potato.model.DataModel;
 import potato.view.OptionsMenu;
 import potato.view.opengl.OpenGLPotato;
+import potato.view.opengl.Window;
 
 import java.util.EventObject;
 
@@ -91,7 +92,7 @@ public class InputController {
             } else if (key == Config.instance.keyValues[4]) {
                 OpenGLPotato.toggleShowInfo();
             } else if (key == Config.instance.keyValues[5]) {
-                OpenGLPotato.toggleShowAll();
+                Window.toggleShowAll();
             } else if (key == Config.instance.keyValues[6]) {
                 Config.instance.saveMapInfo = !Config.instance.saveMapInfo;
                 Config.save();
