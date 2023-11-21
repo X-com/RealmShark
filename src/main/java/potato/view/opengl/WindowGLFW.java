@@ -18,10 +18,10 @@ import static org.lwjgl.system.windows.User32.WS_EX_TOOLWINDOW;
 
 public class WindowGLFW {
 
-    private static WindowGLFW instance;
-    private static boolean userShowAll = true;
     private long window;
-    private boolean viewChanged;
+    private static WindowGLFW instance;
+    private static boolean viewChanged;
+    private static boolean userShowAll = true;
 
     public WindowGLFW() {
         instance = this;
@@ -103,7 +103,7 @@ public class WindowGLFW {
     }
 
     public static void viewChanged() {
-        instance.viewChanged = true;
+        viewChanged = true;
     }
 
     public void checkViewChange() {
