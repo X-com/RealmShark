@@ -130,11 +130,12 @@ public enum StatType implements Serializable {
     UNKNOWN121(121),
     UNKNOWN122(122),
     UNKNOWN123(123),
-    UNKNOWN124(124),
+    POWER_LEVEL(124),
     ANIMATION_ID(125),
     UNKNOWN126(126),
     UNKNOWN127(127),
     UNKNOWN128(128),
+    UNKNOWN129(129),
     ;
 
     private final int index;
