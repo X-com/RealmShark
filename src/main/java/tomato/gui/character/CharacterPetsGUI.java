@@ -28,7 +28,6 @@ public class CharacterPetsGUI extends JPanel {
     private static final float[] feedMultiplier = {1f, 0.65f, 0.3f};
 
     private static final HashMap<Integer, String> petAbilitys = new HashMap<>();
-    private static final HashMap<Integer, Integer> feedMax = new HashMap<>();
     private static final HashMap<Integer, Integer> feedCost = new HashMap<>();
 
     static {
@@ -41,13 +40,6 @@ public class CharacterPetsGUI extends JPanel {
         petAbilitys.put(409, "Savage");
         petAbilitys.put(410, "Decoy");
         petAbilitys.put(411, "R. Fury");
-
-        feedMax.put(0, -1);
-        feedMax.put(30, 2000);
-        feedMax.put(50, 10000);
-        feedMax.put(70, 50000);
-        feedMax.put(90, 235000);
-        feedMax.put(100, 509000);
 
         feedCost.put(0, -1);
         feedCost.put(30, 15);
@@ -229,13 +221,10 @@ public class CharacterPetsGUI extends JPanel {
             }
 
             int maxLevel = 0;
-            int maxing = -1;
             int cost = -1;
 
             if (stat.PET_MAXABILITYPOWER_STAT != null) maxLevel = stat.PET_MAXABILITYPOWER_STAT.statValue;
-            Integer mm = feedMax.get(maxLevel);
             Integer cc = feedCost.get(maxLevel);
-            if (mm != null) maxing = mm;
             if (cc != null) cost = cc;
 
             if (stat.PET_FIRSTABILITY_POINT_STAT != null) a[0] = stat.PET_FIRSTABILITY_POINT_STAT.statValue;
@@ -256,13 +245,16 @@ public class CharacterPetsGUI extends JPanel {
                 if (i == 1 && maxLevel < 50) continue;
                 if (i == 2 && maxLevel < 90) continue;
 
-                if (maxing != -1 && feedAmount != -1) {
+                if (feedAmount != -1) {
                     int points = a[i];
-                    int left = maxing - points;
-                    int count = (int) (left / (feedAmount * feedMultiplier[i]));
+                    int nextLevelPet = Math.max(a[i + 3], 100) - 1;
+                    int maxing = (int) (20 / feedMultiplier[i] * (Math.pow(1.08, maxLevel - 1) - 1) / (1.08 - 1));
+                    int levelMax = (int) (20 / feedMultiplier[i] * (Math.pow(1.08, nextLevelPet - 1) - 1) / (1.08 - 1));
+                    int leftFullMax = maxing - points;
+                    int count = (int) (leftFullMax / (feedAmount * feedMultiplier[i]));
 
-                    if (left > 0) {
-                        labels[i * 5 + 3].setText(String.format(" Items: %d", count));
+                    if (leftFullMax > 0) {
+                        labels[i * 5 + 3].setText(String.format(" N: %d", count));
                         labels[i * 5 + 4].setText(String.format(" F: %d", count * cost));
                     } else {
                         labels[i * 5 + 3].setText(" -");
