@@ -129,9 +129,12 @@ public class Stat implements Serializable {
     public StatData UNKNOWN121; // 121
     public StatData UNKNOWN122; // 122
     public StatData UNKNOWN123; // 123
-    public StatData UNKNOWN124; // 124
+    public StatData POWER_LEVEL; // 124
     public StatData ANIMATION_ID; // 125
     public StatData UNKNOWN126; // 126
+    public StatData UNKNOWN127; // 127
+    public StatData UNKNOWN128; // 128
+    public StatData UNKNOWN129; // 129
 
     public Stat() {
     }
@@ -142,7 +145,9 @@ public class Stat implements Serializable {
 
     public void setStats(StatData[] stats) {
         for (StatData sd : stats) {
-            if (sd.statType == null) continue;
+            if (sd.statType == null) {
+                continue;
+            }
             switch (sd.statType) {
                 case MAX_HP_STAT:
                     MAX_HP_STAT = sd;
@@ -516,14 +521,23 @@ public class Stat implements Serializable {
                 case UNKNOWN123:
                     UNKNOWN123 = sd;
                     break;
-                case UNKNOWN124:
-                    UNKNOWN124 = sd;
+                case POWER_LEVEL:
+                    POWER_LEVEL = sd;
                     break;
                 case ANIMATION_ID:
                     ANIMATION_ID = sd;
                     break;
                 case UNKNOWN126:
                     UNKNOWN126 = sd;
+                    break;
+                case UNKNOWN127:
+                    UNKNOWN127 = sd;
+                    break;
+                case UNKNOWN128:
+                    UNKNOWN128 = sd;
+                    break;
+                case UNKNOWN129:
+                    UNKNOWN129 = sd;
                     break;
             }
         }
