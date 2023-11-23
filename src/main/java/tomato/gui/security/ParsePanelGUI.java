@@ -16,6 +16,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ParsePanelGUI extends JPanel {
@@ -28,6 +29,9 @@ public class ParsePanelGUI extends JPanel {
     private static HashMap<Integer, Player> playerDisplay;
     private static Font mainFont;
     private static String[] missingStrings = new String[]{"HP", "MP", "Ak", "Df", "Sd", "Dx", "Vt", "Ws"};
+    private static String[] missingStringsLonger = new String[]{"HP", "MP", "Atk", "Def", "Spd", "Dex", "Vit", "Wis"};
+    private static String[] equipmentNames = {"weapon", "ability", "armor", "ring"};
+
 
     public ParsePanelGUI() {
         INSTANCE = this;
@@ -57,10 +61,15 @@ public class ParsePanelGUI extends JPanel {
 
     private void clicked(boolean full) {
         StringBuilder sb = new StringBuilder();
+        if (full) sb.append("[\n");
         for (Player player : playerDisplay.values()) {
-            if (full) sb.append(player).append("\n");
-            else sb.append(player.playerEntity.name()).append(", ");
+            if (full) {
+                sb.append(player);
+            } else {
+                sb.append(player.playerEntity.name()).append(", ");
+            }
         }
+        if (full) sb.append("]");
         copyToClipboard(String.valueOf(sb));
     }
 
@@ -260,20 +269,6 @@ public class ParsePanelGUI extends JPanel {
     }
 
     /**
-     * Gets the tool tip stats string from array of stats.
-     *
-     * @param missing Array of stats.
-     * @return Stats as tooltip string.
-     */
-    private static String getMissingString(int[] missing) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 8; i++) {
-            if (missing[i] != 0) sb.append(missingStrings[i]).append(":").append(missing[i]).append(" ");
-        }
-        return sb.toString();
-    }
-
-    /**
      * Gets the characters maxed stat count.
      */
     public static int statsMaxed(Entity player) {
@@ -380,25 +375,42 @@ public class ParsePanelGUI extends JPanel {
         }
 
         public String toString() {
-            StringBuilder sb = new StringBuilder();
             int level = playerEntity.stat.LEVEL_STAT.statValue;
-            sb.append(playerEntity.name()).append(" (").append(level).append(") ");
-            sb.append(playerEntity.getStatGuild()).append(" [");
+            boolean seasonal = playerEntity.stat.SEASONAL.statValue == 1;
+            boolean crucible = !playerEntity.stat.UNKNOWN128.stringStatValue.isEmpty();
+            int stat = statsMaxed(playerEntity);
+            int[] missing = statMissing(playerEntity);
 
+            StringBuilder sb = new StringBuilder();
+            sb.append("\t{\n");
+            sb.append("\t\t").append("\"name\":\"").append(playerEntity.name()).append("\",\n");
+            sb.append("\t\t").append("\"level\":").append(level).append(",\n");
+            sb.append("\t\t").append("\"guild\":\"").append(playerEntity.getStatGuild()).append("\",\n");
+            sb.append("\t\t").append("\"seasonal\":").append(seasonal ? "true" : "false").append(",\n");
+            sb.append("\t\t").append("\"crucible\":").append(crucible ? "true" : "false").append(",\n");
+
+            sb.append("\t\t").append("\"equipment\":{\n");
             for (int i = 0; i < 4; i++) {
                 try {
-                    if (i != 0) sb.append(" / ");
-                    sb.append(IdToAsset.objectName(inv[i]));
+                    sb.append("\t\t\t").append("\"" + equipmentNames[i] + "\":\"").append(IdToAsset.objectName(inv[i])).append("\"").append(i != 3 ? "," : "").append("\n");
                 } catch (AssetMissingException ignored) {
                 }
             }
-            sb.append("] [");
+            sb.append("\t\t").append("},\n");
 
-            int stat = statsMaxed(playerEntity);
-            sb.append(stat).append(" / 8] ");
-            int[] missing = statMissing(playerEntity);
-            sb.append(getMissingString(missing));
+            sb.append("\t\t").append("\"maxstats\":").append(stat).append(",\n");
+            sb.append("\t\t").append("\"missingstats\":{\n");
+            ArrayList<String> l = new ArrayList<>();
+            for (int i = 0; i < missing.length; i++) {
+                if (missing[i] == 0) continue;
+                l.add(String.format("\t\t\t\"%s\":%d", missingStringsLonger[i], missing[i]));
+            }
+            for (int i = 0; i < l.size(); i++) {
+                sb.append(l.get(i)).append(i < l.size() - 1 ? "," : "").append("\n");
+            }
+            sb.append("\t\t").append("}\n");
 
+            sb.append("\t},\n");
             return sb.toString();
         }
     }
