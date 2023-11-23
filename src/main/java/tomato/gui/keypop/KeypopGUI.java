@@ -31,6 +31,10 @@ public class KeypopGUI extends JPanel {
         setLayout(new BorderLayout());
         textAreaKeypop = new JTextArea();
         add(TomatoGUI.createTextArea(textAreaKeypop));
+
+        JButton button = new JButton("Clear");
+        button.addActionListener(e -> textAreaKeypop.setText(""));
+        add(button, BorderLayout.SOUTH);
     }
 
     /**
