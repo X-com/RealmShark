@@ -62,14 +62,19 @@ public class ParsePanelGUI extends JPanel {
     private void clicked(boolean full) {
         StringBuilder sb = new StringBuilder();
         if (full) sb.append("[\n");
+        boolean first = true;
         for (Player player : playerDisplay.values()) {
             if (full) {
+                if (!first) {
+                    sb.append(",").append("\n");
+                }
+                first = false;
                 sb.append(player);
             } else {
                 sb.append(player.playerEntity.name()).append(", ");
             }
         }
-        if (full) sb.append("]");
+        if (full) sb.append("\n").append("]");
         copyToClipboard(String.valueOf(sb));
     }
 
@@ -410,7 +415,7 @@ public class ParsePanelGUI extends JPanel {
             }
             sb.append("\t\t").append("}\n");
 
-            sb.append("\t},\n");
+            sb.append("\t}");
             return sb.toString();
         }
     }
