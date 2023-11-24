@@ -6,6 +6,7 @@ import assets.ImageBuffer;
 import tomato.backend.data.Entity;
 import tomato.gui.SmartScroller;
 import tomato.realmshark.ParseEnchants;
+import tomato.realmshark.RealmCharacter;
 import tomato.realmshark.enums.CharacterClass;
 
 import javax.swing.*;
@@ -380,6 +381,8 @@ public class ParsePanelGUI extends JPanel {
         }
 
         public String toString() {
+            int type = playerEntity.objectType;
+            String clazz = CharacterClass.getName(type);
             int level = playerEntity.stat.LEVEL_STAT.statValue;
             boolean seasonal = playerEntity.stat.SEASONAL.statValue == 1;
             boolean crucible = !playerEntity.stat.UNKNOWN128.stringStatValue.isEmpty();
@@ -389,6 +392,7 @@ public class ParsePanelGUI extends JPanel {
             StringBuilder sb = new StringBuilder();
             sb.append("\t{\n");
             sb.append("\t\t").append("\"name\":\"").append(playerEntity.name()).append("\",\n");
+            sb.append("\t\t").append("\"class\":\"").append(clazz).append("\",\n");
             sb.append("\t\t").append("\"level\":").append(level).append(",\n");
             sb.append("\t\t").append("\"guild\":\"").append(playerEntity.getStatGuild()).append("\",\n");
             sb.append("\t\t").append("\"seasonal\":").append(seasonal ? "true" : "false").append(",\n");
@@ -397,7 +401,8 @@ public class ParsePanelGUI extends JPanel {
             sb.append("\t\t").append("\"equipment\":{\n");
             for (int i = 0; i < 4; i++) {
                 try {
-                    sb.append("\t\t\t").append("\"" + equipmentNames[i] + "\":\"").append(IdToAsset.objectName(inv[i])).append("\"").append(i != 3 ? "," : "").append("\n");
+                    sb.append("\t\t\t").append("\"" + equipmentNames[i] + "\":\"").append(IdToAsset.objectName(inv[i])).append("\",\n");
+                    sb.append("\t\t\t").append("\"" + equipmentNames[i] + "id\":").append(inv[i]).append(i != 3 ? "," : "").append("\n");
                 } catch (AssetMissingException ignored) {
                 }
             }
