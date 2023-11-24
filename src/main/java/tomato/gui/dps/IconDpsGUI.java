@@ -3,6 +3,9 @@ package tomato.gui.dps;
 import assets.AssetMissingException;
 import assets.IdToAsset;
 import assets.ImageBuffer;
+import packets.data.ObjectStatusData;
+import packets.data.StatData;
+import packets.data.enums.StatType;
 import packets.incoming.MapInfoPacket;
 import packets.incoming.NotificationPacket;
 import tomato.backend.data.*;
@@ -101,6 +104,8 @@ public class IconDpsGUI extends DisplayDpsGUI {
         sb.append(entity.getFightTimerString());
         String mobName = sb.toString();
         JLabel l = new JLabel(mobName, new ImageIcon(getScaledImg(entity.objectType, entity.img())), JLabel.LEFT);
+        int firstHP = getHighestHP(entity);
+        l.setToolTipText("Fight start HP: " + firstHP);
         int mobNameStringSize = getStringSize(mobName) + 48;
         mobPanel.setPreferredSize(new Dimension(mobNameStringSize, 48));
         mobPanel.setMaximumSize(new Dimension(mobNameStringSize, 48));
@@ -219,6 +224,20 @@ public class IconDpsGUI extends DisplayDpsGUI {
         if (panelAllPlayers.getComponents().length == 0) return null;
 
         return panel;
+    }
+
+    private static int getHighestHP(Entity entity) {
+        int hp = -1;
+        for (ObjectStatusData o : entity.statUpdates) {
+            for (StatData sd : o.stats) {
+                if (sd.statType == StatType.MAX_HP_STAT) {
+                    if (hp < sd.statValue) {
+                        hp = sd.statValue;
+                    }
+                }
+            }
+        }
+        return hp;
     }
 
     private static int getStringSize(String str) {
