@@ -250,15 +250,34 @@ public class CharacterPetsGUI extends JPanel {
                 if (i == 2 && maxLevel < 90) continue;
 
                 if (feedAmount != -1) {
-                    int nextLevelPet = Math.max(abilityLevel, 100) - 1;
+                    int nextLevelPet = Math.min(abilityLevel + 1, maxLevel);
                     int maxing = (int) (20 / feedMultiplier[i] * (Math.pow(1.08, maxLevel - 1) - 1) / (1.08 - 1));
                     int levelMax = (int) (20 / feedMultiplier[i] * (Math.pow(1.08, nextLevelPet - 1) - 1) / (1.08 - 1));
                     int leftFullMax = maxing - fp;
-                    int count = (int) Math.ceil((double) leftFullMax / feedAmount);
+                    int countFullMax = (int) Math.ceil((double) leftFullMax / feedAmount);
+                    int leftLevelMax = levelMax - fp;
+                    int countLevelMax = (int) Math.ceil((double) leftLevelMax / feedAmount);
+
+                    String s = "<html>";
+                    s += "Feed Points " + fp + " / " + maxing;
+                    s += "<br>";
+                    s += "Next Level " + nextLevelPet;
+                    if (abilityLevel != maxLevel) {
+                        s += "<br>";
+                        s += "Feed Missing " + leftLevelMax;
+                        s += "<br>";
+                        s += " Items needed " + countLevelMax;
+                        s += "<br>";
+                        s += " Fame needed " + countLevelMax * cost;
+                    }
+                    s += "</html>";
+                    labels[i * 5 + 2].setToolTipText(s);
 
                     if (leftFullMax > 0) {
-                        labels[i * 5 + 3].setText(String.format(" N: %d", count));
-                        labels[i * 5 + 4].setText(String.format(" F: %d", count * cost));
+                        labels[i * 5 + 3].setText(String.format(" N: %d", countFullMax));
+                        labels[i * 5 + 3].setToolTipText("Number of items to max pet");
+                        labels[i * 5 + 4].setText(String.format(" F: %d", countFullMax * cost));
+                        labels[i * 5 + 4].setToolTipText("Fame needed to max pet");
                     } else {
                         labels[i * 5 + 3].setText(" -");
                         labels[i * 5 + 4].setText(" -");
