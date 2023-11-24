@@ -238,20 +238,23 @@ public class CharacterPetsGUI extends JPanel {
             if (stat.PET_THIRDABILITY_TYPE_STAT != null) a[8] = stat.PET_THIRDABILITY_TYPE_STAT.statValue;
 
             for (int i = 0; i < 3; i++) {
-                labels[i * 5].setText(String.format("%s ", petAbilitys.get(a[i + 6])));
-                labels[i * 5 + 1].setText(String.format("[Level: %d]", a[i + 3]));
-                labels[i * 5 + 2].setText(String.format("FP: %d", a[i]));
+                String abilityName = petAbilitys.get(a[i + 6]);
+                int abilityLevel = a[i + 3];
+                int fp = (int) (a[i] / feedMultiplier[i]);
+
+                labels[i * 5].setText(String.format("%s ", abilityName));
+                labels[i * 5 + 1].setText(String.format("[Level: %d]", abilityLevel));
+                labels[i * 5 + 2].setText(String.format("FP: %d", fp));
 
                 if (i == 1 && maxLevel < 50) continue;
                 if (i == 2 && maxLevel < 90) continue;
 
                 if (feedAmount != -1) {
-                    int points = a[i];
-                    int nextLevelPet = Math.max(a[i + 3], 100) - 1;
+                    int nextLevelPet = Math.max(abilityLevel, 100) - 1;
                     int maxing = (int) (20 / feedMultiplier[i] * (Math.pow(1.08, maxLevel - 1) - 1) / (1.08 - 1));
                     int levelMax = (int) (20 / feedMultiplier[i] * (Math.pow(1.08, nextLevelPet - 1) - 1) / (1.08 - 1));
-                    int leftFullMax = maxing - points;
-                    int count = (int) (leftFullMax / (feedAmount * feedMultiplier[i]));
+                    int leftFullMax = maxing - fp;
+                    int count = (int) Math.ceil(leftFullMax / (feedAmount * feedMultiplier[i]));
 
                     if (leftFullMax > 0) {
                         labels[i * 5 + 3].setText(String.format(" N: %d", count));
