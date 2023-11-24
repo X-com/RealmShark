@@ -125,7 +125,7 @@ public class DpsToString {
             }
             String name = dmg.owner.getStatName();
             String extra = "    ";
-            String isMe = dmg.owner.isUser() ? " ->" : (highlight ? ">>>" : "   ");
+            String isMe = (dmg.owner.isUser() && DpsDisplayOptions.showMe) ? " ->" : (highlight ? ">>>" : "   ");
             int index = name.indexOf(',');
             if (index != -1) name = name.substring(0, index);
             float pers = ((float) dmg.damage * 100 / (float) entity.maxHp());

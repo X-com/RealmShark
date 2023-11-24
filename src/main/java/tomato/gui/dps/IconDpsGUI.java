@@ -124,7 +124,7 @@ public class IconDpsGUI extends DisplayDpsGUI {
         for (Damage dmg : playerDamageList) {
             int filter = Filter.filter(dmg.owner, player);
 
-            boolean user = dmg.owner.isUser();
+            boolean user = dmg.owner.isUser() && DpsDisplayOptions.showMe;
             boolean highlight = false;
             counter++;
 

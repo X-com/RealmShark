@@ -3,6 +3,7 @@ package tomato.gui.dps;
 import util.PropertiesManager;
 
 public class DpsDisplayOptions {
+    public static boolean showMe;
     public static int equipmentOption;
     public static int sortOption;
     public static String[] filteredStrings;
@@ -13,6 +14,11 @@ public class DpsDisplayOptions {
         String names = PropertiesManager.getProperty("nameFilter");
         String toggleFilter = PropertiesManager.getProperty("toggleFilter");
         String sort = PropertiesManager.getProperty("sortDps");
+        String show = PropertiesManager.getProperty("showMe");
+
+        if (show != null) {
+            showMe = show.equals("true");
+        }
 
         if (equipment == null) {
             equipmentOption = 1;

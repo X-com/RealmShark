@@ -22,7 +22,7 @@ public class TomatoMenuBar implements ActionListener {
     private JRadioButtonMenuItem fontNameMonospaced, fontNameDialog, fontNameDialogInput, fontNameSerif, fontNameSansSerif, fontNameSegoe;
     private JRadioButtonMenuItem dpsEquipmentNone, dpsEquipmentSimple, dpsEquipmentFull, dpsIcon;
     private JRadioButtonMenuItem dpsSortLastHit, dpsSortFirstHit, dpsSortMaxHp, dpsSortFightTimer;
-    private JCheckBoxMenuItem fontStyleBold, fontStyleItalic;
+    private JCheckBoxMenuItem fontStyleBold, fontStyleItalic, dpsShowMe;
     private JMenu file, edit, info;
     private JMenuBar jMenuBar;
     private JFrame frame;
@@ -98,6 +98,14 @@ public class TomatoMenuBar implements ActionListener {
         fontMenu.add(fontStyleBold);
         fontMenu.add(fontStyleItalic);
         setFontNameRadioButton();
+
+        dpsShowMe = new JCheckBoxMenuItem("Show me");
+        dpsShowMe.addActionListener(this);
+        dpsShowMe.setToolTipText("Shows an arrow -> next to your name in the dps logs");
+        dpsOptions.add(dpsShowMe);
+        setShowMeCheckbox();
+
+        dpsOptions.add(new JSeparator(SwingConstants.HORIZONTAL));
 
         ButtonGroup groupDpsEquipment = new ButtonGroup();
         dpsEquipmentNone = addRadioButtonMenuItem(groupDpsEquipment, dpsOptions, "None");
@@ -264,6 +272,13 @@ public class TomatoMenuBar implements ActionListener {
             case "Monospaced":
                 fontNameMonospaced.setSelected(true);
                 break;
+        }
+    }
+
+    private void setShowMeCheckbox() {
+        String showMe = PropertiesManager.getProperty("showMe");
+        if (showMe != null) {
+            dpsShowMe.setSelected(showMe.equals("true"));
         }
     }
 
@@ -466,6 +481,11 @@ public class TomatoMenuBar implements ActionListener {
         } else if (e.getSource() == fontStyleItalic) { // font style
             TomatoGUI.fontNameTextAreas(getFontName(), getFontStyle());
             PropertiesManager.setProperties("fontStyle", Integer.toString(getFontStyle()));
+        } else if (e.getSource() == dpsShowMe) { // dps show me
+            boolean b = dpsShowMe.isSelected();
+            PropertiesManager.setProperties("showMe", b ? "true" : "false");
+            DpsDisplayOptions.showMe = b;
+            DpsGUI.update();
         } else if (e.getSource() == dpsEquipmentNone) { // dps equipment
             PropertiesManager.setProperties("equipment", "0");
             DpsDisplayOptions.equipmentOption = 0;
