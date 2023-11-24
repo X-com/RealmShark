@@ -254,7 +254,7 @@ public class CharacterPetsGUI extends JPanel {
                     int maxing = (int) (20 / feedMultiplier[i] * (Math.pow(1.08, maxLevel - 1) - 1) / (1.08 - 1));
                     int levelMax = (int) (20 / feedMultiplier[i] * (Math.pow(1.08, nextLevelPet - 1) - 1) / (1.08 - 1));
                     int leftFullMax = maxing - fp;
-                    int count = (int) Math.ceil(leftFullMax / (feedAmount * feedMultiplier[i]));
+                    int count = (int) Math.ceil((double) leftFullMax / feedAmount);
 
                     if (leftFullMax > 0) {
                         labels[i * 5 + 3].setText(String.format(" N: %d", count));
