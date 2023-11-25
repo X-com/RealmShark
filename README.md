@@ -90,3 +90,11 @@ The application can now be built, ran and debugged from IntelliJ.
 To build a runnable jar. Use the gradle tool named shadowJar. The [shadowJar](https://user-images.githubusercontent.com/5974568/185830689-3031bb23-7d6c-416f-984d-4d460f15140c.png) will build a runnable jar and place it in the build/libs folder. The shadowJar build tool builds a fat jar including all the resources. Note! This includes any files that can't be red from within the jar, i.e. dll files.
  - If resources have to be extracted out of the jar during runtime. An example class called LibExtractor.java is found in the project to help extract resources out of the jar during runtime in case it is needed.
  - Both application name and the version can be modified in the build.gradle folder. Simply modify the applicationName to change the release name or project.version to change the release version.
+
+Setting up Tomato or Potato requires RealmShark-vXX.jar to be built as explained above and placed in the /libs folder.
+1. Swap to the "realmshark" branch on github.
+2. Follow the guide above to build the RealmShark-vXX.jar build using shadow jar builder.
+3. Move the RealmShark-vXX.jar file from "./build/libs" into to "./libs".
+4. Swap branch to "tomato" or "potato".
+5. Run either app with the corresponding class "Tomato.java" or "Potato.java"
+6. When ready to build the edited tomato/potato, follow the guide above using the shadow jar again.
