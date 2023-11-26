@@ -25,7 +25,6 @@ public class OpenGLPotato extends Thread {
     private VertexArray vaMap;
     private Texture[] textureMaps;
     private Matrix4f mvp;
-    public static Matrix4f proj;
     private int backgroundChange;
     private int mapIndex = 0;
 
@@ -113,18 +112,13 @@ public class OpenGLPotato extends Thread {
         // ----
 
         // preRender();
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_COLOR);
-        glEnable(GL_BLEND);
+//        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_COLOR);
+//        glEnable(GL_BLEND);
 
-//        renderer = new GLRenderer();
-
-        proj = new Matrix4f();
-//        proj.ortho(-1024f, 1024f, -1024f / ratio, 1024f / ratio, -1.0f, 1.0f); // x*h/w or y*w/h
-
-        mvp = proj;
-
-        shaderMap.bind();
-        shaderMap.setUniformMat4f("uMVP", mvp);
+//        mvp = new Matrix4f();
+//
+//        shaderMap.bind();
+//        shaderMap.setUniformMat4f("uMVP", mvp);
 
         heroes = new GLHeroes();
         // ----
@@ -154,7 +148,7 @@ public class OpenGLPotato extends Thread {
     private void tick() {
         //            fps();
 
-        GLRenderer.clear();
+        clear();
 
         if (backgroundChange != 0) {
             clearColors(backgroundChange);
@@ -171,7 +165,7 @@ public class OpenGLPotato extends Thread {
 
         if (showMap && userShowMap && model.inRealm() && zoom != 1) {
             textureMaps[mapIndex].bind(0);
-            GLRenderer.draw(vaMap, vaMap.getIndexBuffer(), shaderMap);
+            draw(vaMap, vaMap.getIndexBuffer(), shaderMap);
         }
 
 //            if (showHeroes && userShowHeroes && model.inRealm() && zoom != 6) {
@@ -208,6 +202,17 @@ public class OpenGLPotato extends Thread {
         renderHud.render();
         renderText.render();
         renderShape.render();
+    }
+
+    private void clear() {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
+    private void draw(VertexArray va, IndexBuffer ib, Shader shader) {
+        shader.bind();
+        va.bind();
+        ib.bind();
+        glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, 0);
     }
 
     public static void setColor(int color) {

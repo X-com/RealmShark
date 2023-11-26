@@ -1,7 +1,8 @@
-package potato.view.opengl;
+package old;
 
 import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryUtil;
+import potato.view.opengl.*;
 
 import java.awt.*;
 import java.nio.FloatBuffer;
