@@ -19,13 +19,10 @@ import static org.lwjgl.system.windows.User32.WS_EX_TOOLWINDOW;
 public class WindowGLFW {
 
     private long window;
-    private static WindowGLFW instance;
     private static boolean viewChanged;
     private static boolean userShowAll = true;
 
     public WindowGLFW() {
-        instance = this;
-
         if (!glfwInit()) {
             throw new RuntimeException("Failed to initialize GLFW");
         }
@@ -92,12 +89,12 @@ public class WindowGLFW {
         }
     }
 
-    public static void toggleShowAll() {
+    public void toggleShowAll() {
         if (userShowAll) {
-            instance.hide();
+            hide();
             userShowAll = false;
         } else {
-            instance.show();
+            show();
             userShowAll = true;
         }
     }

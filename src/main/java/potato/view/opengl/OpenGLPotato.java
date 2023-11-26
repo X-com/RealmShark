@@ -323,4 +323,10 @@ public class OpenGLPotato extends Thread {
             yBot = 136f;
         }
     }
+
+    public void toggleShowAll() {
+        if (window != null) {
+            window.toggleShowAll();
+        }
+    }
 }

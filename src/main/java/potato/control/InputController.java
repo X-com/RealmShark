@@ -92,7 +92,7 @@ public class InputController {
             } else if (key == Config.instance.keyValues[4]) {
                 OpenGLPotato.toggleShowInfo();
             } else if (key == Config.instance.keyValues[5]) {
-                WindowGLFW.toggleShowAll();
+                renderer.toggleShowAll();
             } else if (key == Config.instance.keyValues[6]) {
                 Config.instance.saveMapInfo = !Config.instance.saveMapInfo;
                 Config.save();
