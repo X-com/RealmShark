@@ -5,11 +5,8 @@ import io.github.chiraagchakravarthy.lwjgl_vectorized_text.VectorFont;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-import potato.model.Bootloader;
 import potato.model.Config;
 import potato.model.DataModel;
-
-import java.awt.image.BufferedImage;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -21,15 +18,9 @@ public class OpenGLPotato extends Thread {
     private final DataModel model;
     private boolean running;
 
-    private Shader shaderMap;
-    private VertexArray vaMap;
-    private Texture[] textureMaps;
     private Matrix4f mvp;
     private int backgroundChange;
     private int mapIndex = 0;
-
-    private int mapAlpha = 150;
-//    public static float ratio;
 
     private boolean firstDisplay = true;
     private static boolean userShowMap = true;
@@ -40,6 +31,8 @@ public class OpenGLPotato extends Thread {
     private boolean showHeroCount = false;
     public static boolean refresh = false;
 
+    private static WindowGLFW window;
+    private static GLMapRender renderMap;
     public static VectorFont vectorFont;
     public static VectorFont vectorShapes;
     public static TextRenderer renderHud;
@@ -73,42 +66,21 @@ public class OpenGLPotato extends Thread {
     }
 
     public void run() {
-        WindowGLFW window = new WindowGLFW();
+        window = new WindowGLFW();
 
+        renderMap = new GLMapRender();
         //vertexMap();
-        float[] mapVertices = new float[]{0, 0, 0, 1, 2048, 0, 1, 1, 2048, 2048, 1, 0, 0, 2048, 0, 0};
 
-        int[] mapIndexes = new int[]{0, 1, 2, 2, 3, 0};
-
-        vaMap = new VertexArray();
-        VertexBuffer vb = new VertexBuffer(mapVertices);
-        IndexBuffer ib = new IndexBuffer(mapIndexes);
-        vaMap.setIndexBuffer(ib);
-        VertexBufferLayout layout = new VertexBufferLayout();
-        layout.addFloat(2); //vertex coords
-        layout.addFloat(2); //texture coords
-        vaMap.addVertexBuffer(vb, layout);
         // ----
 
 
         // setupShaders();
-        shaderMap = new Shader("shader/map.vert", "shader/map.frag");
-        shaderMap.bind();
-        shaderMap.setUniform1i("uTexImage", 0);
-        shaderMap.setUniform1f("alpha", Config.instance.mapTransparency / 255f);
+
         // ----
 
 
         // setupTextures();
-        BufferedImage[] maps = Bootloader.loadMaps();
-        textureMaps = new Texture[maps.length];
-        for (int i = 0; i < maps.length; i++) {
-            int w = maps[i].getWidth();
-            int h = maps[i].getHeight();
-            BufferedImage b = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-            b.getGraphics().drawImage(maps[i], 0, 0, null);
-            textureMaps[i] = new Texture(b, false);
-        }
+
         // ----
 
         // preRender();
@@ -148,27 +120,25 @@ public class OpenGLPotato extends Thread {
     private void tick() {
         //            fps();
 
-        clear();
+        renderMap.clear();
 
         if (backgroundChange != 0) {
             clearColors(backgroundChange);
             backgroundChange = 0;
         }
 
-        if (refresh) {
-            shaderMap.bind();
-            shaderMap.setUniformMat4f("uMVP", mvp);
-            shaderMap.setUniform1f("alpha", mapAlpha / 255f);
-
-            refresh = false;
-        }
+//        if (refresh) {
+//            shaderMap.bind();
+//            shaderMap.setUniformMat4f("uMVP", mvp);
+//            shaderMap.setUniform1f("alpha", mapAlpha / 255f);
+//
+//            refresh = false;
+//        }
 
         if (showMap && userShowMap && model.inRealm() && zoom != 1) {
-            textureMaps[mapIndex].bind(0);
-            draw(vaMap, vaMap.getIndexBuffer(), shaderMap);
+            renderMap.draw();
         }
 
-//            if (showHeroes && userShowHeroes && model.inRealm() && zoom != 6) {
         if (showHeroes && userShowHeroes && model.inRealm() && zoom != 1) {
             heroes.drawHeros(model.mapHeroes(), mvp, mapSize);
             heroes.drawShapes(model.mapEntitys(), mvp, mapSize);
@@ -204,17 +174,6 @@ public class OpenGLPotato extends Thread {
         renderShape.render();
     }
 
-    private void clear() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    }
-
-    private void draw(VertexArray va, IndexBuffer ib, Shader shader) {
-        shader.bind();
-        va.bind();
-        ib.bind();
-        glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, 0);
-    }
-
     public static void setColor(int color) {
         instance.backgroundChange = color;
     }
@@ -238,8 +197,8 @@ public class OpenGLPotato extends Thread {
     }
 
     private void mapAlpha(int alpha) {
-        mapAlpha = alpha;
-        refresh = true;
+        renderMap.setAlpha(alpha);
+//        refresh = true;
     }
 
     public static void toggleShowMap() {
@@ -287,20 +246,20 @@ public class OpenGLPotato extends Thread {
             float ymin = ymax - 48f * zoom;
             mvp = view.ortho(xmin, xmax, ymin, ymax, -1.0f, 1.0f);
         }
+        if (renderMap != null) {
+            renderMap.setMVP(mvp);
+        }
     }
 
     public void setMap(int mapIndex) {
         this.mapIndex = mapIndex;
+        renderMap.setMap(mapIndex);
         refresh = true;
     }
 
     public void dispose() {
         running = false;
-        shaderMap.dispose();
-        vaMap.dispose();
-        for (Texture textureMap : textureMaps) {
-            textureMap.dispose();
-        }
+        renderMap.dispose();
     }
 
     public void mapSize(int mapSize) {
