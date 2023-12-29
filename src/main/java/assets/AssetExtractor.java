@@ -43,7 +43,7 @@ public class AssetExtractor {
     public static final String ASSETS_OBJECT_FILE_DIR_PATH = "assets/ObjectID.list";
     public static final String ASSETS_TILE_FILE_DIR_PATH = "assets/TileID.list";
     private static final String XML_DIR_PATH = "assets/xml";
-    private static final File[] ASSET_FOLDERS = {new File("assets/json/"), new File("assets/sprites/"), new File("assets/xml/")};
+    private static final File[] ASSET_FOLDERS = {new File("assets/spritesheet/"), new File("assets/sprites/"), new File("assets/xml/")};
     private static final String REALM_RES_PATH = "/RealmOfTheMadGod/Production/RotMG Exalt_Data/resources.assets";
     private static JOptionPane pane;
 
@@ -267,8 +267,6 @@ public class AssetExtractor {
 
         tileAssets.sort(Comparator.comparing(a -> a.id));
         tileAssets.forEach(e -> Util.print(ASSETS_TILE_FILE_DIR_PATH + "-", e.toString()));
-
-        reloadAssetsOnRunningApp();
     }
 
     /**

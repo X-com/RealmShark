@@ -70,7 +70,7 @@ public class UnityExtractor {
 
     private void extractSpritesheetJson(Resources res, File outputFolder) {
         if (res.spritesheet != null) {
-            File outputFile = new File(outputFolder + "/spritesheet.json");
+            File outputFile = new File(outputFolder + "/spritesheetf");
             try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
                 outputStream.write(res.spritesheet.m_Script);
             } catch (IOException e) {

@@ -8,7 +8,7 @@ import java.io.IOException;
 public class TextAsset {
     public static final String[] NON_XML_FILES = {
             "manifest_xml", "COPYING", "Errors", "ExplainUnzip", "cloth_bazaar", "Cursors", "Dialogs", "Keyboard",
-            "LICENSE", "LineBreaking Following Characters", "LineBreaking Leading Characters", "manifest_json", "spritesheet",
+            "LICENSE", "LineBreaking Following Characters", "LineBreaking Leading Characters", "manifest_json", "spritesheetf",
             "iso_4217", "data", "manifest", "BillingMode"
     };
 

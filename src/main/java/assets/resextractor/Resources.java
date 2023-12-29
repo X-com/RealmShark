@@ -64,7 +64,7 @@ public class Resources {
 
     private void parseTextAsset(ObjectReader o) throws IOException {
         TextAsset t = new TextAsset(o);
-        if (t.name.equals("spritesheet")) {
+        if (t.name.equals("spritesheetf")) {
             spritesheet = t;
         } else if (t.name.equals("manifest")) {
             manifest_json = t;
