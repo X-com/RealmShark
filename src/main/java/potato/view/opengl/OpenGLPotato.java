@@ -36,6 +36,7 @@ public class OpenGLPotato extends Thread {
     public static VectorFont vectorFont;
     public static VectorFont vectorShapes;
     public static TextRenderer renderHud;
+    public static TextRenderer renderText;
     public static TextRenderer renderShape;
     public static Vector2f bottomLeftVec = new Vector2f(-1, -1);
 
@@ -98,6 +99,7 @@ public class OpenGLPotato extends Thread {
         vectorFont = new VectorFont("/font/ariblk.ttf");
         vectorShapes = new VectorFont("/font/shapes.ttf");
         renderHud = new TextRenderer(vectorFont);
+        renderText = new TextRenderer(vectorFont);
         renderShape = new TextRenderer(vectorShapes);
         // ----
 
@@ -168,6 +170,7 @@ public class OpenGLPotato extends Thread {
             renderHud.drawText2D(s, 5, Config.instance.mapHeight - 23, 20, bottomLeftVec, TextRenderer.TextBoundType.BOUNDING_BOX, mainTextColor);
         }
         renderHud.render();
+        renderText.render();
         renderShape.render();
     }
 
