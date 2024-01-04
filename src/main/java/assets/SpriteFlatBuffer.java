@@ -52,6 +52,11 @@ public class SpriteFlatBuffer {
         decodeSheet(ssr);
     }
 
+    /**
+     * Decodes spritesheetf into sprite objects
+     *
+     * @param ssr root flat buffer object.
+     */
     private static void decodeSheet(SpriteSheetRoot ssr) {
         int spriteSheetSize = ssr.spritesLength();
         for (int i = 0; i < spriteSheetSize; i++) {
@@ -79,13 +84,21 @@ public class SpriteFlatBuffer {
             HashMap<Integer, Sprite> map = new HashMap<>();
             sprites.put(name, map);
             for (int j = 0; j < spritSize; j++) {
-                map.put(j, getSprite(animatedSheet.sprites(j)));
+                Sprite sprite = getSprite(animatedSheet.sprites(j));
+                map.put(sprite.index(), sprite);
             }
         }
     }
 
+    /**
+     * Gets the sprite object from parsed buffer.
+     *
+     * @param s Buffer sprite object to be extracted
+     * @return Sprite object containing sprite data.
+     */
     private static Sprite getSprite(assets.flattbuffer.Sprite s) {
         Sprite newSprite = new Sprite();
+        newSprite.index = s.index();
         newSprite.aId = (int) s.aId();
         Position position = s.position();
         newSprite.setPosition(position.w(), position.h(), position.x(), position.y());
@@ -93,10 +106,6 @@ public class SpriteFlatBuffer {
         newSprite.setColor(color.r(), color.g(), color.b(), color.a());
 
         return newSprite;
-    }
-
-    public static void main(String[] args) {
-
     }
 
     /**
@@ -176,6 +185,10 @@ public class SpriteFlatBuffer {
 
         public int colorAsInt() {
             return mostCommonColorA << 24 | mostCommonColorB << 16 | mostCommonColorG << 8 | mostCommonColorR;
+        }
+
+        public int index() {
+            return index;
         }
     }
 }
