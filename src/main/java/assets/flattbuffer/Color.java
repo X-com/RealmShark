@@ -3,54 +3,46 @@
 package assets.flattbuffer;
 
 import com.google.flatbuffers.BaseVector;
+import com.google.flatbuffers.BooleanVector;
+import com.google.flatbuffers.ByteVector;
 import com.google.flatbuffers.Constants;
+import com.google.flatbuffers.DoubleVector;
 import com.google.flatbuffers.FlatBufferBuilder;
+import com.google.flatbuffers.FloatVector;
+import com.google.flatbuffers.IntVector;
+import com.google.flatbuffers.LongVector;
+import com.google.flatbuffers.ShortVector;
+import com.google.flatbuffers.StringVector;
+import com.google.flatbuffers.Struct;
 import com.google.flatbuffers.Table;
-
+import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 @SuppressWarnings("unused")
-public final class Color extends Table {
-  public static void ValidateVersion() { Constants.FLATBUFFERS_23_5_26(); }
-  public static Color getRootAsColor(ByteBuffer _bb) { return getRootAsColor(_bb, new Color()); }
-  public static Color getRootAsColor(ByteBuffer _bb, Color obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+public final class Color extends Struct {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public Color __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public float r() { int o = __offset(4); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public float g() { int o = __offset(6); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public float b() { int o = __offset(8); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public float a() { int o = __offset(10); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  public float r() { return bb.getFloat(bb_pos + 0); }
+  public float g() { return bb.getFloat(bb_pos + 4); }
+  public float b() { return bb.getFloat(bb_pos + 8); }
+  public float a() { return bb.getFloat(bb_pos + 12); }
 
-  public static int createColor(FlatBufferBuilder builder,
-      float r,
-      float g,
-      float b,
-      float a) {
-    builder.startTable(4);
-    Color.addA(builder, a);
-    Color.addB(builder, b);
-    Color.addG(builder, g);
-    Color.addR(builder, r);
-    return Color.endColor(builder);
-  }
-
-  public static void startColor(FlatBufferBuilder builder) { builder.startTable(4); }
-  public static void addR(FlatBufferBuilder builder, float r) { builder.addFloat(0, r, 0.0f); }
-  public static void addG(FlatBufferBuilder builder, float g) { builder.addFloat(1, g, 0.0f); }
-  public static void addB(FlatBufferBuilder builder, float b) { builder.addFloat(2, b, 0.0f); }
-  public static void addA(FlatBufferBuilder builder, float a) { builder.addFloat(3, a, 0.0f); }
-  public static int endColor(FlatBufferBuilder builder) {
-    int o = builder.endTable();
-    return o;
+  public static int createColor(FlatBufferBuilder builder, float r, float g, float b, float a) {
+    builder.prep(4, 16);
+    builder.putFloat(a);
+    builder.putFloat(b);
+    builder.putFloat(g);
+    builder.putFloat(r);
+    return builder.offset();
   }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }
 
     public Color get(int j) { return get(new Color(), j); }
-    public Color get(Color obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
+    public Color get(Color obj, int j) {  return obj.__assign(__element(j), bb); }
   }
 }
 

@@ -3,10 +3,19 @@
 package assets.flattbuffer;
 
 import com.google.flatbuffers.BaseVector;
+import com.google.flatbuffers.BooleanVector;
+import com.google.flatbuffers.ByteVector;
 import com.google.flatbuffers.Constants;
+import com.google.flatbuffers.DoubleVector;
 import com.google.flatbuffers.FlatBufferBuilder;
+import com.google.flatbuffers.FloatVector;
+import com.google.flatbuffers.IntVector;
+import com.google.flatbuffers.LongVector;
+import com.google.flatbuffers.ShortVector;
+import com.google.flatbuffers.StringVector;
+import com.google.flatbuffers.Struct;
 import com.google.flatbuffers.Table;
-
+import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -22,11 +31,11 @@ public final class SpriteSheet extends Table {
   public ByteBuffer nameAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer nameInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   public long unknown() { int o = __offset(6); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
-  public Sprite sprites(int j) { return sprites(new Sprite(), j); }
-  public Sprite sprites(Sprite obj, int j) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public assets.flattbuffer.Sprite sprites(int j) { return sprites(new assets.flattbuffer.Sprite(), j); }
+  public assets.flattbuffer.Sprite sprites(assets.flattbuffer.Sprite obj, int j) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int spritesLength() { int o = __offset(8); return o != 0 ? __vector_len(o) : 0; }
-  public Sprite.Vector spritesVector() { return spritesVector(new Sprite.Vector()); }
-  public Sprite.Vector spritesVector(Sprite.Vector obj) { int o = __offset(8); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public assets.flattbuffer.Sprite.Vector spritesVector() { return spritesVector(new assets.flattbuffer.Sprite.Vector()); }
+  public assets.flattbuffer.Sprite.Vector spritesVector(assets.flattbuffer.Sprite.Vector obj) { int o = __offset(8); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createSpriteSheet(FlatBufferBuilder builder,
       int nameOffset,

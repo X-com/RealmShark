@@ -86,12 +86,11 @@ public class SpriteFlatBuffer {
 
     private static Sprite getSprite(assets.flattbuffer.Sprite s) {
         Sprite newSprite = new Sprite();
-        newSprite.aId = s.id();
-        Position position = s.maskPosition();
-        newSprite.addPosition(position.w(), position.h(), position.x(), position.y());
-        System.out.println(newSprite.positionX + " " + newSprite.positionY);
-        Color color = s.color();
-        newSprite.addColor(color.r(), color.g(), color.b(), color.a());
+        newSprite.aId = (int) s.aId();
+        Position position = s.position();
+        newSprite.setPosition(position.w(), position.h(), position.x(), position.y());
+        Color color = s.mostCommonColor();
+        newSprite.setColor(color.r(), color.g(), color.b(), color.a());
 
         return newSprite;
     }
@@ -161,14 +160,14 @@ public class SpriteFlatBuffer {
             animatedSet = set;
         }
 
-        public void addPosition(float w, float h, float x, float y) {
+        public void setPosition(float w, float h, float x, float y) {
             positionW = (int) w;
             positionH = (int) h;
             positionX = (int) x;
             positionY = (int) y;
         }
 
-        public void addColor(float r, float g, float b, float a) {
+        public void setColor(float r, float g, float b, float a) {
             mostCommonColorR = (int) r;
             mostCommonColorG = (int) g;
             mostCommonColorB = (int) b;

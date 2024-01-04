@@ -3,10 +3,19 @@
 package assets.flattbuffer;
 
 import com.google.flatbuffers.BaseVector;
+import com.google.flatbuffers.BooleanVector;
+import com.google.flatbuffers.ByteVector;
 import com.google.flatbuffers.Constants;
+import com.google.flatbuffers.DoubleVector;
 import com.google.flatbuffers.FlatBufferBuilder;
+import com.google.flatbuffers.FloatVector;
+import com.google.flatbuffers.IntVector;
+import com.google.flatbuffers.LongVector;
+import com.google.flatbuffers.ShortVector;
+import com.google.flatbuffers.StringVector;
+import com.google.flatbuffers.Struct;
 import com.google.flatbuffers.Table;
-
+import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -21,39 +30,39 @@ public final class AnimatedSpriteSheet extends Table {
   public String name() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer nameAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer nameInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
-  public long unknown() { int o = __offset(6); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
-  public int unknown2() { int o = __offset(8); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public long unknown3() { int o = __offset(10); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
-  public long unknown4() { int o = __offset(12); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
-  public Sprite sprites(int j) { return sprites(new Sprite(), j); }
-  public Sprite sprites(Sprite obj, int j) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public long index() { int o = __offset(6); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  public int set() { int o = __offset(8); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  public long direction() { int o = __offset(10); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  public long action() { int o = __offset(12); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  public assets.flattbuffer.Sprite sprites(int j) { return sprites(new assets.flattbuffer.Sprite(), j); }
+  public assets.flattbuffer.Sprite sprites(assets.flattbuffer.Sprite obj, int j) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int spritesLength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
-  public Sprite.Vector spritesVector() { return spritesVector(new Sprite.Vector()); }
-  public Sprite.Vector spritesVector(Sprite.Vector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public assets.flattbuffer.Sprite.Vector spritesVector() { return spritesVector(new assets.flattbuffer.Sprite.Vector()); }
+  public assets.flattbuffer.Sprite.Vector spritesVector(assets.flattbuffer.Sprite.Vector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createAnimatedSpriteSheet(FlatBufferBuilder builder,
       int nameOffset,
-      long unknown,
-      int unknown2,
-      long unknown3,
-      long unknown4,
+      long index,
+      int set,
+      long direction,
+      long action,
       int spritesOffset) {
     builder.startTable(6);
     AnimatedSpriteSheet.addSprites(builder, spritesOffset);
-    AnimatedSpriteSheet.addUnknown4(builder, unknown4);
-    AnimatedSpriteSheet.addUnknown3(builder, unknown3);
-    AnimatedSpriteSheet.addUnknown2(builder, unknown2);
-    AnimatedSpriteSheet.addUnknown(builder, unknown);
+    AnimatedSpriteSheet.addAction(builder, action);
+    AnimatedSpriteSheet.addDirection(builder, direction);
+    AnimatedSpriteSheet.addSet(builder, set);
+    AnimatedSpriteSheet.addIndex(builder, index);
     AnimatedSpriteSheet.addName(builder, nameOffset);
     return AnimatedSpriteSheet.endAnimatedSpriteSheet(builder);
   }
 
   public static void startAnimatedSpriteSheet(FlatBufferBuilder builder) { builder.startTable(6); }
   public static void addName(FlatBufferBuilder builder, int nameOffset) { builder.addOffset(0, nameOffset, 0); }
-  public static void addUnknown(FlatBufferBuilder builder, long unknown) { builder.addInt(1, (int) unknown, (int) 0L); }
-  public static void addUnknown2(FlatBufferBuilder builder, int unknown2) { builder.addInt(2, unknown2, 0); }
-  public static void addUnknown3(FlatBufferBuilder builder, long unknown3) { builder.addInt(3, (int) unknown3, (int) 0L); }
-  public static void addUnknown4(FlatBufferBuilder builder, long unknown4) { builder.addInt(4, (int) unknown4, (int) 0L); }
+  public static void addIndex(FlatBufferBuilder builder, long index) { builder.addInt(1, (int) index, (int) 0L); }
+  public static void addSet(FlatBufferBuilder builder, int set) { builder.addInt(2, set, 0); }
+  public static void addDirection(FlatBufferBuilder builder, long direction) { builder.addInt(3, (int) direction, (int) 0L); }
+  public static void addAction(FlatBufferBuilder builder, long action) { builder.addInt(4, (int) action, (int) 0L); }
   public static void addSprites(FlatBufferBuilder builder, int spritesOffset) { builder.addOffset(5, spritesOffset, 0); }
   public static int createSpritesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startSpritesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }

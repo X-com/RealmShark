@@ -3,10 +3,19 @@
 package assets.flattbuffer;
 
 import com.google.flatbuffers.BaseVector;
+import com.google.flatbuffers.BooleanVector;
+import com.google.flatbuffers.ByteVector;
 import com.google.flatbuffers.Constants;
+import com.google.flatbuffers.DoubleVector;
 import com.google.flatbuffers.FlatBufferBuilder;
+import com.google.flatbuffers.FloatVector;
+import com.google.flatbuffers.IntVector;
+import com.google.flatbuffers.LongVector;
+import com.google.flatbuffers.ShortVector;
+import com.google.flatbuffers.StringVector;
+import com.google.flatbuffers.Struct;
 import com.google.flatbuffers.Table;
-
+import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -18,16 +27,16 @@ public final class SpriteSheetRoot extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SpriteSheetRoot __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public SpriteSheet sprites(int j) { return sprites(new SpriteSheet(), j); }
-  public SpriteSheet sprites(SpriteSheet obj, int j) { int o = __offset(4); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public assets.flattbuffer.SpriteSheet sprites(int j) { return sprites(new assets.flattbuffer.SpriteSheet(), j); }
+  public assets.flattbuffer.SpriteSheet sprites(assets.flattbuffer.SpriteSheet obj, int j) { int o = __offset(4); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int spritesLength() { int o = __offset(4); return o != 0 ? __vector_len(o) : 0; }
-  public SpriteSheet.Vector spritesVector() { return spritesVector(new SpriteSheet.Vector()); }
-  public SpriteSheet.Vector spritesVector(SpriteSheet.Vector obj) { int o = __offset(4); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public AnimatedSpriteSheet animatedSprites(int j) { return animatedSprites(new AnimatedSpriteSheet(), j); }
-  public AnimatedSpriteSheet animatedSprites(AnimatedSpriteSheet obj, int j) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public assets.flattbuffer.SpriteSheet.Vector spritesVector() { return spritesVector(new assets.flattbuffer.SpriteSheet.Vector()); }
+  public assets.flattbuffer.SpriteSheet.Vector spritesVector(assets.flattbuffer.SpriteSheet.Vector obj) { int o = __offset(4); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public assets.flattbuffer.AnimatedSpriteSheet animatedSprites(int j) { return animatedSprites(new assets.flattbuffer.AnimatedSpriteSheet(), j); }
+  public assets.flattbuffer.AnimatedSpriteSheet animatedSprites(assets.flattbuffer.AnimatedSpriteSheet obj, int j) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int animatedSpritesLength() { int o = __offset(6); return o != 0 ? __vector_len(o) : 0; }
-  public AnimatedSpriteSheet.Vector animatedSpritesVector() { return animatedSpritesVector(new AnimatedSpriteSheet.Vector()); }
-  public AnimatedSpriteSheet.Vector animatedSpritesVector(AnimatedSpriteSheet.Vector obj) { int o = __offset(6); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public assets.flattbuffer.AnimatedSpriteSheet.Vector animatedSpritesVector() { return animatedSpritesVector(new assets.flattbuffer.AnimatedSpriteSheet.Vector()); }
+  public assets.flattbuffer.AnimatedSpriteSheet.Vector animatedSpritesVector(assets.flattbuffer.AnimatedSpriteSheet.Vector obj) { int o = __offset(6); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createSpriteSheetRoot(FlatBufferBuilder builder,
       int spritesOffset,
