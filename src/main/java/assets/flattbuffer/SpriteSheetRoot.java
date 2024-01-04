@@ -32,11 +32,11 @@ public final class SpriteSheetRoot extends Table {
   public int spritesLength() { int o = __offset(4); return o != 0 ? __vector_len(o) : 0; }
   public SpriteSheet.Vector spritesVector() { return spritesVector(new SpriteSheet.Vector()); }
   public SpriteSheet.Vector spritesVector(SpriteSheet.Vector obj) { int o = __offset(4); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public AnimatedSpriteSheet animatedSprites(int j) { return animatedSprites(new AnimatedSpriteSheet(), j); }
-  public AnimatedSpriteSheet animatedSprites(AnimatedSpriteSheet obj, int j) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public AnimatedSprite animatedSprites(int j) { return animatedSprites(new AnimatedSprite(), j); }
+  public AnimatedSprite animatedSprites(AnimatedSprite obj, int j) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int animatedSpritesLength() { int o = __offset(6); return o != 0 ? __vector_len(o) : 0; }
-  public AnimatedSpriteSheet.Vector animatedSpritesVector() { return animatedSpritesVector(new AnimatedSpriteSheet.Vector()); }
-  public AnimatedSpriteSheet.Vector animatedSpritesVector(AnimatedSpriteSheet.Vector obj) { int o = __offset(6); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public AnimatedSprite.Vector animatedSpritesVector() { return animatedSpritesVector(new AnimatedSprite.Vector()); }
+  public AnimatedSprite.Vector animatedSpritesVector(AnimatedSprite.Vector obj) { int o = __offset(6); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createSpriteSheetRoot(FlatBufferBuilder builder,
       int spritesOffset,

@@ -64,8 +64,7 @@ public class SpriteFlatBuffer {
             int spritSize = spriteSheet.spritesLength();
             String name = spriteSheet.name();
 
-            HashMap<Integer, Sprite> map = new HashMap<>();
-            sprites.put(name, map);
+            HashMap<Integer, Sprite> map = sprites.computeIfAbsent(name, k -> new HashMap<>());
             for (int j = 0; j < spritSize; j++) {
                 try {
                     map.put(j, getSprite(spriteSheet.sprites(j)));
@@ -77,16 +76,13 @@ public class SpriteFlatBuffer {
 
         int animatedLength = ssr.animatedSpritesLength();
         for (int i = 0; i < animatedLength; i++) {
-            AnimatedSpriteSheet animatedSheet = ssr.animatedSprites(i);
-            int spritSize = animatedSheet.spritesLength();
+            AnimatedSprite animatedSheet = ssr.animatedSprites(i);
             String name = animatedSheet.name();
+            HashMap<Integer, Sprite> map = sprites.computeIfAbsent(name, k -> new HashMap<>());
 
-            HashMap<Integer, Sprite> map = new HashMap<>();
-            sprites.put(name, map);
-            for (int j = 0; j < spritSize; j++) {
-                Sprite sprite = getSprite(animatedSheet.sprites(j));
-                map.put(sprite.index(), sprite);
-            }
+            assets.flattbuffer.Sprite s = animatedSheet.sprites();
+            Sprite sprite = getSprite(s);
+            map.put(sprite.index(), sprite);
         }
     }
 
