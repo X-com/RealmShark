@@ -14,7 +14,8 @@ public class ImageBuffer {
 
     private static HashMap<Integer, BufferedImage> images = new HashMap<>();
     private static HashMap<Integer, Integer> colors = new HashMap<>();
-    private static final SpriteJson spriteJson = new SpriteJson();
+//    private static final SpriteJson spriteJson = new SpriteJson();
+    private static final SpriteFlatBuffer spriteFlatBuffer = new SpriteFlatBuffer();
     private static BufferedImage emptyImg;
 
     private static String[] spriteSheets = {"assets/sprites/groundTiles.png", "assets/sprites/characters.png", "assets/sprites/characters_masks.png", "assets/sprites/mapObjects.png"};
@@ -39,7 +40,7 @@ public class ImageBuffer {
         String name = IdToAsset.getObjectTextureName(id, 0);
         if (name == null) return emptyImage();
         int index = IdToAsset.getObjectTextureIndex(id, 0);
-        int[] spriteData = spriteJson.getSpriteData(name, index);
+        int[] spriteData = spriteFlatBuffer.getSpriteData(name, index);
         if (spriteData == null) return emptyImage();
         BufferedImage sprite = getSprite(spriteData);
         images.put(id, sprite);
@@ -59,7 +60,7 @@ public class ImageBuffer {
         String name = IdToAsset.getTileTextureName(id, 0);
         if (name == null) return 0;
         int index = IdToAsset.getTileTextureIndex(id, 0);
-        int color = spriteJson.getSpriteColor(name, index);
+        int color = spriteFlatBuffer.getSpriteColor(name, index);
         colors.put(id, color);
         return color;
     }

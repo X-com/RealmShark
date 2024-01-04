@@ -24,8 +24,8 @@ public class UnityExtractor {
 
         Resources res = new Resources(input);
 
-        AssetExtractor.setDisplay("Extracting Json File");
-        extractSpritesheetJson(res, output[0]);
+        AssetExtractor.setDisplay("Extracting Spritesheet File");
+        extractSpritesheet(res, output[0]);
         AssetExtractor.setDisplay("Extracting Sprites");
         extractSprites(res, output[1]);
         AssetExtractor.setDisplay("Extracting Xml Files");
@@ -68,7 +68,7 @@ public class UnityExtractor {
         }
     }
 
-    private void extractSpritesheetJson(Resources res, File outputFolder) {
+    private void extractSpritesheet(Resources res, File outputFolder) {
         if (res.spritesheet != null) {
             File outputFile = new File(outputFolder + "/spritesheetf");
             try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
