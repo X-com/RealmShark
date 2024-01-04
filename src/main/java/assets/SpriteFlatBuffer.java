@@ -67,7 +67,8 @@ public class SpriteFlatBuffer {
             HashMap<Integer, Sprite> map = sprites.computeIfAbsent(name, k -> new HashMap<>());
             for (int j = 0; j < spritSize; j++) {
                 try {
-                    map.put(j, getSprite(spriteSheet.sprites(j)));
+                    Sprite sprite = getSprite(spriteSheet.sprites(j));
+                    map.put(sprite.index(), sprite);
                 } catch (Exception e) {
                     System.out.println(name);
                 }
@@ -85,6 +86,10 @@ public class SpriteFlatBuffer {
             sprite.index = (int) animatedSheet.index();
             map.put(sprite.index(), sprite);
         }
+    }
+
+    public static void main(String[] args) throws IOException, AssetMissingException {
+        ImageBuffer.getImage(28822);
     }
 
     /**
