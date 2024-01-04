@@ -82,6 +82,7 @@ public class SpriteFlatBuffer {
 
             assets.flattbuffer.Sprite s = animatedSheet.sprites();
             Sprite sprite = getSprite(s);
+            sprite.index = (int) animatedSheet.index();
             map.put(sprite.index(), sprite);
         }
     }
