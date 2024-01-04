@@ -27,14 +27,14 @@ public final class Sprite extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public Sprite __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public assets.flattbuffer.Position position() { return position(new assets.flattbuffer.Position()); }
-  public assets.flattbuffer.Position position(assets.flattbuffer.Position obj) { int o = __offset(4); return o != 0 ? obj.__assign(o + bb_pos, bb) : null; }
-  public assets.flattbuffer.Position maskPosition() { return maskPosition(new assets.flattbuffer.Position()); }
-  public assets.flattbuffer.Position maskPosition(assets.flattbuffer.Position obj) { int o = __offset(6); return o != 0 ? obj.__assign(o + bb_pos, bb) : null; }
+  public Position position() { return position(new Position()); }
+  public Position position(Position obj) { int o = __offset(4); return o != 0 ? obj.__assign(o + bb_pos, bb) : null; }
+  public Position maskPosition() { return maskPosition(new Position()); }
+  public Position maskPosition(Position obj) { int o = __offset(6); return o != 0 ? obj.__assign(o + bb_pos, bb) : null; }
   public int padding() { int o = __offset(8); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
   public int index() { int o = __offset(10); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public assets.flattbuffer.Color mostCommonColor() { return mostCommonColor(new assets.flattbuffer.Color()); }
-  public assets.flattbuffer.Color mostCommonColor(assets.flattbuffer.Color obj) { int o = __offset(12); return o != 0 ? obj.__assign(o + bb_pos, bb) : null; }
+  public Color mostCommonColor() { return mostCommonColor(new Color()); }
+  public Color mostCommonColor(Color obj) { int o = __offset(12); return o != 0 ? obj.__assign(o + bb_pos, bb) : null; }
   public boolean isT() { int o = __offset(14); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   public String spriteSheetName() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer spriteSheetNameAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }

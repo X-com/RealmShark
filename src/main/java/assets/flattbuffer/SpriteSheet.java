@@ -30,19 +30,19 @@ public final class SpriteSheet extends Table {
   public String name() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer nameAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer nameInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
-  public long unknown() { int o = __offset(6); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
-  public assets.flattbuffer.Sprite sprites(int j) { return sprites(new assets.flattbuffer.Sprite(), j); }
-  public assets.flattbuffer.Sprite sprites(assets.flattbuffer.Sprite obj, int j) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public long atlasId() { int o = __offset(6); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  public Sprite sprites(int j) { return sprites(new Sprite(), j); }
+  public Sprite sprites(Sprite obj, int j) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int spritesLength() { int o = __offset(8); return o != 0 ? __vector_len(o) : 0; }
-  public assets.flattbuffer.Sprite.Vector spritesVector() { return spritesVector(new assets.flattbuffer.Sprite.Vector()); }
-  public assets.flattbuffer.Sprite.Vector spritesVector(assets.flattbuffer.Sprite.Vector obj) { int o = __offset(8); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public Sprite.Vector spritesVector() { return spritesVector(new Sprite.Vector()); }
+  public Sprite.Vector spritesVector(Sprite.Vector obj) { int o = __offset(8); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createSpriteSheet(FlatBufferBuilder builder,
       int nameOffset,
-      long unknown,
+      long atlasId,
       int spritesOffset) {
     builder.startTable(3);
-    SpriteSheet.addUnknown(builder, unknown);
+    SpriteSheet.addAtlasId(builder, atlasId);
     SpriteSheet.addSprites(builder, spritesOffset);
     SpriteSheet.addName(builder, nameOffset);
     return SpriteSheet.endSpriteSheet(builder);
@@ -50,7 +50,7 @@ public final class SpriteSheet extends Table {
 
   public static void startSpriteSheet(FlatBufferBuilder builder) { builder.startTable(3); }
   public static void addName(FlatBufferBuilder builder, int nameOffset) { builder.addOffset(0, nameOffset, 0); }
-  public static void addUnknown(FlatBufferBuilder builder, long unknown) { builder.addLong(1, unknown, 0L); }
+  public static void addAtlasId(FlatBufferBuilder builder, long atlasId) { builder.addLong(1, atlasId, 0L); }
   public static void addSprites(FlatBufferBuilder builder, int spritesOffset) { builder.addOffset(2, spritesOffset, 0); }
   public static int createSpritesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startSpritesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }

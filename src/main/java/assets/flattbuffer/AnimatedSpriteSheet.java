@@ -34,11 +34,11 @@ public final class AnimatedSpriteSheet extends Table {
   public int set() { int o = __offset(8); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
   public long direction() { int o = __offset(10); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   public long action() { int o = __offset(12); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
-  public assets.flattbuffer.Sprite sprites(int j) { return sprites(new assets.flattbuffer.Sprite(), j); }
-  public assets.flattbuffer.Sprite sprites(assets.flattbuffer.Sprite obj, int j) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public Sprite sprites(int j) { return sprites(new Sprite(), j); }
+  public Sprite sprites(Sprite obj, int j) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int spritesLength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
-  public assets.flattbuffer.Sprite.Vector spritesVector() { return spritesVector(new assets.flattbuffer.Sprite.Vector()); }
-  public assets.flattbuffer.Sprite.Vector spritesVector(assets.flattbuffer.Sprite.Vector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public Sprite.Vector spritesVector() { return spritesVector(new Sprite.Vector()); }
+  public Sprite.Vector spritesVector(Sprite.Vector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createAnimatedSpriteSheet(FlatBufferBuilder builder,
       int nameOffset,
