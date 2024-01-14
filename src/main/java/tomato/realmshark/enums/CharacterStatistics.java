@@ -38,14 +38,14 @@ public enum CharacterStatistics {
     ANCIENT_RUINS(35, 9657, "Ancient Ruins"), // AncientRuinsCompleted
     BATTLE_FOR_THE_NEXUS(62, 1886, "Battle for the Nexus"),
     BEACHZONE(67, 1858, "Beachzone"),
-    BELLADONNAS_GARDEN(48, 8849, "Belladonnas Garden"),
+    BELLADONNAS_GARDEN(48, 8849, "Belladonna's Garden"),
     CANDYLAND_HUNTING_GROUNDS(3, 1866, "Candyland Hunting Grounds"),
     CAVE_OF_THOUSAND_TREASURES(5, 24110, "Cave of Thousand Treasures"),
     CNIDARIAN_REEF(46, 2554, "Cnidarian Reef"),
     CRYSTAL_CAVERN(34, 10042, "Crystal Cavern"),
     CULTIST_HIDEOUT(40, 19459, "Cultist Hideout"),
     CURSED_LIBRARY(32, 43862, "Cursed Library"),
-    DAVY_JONES_LOCKER(7, 1857, "Davy Jones Locker"),
+    DAVY_JONES_LOCKER(7, 1857, "Davy Jones' Locker"),
     DEADWATER_DOCKS(59, 1885, "Deadwater Docks"),
     FORAX(37, 45771, "Forax"), // ForaxsCompleted
     FORBIDDEN_JUNGLE(15, 1843, "Forbidden Jungle"),
@@ -76,8 +76,8 @@ public enum CharacterStatistics {
     ORYXS_SANCTUARY(95, 6218, "Oryxs Sanctuary"),
     PARASITE_CHAMBERS(44, 1944, "Parasite Chambers"),
     PIRATE_CAVE(21, 1815, "Pirate Cave"),
-    PUPPET_MASTERS_ENCORE(42, 29798, "Puppet Masters Encore"),
-    PUPPET_MASTERS_THEATRE(49, 9043, "Puppet Masters Theatre"),
+    PUPPET_MASTERS_ENCORE(42, 29798, "Puppet Master's Encore"),
+    PUPPET_MASTERS_THEATRE(49, 9043, "Puppet Master's Theatre"),
     RAINBOW_ROAD(80, 5704, "Rainbow Road"),
     SANTAS_WORKSHOP(81, 15566, "Santas Workshop"), //SantasWorkshopsCompleted
     SECLUDED_THICKET(47, 13983, "Secluded Thicket"), // SecludedThicketsCompleted
@@ -90,6 +90,7 @@ public enum CharacterStatistics {
     THE_MACHINE(82, 43986, "The Machine"), // TODO verify
     THE_NEST(53, 4259, "The Nest"),
     THE_SHATTERS(63, 29310, "The Shatters"),
+    THE_TAVERN(-2, 17917, "The Tavern"),
     THE_THIRD_DIMENSION(66, 19302, "The Third Dimension"),
     THE_VOID(41, 45075, "The Void"),
     TOMB_OF_THE_ANCIENTS(13, 1844, "Tomb of the Ancients"),
@@ -105,12 +106,14 @@ public enum CharacterStatistics {
 
     private static final HashMap<Integer, String> NAME = new HashMap<>();
     public static final ArrayList<Integer> DUNGEONS = new ArrayList<>();
+    public static final ArrayList<String> DUNGEON_NAMES = new ArrayList<>();
 
     static {
         for (CharacterStatistics o : CharacterStatistics.values()) {
             NAME.put(o.pcStatId, o.name);
             if (o.spriteId != -1) {
                 DUNGEONS.add(o.spriteId);
+                DUNGEON_NAMES.add(o.name);
             }
         }
     }

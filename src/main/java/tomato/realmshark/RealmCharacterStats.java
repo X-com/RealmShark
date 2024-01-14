@@ -102,6 +102,7 @@ public class RealmCharacterStats {
     public int the_machine;
     public int the_nest;
     public int the_shatters;
+    public int the_tavern;
     public int the_third_dimension;
     public int the_void;
     public int tomb_of_the_ancients;
@@ -225,6 +226,7 @@ public class RealmCharacterStats {
                 the_machine,
                 the_nest,
                 the_shatters,
+                the_tavern,
                 the_third_dimension,
                 the_void,
                 tomb_of_the_ancients,
@@ -622,6 +624,7 @@ public class RealmCharacterStats {
                 "\n   the_machine=" + the_machine +
                 "\n   the_nest=" + the_nest +
                 "\n   the_shatters=" + the_shatters +
+                "\n   the_tavern=" + the_tavern +
                 "\n   the_third_dimension=" + the_third_dimension +
                 "\n   the_void=" + the_void +
                 "\n   tomb_of_the_ancients=" + tomb_of_the_ancients +
