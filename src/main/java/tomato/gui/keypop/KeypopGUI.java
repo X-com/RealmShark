@@ -4,7 +4,9 @@ import assets.AssetMissingException;
 import assets.IdToAsset;
 import packets.data.enums.NotificationEffectType;
 import packets.incoming.NotificationPacket;
+import tomato.backend.data.TomatoData;
 import tomato.gui.TomatoGUI;
+import tomato.realmshark.RealmCharacterStats;
 import tomato.realmshark.enums.CharacterStatistics;
 import util.PropertiesManager;
 import util.Util;
@@ -62,9 +64,10 @@ public class KeypopGUI extends JPanel {
     /**
      * Packet parser for notification packets that will be used to add key, vial, rune or inc pops.
      *
+     * @param data
      * @param packet Notification packet containing info about who pops keys, vial, runes or inc pops.
      */
-    public static void packet(NotificationPacket packet) {
+    public static void packet(TomatoData data, NotificationPacket packet) {
         if (packet.effect == NotificationEffectType.PortalOpened) {
             String msg = packet.message;
             Matcher m = keypopParse.matcher(msg);
@@ -76,6 +79,8 @@ public class KeypopGUI extends JPanel {
                     appendTextAreaKeypop(String.format("%s [%s]: %s\n", Util.getHourTime(), playerName, dungeonName));
 
                     if (selectedDungeons.contains(dungeonName)) {
+                        playNotificationSound();
+                    } else if (isMissingDungeonsSelected() && isMissingDungeon(data.getCurrentDungeonStats(), dungeonName)) {
                         playNotificationSound();
                     }
                 } catch (AssetMissingException e) {
@@ -101,6 +106,20 @@ public class KeypopGUI extends JPanel {
                 }
             }
         }
+    }
+
+    /**
+     * Dungeon the currently playing character missing a complete on.
+     *
+     * @param data        Character data containing dungeon completes.
+     * @param dungeonName Name of the dungeon the player is missing
+     * @return True if missing the dungeon.
+     */
+    private static boolean isMissingDungeon(RealmCharacterStats data, String dungeonName) {
+        if (data == null) return false;
+        int completes = data.getDungeonInfoByName(dungeonName);
+
+        return completes == 0;
     }
 
     /**
@@ -184,7 +203,11 @@ public class KeypopGUI extends JPanel {
 
         JButton applyButton = new JButton("Apply");
         applyButton.addActionListener(e -> {
+            boolean missingDungeons = isMissingDungeonsSelected();
             selectedDungeons.clear();
+            if (missingDungeons) {
+                selectedDungeons.add("missingDungeons");
+            }
             for (JCheckBox checkbox : checkboxes) {
                 if (checkbox.isSelected()) {
                     selectedDungeons.add(checkbox.getText());
@@ -204,6 +227,8 @@ public class KeypopGUI extends JPanel {
         for (JCheckBox checkbox : checkboxes) {
             checkboxPanel.add(checkbox);
         }
+
+        addMissingDungeonCheckbox(configureDialog);
 
         configureDialog.add(checkboxPanel, BorderLayout.CENTER);
         configureDialog.add(buttonPanel, BorderLayout.SOUTH);
@@ -228,13 +253,36 @@ public class KeypopGUI extends JPanel {
     }
 
     /**
+     * Adds a missing dungeon checkbox at the top of the dungeon notification window.
+     */
+    private static void addMissingDungeonCheckbox(JDialog configureDialog) {
+        JCheckBox missingDungeons = new JCheckBox("Missing Dungeons");
+        missingDungeons.setToolTipText("Notifies dungeon pops for current character missing dungeon completes");
+        missingDungeons.setSelected(isMissingDungeonsSelected());
+        configureDialog.add(missingDungeons, BorderLayout.NORTH);
+        missingDungeons.addActionListener(e -> {
+            if (missingDungeons.isSelected()) {
+                selectedDungeons.add("missingDungeons");
+            } else {
+                selectedDungeons.remove("missingDungeons");
+            }
+        });
+    }
+
+    private static boolean isMissingDungeonsSelected() {
+        return selectedDungeons.contains("missingDungeons");
+    }
+
+    /**
      * Saves selection to disk
      */
     private static void saveDungeonChoices() {
         StringBuilder sb = new StringBuilder();
         boolean first = false;
         for (String s : selectedDungeons) {
-            if (first) sb.append(",");
+            if (first) {
+                sb.append(",");
+            }
             first = true;
             sb.append(s);
         }

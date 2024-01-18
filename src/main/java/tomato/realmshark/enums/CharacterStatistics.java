@@ -104,13 +104,13 @@ public enum CharacterStatistics {
     int spriteId;
     String name;
 
-    private static final HashMap<Integer, String> NAME = new HashMap<>();
+    private static final HashMap<Integer, String> ID_NAME = new HashMap<>();
     public static final ArrayList<Integer> DUNGEONS = new ArrayList<>();
     public static final ArrayList<String> DUNGEON_NAMES = new ArrayList<>();
 
     static {
         for (CharacterStatistics o : CharacterStatistics.values()) {
-            NAME.put(o.pcStatId, o.name);
+            ID_NAME.put(o.pcStatId, o.name);
             if (o.spriteId != -1) {
                 DUNGEONS.add(o.spriteId);
                 DUNGEON_NAMES.add(o.name);
@@ -131,7 +131,17 @@ public enum CharacterStatistics {
      * @return Statistics name
      */
     public static String getName(int id) {
-        return NAME.get(id);
+        return ID_NAME.get(id);
+    }
+
+    /**
+     * Returns the dungeon index from name in the dungeon array.
+     *
+     * @param name Name of the dungeon.
+     * @return The index in the dungeon list the dungeon is found.
+     */
+    public static int getDungeonIndex(String name) {
+        return DUNGEON_NAMES.indexOf(name);
     }
 
     /**

@@ -531,6 +531,11 @@ public class RealmCharacterStats {
         }
     }
 
+    public int getDungeonInfoByName(String dungeonName) {
+        int index = CharacterStatistics.getDungeonIndex(dungeonName);
+        return dungeonStats[index];
+    }
+
     private static boolean readStat(boolean[] bitArray, int id) {
         if (id == -1) return false;
         return bitArray[id];

@@ -54,6 +54,7 @@ public class TomatoData {
     protected final HashSet<Integer> dropList = new HashSet<>();
     private ArrayList<Packet> dpsPacketLog = new ArrayList<>();
     private boolean petyard;
+    private RealmCharacterStats currentCharacterStats;
 
     /**
      * Sets the current realm.
@@ -91,16 +92,35 @@ public class TomatoData {
     }
 
     private void updateDungeonStats(int charId, String str) {
-        if (charMap == null) return;
+        if (currentCharacterStats == null) {
+            currentCharacterStats = new RealmCharacterStats();
+        }
+        currentCharacterStats.decode(str);
+
+        if (charMap == null) {
+            return;
+        }
         RealmCharacter r = charMap.get(charId);
-        if (r == null) return;
-        RealmCharacterStats newStats = new RealmCharacterStats();
-        newStats.decode(str);
-        if (!Arrays.equals(newStats.dungeonStats, r.charStats.dungeonStats)) {
-            r.charStats = newStats;
+        if (r == null || r.charStats == null) {
+            return;
+        }
+        if (!Arrays.equals(currentCharacterStats.dungeonStats, r.charStats.dungeonStats)) {
+            r.charStats = new RealmCharacterStats();
+            r.charStats.decode(str);
             CharacterStatsGUI.updateRealmChars();
             CharacterCollectionGUI.updateRealmChars();
         }
+    }
+
+    /**
+     * Gets the dungeion completion stats of the currently played character.
+     * Note! only available if the instance have been changed at least ones from starting the app.
+     *
+     * @return Currently playing character stats.
+     */
+    public RealmCharacterStats getCurrentDungeonStats() {
+        if (currentCharacterStats == null) return null;
+        return currentCharacterStats;
     }
 
     /**
@@ -482,7 +502,7 @@ public class TomatoData {
         if (packet.effect == NotificationEffectType.Death) {
             deathNotifications.add(packet);
         }
-        KeypopGUI.packet(packet);
+        KeypopGUI.packet(this, packet);
     }
 
     public ArrayList<NotificationPacket> getDeathNotifications() {
