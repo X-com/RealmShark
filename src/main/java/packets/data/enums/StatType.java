@@ -136,6 +136,7 @@ public enum StatType implements Serializable {
     UNKNOWN127(127),
     UNKNOWN128(128),
     UNKNOWN129(129),
+    UNKNOWN147(147),
     ;
 
     private final int index;
