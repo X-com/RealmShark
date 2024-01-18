@@ -26,9 +26,13 @@ public class VaultContentPacket extends Packet {
      */
     public int potionStorageObjectId;
     /**
-     * Unknown
+     * Seasonal spoils object ID
      */
     public int seasonalSpoilChestObjectId;
+    /**
+     * Unknown
+     */
+    public int unknownInt;
     /**
      * The contents of the players vault, sent as an array of item object IDs or -1 if the slot is empty
      */
@@ -42,9 +46,13 @@ public class VaultContentPacket extends Packet {
      */
     public int[] potionContents;
     /**
-     * Unknown compressed int array
+     * The contents of the player's seasonal spoils items
      */
     int[] seasonalSpoilContent;
+    /**
+     * Unknown compressed int array
+     */
+    int[] unknownCompressedIntArray;
     /**
      * Unknown
      */
@@ -73,6 +81,18 @@ public class VaultContentPacket extends Packet {
      * Unknown string
      */
     public String unknownString2;
+    /**
+     * Unknown string
+     */
+    public String unknownString3;
+    /**
+     * Unknown
+     */
+    public short unknownShort1;
+    /**
+     * Unknown
+     */
+    public short unknownShort2;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
@@ -81,21 +101,24 @@ public class VaultContentPacket extends Packet {
         giftChestObjectId = buffer.readCompressedInt();
         potionStorageObjectId = buffer.readCompressedInt();
         seasonalSpoilChestObjectId = buffer.readCompressedInt();
+        unknownInt = buffer.readCompressedInt();
 
         vaultContents = new int[buffer.readCompressedInt()];
         for (int i = 0; i < vaultContents.length; i++) {
             vaultContents[i] = buffer.readCompressedInt();
         }
+        unknownCompressedIntArray = new int[buffer.readCompressedInt()];
+        for (int i = 0; i < unknownCompressedIntArray.length; i++) {
+            unknownCompressedIntArray[i] = buffer.readCompressedInt();
+        }
         giftContents = new int[buffer.readCompressedInt()];
         for (int i = 0; i < giftContents.length; i++) {
             giftContents[i] = buffer.readCompressedInt();
         }
-
         potionContents = new int[buffer.readCompressedInt()];
         for (int i = 0; i < potionContents.length; i++) {
             potionContents[i] = buffer.readCompressedInt();
         }
-
         seasonalSpoilContent = new int[buffer.readCompressedInt()];
         for (int i = 0; i < seasonalSpoilContent.length; i++) {
             seasonalSpoilContent[i] = buffer.readCompressedInt();
@@ -103,11 +126,13 @@ public class VaultContentPacket extends Packet {
 
         vaultUpgradeCost = buffer.readShort();
         potionUpgradeCost = buffer.readShort();
+        unknownShort1 = buffer.readShort();
         currentPotionMax = buffer.readShort();
         nextPotionMax = buffer.readShort();
 
         unknownString1 = buffer.readString();
         unknownString2 = buffer.readString();
+        unknownShort2 = buffer.readShort();
     }
 
     @Override
@@ -118,16 +143,22 @@ public class VaultContentPacket extends Packet {
                 "\n   giftChestObjectId=" + giftChestObjectId +
                 "\n   potionStorageObjectId=" + potionStorageObjectId +
                 "\n   seasonalSpoilChestObjectId=" + seasonalSpoilChestObjectId +
+                "\n   unknownInt=" + unknownInt +
                 "\n   vaultContents=" + Arrays.toString(vaultContents) +
                 "\n   giftContents=" + Arrays.toString(giftContents) +
                 "\n   potionContents=" + Arrays.toString(potionContents) +
                 "\n   seasonalSpoilContent=" + Arrays.toString(seasonalSpoilContent) +
+                "\n   unknownCompressedIntArray=" + Arrays.toString(unknownCompressedIntArray) +
+                "\n   unknownString3=" + unknownString3 +
                 "\n   unknownByte=" + unknownByte +
                 "\n   vaultUpgradeCost=" + vaultUpgradeCost +
                 "\n   potionUpgradeCost=" + potionUpgradeCost +
+                "\n   unknownShort1=" + unknownShort1 +
                 "\n   currentPotionMax=" + currentPotionMax +
                 "\n   nextPotionMax=" + nextPotionMax +
                 "\n   unknownString1=" + unknownString1 +
-                "\n   unknownString2=" + unknownString2;
+                "\n   unknownString2=" + unknownString2 +
+                "\n   unknownShort2=" + unknownShort2
+                ;
     }
 }
