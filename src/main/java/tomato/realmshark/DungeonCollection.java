@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 public class DungeonCollection {
 
-    public static final String[] collection = {"Tunnel Rat",
+    public static final String[] collection = {
+            "Tunnel Rat",
             "Explosive Journey",
             "Travel of the Decade",
             "First Steps",
@@ -16,6 +17,20 @@ public class DungeonCollection {
             "Hero of the Nexus",
             "Season's Beatins",
             "Realm of the Mad God",};
+
+    public static final String[] collectionBonus = {
+            "7.5%, 3,000 Fame",
+            "7.5%, 3,000 Fame",
+            "10%, 5,000 Fame",
+            "2.5%, 100 Fame",
+            "5%, 1,000 Fame",
+            "10%, 4,000 Fame",
+            "7.5%, 3,000 Fame",
+            "7.5%, 2,000 Fame",
+            "5%, 2,000 Fame",
+            "12.5%, 5,000 Fame",
+            "12.5%, 5,000 Fame",
+            "25%, 10,000 Fame",};
 
     public static final String[] collectionShort = {"TR", "EJ", "TD", "FS", "KM", "CR", "EC", "EB", "FO", "HN", "SB", "RMG",};
 

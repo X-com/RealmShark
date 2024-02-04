@@ -100,7 +100,10 @@ public class CharacterCollectionGUI extends JPanel {
 
         for (int j = 0; j < collectionCount; j++) {
             JLabel dungeonIcon = new JLabel(DungeonCollection.collectionShort[j]);
-            dungeonIcon.setToolTipText(DungeonCollection.collection[j]);
+            String t1 = DungeonCollection.collection[j];
+            String t2 = DungeonCollection.collectionBonus[j];
+
+            dungeonIcon.setToolTipText("<html>" + t1 + "<br>" + t2 + "</html>");
 
 //            int finalJ = j;
 //            dungeonIcon.addMouseListener(new MouseAdapter() {
