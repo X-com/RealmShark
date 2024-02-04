@@ -152,10 +152,11 @@ public class MyDamageGUI extends JPanel {
         sb.append(String.format("Total mana regen: %.2f mana/sec\n", manaRegen + petManaRegen));
 
         Weapon ability = Equip.get(slots[1]);
-        sb.append("\n");
-        sb.append(ability.displayName != null ? ability.displayName : ability.name).append("\n");
-        sb.append("Damage not implemented");
-
+        if (ability != null) {
+            sb.append("\n");
+            sb.append(ability.displayName != null ? ability.displayName : ability.name).append("\n");
+            sb.append("Damage not implemented");
+        }
         sb.append("\n");
 
         textArea.setText(String.valueOf(sb));

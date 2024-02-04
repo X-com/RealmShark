@@ -114,8 +114,10 @@ public class RealmCharacterStats {
 
     public int[] regularStats;
     public int[] dungeonStats;
+    public String pcStats;
 
     public void decode(String pcStats) {
+        this.pcStats = pcStats;
         byte[] data = PcStatsDecoder.sixBitStringToBytes(pcStats);
         BufferReader reader = new BufferReader(ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN));
 
@@ -125,7 +127,7 @@ public class RealmCharacterStats {
                 boolean[] bitArray = parseBits(reader);
 //                for (int i = 0; i < bitArray.length; i++) {
 //                    if (CharacterStatistics.getName(i) == null && bitArray[i]) {
-//                        System.out.println(i);
+//                        System.out.printf("%3d %s\n", i, CharacterStatistics.getName(i));
 //                    }
 //                }
                 parseStats(reader, bitArray);
@@ -528,6 +530,9 @@ public class RealmCharacterStats {
         }
         if (readStat(bitArray, CharacterStatistics.MOONLIGHT_VILLAGE.getPcStatId())) {
             moonlight_village = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.THE_TAVERN.getPcStatId())) {
+            the_tavern = reader.readCompressedInt();
         }
     }
 

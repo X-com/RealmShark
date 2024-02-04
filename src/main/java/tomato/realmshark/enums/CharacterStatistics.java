@@ -90,7 +90,7 @@ public enum CharacterStatistics {
     THE_MACHINE(82, 43986, "The Machine"), // TODO verify
     THE_NEST(53, 4259, "The Nest"),
     THE_SHATTERS(63, 29310, "The Shatters"),
-    THE_TAVERN(-2, 17917, "The Tavern"),
+    THE_TAVERN(122, 17744, "The Tavern"),
     THE_THIRD_DIMENSION(66, 19302, "The Third Dimension"),
     THE_VOID(41, 45075, "The Void"),
     TOMB_OF_THE_ANCIENTS(13, 1844, "Tomb of the Ancients"),
@@ -104,13 +104,13 @@ public enum CharacterStatistics {
     int spriteId;
     String name;
 
-    private static final HashMap<Integer, String> ID_NAME = new HashMap<>();
+    public static final HashMap<Integer, String> ID_NAME = new HashMap<>();
     public static final ArrayList<Integer> DUNGEONS = new ArrayList<>();
     public static final ArrayList<String> DUNGEON_NAMES = new ArrayList<>();
 
     static {
         for (CharacterStatistics o : CharacterStatistics.values()) {
-            ID_NAME.put(o.pcStatId, o.name);
+            ID_NAME.put(o.spriteId, o.name);
             if (o.spriteId != -1) {
                 DUNGEONS.add(o.spriteId);
                 DUNGEON_NAMES.add(o.name);
