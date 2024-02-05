@@ -28,6 +28,7 @@ build
 bin
 /assets
 tiles
+/chat
 /libs
 potato.config
 

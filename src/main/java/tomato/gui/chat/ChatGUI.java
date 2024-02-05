@@ -63,7 +63,7 @@ public class ChatGUI extends JPanel {
         String s = String.format("%s[%s]: %s", a, p.name, p.text);
         ChatGUI.appendTextAreaChat(s + "\n");
         if (save) {
-            Util.print("logs/chat", s);
+            Util.print("chat/chat", s);
         }
     }
 }
