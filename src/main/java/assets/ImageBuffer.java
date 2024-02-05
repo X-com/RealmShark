@@ -1,6 +1,7 @@
 package assets;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -12,6 +13,7 @@ import java.util.HashMap;
  */
 public class ImageBuffer {
 
+    private static final HashMap<Long, ImageIcon> outlinedImages = new HashMap<>();
     private static HashMap<Integer, BufferedImage> images = new HashMap<>();
     private static HashMap<Integer, Integer> colors = new HashMap<>();
 //    private static final SpriteJson spriteJson = new SpriteJson();
@@ -103,6 +105,59 @@ public class ImageBuffer {
         graphics.dispose();
 
         return bufferedImage;
+    }
+
+    /**
+     * Returns an image with outlines, empty image if image isn't found.
+     * Image is buffered after outline is created.
+     *
+     * @param id ID of the image
+     * @param size Size of the requested image
+     * @return Outlined image with specific size
+     */
+    public static ImageIcon getOutlinedIcon(int id, int size) throws IOException, AssetMissingException {
+        long l = (long) id << 10 + size;
+        if (outlinedImages.containsKey(l)) return outlinedImages.get(l);
+
+        BufferedImage img;
+        if (id == -1) {
+            img = ImageBuffer.getEmptyImg();
+        } else {
+            img = ImageBuffer.getImage(id);
+        }
+
+        Image scaledInstance = img.getScaledInstance(size - 2, size - 2, Image.SCALE_DEFAULT);
+
+        BufferedImage bimage = new BufferedImage(scaledInstance.getWidth(null) + 2, scaledInstance.getHeight(null) + 2, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bimage2 = new BufferedImage(scaledInstance.getWidth(null) + 2, scaledInstance.getHeight(null) + 2, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D bGr = bimage.createGraphics();
+        bGr.drawImage(scaledInstance, 1, 1, null);
+        bGr.dispose();
+
+        int w = bimage.getWidth();
+        int h = bimage.getHeight();
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                int rgb = bimage.getRGB(x, y);
+                int alpha = (rgb & 0xff000000) >> 24;
+                if (alpha == 0) {
+                    if (
+                            ((bimage.getRGB(x + (x < (w-1) ? 1 : 0), y) & 0xff000000) >> 24) != 0 ||
+                                    ((bimage.getRGB(x - (x != 0 ? 1 : 0), y) & 0xff000000) >> 24) != 0 ||
+                                    ((bimage.getRGB(x, y + (y < (h-1) ? 1 : 0)) & 0xff000000) >> 24) != 0 ||
+                                    ((bimage.getRGB(x, y - (y != 0 ? 1 : 0)) & 0xff000000) >> 24) != 0
+                    ) {
+                        bimage2.setRGB(x, y, 0xff000000);
+                    }
+                } else {
+                    bimage2.setRGB(x, y, rgb);
+                }
+            }
+        }
+        ImageIcon i = new ImageIcon(bimage2);
+        outlinedImages.put(l, i);
+
+        return i;
     }
 
     /**
