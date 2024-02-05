@@ -204,6 +204,11 @@ public class Entity implements Serializable {
         return stat.SEASONAL.statValue == 1;
     }
 
+    public boolean isCrucible() {
+        if (stat.UNKNOWN128 == null) return false;
+        return !stat.UNKNOWN128.stringStatValue.isEmpty();
+    }
+
     public ArrayList<Damage> getDamageList() {
         return damageList;
     }

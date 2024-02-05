@@ -101,12 +101,19 @@ public class ParsePanelGUI extends JPanel {
         mainPanel.add(Box.createHorizontalGlue());
         {
             JPanel panel = new JPanel();
+            JPanel p1 = new JPanel();
+            p.crucible = new JPanel();
 
             int x = 10;
             width += x;
 
             panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            panel.setBackground(player.isSeasonal() ? seasonalColor : Color.WHITE);
+            Color bg = player.isSeasonal() ? seasonalColor : Color.WHITE;
+            p1.setBackground(bg);
+            p.crucible.setBackground(player.isCrucible() ? Color.RED : bg);
+            panel.add(p1);
+            panel.add(p.crucible);
+            panel.setLayout(new GridLayout(2, 1));
 
             panel.setPreferredSize(new Dimension(10, 10));
             panel.setMaximumSize(new Dimension(10, 10));
@@ -190,13 +197,6 @@ public class ParsePanelGUI extends JPanel {
             for (int i = 0; i < 4; i++) {
                 int eq = p.inv[i];
                 try {
-//                    BufferedImage img;
-//                    if (eq == -1) {
-//                        img = ImageBuffer.getEmptyImg();
-//                    } else {
-//                        img = ImageBuffer.getImage(eq);
-//                    }
-//                    p.icon[i] = new JLabel(new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT)));
                     p.icon[i] = new JLabel(ImageBuffer.getOutlinedIcon(eq, 20));
                     p.itemName[i] = IdToAsset.objectName(eq);
                     panel.add(p.icon[i]);
@@ -336,12 +336,14 @@ public class ParsePanelGUI extends JPanel {
         int id;
         Entity playerEntity;
         JPanel panel;
+        JPanel crucible;
 
         public void update(Entity player) {
             setIcon(0, player.stat.INVENTORY_0_STAT.statValue);
             setIcon(1, player.stat.INVENTORY_1_STAT.statValue);
             setIcon(2, player.stat.INVENTORY_2_STAT.statValue);
             setIcon(3, player.stat.INVENTORY_3_STAT.statValue);
+            crucible.setBackground(player.isCrucible() ? Color.RED : player.isSeasonal() ? seasonalColor : Color.WHITE);
             updateToolTipText();
         }
 
