@@ -6,6 +6,7 @@ import packets.data.enums.NotificationEffectType;
 import packets.incoming.NotificationPacket;
 import tomato.backend.data.TomatoData;
 import tomato.gui.TomatoGUI;
+import tomato.realmshark.AudioNotification;
 import tomato.realmshark.RealmCharacterStats;
 import tomato.realmshark.enums.CharacterStatistics;
 import util.PropertiesManager;
@@ -37,12 +38,9 @@ public class KeypopGUI extends JPanel {
     private static final Pattern keypopParse = Pattern.compile("[^ ]*\"player\":\"([A-Za-z]*)[^ ]*");
     private static final Pattern nonkeypopParse = Pattern.compile("[^ ]*\"name\":\"([A-Za-z ]*)\",\"player\":\"([A-Za-z]*)[^ ]*");
 
-    private static final String NOTIFICATION_SOUND_FILE = "/sound/Notification.wav";
     private static HashSet<String> selectedDungeons = new HashSet<>();
-    private static Clip notificationSoundClip;
 
     public KeypopGUI() {
-        initAudioClip();
         loadDungeonChoices();
 
         setLayout(new BorderLayout());
@@ -79,9 +77,9 @@ public class KeypopGUI extends JPanel {
                     appendTextAreaKeypop(String.format("%s [%s]: %s\n", Util.getHourTime(), playerName, dungeonName));
 
                     if (selectedDungeons.contains(dungeonName)) {
-                        playNotificationSound();
+                        AudioNotification.playNotificationSound();
                     } else if (isMissingDungeonsSelected() && isMissingDungeon(data.getCurrentDungeonStats(), dungeonName)) {
-                        playNotificationSound();
+                        AudioNotification.playNotificationSound();
                     }
                 } catch (AssetMissingException e) {
                     e.printStackTrace();
@@ -141,43 +139,6 @@ public class KeypopGUI extends JPanel {
     }
 
     /**
-     * Loads auto clip to be played later
-     */
-    private void initAudioClip() {
-        try {
-            InputStream audioInputStream = KeypopGUI.class.getResourceAsStream(NOTIFICATION_SOUND_FILE);
-
-            if (audioInputStream == null) {
-                System.err.println("Error: Could not load audio file.");
-            } else {
-                InputStream bufferedIn = new BufferedInputStream(audioInputStream);
-                AudioInputStream stream = AudioSystem.getAudioInputStream(bufferedIn);
-
-                AudioFormat baseFormat = stream.getFormat();
-                AudioFormat decodedFormat = new AudioFormat(
-                        AudioFormat.Encoding.PCM_SIGNED,
-                        44100,  // Sample rate (Hz)
-                        16,     // Bit depth
-                        1,      // Channels (1 for mono, 2 for stereo)
-                        2,      // Frame size in bytes
-                        44100,  // Frame rate (frames per second)
-                        false   // Big-endian byte order
-                );
-
-                if (!AudioSystem.isConversionSupported(decodedFormat, baseFormat)) {
-                    System.err.println("Error: Conversion not supported.");
-                } else {
-                    AudioInputStream decodedStream = AudioSystem.getAudioInputStream(decodedFormat, stream);
-                    notificationSoundClip = AudioSystem.getClip();
-                    notificationSoundClip.open(decodedStream);
-                }
-            }
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Dialog window used to display notification dungeons.
      */
     private static void showConfigureDialog() {
@@ -214,7 +175,7 @@ public class KeypopGUI extends JPanel {
                 }
             }
             saveDungeonChoices();
-            playNotificationSound();
+            AudioNotification.playNotificationSound();
             configureDialog.dispose();
         });
 
@@ -299,25 +260,6 @@ public class KeypopGUI extends JPanel {
         if (keySound != null) {
             String[] list = keySound.split(",");
             selectedDungeons.addAll(Arrays.asList(list));
-        }
-    }
-
-    /**
-     * Plays loaded sound
-     */
-    private static void playNotificationSound() {
-        if (notificationSoundClip != null) {
-            notificationSoundClip.setFramePosition(0); // Rewind to the beginning
-            notificationSoundClip.start();
-        }
-    }
-
-    /**
-     * Stops sound being played.
-     */
-    private static void stopNotificationSound() {
-        if (notificationSoundClip != null && notificationSoundClip.isRunning()) {
-            notificationSoundClip.stop();
         }
     }
 }
