@@ -115,7 +115,7 @@ public class ImageBuffer {
      * @param size Size of the requested image
      * @return Outlined image with specific size
      */
-    public static ImageIcon getOutlinedIcon(int id, int size) throws IOException, AssetMissingException {
+    public static ImageIcon getOutlinedIcon(int id, int size) {
         long l = (long) id << 10 + size;
         if (outlinedImages.containsKey(l)) return outlinedImages.get(l);
 
@@ -123,7 +123,11 @@ public class ImageBuffer {
         if (id == -1) {
             img = ImageBuffer.getEmptyImg();
         } else {
-            img = ImageBuffer.getImage(id);
+            try {
+                img = ImageBuffer.getImage(id);
+            } catch (IOException | AssetMissingException e) {
+                img = ImageBuffer.getEmptyImg();
+            }
         }
 
         Image scaledInstance = img.getScaledInstance(size - 2, size - 2, Image.SCALE_DEFAULT);
