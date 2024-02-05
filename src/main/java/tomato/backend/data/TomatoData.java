@@ -9,6 +9,7 @@ import packets.outgoing.EnemyHitPacket;
 import packets.outgoing.PlayerShootPacket;
 import tomato.gui.TomatoGUI;
 import tomato.gui.character.*;
+import tomato.gui.chat.ChatGUI;
 import tomato.gui.dps.DpsGUI;
 import tomato.gui.keypop.KeypopGUI;
 import tomato.gui.mydmg.MyDamageGUI;
@@ -490,7 +491,7 @@ public class TomatoData {
                 e.dammahCountered = true;
             }
         }
-        TomatoGUI.appendTextAreaChat(String.format("[%s]: %s\n", p.name, p.text));
+        ChatGUI.updateChat(p);
     }
 
     /**

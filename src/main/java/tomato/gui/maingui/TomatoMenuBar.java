@@ -4,6 +4,7 @@ import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.*;
 import tomato.Tomato;
 import tomato.gui.TomatoGUI;
+import tomato.gui.chat.ChatGUI;
 import tomato.gui.dps.DpsDisplayOptions;
 import tomato.gui.dps.DpsGUI;
 import util.PropertiesManager;
@@ -16,13 +17,13 @@ import java.awt.event.ActionListener;
  * Menu bar builder class
  */
 public class TomatoMenuBar implements ActionListener {
-    private JMenuItem about, borders, clearChat, bandwidth, javav, clearDpsLogs, theme, fontMenu, dpsOptions;
+    private JMenuItem about, borders, clearChat, bandwidth, javav, clearDpsLogs, theme, fontMenu, dpsOptions, chat;
     private JRadioButtonMenuItem fontSize8, fontSize12, fontSize16, fontSize24, fontSize48, fontSizeCustom;
     private JRadioButtonMenuItem themeDarcula, themeighContrastDark, themeHighContrastLight, themeIntelliJ, themeSolarizedDark, themeSolarizedLight;
     private JRadioButtonMenuItem fontNameMonospaced, fontNameDialog, fontNameDialogInput, fontNameSerif, fontNameSansSerif, fontNameSegoe;
     private JRadioButtonMenuItem dpsEquipmentNone, dpsEquipmentSimple, dpsEquipmentFull, dpsIcon;
     private JRadioButtonMenuItem dpsSortLastHit, dpsSortFirstHit, dpsSortMaxHp, dpsSortFightTimer;
-    private JCheckBoxMenuItem fontStyleBold, fontStyleItalic, dpsShowMe;
+    private JCheckBoxMenuItem fontStyleBold, fontStyleItalic, dpsShowMe, saveChat, chatPing;
     private JMenu file, edit, info;
     private JMenuBar jMenuBar;
     private JFrame frame;
@@ -42,12 +43,8 @@ public class TomatoMenuBar implements ActionListener {
         file.add(sniffer);
         jMenuBar.add(file);
 
-        borders = new JMenuItem("Borders");
-        borders.addActionListener(this);
-        clearChat = new JMenuItem("Clear Chat");
-        clearChat.addActionListener(this);
-        clearDpsLogs = new JMenuItem("Clear DPS Logs");
-        clearDpsLogs.addActionListener(this);
+        chat = new JMenu("Chat");
+        chat.addActionListener(this);
         theme = new JMenu("Theme");
         theme.addActionListener(this);
         fontMenu = new JMenu("Font");
@@ -56,13 +53,30 @@ public class TomatoMenuBar implements ActionListener {
         dpsOptions.addActionListener(this);
 
         edit = new JMenu("Edit");
-        edit.add(borders);
-        edit.add(clearChat);
-        edit.add(clearDpsLogs);
+        edit.add(chat);
         edit.add(theme);
         edit.add(fontMenu);
         edit.add(dpsOptions);
         jMenuBar.add(edit);
+
+        saveChat = new JCheckBoxMenuItem("Save Chat");
+        saveChat.addActionListener(this);
+        chatPing = new JCheckBoxMenuItem("Ping Chat PMs");
+        chatPing.addActionListener(this);
+        clearChat = new JMenuItem("Clear Chat");
+        clearChat.addActionListener(this);
+        setChatCheckbox();
+
+        chat.add(saveChat);
+        chat.add(chatPing);
+        chat.add(new JSeparator(SwingConstants.HORIZONTAL));
+        chat.add(clearChat);
+
+        borders = new JMenuItem("Borders");
+        borders.addActionListener(this);
+
+        theme.add(borders);
+        theme.add(new JSeparator(SwingConstants.HORIZONTAL));
 
         ButtonGroup groupTheme = new ButtonGroup();
         themeDarcula = addRadioButtonMenuItem(groupTheme, theme, "Darcula Theme");
@@ -122,6 +136,11 @@ public class TomatoMenuBar implements ActionListener {
         dpsSortMaxHp = addRadioButtonMenuItem(groupDpsSort, dpsOptions, "Health Points");
         dpsSortFightTimer = addRadioButtonMenuItem(groupDpsSort, dpsOptions, "Fight Time");
         setDpsSortRadioButton();
+
+        dpsOptions.add(new JSeparator(SwingConstants.HORIZONTAL));
+        clearDpsLogs = new JMenuItem("Clear DPS Logs");
+        clearDpsLogs.addActionListener(this);
+        dpsOptions.add(clearDpsLogs);
 
         about = new JMenuItem("About");
         about.addActionListener(this);
@@ -275,6 +294,18 @@ public class TomatoMenuBar implements ActionListener {
         }
     }
 
+    private void setChatCheckbox() {
+        String save = PropertiesManager.getProperty("saveChat");
+        if (save != null) {
+            saveChat.setSelected(save.equals("true"));
+        }
+
+        String ping = PropertiesManager.getProperty("chatPing");
+        if (ping != null) {
+            chatPing.setSelected(ping.equals("true"));
+        }
+    }
+
     private void setShowMeCheckbox() {
         String showMe = PropertiesManager.getProperty("showMe");
         if (showMe != null) {
@@ -405,14 +436,20 @@ public class TomatoMenuBar implements ActionListener {
                 stopPacketSniffer();
                 PropertiesManager.setProperties("sniffer", "F");
             }
+        } else if (e.getSource() == saveChat) { // chat save logs
+            boolean b = saveChat.isSelected();
+            PropertiesManager.setProperties("saveChat", b ? "true" : "false");
+            ChatGUI.save = b;
+        } else if (e.getSource() == chatPing) { // chat ping pm
+            boolean b = chatPing.isSelected();
+            PropertiesManager.setProperties("chatPing", b ? "true" : "false");
+            ChatGUI.ping = b;
+        } else if (e.getSource() == clearChat) { // clears the text chat
+            ChatGUI.clearTextAreaChat();
         } else if (e.getSource() == borders) { // Removes the boarder of the window
             frame.dispose();
             frame.setUndecorated(!frame.isUndecorated());
             frame.setVisible(true);
-        } else if (e.getSource() == clearChat) { // clears the text chat
-            TomatoGUI.clearTextAreaChat();
-        } else if (e.getSource() == clearDpsLogs) { // clears the dps logs
-            DpsGUI.clearDpsLogs();
         } else if (e.getSource() == themeDarcula) { // theme
             LafManager.install(new DarculaTheme());
             PropertiesManager.setProperties("theme", "darcula");
@@ -518,6 +555,8 @@ public class TomatoMenuBar implements ActionListener {
             PropertiesManager.setProperties("sortDps", "3");
             DpsDisplayOptions.sortOption = 3;
             DpsGUI.update();
+        } else if (e.getSource() == clearDpsLogs) { // clears the dps logs
+            DpsGUI.clearDpsLogs();
         } else if (e.getSource() == about) { // Opens about window
             new TomatoPopupAbout().addPopup(frame);
         } else if (e.getSource() == bandwidth) { // Opens bandwidth window

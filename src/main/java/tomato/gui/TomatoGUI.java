@@ -4,6 +4,7 @@ import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.*;
 import packets.data.QuestData;
 import tomato.Tomato;
+import tomato.gui.chat.ChatGUI;
 import tomato.gui.dps.DpsDisplayOptions;
 import tomato.gui.dps.DpsGUI;
 import tomato.gui.fame.FameTrackerGUI;
@@ -30,7 +31,6 @@ public class TomatoGUI {
     private static int fontSize = 12;
     private static int fontStyle = 0;
     private static String fontName = "Monospaced";
-    private static JTextArea textAreaChat;
     private static JLabel statusLabel;
     private static JFrame frame;
     private static SecurityGUI securityPanel;
@@ -54,8 +54,8 @@ public class TomatoGUI {
      */
     public void create() {
         JTabbedPane tabbedPane = new JTabbedPane();
-        textAreaChat = new JTextArea();
-        tabbedPane.addTab("Chat", createTextArea(textAreaChat));
+
+        tabbedPane.addTab("Chat", new ChatGUI());
 
         tabbedPane.addTab("Key-pops", new KeypopGUI());
 
@@ -89,6 +89,7 @@ public class TomatoGUI {
         mainPanel.add(statusLabel, BorderLayout.SOUTH);
 
         icon = Toolkit.getDefaultToolkit().getImage(Tomato.imagePath);
+        loadChatPreset();
         loadFontSizePreset();
         loadFontNamePreset();
         DpsGUI.loadFilterPreset();
@@ -115,6 +116,21 @@ public class TomatoGUI {
         scrollChat.setAutoscrolls(true);
         new SmartScroller(scrollChat);
         return scrollChat;
+    }
+
+    /**
+     * Loads chat presets
+     */
+    private void loadChatPreset() {
+        String save = PropertiesManager.getProperty("saveChat");
+        if (save != null) {
+            ChatGUI.save = save.equals("true");
+        }
+
+        String ping = PropertiesManager.getProperty("chatPing");
+        if (ping != null) {
+            ChatGUI.ping = ping.equals("true");
+        }
     }
 
     /**
@@ -204,41 +220,26 @@ public class TomatoGUI {
     }
 
     /**
-     * Add text to the chat text area.
-     *
-     * @param s The text to be added at the end of text area.
-     */
-    public static void appendTextAreaChat(String s) {
-        if (textAreaChat != null) textAreaChat.append(s);
-    }
-
-    /**
-     * Clears the chat text area.
-     */
-    public static void clearTextAreaChat() {
-        textAreaChat.setText("");
-    }
-
-    /**
      * Set font size of text area.
      */
     public static void fontSizeTextAreas(int size) {
-        Font f = textAreaChat.getFont();
-        textAreaChat.setFont(new Font(f.getName(), f.getStyle(), size));
-        KeypopGUI.editFont(new Font(f.getName(), f.getStyle(), size));
-        DpsGUI.editFont(new Font(f.getName(), f.getStyle(), size));
-        ParsePanelGUI.editFont(new Font(f.getName(), f.getStyle(), size));
+        fontSize = size;
+        ChatGUI.editFont(new Font(fontName, fontStyle, size));
+        KeypopGUI.editFont(new Font(fontName, fontStyle, size));
+        DpsGUI.editFont(new Font(fontName, fontStyle, size));
+        ParsePanelGUI.editFont(new Font(fontName, fontStyle, size));
     }
 
     /**
      * Set font size of text area.
      */
     public static void fontNameTextAreas(String name, int style) {
-        Font f = textAreaChat.getFont();
-        textAreaChat.setFont(new Font(name, style, f.getSize()));
-        KeypopGUI.editFont(new Font(name, style, f.getSize()));
-        DpsGUI.editFont(new Font(name, style, f.getSize()));
-        ParsePanelGUI.editFont(new Font(name, style, f.getSize()));
+        fontName = name;
+        fontStyle = style;
+        ChatGUI.editFont(new Font(name, style, fontSize));
+        KeypopGUI.editFont(new Font(name, style, fontSize));
+        DpsGUI.editFont(new Font(name, style, fontSize));
+        ParsePanelGUI.editFont(new Font(name, style, fontSize));
     }
 
     /**

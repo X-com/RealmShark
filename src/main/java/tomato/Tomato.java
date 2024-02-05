@@ -9,6 +9,7 @@ import tomato.backend.TomatoPacketCapture;
 import tomato.backend.TomatoRootController;
 import tomato.backend.data.TomatoData;
 import tomato.gui.TomatoGUI;
+import tomato.gui.chat.ChatGUI;
 import tomato.gui.maingui.TomatoBandwidth;
 import tomato.gui.maingui.TomatoMenuBar;
 import tomato.gui.warnings.JavaOutOfMemoryGUI;
@@ -101,7 +102,7 @@ public class Tomato {
      * @param dump     Log dump string
      */
     private static void errorMessageHandler(String errorMsg, String dump) {
-        TomatoGUI.appendTextAreaChat(errorMsg);
+        ChatGUI.appendTextAreaChat(errorMsg);
         Util.printLogs(dump);
     }
 
