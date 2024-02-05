@@ -76,23 +76,19 @@ public class VaultContentPacket extends Packet {
     /**
      * Unknown string
      */
-    public String unknownString1;
+    public String vaultChestEnchants;
     /**
      * Unknown string
      */
-    public String unknownString2;
+    public String giftChestEnchants;
     /**
      * Unknown string
      */
-    public String unknownString3;
+    public String spoilsChestEnchants;
     /**
      * Unknown
      */
-    public short unknownShort1;
-    /**
-     * Unknown
-     */
-    public short unknownShort2;
+    public short unknownShort;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
@@ -125,14 +121,14 @@ public class VaultContentPacket extends Packet {
         }
 
         vaultUpgradeCost = buffer.readShort();
+        unknownShort = buffer.readShort();
         potionUpgradeCost = buffer.readShort();
-        unknownShort1 = buffer.readShort();
         currentPotionMax = buffer.readShort();
         nextPotionMax = buffer.readShort();
 
-        unknownString1 = buffer.readString();
-        unknownString2 = buffer.readString();
-        unknownShort2 = buffer.readShort();
+        vaultChestEnchants = buffer.readString();
+        giftChestEnchants = buffer.readString();
+        spoilsChestEnchants = buffer.readString();
     }
 
     @Override
@@ -149,16 +145,15 @@ public class VaultContentPacket extends Packet {
                 "\n   potionContents=" + Arrays.toString(potionContents) +
                 "\n   seasonalSpoilContent=" + Arrays.toString(seasonalSpoilContent) +
                 "\n   unknownCompressedIntArray=" + Arrays.toString(unknownCompressedIntArray) +
-                "\n   unknownString3=" + unknownString3 +
                 "\n   unknownByte=" + unknownByte +
                 "\n   vaultUpgradeCost=" + vaultUpgradeCost +
                 "\n   potionUpgradeCost=" + potionUpgradeCost +
-                "\n   unknownShort1=" + unknownShort1 +
+                "\n   unknownShort=" + unknownShort +
                 "\n   currentPotionMax=" + currentPotionMax +
                 "\n   nextPotionMax=" + nextPotionMax +
-                "\n   unknownString1=" + unknownString1 +
-                "\n   unknownString2=" + unknownString2 +
-                "\n   unknownShort2=" + unknownShort2
+                "\n   vaultChestEnchants=" + vaultChestEnchants +
+                "\n   giftChestEnchants=" + giftChestEnchants +
+                "\n   spoilsChestEnchants=" + spoilsChestEnchants
                 ;
     }
 }
