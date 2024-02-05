@@ -26,7 +26,6 @@ public enum StatPotion {
 
     private static final HashMap<Integer, String> POTION_NAME = new HashMap<>();
     private static final HashMap<Integer, StatPotion> POTION = new HashMap<>();
-    private static final HashMap<Integer, BufferedImage> POTION_IMG = new HashMap<>();
     private static final HashMap<Integer, Integer> POT_STAT_SIZE = new HashMap<>();
     public static final HashSet<Integer> POT_ID_LIST = new HashSet<>();
 
@@ -36,9 +35,6 @@ public enum StatPotion {
                 POTION_NAME.put(o.smallId, o.toString());
                 POTION_NAME.put(o.greaterId, "Greater " + o);
                 POTION_NAME.put(o.soulboundId, "Soulbound " + o);
-                POTION_IMG.put(o.smallId, ImageBuffer.getImage(o.smallId));
-                POTION_IMG.put(o.greaterId, ImageBuffer.getImage(o.greaterId));
-                POTION_IMG.put(o.soulboundId, ImageBuffer.getImage(o.soulboundId));
                 POTION.put(o.smallId, o);
                 POTION.put(o.greaterId, o);
                 POTION.put(o.soulboundId, o);
@@ -72,26 +68,6 @@ public enum StatPotion {
     }
 
     /**
-     * Potion id to image.
-     *
-     * @param id Potion id
-     * @return Buffered image of the potion
-     */
-    public static BufferedImage getImage(int id) {
-        return POTION_IMG.get(id);
-    }
-
-    /**
-     * Potion enum to image.
-     *
-     * @param statPotion Potion enum
-     * @return Buffered image of the potion
-     */
-    public static BufferedImage getImage(StatPotion statPotion) {
-        return POTION_IMG.get(statPotion.smallId);
-    }
-
-    /**
      * Potion id to enum.
      *
      * @param id Potion id
@@ -118,5 +94,14 @@ public enum StatPotion {
      */
     public int getIndex() {
         return index;
+    }
+
+    /**
+     * Icon ID of the small potions
+     *
+     * @return Small potion icon ID
+     */
+    public int smallId() {
+        return smallId;
     }
 }

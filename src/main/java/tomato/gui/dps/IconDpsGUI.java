@@ -103,7 +103,7 @@ public class IconDpsGUI extends DisplayDpsGUI {
         sb.append(entity.name()).append(" HP: ").append(entity.maxHp()).append("\n");
         sb.append(entity.getFightTimerString());
         String mobName = sb.toString();
-        JLabel l = new JLabel(mobName, new ImageIcon(getScaledImg(entity.objectType, entity.img())), JLabel.LEFT);
+        JLabel l = new JLabel(mobName, ImageBuffer.getOutlinedIcon(entity.objectType, 40), JLabel.LEFT);
         int firstHP = getHighestHP(entity);
         l.setToolTipText("Fight start HP: " + firstHP);
         int mobNameStringSize = getStringSize(mobName) + 48;
@@ -155,7 +155,7 @@ public class IconDpsGUI extends DisplayDpsGUI {
             String userIndicator = String.format("%s%d", user ? " ->" : (highlight ? ">>" : "  "), counter);
             String s2 = String.format("DMG: %7d %6.3f%%", dmg.damage, pers);
 
-            JLabel playerIconLabel = new JLabel(userIndicator, new ImageIcon(dmg.owner.img().getScaledInstance(16, 16, Image.SCALE_DEFAULT)), JLabel.LEFT);
+            JLabel playerIconLabel = new JLabel(userIndicator, ImageBuffer.getOutlinedIcon(dmg.owner.objectType, 16), JLabel.LEFT);
             JLabel nameLabel = new JLabel(name);
             JLabel dpsDataLabel = new JLabel(s2);
             JLabel deathNexusLabel = new JLabel();
@@ -165,9 +165,9 @@ public class IconDpsGUI extends DisplayDpsGUI {
                     int dead = isDeadPlayer(name, deaths);
                     if (dead != -1) {
                         try {
-                            ImageIcon ii = new ImageIcon(ImageBuffer.getImage(dead).getScaledInstance(16, 16, Image.SCALE_DEFAULT));
-                            deathNexusLabel = new JLabel(ii);
-                        } catch (IOException | AssetMissingException e) {
+                            ImageBuffer.getImage(dead);
+                            deathNexusLabel = new JLabel(ImageBuffer.getOutlinedIcon(dead, 16));
+                        } catch (AssetMissingException | IOException e) {
                             deathNexusLabel = new JLabel("Died");
                         }
                     } else {
@@ -299,18 +299,12 @@ public class IconDpsGUI extends DisplayDpsGUI {
 
         for (int i = 0; i < 4; i++) {
             Equipment max = inv[i].values().stream().max(Comparator.comparingInt(e -> e.dmg)).orElseThrow(NoSuchElementException::new);
-            BufferedImage img;
             try {
                 int eq = max.id;
-                if (eq == -1) {
-                    img = ImageBuffer.getEmptyImg();
-                } else {
-                    img = ImageBuffer.getImage(eq);
-                }
-                JLabel icon = new JLabel(new ImageIcon(img.getScaledInstance(16, 16, Image.SCALE_DEFAULT)));
+                JLabel icon = new JLabel(ImageBuffer.getOutlinedIcon(eq, 16));
                 icon.setToolTipText(String.format("<html>%s<br>%s</html>", IdToAsset.objectName(eq), ParseEnchants.parse(max.enchant)));
                 panel.add(icon);
-            } catch (AssetMissingException | IOException ex) {
+            } catch (AssetMissingException ex) {
                 throw new RuntimeException(ex);
             }
         }

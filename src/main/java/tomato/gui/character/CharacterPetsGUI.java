@@ -11,7 +11,6 @@ import tomato.backend.data.TomatoData;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -123,16 +122,9 @@ public class CharacterPetsGUI extends JPanel {
         GridBagConstraints g = new GridBagConstraints();
         g.gridwidth = 2;
         g.gridheight = 1;
-        try {
-            int skin = pet.skin();
-            BufferedImage img = ImageBuffer.getImage(skin);
-            ImageIcon icon = new ImageIcon(img.getScaledInstance(40, 40, Image.SCALE_DEFAULT));
-//            JLabel petIcon = new JLabel(pet.name(), icon, JLabel.CENTER);
-            JLabel petIcon = new JLabel(icon, JLabel.CENTER);
-            box.add(petIcon, g);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        int skin = pet.skin();
+        JLabel petIcon = new JLabel(ImageBuffer.getOutlinedIcon(skin, 40), JLabel.CENTER);
+        box.add(petIcon, g);
         g.weightx = 0.7f;
 
         pet.updateLabels();

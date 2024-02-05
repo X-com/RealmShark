@@ -94,7 +94,7 @@ public class CharacterStatsGUI extends JPanel {
      *
      * @param top Panel to add dungeon icons to.
      */
-    private void topDungeonList(JPanel top) {
+    private void topDungeonList(JPanel top) throws RuntimeException {
         top.setLayout(new GridLayout(1, dungeonCount));
 
         for (int j = 0; j < dungeonCount; j++) {
@@ -102,14 +102,8 @@ public class CharacterStatsGUI extends JPanel {
             String name;
             int id = CharacterStatistics.DUNGEONS.get(j);
             name = CharacterStatistics.getName(id);
-            try {
-                img = ImageBuffer.getImage(id);
-            } catch (IOException | AssetMissingException e) {
-                e.printStackTrace();
-                img = ImageBuffer.getEmptyImg();
-            }
-            ImageIcon icon = new ImageIcon(img.getScaledInstance(15, 15, Image.SCALE_DEFAULT));
-            JLabel dungeonIcon = new JLabel(icon, JLabel.CENTER);
+
+            JLabel dungeonIcon = new JLabel(ImageBuffer.getOutlinedIcon(id, 15), JLabel.CENTER);
             dungeonIcon.setToolTipText(name);
 
             int finalJ = j;
@@ -265,12 +259,7 @@ public class CharacterStatsGUI extends JPanel {
      * @return Icon to be added to the label
      */
     private static ImageIcon getImageIcon(int imageId) {
-        try {
-            BufferedImage img = ImageBuffer.getImage(imageId);
-            return new ImageIcon(img.getScaledInstance(15, 15, Image.SCALE_DEFAULT));
-        } catch (IOException | AssetMissingException e) {
-            throw new RuntimeException(e);
-        }
+        return ImageBuffer.getOutlinedIcon(imageId, 15);
     }
 
     /**

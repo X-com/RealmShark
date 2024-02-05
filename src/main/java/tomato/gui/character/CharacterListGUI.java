@@ -6,7 +6,6 @@ import tomato.backend.data.TomatoData;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class CharacterListGUI extends JPanel {
 
@@ -43,17 +42,11 @@ public class CharacterListGUI extends JPanel {
     private JPanel leftColumn(RealmCharacter c) {
         JPanel panel = CharacterPanelGUI.createLeftBox();
 
-        try {
-            int eq = c.skin;
-            if (eq == 0) eq = c.classNum;
-            BufferedImage img = ImageBuffer.getImage(eq);
-            ImageIcon icon = new ImageIcon(img.getScaledInstance(15, 15, Image.SCALE_DEFAULT));
-            JLabel characterLabel = new JLabel(c.classString + " " + c.level, icon, JLabel.CENTER);
-            panel.add(characterLabel);
-//            characterLabel.setToolTipText(exaltStats(c));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        int eq = c.skin;
+        if (eq == 0) eq = c.classNum;
+        JLabel characterLabel = new JLabel(c.classString + " " + c.level, ImageBuffer.getOutlinedIcon(eq, 15), JLabel.CENTER);
+        panel.add(characterLabel);
+
         panel.add(new JLabel(String.format("Fame:%d", c.fame)));
         panel.add(new JLabel(String.format("HP:%3d MP:%3d", c.hp, c.mp)));
         panel.add(new JLabel(String.format("Ak:%3d Df:%3d", c.atk, c.def)));
@@ -76,18 +69,7 @@ public class CharacterListGUI extends JPanel {
         panelEquip.setPreferredSize(new Dimension(90, 30));
         for (int i = 0; i < 4; i++) {
             int eq = c.equipment[i];
-            try {
-                BufferedImage img;
-                if (eq == -1) {
-                    img = ImageBuffer.getEmptyImg();
-                } else {
-                    img = ImageBuffer.getImage(eq);
-                }
-                ImageIcon icon = new ImageIcon(img.getScaledInstance(15, 15, Image.SCALE_DEFAULT));
-                panelEquip.add(new JLabel(icon));
-            } catch (Exception e) {
-//                e.printStackTrace();
-            }
+            panelEquip.add(new JLabel(ImageBuffer.getOutlinedIcon(eq, 15)));
         }
         panel.add(panelEquip);
 
@@ -96,20 +78,10 @@ public class CharacterListGUI extends JPanel {
         int add = c.qs3 ? 40 : 0;
         panelBelt.setPreferredSize(new Dimension(80 + add, 30));
         for (String eqs : c.equipQS) {
-            try {
-                String[] s = eqs.split("\\|");
-                int eq = Integer.parseInt(s[0]);
-                BufferedImage img;
-                if (eq == -1) {
-                    img = ImageBuffer.getEmptyImg();
-                } else {
-                    img = ImageBuffer.getImage(eq);
-                }
-                ImageIcon icon = new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-                panelBelt.add(new JLabel(icon));
-                panelBelt.add(new JLabel(s[1]));
-            } catch (Exception ignored) {
-            }
+            String[] s = eqs.split("\\|");
+            int eq = Integer.parseInt(s[0]);
+            panelBelt.add(new JLabel(ImageBuffer.getOutlinedIcon(eq, 20)));
+            panelBelt.add(new JLabel(s[1]));
         }
         panel.add(panelBelt);
 
@@ -137,21 +109,10 @@ public class CharacterListGUI extends JPanel {
 
         for (int i = 4 + b; i < 12 + b; i++) {
             int eq = c.equipment[i];
-            try {
-                BufferedImage img;
-                if (eq == -1) {
-                    img = ImageBuffer.getEmptyImg();
-                } else {
-                    img = ImageBuffer.getImage(eq);
-                }
-                ImageIcon icon = new ImageIcon(img.getScaledInstance(12, 12, Image.SCALE_DEFAULT));
-                if (i < 8 + b) {
-                    topRow.add(new JLabel(icon));
-                } else {
-                    botRow.add(new JLabel(icon));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (i < 8 + b) {
+                topRow.add(new JLabel(ImageBuffer.getOutlinedIcon(eq, 12)));
+            } else {
+                botRow.add(new JLabel(ImageBuffer.getOutlinedIcon(eq, 12)));
             }
         }
 

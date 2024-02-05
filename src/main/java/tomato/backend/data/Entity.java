@@ -32,7 +32,6 @@ public class Entity implements Serializable {
     private final HashMap<Integer, Damage> damagePlayer;
     public final HashMap<Integer, PlayerRemoved> playerDropped;
     private String name;
-    transient private BufferedImage img;
     private long firstDamageTaken = -1;
     private long lastDamageTaken = -1;
     private int charId;
@@ -65,17 +64,9 @@ public class Entity implements Serializable {
         try {
             if (type != -1) {
                 name = IdToAsset.objectName(type);
-                getImg(type);
             }
         } catch (Exception e) {
         }
-    }
-
-    private void getImg(int type) throws IOException, AssetMissingException {
-        if (CharacterClass.isPlayerCharacter(type)) {
-            type = stat.SKIN_ID.statValue == 0 ? type : stat.SKIN_ID.statValue;
-        }
-        img = ImageBuffer.getImage(type);
     }
 
     // TODO fix time
@@ -305,17 +296,6 @@ public class Entity implements Serializable {
             r.wis = stats[7];
             CharacterStatMaxingGUI.updateRealmChars();
         }
-    }
-
-    public BufferedImage img() {
-        if (img == null) {
-            try {
-                getImg(objectType);
-            } catch (IOException | AssetMissingException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return img;
     }
 
     public void addPlayerDrop(int dropId, long time) {

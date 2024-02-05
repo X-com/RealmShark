@@ -7,7 +7,6 @@ import tomato.realmshark.enums.CharacterClass;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class CharacterExaltGUI extends JPanel {
 
@@ -154,13 +153,6 @@ public class CharacterExaltGUI extends JPanel {
     }
 
     private JLabel classIcon(int skin, String classString) {
-        try {
-            BufferedImage img = ImageBuffer.getImage(skin);
-            ImageIcon icon = new ImageIcon(img.getScaledInstance(15, 15, Image.SCALE_DEFAULT));
-            return new JLabel(classString, icon, JLabel.CENTER);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        return new JLabel(classString, ImageBuffer.getOutlinedIcon(skin, 15), JLabel.CENTER);
     }
 }

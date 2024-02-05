@@ -10,7 +10,6 @@ import tomato.realmshark.enums.StatPotion;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -292,15 +291,9 @@ public class CharacterStatMaxingGUI extends JPanel {
         panel.add(seasonalLabel);
         int eq = character.skin;
         if (eq == 0) eq = character.classNum;
-        try {
-            BufferedImage img = ImageBuffer.getImage(eq);
-            ImageIcon icon = new ImageIcon(img.getScaledInstance(30, 30, Image.SCALE_DEFAULT));
-            JLabel characterLabel = new JLabel(icon, JLabel.CENTER);
-            characterLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-            panel.add(characterLabel);
-        } catch (IOException | AssetMissingException e) {
-            e.printStackTrace();
-        }
+        JLabel characterLabel = new JLabel(ImageBuffer.getOutlinedIcon(eq, 30), JLabel.CENTER);
+        characterLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        panel.add(characterLabel);
 //        JCheckBox checkBox = checkBoxMissingStats(c.classString + " " + c.level);
         JCheckBox checkBox = new JCheckBox(character.classString + " " + character.level);
         checkBox.addActionListener(e -> {
@@ -386,6 +379,6 @@ public class CharacterStatMaxingGUI extends JPanel {
      * @param pot Potion type
      */
     private ImageIcon getImageIcon(StatPotion pot) {
-        return new ImageIcon(StatPotion.getImage(pot).getScaledInstance(15, 15, Image.SCALE_DEFAULT));
+        return ImageBuffer.getOutlinedIcon(pot.smallId(), 15);
     }
 }

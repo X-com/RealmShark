@@ -6,7 +6,6 @@ import assets.ImageBuffer;
 import tomato.backend.data.Entity;
 import tomato.gui.SmartScroller;
 import tomato.realmshark.ParseEnchants;
-import tomato.realmshark.RealmCharacter;
 import tomato.realmshark.enums.CharacterClass;
 
 import javax.swing.*;
@@ -16,7 +15,6 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -127,30 +125,24 @@ public class ParsePanelGUI extends JPanel {
             panel.setMaximumSize(new Dimension(x, y));
             panel.setLayout(new BorderLayout());
 
-            try {
-                int eq = player.stat.SKIN_ID.statValue;
-                if (eq == 0) eq = player.objectType;
-                BufferedImage img = ImageBuffer.getImage(eq);
-                ImageIcon icon = new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-                int level = player.stat.LEVEL_STAT.statValue;
-                String text = player.name() + " [" + level + "]";
-                JLabel characterLabel = new JLabel(text, icon, JLabel.CENTER);
-                characterLabel.addMouseListener(new MouseAdapter() {
-                    public void mouseClicked(MouseEvent e) {
-                        copyToClipboard(player.name());
-                    }
-                });
+            int eq = player.stat.SKIN_ID.statValue;
+            if (eq == 0) eq = player.objectType;
+            int level = player.stat.LEVEL_STAT.statValue;
+            String text = player.name() + " [" + level + "]";
+            JLabel characterLabel = new JLabel(text, ImageBuffer.getOutlinedIcon(eq, 20), JLabel.CENTER);
+            characterLabel.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    copyToClipboard(player.name());
+                }
+            });
 
-                characterLabel.setAlignmentX(JLabel.LEFT);
-                panel.setAlignmentX(JLabel.LEFT);
-                panel.setAlignmentX(LEFT_ALIGNMENT);
-                characterLabel.setHorizontalAlignment(SwingConstants.LEFT);
-                characterLabel.setFont(mainFont);
-                panel.add(characterLabel);
+            characterLabel.setAlignmentX(JLabel.LEFT);
+            panel.setAlignmentX(JLabel.LEFT);
+            panel.setAlignmentX(LEFT_ALIGNMENT);
+            characterLabel.setHorizontalAlignment(SwingConstants.LEFT);
+            characterLabel.setFont(mainFont);
+            panel.add(characterLabel);
 //            characterLabel.setToolTipText(exaltStats(c));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
             mainPanel.add(panel);
         }
         mainPanel.add(Box.createHorizontalStrut(5));
@@ -198,16 +190,17 @@ public class ParsePanelGUI extends JPanel {
             for (int i = 0; i < 4; i++) {
                 int eq = p.inv[i];
                 try {
-                    BufferedImage img;
-                    if (eq == -1) {
-                        img = ImageBuffer.getEmptyImg();
-                    } else {
-                        img = ImageBuffer.getImage(eq);
-                    }
-                    p.icon[i] = new JLabel(new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT)));
+//                    BufferedImage img;
+//                    if (eq == -1) {
+//                        img = ImageBuffer.getEmptyImg();
+//                    } else {
+//                        img = ImageBuffer.getImage(eq);
+//                    }
+//                    p.icon[i] = new JLabel(new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT)));
+                    p.icon[i] = new JLabel(ImageBuffer.getOutlinedIcon(eq, 20));
                     p.itemName[i] = IdToAsset.objectName(eq);
                     panel.add(p.icon[i]);
-                } catch (IOException | AssetMissingException e) {
+                } catch (AssetMissingException e) {
                     e.printStackTrace();
                 }
             }
@@ -357,13 +350,7 @@ public class ParsePanelGUI extends JPanel {
             inv[i] = eq;
 
             try {
-                BufferedImage img;
-                if (eq == -1) {
-                    img = ImageBuffer.getEmptyImg();
-                } else {
-                    img = ImageBuffer.getImage(eq);
-                }
-                icon[i].setIcon(new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT)));
+                icon[i].setIcon(ImageBuffer.getOutlinedIcon(eq, 20));
 //                icon[i].setToolTipText(String.format("<html>%s<br>%s</html>", IdToAsset.objectName(eq), enchant));
                 itemName[i] = IdToAsset.objectName(eq);
             } catch (Exception e) {

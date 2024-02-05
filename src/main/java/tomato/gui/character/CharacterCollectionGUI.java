@@ -11,7 +11,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -265,12 +264,7 @@ public class CharacterCollectionGUI extends JPanel {
      * @return Icon to be added to the label
      */
     private static ImageIcon getImageIcon(int imageId) {
-        try {
-            BufferedImage img = ImageBuffer.getImage(imageId);
-            return new ImageIcon(img.getScaledInstance(15, 15, Image.SCALE_DEFAULT));
-        } catch (IOException | AssetMissingException e) {
-            throw new RuntimeException(e);
-        }
+        return ImageBuffer.getOutlinedIcon(imageId, 20);
     }
 
     /**

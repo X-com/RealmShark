@@ -8,7 +8,6 @@ import tomato.gui.TomatoGUI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class MyDamageGUI extends JPanel {
 
@@ -176,18 +175,12 @@ public class MyDamageGUI extends JPanel {
 
     public void displayImg(JLabel label, int eq) {
         try {
-            BufferedImage img;
-            if (eq == -1) {
-                img = ImageBuffer.getEmptyImg();
-            } else {
-                img = ImageBuffer.getImage(eq);
-            }
-            label.setIcon(new ImageIcon(img.getScaledInstance(40, 40, Image.SCALE_DEFAULT)));
+            label.setIcon(ImageBuffer.getOutlinedIcon(eq, 40));
 //            label.setText(IdToAsset.objectName(eq));
 //                icon[i].setToolTipText(String.format("<html>%s<br>%s</html>", IdToAsset.objectName(eq), enchant));
             label.setToolTipText(IdToAsset.objectName(eq));
         } catch (Exception e) {
-//            e.printStackTrace();
+            e.printStackTrace();
         }
     }
 

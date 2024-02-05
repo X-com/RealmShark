@@ -6,11 +6,8 @@ import assets.ImageBuffer;
 import packets.data.QuestData;
 
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Quest tab GUI
@@ -66,9 +63,7 @@ public class QuestGUI extends JPanel {
      */
     private void addItems(int[] items, JPanel panel) throws IOException, AssetMissingException {
         for (int id : items) {
-            BufferedImage img = ImageBuffer.getImage(id);
-            ImageIcon icon = new ImageIcon(img.getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-            JLabel item = new JLabel(icon);
+            JLabel item = new JLabel(ImageBuffer.getOutlinedIcon(id, 20));
             item.setToolTipText(IdToAsset.objectName(id));
             panel.add(item);
         }
