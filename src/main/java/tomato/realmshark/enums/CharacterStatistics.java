@@ -78,6 +78,7 @@ public enum CharacterStatistics {
     PIRATE_CAVE(21, 1815, "Pirate Cave"),
     PUPPET_MASTERS_ENCORE(42, 29798, "Puppet Master's Encore"),
     PUPPET_MASTERS_THEATRE(49, 9043, "Puppet Master's Theatre"),
+    QUEEN_BUNNY_CHAMBER(122, 1430, "Queen Bunny Chamber"),
     RAINBOW_ROAD(80, 5704, "Rainbow Road"),
     SANTAS_WORKSHOP(81, 15566, "Santas Workshop"), //SantasWorkshopsCompleted
     SECLUDED_THICKET(47, 13983, "Secluded Thicket"), // SecludedThicketsCompleted
