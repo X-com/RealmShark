@@ -64,7 +64,15 @@ public class ParsePanelGUI extends JPanel {
         filterComboBox.setPreferredSize(new Dimension(10000, 0));
         filterComboBox.addActionListener(this::comboAction);
 
+        String stateCopyOnlyUnderReqCheckbox = PropertiesManager.getProperty("copyOnlyUnderReqCheckbox");
         copyOnlyUnderReqCheckbox = new JCheckBox("Only copy under req'd");
+        copyOnlyUnderReqCheckbox.setSelected(stateCopyOnlyUnderReqCheckbox != null && stateCopyOnlyUnderReqCheckbox.equals("true")); // deselected by default with no prior setting
+
+        // Add an action listener to the checkbox to update the saved state when toggled
+        copyOnlyUnderReqCheckbox.addActionListener(e -> {
+            // Update the properties manager to reflect the new status of the option
+            PropertiesManager.setProperties("copyOnlyUnderReqCheckbox", copyOnlyUnderReqCheckbox.isSelected() ? "true" : "false");
+        });
 
         loadFilters();
 
@@ -90,14 +98,18 @@ public class ParsePanelGUI extends JPanel {
         buttons.add(buttonRight);
 
         // Add Sort checkbox to the buttons panel
+        String stateSortCheckBox = PropertiesManager.getProperty("sortCheckBox");
         sortCheckBox = new JCheckBox("Sort By Guild");
-        sortCheckBox.setSelected(true);  // Optional: set it to be selected by default
+        sortCheckBox.setSelected(stateSortCheckBox == null || stateSortCheckBox.equals("true"));  // selected by default with no prior setting
 
         // Add an action listener to the checkbox to update the player list when toggled
         sortCheckBox.addActionListener(e -> {
             if (sortCheckBox.isSelected()) {
                 update();  // Sort and update the list whenever a new player is added
             }
+
+            // Update the properties manager to reflect the new status of the option
+            PropertiesManager.setProperties("sortCheckBox", sortCheckBox.isSelected() ? "true" : "false");
         });
 
         // Add the Sort checkbox to the buttons panel
@@ -623,7 +635,6 @@ public class ParsePanelGUI extends JPanel {
         /**
          * Gets the tool tip stats string from array of stats.
          *
-         * @param stats Array of stats.
          * @return Stats as tooltip string.
          */
         public String getToolTipStatString() {
