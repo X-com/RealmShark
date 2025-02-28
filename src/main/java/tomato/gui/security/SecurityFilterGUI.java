@@ -2,12 +2,14 @@ package tomato.gui.security;
 
 import assets.ImageBuffer;
 import com.google.gson.Gson;
+import sun.awt.image.ImageWatched;
 import tomato.realmshark.ParseEquipment;
 import tomato.realmshark.enums.CharacterClass;
 import tomato.realmshark.enums.StatPotion;
 import util.PropertiesManager;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -33,6 +35,10 @@ public class SecurityFilterGUI extends JPanel {
     private final ArrayList<FilterEntity> items = new ArrayList<>();
     private final ArrayList<FilterEntity> minTiers = new ArrayList<>();
     private final ArrayList<JCheckBox> checkBoxStats = new ArrayList<>();
+
+    private JPanel itemsPanel;
+    private JTextField searchField;
+    private String currentSearchValue = null;
 
     private final JComboBox<String> filterComboBox;
     private final JTextField jsonField;
@@ -128,6 +134,15 @@ public class SecurityFilterGUI extends JPanel {
         panel2.add(paste);
         panel2.add(Box.createRigidArea(new Dimension(10, 0)));
         panel2.add(Box.createHorizontalGlue());
+    }
+
+    private void search(ActionEvent actionEvent) {
+        // only search if a new value is provided
+        String searchValue = searchField.getText();
+        if (searchValue.equals(currentSearchValue)) return;
+
+        currentSearchValue = searchValue;
+        updateItemsPanel(searchField.getText());
     }
 
     private void copy(ActionEvent actionEvent) {
@@ -469,7 +484,33 @@ public class SecurityFilterGUI extends JPanel {
     private void textFieldOptions(JPanel mainPanel) {
         JPanel panel = new JPanel(new BorderLayout());
 
+        JPanel searchSelectPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+
+        // add search bar
+        searchField = new JTextField();
+        c.anchor = GridBagConstraints.LINE_END;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridwidth = 4;
+        c.weightx = 1.0;
+        searchSelectPanel.add(searchField, c);
+
+        JButton searchButton = new JButton("->");
+        searchButton.addActionListener(this::search);
+        c.anchor = GridBagConstraints.LINE_START;
+        c.fill = GridBagConstraints.VERTICAL;
+        c.gridx = 4;
+        c.gridwidth = 1;
+        c.weightx = 0.0;
+        searchSelectPanel.add(searchButton, c);
+
         // add select/unselect all buttons
+        c.anchor = GridBagConstraints.CENTER;
+        c.gridx = 0;
+        c.gridwidth = 5;
+        c.weightx = 0.0;
+        c.gridy = 1;
         JPanel selectPanel = new JPanel(new GridLayout(1, 2));
         JButton btnSelectAll = new JButton("Select All");
         btnSelectAll.addActionListener(this::onClickSelectAll);
@@ -477,21 +518,30 @@ public class SecurityFilterGUI extends JPanel {
         btnSelectNone.addActionListener(this::onClickUnselectAll);
         selectPanel.add(btnSelectAll);
         selectPanel.add(btnSelectNone);
+        searchSelectPanel.add(selectPanel, c);
 
-        panel.add(selectPanel, BorderLayout.PAGE_START);
+        panel.add(searchSelectPanel, BorderLayout.PAGE_START);
 
         JLabel n = new JLabel("Item Points");
         panel.add(n, BorderLayout.NORTH);
 
+        itemsPanel = new JPanel();
+        itemsPanel.setLayout(new GridBagLayout());
+        panel.add(itemsPanel, BorderLayout.CENTER);
+
+        createItemFilterEntities();
+        updateItemsPanel();
+
+        mainPanel.add(panel);
+    }
+
+    private void createItemFilterEntities() {
+        // should only be run once
+        if (!items.isEmpty()) System.err.println("Tried to generate item filter entities more than once?");
+
         ArrayList<ParseEquipment.Equipment> list = ParseEquipment.getParseItems();
         list.sort(Comparator.comparing(ParseEquipment.Equipment::name));
 
-        JPanel body = new JPanel();
-        body.setLayout(new GridBagLayout());
-
-        GridBagConstraints gridBagConstraints = new GridBagConstraints();
-
-        int count = 0;
         for (ParseEquipment.Equipment e : list) {
             // omit some items
             if (OMITTED_SLOT_TYPES.contains(e.slotType)) continue;
@@ -501,28 +551,66 @@ public class SecurityFilterGUI extends JPanel {
             FilterEntity item = new FilterEntity();
             items.add(item);
             item.id = e.id;
-
-            JLabel icon = new JLabel(ImageBuffer.getOutlinedIcon(e.id, 24));
-            icon.setText(e.name());
             item.field = addTextField(3, item);
             item.checkBox = new JCheckBox();
-            gridBagConstraints.gridy = count;
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.anchor = GridBagConstraints.WEST;
-            body.add(icon, gridBagConstraints);
-            gridBagConstraints.gridx = 1;
-            body.add(item.field, gridBagConstraints);
-            gridBagConstraints.gridx = 2;
-            body.add(item.checkBox, gridBagConstraints);
+
             item.checkBox.addActionListener(e1 -> {
                 toggleItem(item);
             });
-//            item.field.setText("0");
-            item.field.setEnabled(false);
+        }
+
+    }
+
+    private void updateItemsPanel() { updateItemsPanel(null); }
+
+    private void updateItemsPanel(String withSearch) {
+        // Clear current item list
+        itemsPanel.removeAll();
+
+        ArrayList<ParseEquipment.Equipment> list = ParseEquipment.getParseItems();
+        list.sort(Comparator.comparing(ParseEquipment.Equipment::name));
+
+
+        int count = 0;
+        for (FilterEntity itemFilterEntity : items) {
+            GridBagConstraints c = new GridBagConstraints();
+            ParseEquipment.Equipment e = ParseEquipment.getEquipmentById(itemFilterEntity.id);
+
+            // omit some items
+            if (OMITTED_SLOT_TYPES.contains(e.slotType)) continue;
+
+            // TODO: omit gear covered by minimum equipment tiers
+
+            // basic search
+            String entitySearchName = e.name().toLowerCase();
+            String searchName = withSearch != null ? withSearch.toLowerCase() : "";
+            if (withSearch != null && !entitySearchName.startsWith(searchName)) continue;
+
+            c.gridy = count;
+            c.anchor = GridBagConstraints.LINE_START;
+
+            // add checkbox + field value
+            JPanel filterValuePanel = new JPanel();
+            c.gridx = 0;
+            itemsPanel.add(itemFilterEntity.field, c);
+            c.gridx = 1;
+            itemsPanel.add(itemFilterEntity.checkBox, c);
+            itemFilterEntity.field.setEnabled(itemFilterEntity.checkBox.isSelected());
+
+            // add icons + name
+            JLabel icon = new JLabel(ImageBuffer.getOutlinedIcon(e.id, 24));
+            icon.setText(e.name());
+            icon.setHorizontalAlignment(JLabel.LEFT);
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridx = 2;
+            c.weightx = 1.0;
+            c.insets = new Insets(0,10,0,0);
+            itemsPanel.add(icon, c);
+
             count++;
         }
-        panel.add(body, BorderLayout.SOUTH);
-        mainPanel.add(panel);
+
+        this.updateUI();
     }
 
     private static JTextField addTextField(int withNumbers, FilterEntity entity) {
