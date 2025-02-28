@@ -153,7 +153,7 @@ public class SecurityFilterGUI extends JPanel {
                 sf.classPoint.put(classPoint.id, classPoint.point);
             }
             for (FilterEntity minTier : minTiers) {
-                sf.minTier.put(minTier.id, minTier.point);
+                if (minTier.checkBox.isSelected()) sf.minTier.put(minTier.id, minTier.point);
             }
             for (int i = 0; i < checkBoxStats.size(); i++) {
                 JCheckBox c = checkBoxStats.get(i);
@@ -224,6 +224,8 @@ public class SecurityFilterGUI extends JPanel {
                 Integer v = sf.minTier.get(minTier.id);
 
                 // default value in the event that it's missing
+                minTier.field.setEnabled(v != null);
+                minTier.checkBox.setSelected(v != null);
                 if (v == null) v = 0;
 
                 minTier.field.setText(String.valueOf(v));
@@ -297,7 +299,9 @@ public class SecurityFilterGUI extends JPanel {
         }
         for (FilterEntity minTier : minTiers) {
             minTier.field.setText("");
+            minTier.field.setEnabled(false);
             minTier.point = 0;
+            minTier.checkBox.setSelected(false);
         }
         exaltSkinPointsField.setText("");
         exaltSkin.point = 0;
@@ -401,13 +405,19 @@ public class SecurityFilterGUI extends JPanel {
             FilterEntity minTier = new FilterEntity();
             minTiers.add(minTier);
 
-            JLabel label = new JLabel(equipment.get(i));
             minTier.id = i;
-            minTier.field = addTextField(1, minTier);
-            body.add(label);
+            minTier.checkBox = new JCheckBox(equipment.get(i));
+            minTier.field = addTextField(0, minTier);
+            body.add(minTier.checkBox);
             body.add(minTier.field);
+
             minTier.field.setText("0");
             minTier.field.addFocusListener(new MinTierFocusListener());
+            minTier.field.setEnabled(false);
+
+            minTier.checkBox.addActionListener(e -> {
+                minTier.field.setEnabled(minTier.checkBox.isSelected());
+            });
         });
 
         mainPanel.add(panel);

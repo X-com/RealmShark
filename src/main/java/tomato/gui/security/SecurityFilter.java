@@ -57,20 +57,20 @@ public class SecurityFilter {
         }
 
         // equipment minimum reqs
-        for (int i = 0; i < this.minTier.size(); i++) {
-            int equipmentId = player.inv[i];
+        for (int slot : minTier.keySet()) {
+            int equipmentId = player.inv[slot];
             ParseEquipment.Equipment equipment = ParseEquipment.getEquipmentById(equipmentId);
-            Integer minimumTier = this.minTier.get(i);
+            Integer minimumTier = this.minTier.get(slot);
 
             // handle empty gear slots
             if (equipment == null) {
 //                System.out.println(String.format("could not find equipment with id %s", equipmentId));
-                missing.add("Gear missing: " + Player.equipmentNames[i]);
+                missing.add("Gear missing: " + Player.equipmentNames[slot]);
                 continue;
             }
 
             if (equipment.labels.contains("TIERED") && equipment.tier < minimumTier) {
-                missing.add("Gear below reqs: T" + equipment.tier + " " + Player.equipmentNames[i]);
+                missing.add("Gear below reqs: T" + equipment.tier + " " + Player.equipmentNames[slot]);
             }
         }
 
