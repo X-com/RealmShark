@@ -211,6 +211,8 @@ public class SecurityFilterGUI extends JPanel {
 
     private void loadSF(SecurityFilter sf) {
         nameField.setText(sf.name);
+        filterComboBox.setSelectedItem(sf.name);
+
         for (int i = 0; i < checkBoxStats.size(); i++) {
             JCheckBox c = checkBoxStats.get(i);
             c.setSelected(sf.statMaxed[i]);
@@ -555,6 +557,12 @@ public class SecurityFilterGUI extends JPanel {
         });
         JDialog dialog = pane.createDialog(null, "Security Filter");
 //        dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        // Load the currently-active filter (if there is one)
+        if (ParsePanelGUI.currentFilter != null) {
+            filter.loadSF(ParsePanelGUI.currentFilter);
+        }
+
         dialog.setVisible(true);
     }
 

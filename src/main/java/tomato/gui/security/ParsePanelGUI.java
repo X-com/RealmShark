@@ -38,7 +38,7 @@ public class ParsePanelGUI extends JPanel {
     private final JCheckBox sortCheckBox; // Declare the checkbox at the class level
 
     private final static TreeMap<String, SecurityFilter> filters = new TreeMap<>();
-    private static SecurityFilter currentFilter = null;
+    public static SecurityFilter currentFilter = null;
     private static boolean guiUpdateSuppression = false;
 
     public ParsePanelGUI() {
