@@ -1,7 +1,6 @@
 package tomato.realmshark;
 
 import org.xml.sax.SAXException;
-import tomato.backend.data.Equipment;
 import util.StringXML;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -18,8 +17,8 @@ public class ParseEquipment {
     private static final String XML_PATH = "assets/xml/equip.xml";
     private static final HashMap<Integer, Equipment> EQUIPMENT = new HashMap<>();
 
-    /**
-     * Load Enchant XML data to get names from file.
+    /*
+      Load Enchant XML data to get names from file.
      */
     static {
         loadEnchants(XML_PATH);

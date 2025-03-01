@@ -22,7 +22,7 @@ import java.util.stream.IntStream;
 
 public class SecurityFilterGUI extends JPanel {
 
-    private final ParsePanelGUI parrent;
+    private final ParsePanelGUI parentPanel;
 
     private final ArrayList<Integer> OMITTED_SLOT_TYPES = new ArrayList<Integer>() {
         {
@@ -47,14 +47,13 @@ public class SecurityFilterGUI extends JPanel {
     private JTextField nameField;
     private JTextField exaltSkinPointsField;
     private final FilterEntity exaltSkin = new FilterEntity();
-    private ActionEvent event;
 
-    public SecurityFilterGUI(ParsePanelGUI parrent) {
-        this.parrent = parrent;
+    public SecurityFilterGUI(ParsePanelGUI parentPanel) {
+        this.parentPanel = parentPanel;
         setLayout(new BorderLayout());
 
         filterComboBox = new JComboBox<>();
-        for (SecurityFilter sf : parrent.getFilters().values()) {
+        for (SecurityFilter sf : parentPanel.getFilters().values()) {
             filterComboBox.addItem(sf.name);
         }
 
@@ -187,13 +186,13 @@ public class SecurityFilterGUI extends JPanel {
     }
 
     private void saveSF(SecurityFilter sf) {
-        if (parrent.getFilters().containsKey(sf.name)) {
+        if (parentPanel.getFilters().containsKey(sf.name)) {
             if (ask("Are you sure you want to overwrite: " + sf.name)) {
-                parrent.getFilters().put(sf.name, sf);
+                parentPanel.getFilters().put(sf.name, sf);
                 saveToProfile();
             }
         } else {
-            parrent.getFilters().put(sf.name, sf);
+            parentPanel.getFilters().put(sf.name, sf);
             filterComboBox.addItem(sf.name);
             saveToProfile();
         }
@@ -201,8 +200,8 @@ public class SecurityFilterGUI extends JPanel {
 
     private void saveToProfile() {
         StringBuilder str = new StringBuilder();
-        int i = parrent.getFilters().size();
-        for (SecurityFilter sf : parrent.getFilters().values()) {
+        int i = parentPanel.getFilters().size();
+        for (SecurityFilter sf : parentPanel.getFilters().values()) {
             if (!sf.json.isEmpty()) {
                 str.append(sf.json);
 
@@ -222,7 +221,7 @@ public class SecurityFilterGUI extends JPanel {
     private void load(ActionEvent actionEvent) {
         String name = (String) filterComboBox.getSelectedItem();
         if (name == null) return;
-        SecurityFilter sf = parrent.getFilters().get(name);
+        SecurityFilter sf = parentPanel.getFilters().get(name);
         if (sf == null) return;
         loadSF(sf);
     }
@@ -285,7 +284,7 @@ public class SecurityFilterGUI extends JPanel {
         String n = (String) filterComboBox.getSelectedItem();
         if (!ask("Are you sure you want to delete: " + n)) return;
         filterComboBox.removeItem(n);
-        parrent.getFilters().remove(n);
+        parentPanel.getFilters().remove(n);
         saveToProfile();
     }
 
@@ -341,20 +340,6 @@ public class SecurityFilterGUI extends JPanel {
         item.field.setEnabled(item.checkBox.isSelected() && getItemSelectMode());
     }
 
-    private void onClickSelectAll(ActionEvent event) {
-        for (FilterEntity item : items) {
-            item.checkBox.setSelected(true);
-            toggleItem(item);
-        }
-    }
-
-    private void onClickUnselectAll(ActionEvent event) {
-        for (FilterEntity item : items) {
-            item.checkBox.setSelected(false);
-            toggleItem(item);
-        }
-    }
-
     private void onClickWhitelist(ActionEvent event) {
         setItemSelectMode(true);
     }
@@ -378,7 +363,7 @@ public class SecurityFilterGUI extends JPanel {
         if (previousMode != isWhitelistMode) updateItemsPanel(); // update the items panel if it's a mode change
     }
 
-    private class MinTierFocusListener implements FocusListener {
+    private static class MinTierFocusListener implements FocusListener {
 
         @Override
         public void focusGained(FocusEvent e) {
@@ -392,7 +377,7 @@ public class SecurityFilterGUI extends JPanel {
 
         @Override
         public void focusLost(FocusEvent e) {
-            return;
+            // nothing
         }
     }
 
@@ -457,9 +442,7 @@ public class SecurityFilterGUI extends JPanel {
             minTier.field.addFocusListener(new MinTierFocusListener());
             minTier.field.setEnabled(false);
 
-            minTier.checkBox.addActionListener(e -> {
-                minTier.field.setEnabled(minTier.checkBox.isSelected());
-            });
+            minTier.checkBox.addActionListener(e -> minTier.field.setEnabled(minTier.checkBox.isSelected()));
         });
 
         mainPanel.add(panel);
@@ -485,7 +468,7 @@ public class SecurityFilterGUI extends JPanel {
     private void classes(JPanel mainPanel) {
         JPanel panel = new JPanel(new BorderLayout());
 
-        JLabel n = new JLabel("Classe Points");
+        JLabel n = new JLabel("Class Points");
         panel.add(n, BorderLayout.NORTH);
 
         JPanel body = new JPanel();
@@ -552,22 +535,6 @@ public class SecurityFilterGUI extends JPanel {
         c.gridy = 1;
         searchSelectPanel.add(searchButton, c);
 
-        // add select/unselect all buttons
-//        c.anchor = GridBagConstraints.CENTER;
-//        c.fill = GridBagConstraints.NONE;
-//        c.gridx = 0;
-//        c.gridwidth = 5;
-//        c.weightx = 0.0;
-//        c.gridy = 2;
-//        JPanel selectPanel = new JPanel(new GridLayout(1, 2));
-//        JButton btnSelectAll = new JButton("Select All");
-//        btnSelectAll.addActionListener(this::onClickSelectAll);
-//        JButton btnSelectNone = new JButton("Unselect All");
-//        btnSelectNone.addActionListener(this::onClickUnselectAll);
-//        selectPanel.add(btnSelectAll);
-//        selectPanel.add(btnSelectNone);
-//        searchSelectPanel.add(selectPanel, c);
-
         panel.add(searchSelectPanel, BorderLayout.PAGE_START);
 
         JLabel n = new JLabel("Item Points");
@@ -602,9 +569,7 @@ public class SecurityFilterGUI extends JPanel {
             item.field = addTextField(3, item);
             item.checkBox = new JCheckBox();
 
-            item.checkBox.addActionListener(e1 -> {
-                toggleItem(item);
-            });
+            item.checkBox.addActionListener(event -> toggleItem(item));
         }
 
     }
@@ -642,7 +607,6 @@ public class SecurityFilterGUI extends JPanel {
             c.anchor = GridBagConstraints.LINE_START;
 
             // add checkbox + field value
-            JPanel filterValuePanel = new JPanel();
             c.gridx = 0;
             itemsPanel.add(itemFilterEntity.field, c);
             c.gridx = 1;
@@ -669,8 +633,8 @@ public class SecurityFilterGUI extends JPanel {
         JTextField comp = new JTextField(withNumbers);
         comp.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
-                char caracter = e.getKeyChar();
-                if (!((caracter >= '0') && (caracter <= '9')) && (caracter != '-')) {
+                char character = e.getKeyChar();
+                if (!((character >= '0') && (character <= '9')) && (character != '-')) {
                     e.consume();
                 }
             }

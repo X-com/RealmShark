@@ -153,8 +153,7 @@ public class ParsePanelGUI extends JPanel {
 
     private void comboAction(ActionEvent actionEvent) {
         if (guiUpdateSuppression) return;
-        JComboBox<String> combo = (JComboBox<String>) actionEvent.getSource();
-        String selectedItem = String.valueOf(combo.getSelectedItem());
+        String selectedItem = String.valueOf(filterComboBox.getSelectedItem());
         if (setupFilter(selectedItem)) {
             PropertiesManager.setProperties("securityFilterName", selectedItem);
         } else {
@@ -270,8 +269,6 @@ public class ParsePanelGUI extends JPanel {
     }
 
     private static int pointItems(PlayerBox p, JPanel mainPanel, FontMetrics fm, int y, int width) {
-        Player player = p.player;
-
         if (currentFilter == null) return width;
         int x = fm.stringWidth("-- / --") + 2;
         width += x;
@@ -363,7 +360,7 @@ public class ParsePanelGUI extends JPanel {
             characterLabel.setFont(mainFont);
             panel.add(characterLabel);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Failed to add character label to player box for IGN " + playerEntity.name());
         }
         mainPanel.add(panel);
         return width;
@@ -444,7 +441,7 @@ public class ParsePanelGUI extends JPanel {
             URI uri = new URI(url);
             desktop.browse(uri);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            System.err.println("Failed to open webpage for URL: " + url);
         }
     }
 
@@ -461,11 +458,6 @@ public class ParsePanelGUI extends JPanel {
         } else {
             INSTANCE.guiUpdate();  // Simply refresh if not sorting
         }
-    }
-
-    public JCheckBox getSortCheckBox() {
-        // Assuming the checkbox is saved in a class variable like `sortCheckBox`
-        return sortCheckBox;
     }
 
     public static void removePlayer(int dropId) {
@@ -570,7 +562,6 @@ public class ParsePanelGUI extends JPanel {
         }
 
         private JPanel updatePointsPanel() {
-            System.out.println("updating points");
             pointsPanel.removeAll();
 
             // Parse the player
@@ -603,7 +594,7 @@ public class ParsePanelGUI extends JPanel {
 //                icon[i].setToolTipText(String.format("<html>%s<br>%s</html>", IdToAsset.objectName(eq), enchant));
                 player.itemName[i] = IdToAsset.objectName(eq);
             } catch (Exception e) {
-                e.printStackTrace();
+                System.err.println("Failed to set icon for player " + this.player.playerEntity.name() + " on item slot " + i + " for item ID " + eq);
             }
             INSTANCE.updateUI();
         }

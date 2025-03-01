@@ -14,8 +14,7 @@ public class Player {
     Entity playerEntity;
 
     public final static String[] equipmentNames = {"weapon", "ability", "armor", "ring"};
-    private final static String[] statNames = new String[]{"HP", "MP", "Ak", "Df", "Sd", "Dx", "Vt", "Ws"};
-    private final static String[] statNamesLonger = new String[]{"HP", "MP", "Atk", "Def", "Spd", "Dex", "Vit", "Wis"};
+    private final static String[] statNames = new String[]{"HP", "MP", "Atk", "Def", "Spd", "Dex", "Vit", "Wis"};
 
     public Player(Entity playerEntity) {
         this.playerEntity = playerEntity;
@@ -59,17 +58,17 @@ public class Player {
      */
     public int statsMaxed() {
         Entity player = this.playerEntity;
-        int outof8 = 0;
-        if (CharacterClass.getLife(player.objectType) == player.baseStats[0]) outof8++;
-        if (CharacterClass.getMana(player.objectType) == player.baseStats[1]) outof8++;
-        if (CharacterClass.getAtk(player.objectType) == player.baseStats[2]) outof8++;
-        if (CharacterClass.getDef(player.objectType) == player.baseStats[3]) outof8++;
-        if (CharacterClass.getSpd(player.objectType) == player.baseStats[4]) outof8++;
-        if (CharacterClass.getDex(player.objectType) == player.baseStats[5]) outof8++;
-        if (CharacterClass.getVit(player.objectType) == player.baseStats[6]) outof8++;
-        if (CharacterClass.getWis(player.objectType) == player.baseStats[7]) outof8++;
+        int outOf8 = 0;
+        if (CharacterClass.getLife(player.objectType) == player.baseStats[0]) outOf8++;
+        if (CharacterClass.getMana(player.objectType) == player.baseStats[1]) outOf8++;
+        if (CharacterClass.getAtk(player.objectType) == player.baseStats[2]) outOf8++;
+        if (CharacterClass.getDef(player.objectType) == player.baseStats[3]) outOf8++;
+        if (CharacterClass.getSpd(player.objectType) == player.baseStats[4]) outOf8++;
+        if (CharacterClass.getDex(player.objectType) == player.baseStats[5]) outOf8++;
+        if (CharacterClass.getVit(player.objectType) == player.baseStats[6]) outOf8++;
+        if (CharacterClass.getWis(player.objectType) == player.baseStats[7]) outOf8++;
 
-        return outof8;
+        return outOf8;
     }
 
     /**
@@ -103,8 +102,8 @@ public class Player {
 
         sb.append("\t\t").append("\"equipment\":{\n");
         for (int i = 0; i < 4; i++) {
-            sb.append("\t\t\t").append("\"" + equipmentNames[i] + "\":\"").append(IdToAsset.objectName(inv[i])).append("\",\n");
-            sb.append("\t\t\t").append("\"" + equipmentNames[i] + "id\":").append(inv[i]).append(i != 3 ? "," : "").append("\n");
+            sb.append("\t\t\t").append("\"").append(equipmentNames[i]).append("\":\"").append(IdToAsset.objectName(inv[i])).append("\",\n");
+            sb.append("\t\t\t").append("\"").append(equipmentNames[i]).append("id\":").append(inv[i]).append(i != 3 ? "," : "").append("\n");
         }
         sb.append("\t\t").append("},\n");
 
@@ -113,7 +112,7 @@ public class Player {
         ArrayList<String> l = new ArrayList<>();
         for (int i = 0; i < missing.length; i++) {
             if (missing[i] == 0) continue;
-            l.add(String.format("\t\t\t\"%s\":%d", statNamesLonger[i], missing[i]));
+            l.add(String.format("\t\t\t\"%s\":%d", statNames[i], missing[i]));
         }
         for (int i = 0; i < l.size(); i++) {
             sb.append(l.get(i)).append(i < l.size() - 1 ? "," : "").append("\n");

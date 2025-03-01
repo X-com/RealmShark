@@ -65,7 +65,6 @@ public class SecurityFilter {
 
             // handle empty gear slots
             if (equipment == null) {
-//                System.out.println(String.format("could not find equipment with id %s", equipmentId));
                 missing.add("Gear missing: " + Player.equipmentNames[slot]);
                 continue;
             }
