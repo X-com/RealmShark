@@ -532,6 +532,7 @@ public class SecurityFilterGUI extends JPanel {
 
         // add search bar
         searchField = new JTextField();
+        searchField.addActionListener(this::search);
         c.anchor = GridBagConstraints.LINE_END;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
@@ -630,7 +631,7 @@ public class SecurityFilterGUI extends JPanel {
             // basic search
             String entitySearchName = e.name().toLowerCase();
             String searchName = withSearch != null ? withSearch.toLowerCase() : "";
-            if (withSearch != null && !entitySearchName.startsWith(searchName)) continue;
+            if (withSearch != null && !entitySearchName.contains(searchName)) continue;
 
             c.gridy = count;
             c.anchor = GridBagConstraints.LINE_START;
