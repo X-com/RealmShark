@@ -15,6 +15,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.IntStream;
@@ -630,8 +631,12 @@ public class SecurityFilterGUI extends JPanel {
 
             // basic search
             String entitySearchName = e.name().toLowerCase();
+            String[] entitySearchLabels = e.labels.toLowerCase().split(",");
             String searchName = withSearch != null ? withSearch.toLowerCase() : "";
-            if (withSearch != null && !entitySearchName.contains(searchName)) continue;
+
+            boolean searchByName = entitySearchName.contains(searchName);
+            boolean searchByLabel = Arrays.asList(entitySearchLabels).contains(searchName);
+            if (withSearch != null && !searchByName && !searchByLabel) continue;
 
             c.gridy = count;
             c.anchor = GridBagConstraints.LINE_START;
