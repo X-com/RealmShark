@@ -11,6 +11,7 @@ public class SecurityFilter {
     public transient String json;
     public int exaltSkinPoints;
     public boolean[] statMaxed = new boolean[8];
+    public boolean isWhitelistFilter = true; // default to whitelist
     public TreeMap<Integer, Integer> itemPoint = new TreeMap<>();
     public TreeMap<Integer, Integer> classPoint = new TreeMap<>();
     public TreeMap<Integer, Integer> minTier = new TreeMap<>();
@@ -90,10 +91,10 @@ public class SecurityFilter {
             // skip non-parsable items
             if (!ParseEquipment.isParseItem(ParseEquipment.getEquipmentById(item))) continue;
             Integer ip = this.itemPoint.get(item);
-            if (ip == null) {
+            if ((ip == null && isWhitelistFilter) || (ip != null && !isWhitelistFilter)) {
                 missing.add("Blacklisted item: " + Player.equipmentNames[i]);
             } else {
-                point += ip;
+                if (ip != null) point += ip;
             }
         }
 

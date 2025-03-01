@@ -2,14 +2,12 @@ package tomato.gui.security;
 
 import assets.ImageBuffer;
 import com.google.gson.Gson;
-import sun.awt.image.ImageWatched;
 import tomato.realmshark.ParseEquipment;
 import tomato.realmshark.enums.CharacterClass;
 import tomato.realmshark.enums.StatPotion;
 import util.PropertiesManager;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -37,6 +35,9 @@ public class SecurityFilterGUI extends JPanel {
     private final ArrayList<JCheckBox> checkBoxStats = new ArrayList<>();
 
     private JPanel itemsPanel;
+    private JToggleButton toggleWhiteList;
+    private JToggleButton toggleBlackList;
+    private boolean itemSelectMode;
     private JTextField searchField;
     private String currentSearchValue = null;
 
@@ -158,6 +159,7 @@ public class SecurityFilterGUI extends JPanel {
         if (!name.isEmpty()) {
             SecurityFilter sf = new SecurityFilter();
             sf.name = name;
+            sf.isWhitelistFilter = this.toggleWhiteList.isSelected();
             for (FilterEntity item : items) {
                 if (item.checkBox.isSelected()) {
                     sf.itemPoint.put(item.id, item.point);
@@ -256,6 +258,7 @@ public class SecurityFilterGUI extends JPanel {
             classPoint.field.setText(String.valueOf(c));
             classPoint.point = c;
         }
+        setItemSelectMode(sf.isWhitelistFilter);
         for (FilterEntity item : items) {
             Integer i = sf.itemPoint.get(item.id);
             if (i == null) {
@@ -267,9 +270,9 @@ public class SecurityFilterGUI extends JPanel {
                 if (i != 0) {
                     item.field.setText(String.valueOf(i));
                 } else {
-                    item.field.setText("0");
+                    item.field.setText("");
                 }
-                item.field.setEnabled(true);
+                item.field.setEnabled(sf.isWhitelistFilter);
                 item.checkBox.setSelected(true);
                 item.point = i;
             }
@@ -334,7 +337,7 @@ public class SecurityFilterGUI extends JPanel {
     }
 
     private void toggleItem(FilterEntity item) {
-        item.field.setEnabled(item.checkBox.isSelected());
+        item.field.setEnabled(item.checkBox.isSelected() && getItemSelectMode());
     }
 
     private void onClickSelectAll(ActionEvent event) {
@@ -349,6 +352,29 @@ public class SecurityFilterGUI extends JPanel {
             item.checkBox.setSelected(false);
             toggleItem(item);
         }
+    }
+
+    private void onClickWhitelist(ActionEvent event) {
+        setItemSelectMode(true);
+    }
+
+    private void onClickBlacklist(ActionEvent event) {
+        setItemSelectMode(false);
+    }
+
+    private boolean getItemSelectMode() {
+        return this.itemSelectMode;
+    }
+
+    private void setItemSelectMode(boolean isWhitelistMode) {
+        boolean previousMode = getItemSelectMode();
+
+        toggleWhiteList.setSelected(isWhitelistMode);
+        toggleBlackList.setSelected(!isWhitelistMode);
+
+        this.itemSelectMode = isWhitelistMode;
+
+        if (previousMode != isWhitelistMode) updateItemsPanel(); // update the items panel if it's a mode change
     }
 
     private class MinTierFocusListener implements FocusListener {
@@ -487,6 +513,23 @@ public class SecurityFilterGUI extends JPanel {
         JPanel searchSelectPanel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
+        // add toggles
+        JPanel togglePanel = new JPanel();
+        toggleWhiteList = new JToggleButton("Whitelist Mode");
+        toggleWhiteList.addActionListener(this::onClickWhitelist);
+        toggleBlackList = new JToggleButton("Blacklist Mode");
+        toggleBlackList.addActionListener(this::onClickBlacklist);
+        togglePanel.add(toggleWhiteList);
+        togglePanel.add(toggleBlackList);
+
+        c.anchor = GridBagConstraints.CENTER;
+        c.fill = GridBagConstraints.NONE;
+        c.gridx = 0;
+        c.gridwidth = 5;
+        c.weightx = 0.0;
+        c.gridy = 0;
+        searchSelectPanel.add(togglePanel, c);
+
         // add search bar
         searchField = new JTextField();
         c.anchor = GridBagConstraints.LINE_END;
@@ -494,6 +537,7 @@ public class SecurityFilterGUI extends JPanel {
         c.gridx = 0;
         c.gridwidth = 4;
         c.weightx = 1.0;
+        c.gridy = 1;
         searchSelectPanel.add(searchField, c);
 
         JButton searchButton = new JButton("->");
@@ -503,22 +547,24 @@ public class SecurityFilterGUI extends JPanel {
         c.gridx = 4;
         c.gridwidth = 1;
         c.weightx = 0.0;
+        c.gridy = 1;
         searchSelectPanel.add(searchButton, c);
 
         // add select/unselect all buttons
-        c.anchor = GridBagConstraints.CENTER;
-        c.gridx = 0;
-        c.gridwidth = 5;
-        c.weightx = 0.0;
-        c.gridy = 1;
-        JPanel selectPanel = new JPanel(new GridLayout(1, 2));
-        JButton btnSelectAll = new JButton("Select All");
-        btnSelectAll.addActionListener(this::onClickSelectAll);
-        JButton btnSelectNone = new JButton("Unselect All");
-        btnSelectNone.addActionListener(this::onClickUnselectAll);
-        selectPanel.add(btnSelectAll);
-        selectPanel.add(btnSelectNone);
-        searchSelectPanel.add(selectPanel, c);
+//        c.anchor = GridBagConstraints.CENTER;
+//        c.fill = GridBagConstraints.NONE;
+//        c.gridx = 0;
+//        c.gridwidth = 5;
+//        c.weightx = 0.0;
+//        c.gridy = 2;
+//        JPanel selectPanel = new JPanel(new GridLayout(1, 2));
+//        JButton btnSelectAll = new JButton("Select All");
+//        btnSelectAll.addActionListener(this::onClickSelectAll);
+//        JButton btnSelectNone = new JButton("Unselect All");
+//        btnSelectNone.addActionListener(this::onClickUnselectAll);
+//        selectPanel.add(btnSelectAll);
+//        selectPanel.add(btnSelectNone);
+//        searchSelectPanel.add(selectPanel, c);
 
         panel.add(searchSelectPanel, BorderLayout.PAGE_START);
 
@@ -561,7 +607,7 @@ public class SecurityFilterGUI extends JPanel {
 
     }
 
-    private void updateItemsPanel() { updateItemsPanel(null); }
+    private void updateItemsPanel() { updateItemsPanel(searchField.getText().isEmpty() ? null : searchField.getText()); }
 
     private void updateItemsPanel(String withSearch) {
         // Clear current item list
@@ -595,7 +641,7 @@ public class SecurityFilterGUI extends JPanel {
             itemsPanel.add(itemFilterEntity.field, c);
             c.gridx = 1;
             itemsPanel.add(itemFilterEntity.checkBox, c);
-            itemFilterEntity.field.setEnabled(itemFilterEntity.checkBox.isSelected());
+            itemFilterEntity.field.setEnabled(itemFilterEntity.checkBox.isSelected() && getItemSelectMode());
 
             // add icons + name
             JLabel icon = new JLabel(ImageBuffer.getOutlinedIcon(e.id, 24));
