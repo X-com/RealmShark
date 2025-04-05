@@ -44,8 +44,16 @@ public class AssetExtractor {
     public static final String ASSETS_TILE_FILE_DIR_PATH = "assets/TileID.list";
     private static final String XML_DIR_PATH = "assets/xml";
     private static final File[] ASSET_FOLDERS = {new File("assets/flatbuffer/"), new File("assets/sprites/"), new File("assets/xml/")};
-    private static final String REALM_RES_PATH = "/RealmOfTheMadGod/Production/RotMG Exalt_Data/resources.assets";
+    private static final String REALM_RES_PATH;
     private static JOptionPane pane;
+
+    static {
+        if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+            REALM_RES_PATH = "/RealmOfTheMadGod/Production/RotMGExalt.app/Contents/Resources/Data/resources.assets";
+        } else {
+            REALM_RES_PATH = "/RealmOfTheMadGod/Production/RotMG Exalt_Data/resources.assets";
+        }
+    }
 
     public static void main(String[] args) throws Throwable {
 //        checkForExtraction(Version.VERSION);
