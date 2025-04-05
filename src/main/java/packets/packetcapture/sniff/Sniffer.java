@@ -8,6 +8,7 @@ import packets.packetcapture.sniff.netpackets.EthernetPacket;
 import packets.packetcapture.sniff.netpackets.Ip4Packet;
 import packets.packetcapture.sniff.netpackets.RawPacket;
 import packets.packetcapture.sniff.netpackets.TcpPacket;
+import pcap.spi.Address;
 import pcap.spi.Interface;
 import pcap.spi.Pcap;
 import pcap.spi.Service;
@@ -16,6 +17,7 @@ import pcap.spi.exception.error.*;
 import pcap.spi.option.DefaultLiveOptions;
 import util.Util;
 
+import java.net.Inet4Address;
 import java.util.Arrays;
 
 /**
@@ -70,12 +72,38 @@ public class Sniffer {
         for (int i = 0; i < interfaceList.length; i++) {
             DefaultLiveOptions defaultLiveOptions = new DefaultLiveOptions();
             defaultLiveOptions.timeout(60000);
-            Pcap pcap;
+            Pcap pcap = null;
 
             try {
-                pcap = service.live(interfaceList[i], defaultLiveOptions);
+                /*
+                If we're running on macOS we only want to start sniffing if it is a 'valid' interface
+                That is, it is actually being used and has a valid IPv4 address
+                Otherwise it will break and not work
+                */
+
+                // Check if we're running on macOS
+                if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+                    // Loop over the interfaces addresses and check if there is a valid IPv4 address
+                    for (Address addr : interfaceList[i].addresses()) {
+                        if (addr.address() instanceof Inet4Address) {
+                            Inet4Address ip = (Inet4Address) addr.address();
+
+                            // If we've got an IPv4 address that isn't loopback or link local, start the sniffer
+                            if (!ip.isLoopbackAddress() && !ip.isLinkLocalAddress()) {
+                                pcap = service.live(interfaceList[i], defaultLiveOptions);
+                            }
+                        }
+                    }
+                } else {
+                    pcap = service.live(interfaceList[i], defaultLiveOptions);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
+                continue;
+            }
+
+            // If pcap is null, meaning this was not a 'valid' interface on macOS continue on to the next one
+            if (pcap == null) {
                 continue;
             }
 
