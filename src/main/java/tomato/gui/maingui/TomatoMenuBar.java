@@ -588,27 +588,35 @@ public class TomatoMenuBar implements ActionListener {
     private void loadFilteredBags() {
         String whiteBag = PropertiesManager.getProperty("filterWhiteBag");
         filterWhiteBag.setSelected(whiteBag == null || whiteBag.equals("true"));
+        LootGUI.filterWhiteBag = filterWhiteBag.isSelected();
 
         String orangeBag = PropertiesManager.getProperty("filterOrangeBag");
         filterOrangeBag.setSelected(orangeBag == null || orangeBag.equals("true"));
+        LootGUI.filterOrangeBag = filterOrangeBag.isSelected();
 
         String redBag = PropertiesManager.getProperty("filterRedBag");
         filterRedBag.setSelected(redBag == null || redBag.equals("true"));
+        LootGUI.filterRedBag = filterRedBag.isSelected();
 
         String goldBag = PropertiesManager.getProperty("filterGoldBag");
         filterGoldBag.setSelected(goldBag == null || goldBag.equals("true"));
+        LootGUI.filterGoldBag = filterGoldBag.isSelected();
 
         String eggBag = PropertiesManager.getProperty("filterEggBag");
         filterEggBag.setSelected(eggBag == null || eggBag.equals("true"));
+        LootGUI.filterEggBag = filterEggBag.isSelected();
 
         String blueBag = PropertiesManager.getProperty("filterBlueBag");
         filterBlueBag.setSelected(blueBag == null || blueBag.equals("true"));
+        LootGUI.filterBlueBag = filterBlueBag.isSelected();
 
         String tealBag = PropertiesManager.getProperty("filterTealBag");
         filterTealBag.setSelected(tealBag == null || tealBag.equals("true"));
+        LootGUI.filterTealBag = filterTealBag.isSelected();
 
         String purpleBag = PropertiesManager.getProperty("filterPurpleBag");
         filterPurpleBag.setSelected(purpleBag == null || purpleBag.equals("true"));
+        LootGUI.filterPurpleBag = filterPurpleBag.isSelected();
     }
 
 
