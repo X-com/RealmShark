@@ -10,6 +10,7 @@ import tomato.gui.dps.DpsDisplayOptions;
 import tomato.gui.dps.DpsGUI;
 import tomato.gui.stats.LootGUI;
 import tomato.realmshark.Sound;
+import tomato.realmshark.enums.LootBags;
 import util.PropertiesManager;
 
 import javax.swing.*;
@@ -28,6 +29,7 @@ public class TomatoMenuBar implements ActionListener {
     private JRadioButtonMenuItem dpsEquipmentNone, dpsEquipmentSimple, dpsEquipmentFull, dpsIcon;
     private JRadioButtonMenuItem dpsSortLastHit, dpsSortFirstHit, dpsSortMaxHp, dpsSortFightTimer, dpsSortBossOnly;
     private JCheckBoxMenuItem fontStyleBold, fontStyleItalic, dpsShowMe, saveChat, chatPing, chatPingGuild, whiteBagSound, chatPingParty, orangeBagSound, redBagSound, goldBagSound, eggBagSound, tradePing, disableDataSending;
+    private JCheckBoxMenuItem filterWhiteBag, filterOrangeBag, filterRedBag, filterGoldBag, filterEggBag, filterBlueBag, filterTealBag, filterPurpleBag;
     private JSlider soundSlider;
     private JMenu file, edit, info;
     private JMenuBar jMenuBar;
@@ -50,6 +52,7 @@ public class TomatoMenuBar implements ActionListener {
         theme = new JMenu("Theme");
         fontMenu = new JMenu("Font");
         dpsOptions = new JMenu("DPS Options");
+        JMenu filterBags = new JMenu("Filter Loot");
 
         edit = new JMenu("Edit");
         edit.add(chat);
@@ -57,6 +60,7 @@ public class TomatoMenuBar implements ActionListener {
         edit.add(theme);
         edit.add(fontMenu);
         edit.add(dpsOptions);
+        edit.add(filterBags);
         jMenuBar.add(edit);
 
         sniffer = new JMenuItem("Start Sniffer");
@@ -122,6 +126,66 @@ public class TomatoMenuBar implements ActionListener {
         sound.add(eggBagSound);
         sound.add(tradePing);
         setSoundCheckbox();
+
+        filterWhiteBag = new JCheckBoxMenuItem("Show White Bags");
+        filterWhiteBag.addActionListener(e -> {
+            LootGUI.filterWhiteBag = filterWhiteBag.isSelected();
+            PropertiesManager.setProperties("filterWhiteBag", Boolean.toString(filterWhiteBag.isSelected()));
+            LootGUI.applyFilters();
+        });
+        filterOrangeBag = new JCheckBoxMenuItem("Show Orange Bags");
+        filterOrangeBag.addActionListener(e -> {
+            LootGUI.filterOrangeBag = filterOrangeBag.isSelected();
+            PropertiesManager.setProperties("filterOrangeBag", Boolean.toString(filterOrangeBag.isSelected()));
+            LootGUI.applyFilters();
+        });
+        filterRedBag = new JCheckBoxMenuItem("Show Red Bags");
+        filterRedBag.addActionListener(e -> {
+            LootGUI.filterRedBag = filterRedBag.isSelected();
+            PropertiesManager.setProperties("filterRedBag", Boolean.toString(filterRedBag.isSelected()));
+            LootGUI.applyFilters();
+        });
+        filterGoldBag = new JCheckBoxMenuItem("Show Gold Bags");
+        filterGoldBag.addActionListener(e -> {
+            LootGUI.filterGoldBag = filterGoldBag.isSelected();
+            PropertiesManager.setProperties("filterGoldBag", Boolean.toString(filterGoldBag.isSelected()));
+            LootGUI.applyFilters();
+        });
+        filterEggBag = new JCheckBoxMenuItem("Show Egg Bags");
+        filterEggBag.addActionListener(e -> {
+            LootGUI.filterEggBag = filterEggBag.isSelected();
+            PropertiesManager.setProperties("filterEggBag", Boolean.toString(filterEggBag.isSelected()));
+            LootGUI.applyFilters();
+        });
+        filterBlueBag = new JCheckBoxMenuItem("Show Blue Bags");
+        filterBlueBag.addActionListener(e -> {
+            LootGUI.filterBlueBag = filterBlueBag.isSelected();
+            PropertiesManager.setProperties("filterBlueBag", Boolean.toString(filterBlueBag.isSelected()));
+            LootGUI.applyFilters();
+        });
+        filterTealBag = new JCheckBoxMenuItem("Show Teal Bags");
+        filterTealBag.addActionListener(e -> {
+            LootGUI.filterTealBag = filterTealBag.isSelected();
+            PropertiesManager.setProperties("filterTealBag", Boolean.toString(filterTealBag.isSelected()));
+            LootGUI.applyFilters();
+        });
+        filterPurpleBag = new JCheckBoxMenuItem("Show Purple Bags");
+        filterPurpleBag.addActionListener(e -> {
+            LootGUI.filterPurpleBag = filterPurpleBag.isSelected();
+            PropertiesManager.setProperties("filterPurpleBag", Boolean.toString(filterPurpleBag.isSelected()));
+            LootGUI.applyFilters();
+        });
+
+        // Add filter options to the Filter Loot menu
+        filterBags.add(filterWhiteBag);
+        filterBags.add(filterOrangeBag);
+        filterBags.add(filterRedBag);
+        filterBags.add(filterGoldBag);
+        filterBags.add(filterEggBag);
+        filterBags.add(filterBlueBag);
+        filterBags.add(filterTealBag);
+        filterBags.add(filterPurpleBag);
+        loadFilteredBags();
 
         borders = new JMenuItem("Borders");
         borders.addActionListener(this);
@@ -438,16 +502,16 @@ public class TomatoMenuBar implements ActionListener {
 
         String gold = PropertiesManager.getProperty("goldBagSound");
         if (gold != null) {
-            goldBagSound.setSelected(red.equals("true"));
-            Sound.playGoldBagSound = red.equals("true");
+            goldBagSound.setSelected(gold.equals("true"));
+            Sound.playGoldBagSound = gold.equals("true");
         } else {
             Sound.playGoldBagSound = false;
         }
 
         String egg = PropertiesManager.getProperty("eggBagSound");
         if (egg != null) {
-            eggBagSound.setSelected(red.equals("true"));
-            Sound.playEggBagSound = red.equals("true");
+            eggBagSound.setSelected(egg.equals("true"));
+            Sound.playEggBagSound = egg.equals("true");
         } else {
             Sound.playEggBagSound = false;
         }
@@ -520,6 +584,33 @@ public class TomatoMenuBar implements ActionListener {
                 break;
         }
     }
+
+    private void loadFilteredBags() {
+        String whiteBag = PropertiesManager.getProperty("filterWhiteBag");
+        filterWhiteBag.setSelected(whiteBag == null || whiteBag.equals("true"));
+
+        String orangeBag = PropertiesManager.getProperty("filterOrangeBag");
+        filterOrangeBag.setSelected(orangeBag == null || orangeBag.equals("true"));
+
+        String redBag = PropertiesManager.getProperty("filterRedBag");
+        filterRedBag.setSelected(redBag == null || redBag.equals("true"));
+
+        String goldBag = PropertiesManager.getProperty("filterGoldBag");
+        filterGoldBag.setSelected(goldBag == null || goldBag.equals("true"));
+
+        String eggBag = PropertiesManager.getProperty("filterEggBag");
+        filterEggBag.setSelected(eggBag == null || eggBag.equals("true"));
+
+        String blueBag = PropertiesManager.getProperty("filterBlueBag");
+        filterBlueBag.setSelected(blueBag == null || blueBag.equals("true"));
+
+        String tealBag = PropertiesManager.getProperty("filterTealBag");
+        filterTealBag.setSelected(tealBag == null || tealBag.equals("true"));
+
+        String purpleBag = PropertiesManager.getProperty("filterPurpleBag");
+        filterPurpleBag.setSelected(purpleBag == null || purpleBag.equals("true"));
+    }
+
 
     /**
      * Adds a radiobutton menu item for the user to select.
