@@ -91,7 +91,7 @@ public class Entity implements Serializable {
                 baseStats = calculateBaseStats();
             }
         }
-        ParsePanelGUI.update(id, this);
+        ParsePanelGUI.update(this);
     }
 
     private void lootTimers(ObjectStatusData status) {

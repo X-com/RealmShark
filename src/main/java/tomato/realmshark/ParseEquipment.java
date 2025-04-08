@@ -1,7 +1,6 @@
 package tomato.realmshark;
 
 import org.xml.sax.SAXException;
-import tomato.backend.data.Equipment;
 import util.StringXML;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -18,8 +17,8 @@ public class ParseEquipment {
     private static final String XML_PATH = "assets/xml/equip.xml";
     private static final HashMap<Integer, Equipment> EQUIPMENT = new HashMap<>();
 
-    /**
-     * Load Enchant XML data to get names from file.
+    /*
+      Load Enchant XML data to get names from file.
      */
     static {
         loadEnchants(XML_PATH);
@@ -72,12 +71,22 @@ public class ParseEquipment {
         ArrayList<Equipment> list = new ArrayList<>();
 
         for (Equipment e : EQUIPMENT.values()) {
-            if (e.labels != null && !e.labels.contains("CONSUMABLE") && (e.labels.contains("ST") || e.labels.contains("UT") || e.labels.contains("T" + e.tier))) {
-                list.add(e);
-            }
+            if (isParseItem(e)) list.add(e);
         }
 
         return list;
+    }
+
+    public static Boolean isParseItem(Equipment e) {
+        final boolean isNonConsumable = e.labels != null && !e.labels.contains("CONSUMABLE");
+        final boolean isSTUT = e.labels != null && (e.labels.contains("ST") || e.labels.contains("UT"));
+        final boolean isTieredGear = e.labels != null && (e.labels.contains("T" + e.tier) || (e.labels.contains("ARMOR") && e.labels.contains("T" + (e.tier+1)))); // fix for tiered armor hacked implementation
+
+        return (isNonConsumable && (isSTUT || isTieredGear));
+    }
+
+    public static Equipment getEquipmentById(int id) {
+        return EQUIPMENT.get(id);
     }
 
     public static class Equipment {

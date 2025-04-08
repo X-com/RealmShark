@@ -8,24 +8,39 @@ import tomato.realmshark.enums.StatPotion;
 import util.PropertiesManager;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.stream.IntStream;
 
 public class SecurityFilterGUI extends JPanel {
 
-    private final ParsePanelGUI parrent;
+    private final ParsePanelGUI parentPanel;
+
+    private final ArrayList<Integer> OMITTED_SLOT_TYPES = new ArrayList<Integer>() {
+        {
+            add(10); //tokens
+        }
+    };
 
     private final ArrayList<FilterEntity> classPoints = new ArrayList<>();
     private final ArrayList<FilterEntity> items = new ArrayList<>();
+    private final ArrayList<FilterEntity> minTiers = new ArrayList<>();
     private final ArrayList<JCheckBox> checkBoxStats = new ArrayList<>();
+
+    private JPanel itemsPanel;
+    private JToggleButton toggleWhiteList;
+    private JToggleButton toggleBlackList;
+    private boolean itemSelectMode;
+    private JTextField searchField;
+    private String currentSearchValue = null;
 
     private final JComboBox<String> filterComboBox;
     private final JTextField jsonField;
@@ -33,12 +48,12 @@ public class SecurityFilterGUI extends JPanel {
     private JTextField exaltSkinPointsField;
     private final FilterEntity exaltSkin = new FilterEntity();
 
-    public SecurityFilterGUI(ParsePanelGUI parrent) {
-        this.parrent = parrent;
+    public SecurityFilterGUI(ParsePanelGUI parentPanel) {
+        this.parentPanel = parentPanel;
         setLayout(new BorderLayout());
 
         filterComboBox = new JComboBox<>();
-        for (SecurityFilter sf : parrent.getFilters().values()) {
+        for (SecurityFilter sf : parentPanel.getFilters().values()) {
             filterComboBox.addItem(sf.name);
         }
 
@@ -122,6 +137,15 @@ public class SecurityFilterGUI extends JPanel {
         panel2.add(Box.createHorizontalGlue());
     }
 
+    private void search(ActionEvent actionEvent) {
+        // only search if a new value is provided
+        String searchValue = searchField.getText();
+        if (searchValue.equals(currentSearchValue)) return;
+
+        currentSearchValue = searchValue;
+        updateItemsPanel(searchField.getText());
+    }
+
     private void copy(ActionEvent actionEvent) {
         String text = jsonField.getText();
         if (text.isEmpty()) return;
@@ -135,6 +159,7 @@ public class SecurityFilterGUI extends JPanel {
         if (!name.isEmpty()) {
             SecurityFilter sf = new SecurityFilter();
             sf.name = name;
+            sf.isWhitelistFilter = this.toggleWhiteList.isSelected();
             for (FilterEntity item : items) {
                 if (item.checkBox.isSelected()) {
                     sf.itemPoint.put(item.id, item.point);
@@ -143,6 +168,9 @@ public class SecurityFilterGUI extends JPanel {
             sf.exaltSkinPoints = exaltSkin.point;
             for (FilterEntity classPoint : classPoints) {
                 sf.classPoint.put(classPoint.id, classPoint.point);
+            }
+            for (FilterEntity minTier : minTiers) {
+                if (minTier.checkBox.isSelected()) sf.minTier.put(minTier.id, minTier.point);
             }
             for (int i = 0; i < checkBoxStats.size(); i++) {
                 JCheckBox c = checkBoxStats.get(i);
@@ -158,13 +186,13 @@ public class SecurityFilterGUI extends JPanel {
     }
 
     private void saveSF(SecurityFilter sf) {
-        if (parrent.getFilters().containsKey(sf.name)) {
+        if (parentPanel.getFilters().containsKey(sf.name)) {
             if (ask("Are you sure you want to overwrite: " + sf.name)) {
-                parrent.getFilters().put(sf.name, sf);
+                parentPanel.getFilters().put(sf.name, sf);
                 saveToProfile();
             }
         } else {
-            parrent.getFilters().put(sf.name, sf);
+            parentPanel.getFilters().put(sf.name, sf);
             filterComboBox.addItem(sf.name);
             saveToProfile();
         }
@@ -172,8 +200,8 @@ public class SecurityFilterGUI extends JPanel {
 
     private void saveToProfile() {
         StringBuilder str = new StringBuilder();
-        int i = parrent.getFilters().size();
-        for (SecurityFilter sf : parrent.getFilters().values()) {
+        int i = parentPanel.getFilters().size();
+        for (SecurityFilter sf : parentPanel.getFilters().values()) {
             if (!sf.json.isEmpty()) {
                 str.append(sf.json);
 
@@ -193,28 +221,44 @@ public class SecurityFilterGUI extends JPanel {
     private void load(ActionEvent actionEvent) {
         String name = (String) filterComboBox.getSelectedItem();
         if (name == null) return;
-        SecurityFilter sf = parrent.getFilters().get(name);
+        SecurityFilter sf = parentPanel.getFilters().get(name);
         if (sf == null) return;
         loadSF(sf);
     }
 
     private void loadSF(SecurityFilter sf) {
         nameField.setText(sf.name);
+        filterComboBox.setSelectedItem(sf.name);
+
         for (int i = 0; i < checkBoxStats.size(); i++) {
             JCheckBox c = checkBoxStats.get(i);
             c.setSelected(sf.statMaxed[i]);
         }
         exaltSkinPointsField.setText(String.valueOf(sf.exaltSkinPoints));
         exaltSkin.point = sf.exaltSkinPoints;
-        for (FilterEntity classPoint : classPoints) {
-            int c = sf.classPoint.get(classPoint.id);
-            if (c != 0) {
-                classPoint.field.setText(String.valueOf(c));
-            } else {
-                classPoint.field.setText("0");
+        if (sf.minTier != null) {
+            for (FilterEntity minTier : minTiers) {
+                Integer v = sf.minTier.get(minTier.id);
+
+                // default value in the event that it's missing
+                minTier.field.setEnabled(v != null);
+                minTier.checkBox.setSelected(v != null);
+                if (v == null) v = 0;
+
+                minTier.field.setText(String.valueOf(v));
+                minTier.point = v;
             }
+        }
+        for (FilterEntity classPoint : classPoints) {
+            Integer c = sf.classPoint.get(classPoint.id);
+
+            // default value in the event that it's missing
+            if (c == null) c = 0;
+
+            classPoint.field.setText(String.valueOf(c));
             classPoint.point = c;
         }
+        setItemSelectMode(sf.isWhitelistFilter);
         for (FilterEntity item : items) {
             Integer i = sf.itemPoint.get(item.id);
             if (i == null) {
@@ -226,9 +270,9 @@ public class SecurityFilterGUI extends JPanel {
                 if (i != 0) {
                     item.field.setText(String.valueOf(i));
                 } else {
-                    item.field.setText("0");
+                    item.field.setText("");
                 }
-                item.field.setEnabled(true);
+                item.field.setEnabled(sf.isWhitelistFilter);
                 item.checkBox.setSelected(true);
                 item.point = i;
             }
@@ -240,7 +284,7 @@ public class SecurityFilterGUI extends JPanel {
         String n = (String) filterComboBox.getSelectedItem();
         if (!ask("Are you sure you want to delete: " + n)) return;
         filterComboBox.removeItem(n);
-        parrent.getFilters().remove(n);
+        parentPanel.getFilters().remove(n);
         saveToProfile();
     }
 
@@ -271,6 +315,12 @@ public class SecurityFilterGUI extends JPanel {
         for (JCheckBox c : checkBoxStats) {
             c.setSelected(false);
         }
+        for (FilterEntity minTier : minTiers) {
+            minTier.field.setText("");
+            minTier.field.setEnabled(false);
+            minTier.point = 0;
+            minTier.checkBox.setSelected(false);
+        }
         exaltSkinPointsField.setText("");
         exaltSkin.point = 0;
         for (FilterEntity classPoint : classPoints) {
@@ -286,9 +336,56 @@ public class SecurityFilterGUI extends JPanel {
         jsonField.setText("");
     }
 
+    private void toggleItem(FilterEntity item) {
+        item.field.setEnabled(item.checkBox.isSelected() && getItemSelectMode());
+    }
+
+    private void onClickWhitelist(ActionEvent event) {
+        setItemSelectMode(true);
+    }
+
+    private void onClickBlacklist(ActionEvent event) {
+        setItemSelectMode(false);
+    }
+
+    private boolean getItemSelectMode() {
+        return this.itemSelectMode;
+    }
+
+    private void setItemSelectMode(boolean isWhitelistMode) {
+        boolean previousMode = getItemSelectMode();
+
+        toggleWhiteList.setSelected(isWhitelistMode);
+        toggleBlackList.setSelected(!isWhitelistMode);
+
+        this.itemSelectMode = isWhitelistMode;
+
+        if (previousMode != isWhitelistMode) updateItemsPanel(); // update the items panel if it's a mode change
+    }
+
+    private static class MinTierFocusListener implements FocusListener {
+
+        @Override
+        public void focusGained(FocusEvent e) {
+            JTextComponent textField;
+            if (e.getComponent() instanceof JTextComponent) textField = (JTextField) e.getComponent();
+            else return;
+
+            textField.setSelectionStart(0);
+            textField.setSelectionEnd(textField.getText().length());
+        }
+
+        @Override
+        public void focusLost(FocusEvent e) {
+            // nothing
+        }
+    }
+
     private void leftColumn(JPanel panel) {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         stats(panel);
+        panel.add(new JSeparator(SwingConstants.HORIZONTAL));
+        minTiers(panel);
         panel.add(new JSeparator(SwingConstants.HORIZONTAL));
         skinPoints(panel);
         panel.add(new JSeparator(SwingConstants.HORIZONTAL));
@@ -314,6 +411,43 @@ public class SecurityFilterGUI extends JPanel {
         mainPanel.add(panel);
     }
 
+    private void minTiers(JPanel mainPanel) {
+        JPanel panel = new JPanel(new BorderLayout());
+
+        ArrayList<String> equipment = new ArrayList<String>() {{
+            add("Weapon");
+            add("Ability");
+            add("Armor");
+            add("Ring");
+        }};
+
+        JLabel n = new JLabel("Minimum Equipment Tiers");
+        panel.add(n, BorderLayout.NORTH);
+
+        JPanel body = new JPanel();
+        body.setLayout(new GridLayout(4, 2));
+        panel.add(body, BorderLayout.CENTER);
+
+        IntStream.range(0, equipment.size()).forEachOrdered( i -> {
+            FilterEntity minTier = new FilterEntity();
+            minTiers.add(minTier);
+
+            minTier.id = i;
+            minTier.checkBox = new JCheckBox(equipment.get(i));
+            minTier.field = addTextField(0, minTier);
+            body.add(minTier.checkBox);
+            body.add(minTier.field);
+
+            minTier.field.setText("0");
+            minTier.field.addFocusListener(new MinTierFocusListener());
+            minTier.field.setEnabled(false);
+
+            minTier.checkBox.addActionListener(e -> minTier.field.setEnabled(minTier.checkBox.isSelected()));
+        });
+
+        mainPanel.add(panel);
+    }
+
     private void skinPoints(JPanel mainPanel) {
         JPanel panel = new JPanel(new BorderLayout());
 
@@ -334,7 +468,7 @@ public class SecurityFilterGUI extends JPanel {
     private void classes(JPanel mainPanel) {
         JPanel panel = new JPanel(new BorderLayout());
 
-        JLabel n = new JLabel("Classe Points");
+        JLabel n = new JLabel("Class Points");
         panel.add(n, BorderLayout.NORTH);
 
         JPanel body = new JPanel();
@@ -360,52 +494,147 @@ public class SecurityFilterGUI extends JPanel {
     private void textFieldOptions(JPanel mainPanel) {
         JPanel panel = new JPanel(new BorderLayout());
 
+        JPanel searchSelectPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+
+        // add toggles
+        JPanel togglePanel = new JPanel();
+        toggleWhiteList = new JToggleButton("Whitelist Mode");
+        toggleWhiteList.addActionListener(this::onClickWhitelist);
+        toggleBlackList = new JToggleButton("Blacklist Mode");
+        toggleBlackList.addActionListener(this::onClickBlacklist);
+        togglePanel.add(toggleWhiteList);
+        togglePanel.add(toggleBlackList);
+
+        c.anchor = GridBagConstraints.CENTER;
+        c.fill = GridBagConstraints.NONE;
+        c.gridx = 0;
+        c.gridwidth = 5;
+        c.weightx = 0.0;
+        c.gridy = 0;
+        searchSelectPanel.add(togglePanel, c);
+
+        // add search bar
+        searchField = new JTextField();
+        searchField.addActionListener(this::search);
+        c.anchor = GridBagConstraints.LINE_END;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridwidth = 4;
+        c.weightx = 1.0;
+        c.gridy = 1;
+        searchSelectPanel.add(searchField, c);
+
+        JButton searchButton = new JButton("->");
+        searchButton.addActionListener(this::search);
+        c.anchor = GridBagConstraints.LINE_START;
+        c.fill = GridBagConstraints.VERTICAL;
+        c.gridx = 4;
+        c.gridwidth = 1;
+        c.weightx = 0.0;
+        c.gridy = 1;
+        searchSelectPanel.add(searchButton, c);
+
+        panel.add(searchSelectPanel, BorderLayout.PAGE_START);
+
         JLabel n = new JLabel("Item Points");
         panel.add(n, BorderLayout.NORTH);
+
+        itemsPanel = new JPanel();
+        itemsPanel.setLayout(new GridBagLayout());
+        panel.add(itemsPanel, BorderLayout.CENTER);
+
+        createItemFilterEntities();
+        updateItemsPanel();
+
+        mainPanel.add(panel);
+    }
+
+    private void createItemFilterEntities() {
+        // should only be run once
+        if (!items.isEmpty()) System.err.println("Tried to generate item filter entities more than once?");
 
         ArrayList<ParseEquipment.Equipment> list = ParseEquipment.getParseItems();
         list.sort(Comparator.comparing(ParseEquipment.Equipment::name));
 
-        JPanel body = new JPanel();
-        body.setLayout(new GridBagLayout());
-
-        GridBagConstraints gridBagConstraints = new GridBagConstraints();
-
-        int count = 0;
         for (ParseEquipment.Equipment e : list) {
+            // omit some items
+            if (OMITTED_SLOT_TYPES.contains(e.slotType)) continue;
+
+            // TODO: omit gear covered by minimum equipment tiers
+
             FilterEntity item = new FilterEntity();
             items.add(item);
             item.id = e.id;
-
-            JLabel icon = new JLabel(ImageBuffer.getOutlinedIcon(e.id, 24));
-            icon.setText(e.name());
             item.field = addTextField(3, item);
             item.checkBox = new JCheckBox();
-            gridBagConstraints.gridy = count;
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.anchor = GridBagConstraints.WEST;
-            body.add(icon, gridBagConstraints);
-            gridBagConstraints.gridx = 1;
-            body.add(item.field, gridBagConstraints);
-            gridBagConstraints.gridx = 2;
-            body.add(item.checkBox, gridBagConstraints);
-            item.checkBox.addActionListener(e1 -> {
-                item.field.setEnabled(item.checkBox.isSelected());
-            });
-//            item.field.setText("0");
-            item.field.setEnabled(false);
+
+            item.checkBox.addActionListener(event -> toggleItem(item));
+        }
+
+    }
+
+    private void updateItemsPanel() { updateItemsPanel(searchField.getText().isEmpty() ? null : searchField.getText()); }
+
+    private void updateItemsPanel(String withSearch) {
+        // Clear current item list
+        itemsPanel.removeAll();
+
+        ArrayList<ParseEquipment.Equipment> list = ParseEquipment.getParseItems();
+        list.sort(Comparator.comparing(ParseEquipment.Equipment::name));
+
+
+        int count = 0;
+        for (FilterEntity itemFilterEntity : items) {
+            GridBagConstraints c = new GridBagConstraints();
+            ParseEquipment.Equipment e = ParseEquipment.getEquipmentById(itemFilterEntity.id);
+
+            // omit some items
+            if (OMITTED_SLOT_TYPES.contains(e.slotType)) continue;
+
+            // TODO: omit gear covered by minimum equipment tiers
+
+            // basic search
+            String entitySearchName = e.name().toLowerCase();
+            String[] entitySearchLabels = e.labels.toLowerCase().split(",");
+            String searchName = withSearch != null ? withSearch.toLowerCase() : "";
+
+            boolean searchByName = entitySearchName.contains(searchName);
+            boolean searchByLabel = Arrays.asList(entitySearchLabels).contains(searchName);
+            if (withSearch != null && !searchByName && !searchByLabel) continue;
+
+            c.gridy = count;
+            c.anchor = GridBagConstraints.LINE_START;
+
+            // add checkbox + field value
+            c.gridx = 0;
+            itemsPanel.add(itemFilterEntity.field, c);
+            c.gridx = 1;
+            itemsPanel.add(itemFilterEntity.checkBox, c);
+            itemFilterEntity.field.setEnabled(itemFilterEntity.checkBox.isSelected() && getItemSelectMode());
+
+            // add icons + name
+            JLabel icon = new JLabel(ImageBuffer.getOutlinedIcon(e.id, 24));
+            icon.setText(e.name());
+            icon.setHorizontalAlignment(JLabel.LEFT);
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridx = 2;
+            c.weightx = 1.0;
+            c.insets = new Insets(0,10,0,0);
+            itemsPanel.add(icon, c);
+
             count++;
         }
-        panel.add(body, BorderLayout.SOUTH);
-        mainPanel.add(panel);
+
+        this.updateUI();
     }
 
     private static JTextField addTextField(int withNumbers, FilterEntity entity) {
         JTextField comp = new JTextField(withNumbers);
         comp.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
-                char caracter = e.getKeyChar();
-                if (!((caracter >= '0') && (caracter <= '9')) && (caracter != '-')) {
+                char character = e.getKeyChar();
+                if (!((character >= '0') && (character <= '9')) && (character != '-')) {
                     e.consume();
                 }
             }
@@ -442,6 +671,12 @@ public class SecurityFilterGUI extends JPanel {
         });
         JDialog dialog = pane.createDialog(null, "Security Filter");
 //        dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        // Load the currently-active filter (if there is one)
+        if (ParsePanelGUI.currentFilter != null) {
+            filter.loadSF(ParsePanelGUI.currentFilter);
+        }
+
         dialog.setVisible(true);
     }
 
