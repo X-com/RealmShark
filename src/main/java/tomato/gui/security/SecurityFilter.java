@@ -62,6 +62,7 @@ public class SecurityFilter {
             int equipmentId = player.inv[slot];
             ParseEquipment.Equipment equipment = ParseEquipment.getEquipmentById(equipmentId);
             Integer minimumTier = this.minTier.get(slot);
+            boolean isSTUT = equipment.labels.contains("ST") || equipment.labels.contains("UT");
 
             // handle empty gear slots
             if (equipment == null) {
@@ -69,7 +70,8 @@ public class SecurityFilter {
                 continue;
             }
 
-            if (equipment.labels.contains("TIERED") && equipment.tier < minimumTier) {
+            // some ST/UT items have the "TIERED" label also - these SHOULD be mutually exclusive
+            if (equipment.labels.contains("TIERED") && equipment.tier < minimumTier && !isSTUT) {
                 missing.add("Gear below reqs: T" + equipment.tier + " " + Player.equipmentNames[slot]);
             }
         }

@@ -80,7 +80,12 @@ public class ParseEquipment {
     public static Boolean isParseItem(Equipment e) {
         final boolean isNonConsumable = e.labels != null && !e.labels.contains("CONSUMABLE");
         final boolean isSTUT = e.labels != null && (e.labels.contains("ST") || e.labels.contains("UT"));
-        final boolean isTieredGear = e.labels != null && (e.labels.contains("T" + e.tier) || (e.labels.contains("ARMOR") && e.labels.contains("T" + (e.tier+1)))); // fix for tiered armor hacked implementation
+
+        // detecting tiered gear requires:
+        //  - tier label
+        //  - armor fix (shifted up)
+        //  - not st/ut (because some ut/st get the T0 label for some reason)
+        final boolean isTieredGear = e.labels != null && (e.labels.contains("T" + e.tier) || (e.labels.contains("ARMOR") && e.labels.contains("T" + (e.tier+1)))) && !isSTUT;
 
         return (isNonConsumable && (isSTUT || isTieredGear));
     }
