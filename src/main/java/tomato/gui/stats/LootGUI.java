@@ -41,7 +41,6 @@ public class LootGUI extends JPanel {
     public static boolean filterPurpleBag = false;
     public static boolean filterPinkBag = false;
     public static boolean filterBrownBag = false;
-    
 
 
     public LootGUI(TomatoData data) {
@@ -107,7 +106,7 @@ public class LootGUI extends JPanel {
         if (isTealBag(bag) && !filterTealBag) return false;
         if (isPurpleBag(bag) && !filterPurpleBag) return false;
         if (isPinkBag(bag) && !filterPinkBag) return false;
-        if (isBrownBag(bag) && !filterBrownBag) return false;       
+        if (isBrownBag(bag) && !filterBrownBag) return false;
         return true; // Show if no filter prevents it
     }
 
@@ -125,12 +124,12 @@ public class LootGUI extends JPanel {
         lootPanel.revalidate();
         lootPanel.repaint();
     }
-    
+
     private boolean isBrownBag(Entity bag) {
         int id = bag.objectType;
         return id == LootBags.BROWN.getId() || id == LootBags.BOOSTED_BROWN.getId();
     }
-    
+
     private boolean isPinkBag(Entity bag) {
         int id = bag.objectType;
         return id == LootBags.PINK.getId() || id == LootBags.BOOSTED_PINK.getId();
