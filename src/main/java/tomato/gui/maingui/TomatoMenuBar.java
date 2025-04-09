@@ -29,7 +29,7 @@ public class TomatoMenuBar implements ActionListener {
     private JRadioButtonMenuItem dpsEquipmentNone, dpsEquipmentSimple, dpsEquipmentFull, dpsIcon;
     private JRadioButtonMenuItem dpsSortLastHit, dpsSortFirstHit, dpsSortMaxHp, dpsSortFightTimer, dpsSortBossOnly;
     private JCheckBoxMenuItem fontStyleBold, fontStyleItalic, dpsShowMe, saveChat, chatPing, chatPingGuild, whiteBagSound, chatPingParty, orangeBagSound, redBagSound, goldBagSound, eggBagSound, tradePing, disableDataSending;
-    private JCheckBoxMenuItem filterWhiteBag, filterOrangeBag, filterRedBag, filterGoldBag, filterEggBag, filterBlueBag, filterTealBag, filterPurpleBag;
+    private JCheckBoxMenuItem filterWhiteBag, filterOrangeBag, filterRedBag, filterGoldBag, filterEggBag, filterBlueBag, filterTealBag, filterPurpleBag, filterPinkBag, filterBrownBag;
     private JSlider soundSlider;
     private JMenu file, edit, info;
     private JMenuBar jMenuBar;
@@ -175,6 +175,18 @@ public class TomatoMenuBar implements ActionListener {
             PropertiesManager.setProperties("filterPurpleBag", Boolean.toString(filterPurpleBag.isSelected()));
             LootGUI.applyFilters();
         });
+        filterPinkBag = new JCheckBoxMenuItem("Show Pink Bags");
+        filterPinkBag.addActionListener(e -> {
+            LootGUI.filterPinkBag = filterPinkBag.isSelected();
+            PropertiesManager.setProperties("filterPinkBag", Boolean.toString(filterPinkBag.isSelected()));
+            LootGUI.applyFilters();
+        });
+        filterBrownBag = new JCheckBoxMenuItem("Show Brown Bags");
+        filterBrownBag.addActionListener(e -> {
+            LootGUI.filterBrownBag = filterBrownBag.isSelected();
+            PropertiesManager.setProperties("filterBrownBag", Boolean.toString(filterBrownBag.isSelected()));
+            LootGUI.applyFilters();
+        });
 
         // Add filter options to the Filter Loot menu
         filterBags.add(filterWhiteBag);
@@ -185,6 +197,8 @@ public class TomatoMenuBar implements ActionListener {
         filterBags.add(filterBlueBag);
         filterBags.add(filterTealBag);
         filterBags.add(filterPurpleBag);
+        filterBags.add(filterPinkBag);
+        filterBags.add(filterBrownBag);
         loadFilteredBags();
 
         borders = new JMenuItem("Borders");
@@ -617,6 +631,14 @@ public class TomatoMenuBar implements ActionListener {
         String purpleBag = PropertiesManager.getProperty("filterPurpleBag");
         filterPurpleBag.setSelected(purpleBag == null || purpleBag.equals("true"));
         LootGUI.filterPurpleBag = filterPurpleBag.isSelected();
+        
+        String pinkBag = PropertiesManager.getProperty("filterPinkBag");
+        filterPinkBag.setSelected(pinkBag == null || pinkBag.equals("true"));
+        LootGUI.filterPinkBag = filterPinkBag.isSelected();
+        
+        String brownBag = PropertiesManager.getProperty("filterBrownBag");
+        filterBrownBag.setSelected(brownBag == null || brownBag.equals("true"));
+        LootGUI.filterBrownBag = filterBrownBag.isSelected();
     }
 
 
