@@ -39,9 +39,6 @@ public class DpsToString {
      * @return logged dps output as a string.
      */
     public static String stringDmgRealtime(MapInfoPacket map, List<Entity> sortedEntityHitList, ArrayList<NotificationPacket> notifications, Entity player, long totalDungeonPcTime) {
-    public static String stringDmgRealtime(MapInfoPacket map, List<Entity> sortedEntityHitList,
-                                           ArrayList<NotificationPacket> notifications,
-                                           Entity player, long totalDungeonPcTime) {
         StringBuilder sb = new StringBuilder();
 
         if(DpsDisplayOptions.equipmentOption == 3) sb.append("Icons are not visible in live tab. Use \"<\" to see icons.\n\n");
@@ -49,15 +46,20 @@ public class DpsToString {
         if (map != null) {
             sb.append(map.name).append(" ").append(DpsGUI.systemTimeToString(totalDungeonPcTime)).append("\n\n");
         }
+
         ArrayList<Pair<String, Integer>> deaths = new ArrayList<>();
         for (NotificationPacket n : notifications) {
-            String name = n.message.split("\"")[9];
-            int graveIcon = n.pictureType;
-            deaths.add(new Pair<>(name, graveIcon));
+            if (n.message != null) {
+                String[] parts = n.message.split("\"");
+                if (parts.length > 9) {
+                    String name = parts[9];
+                    deaths.add(new Pair<>(name, n.pictureType));
+                }
+            }
         }
+
         for (Entity e : sortedEntityHitList) {
-            if (e.maxHp() <= 0) continue;
-            if (CharacterClass.isPlayerCharacter(e.objectType)) continue;
+            if (e == null || e.maxHp() <= 0 || CharacterClass.isPlayerCharacter(e.objectType)) continue;
             sb.append(display(e, deaths, player)).append("\n");
         }
 
@@ -158,60 +160,45 @@ public class DpsToString {
     }
 
     public static String showInv(int equipmentFilter, Entity owner, Entity entity) {
-        if (equipmentFilter == 0 || owner.getStatName() == null) return "";
+        if (equipmentFilter == 0 || owner == null || owner.getStatName() == null) return "";
 
         HashMap<Integer, Equipment>[] inv = new HashMap[4];
 
         for (int i = 0; i < 4; i++) {
             AtomicInteger tot = new AtomicInteger(0);
-            if (inv[i] == null) inv[i] = new HashMap<>();
             inv[i] = new HashMap<>();
             for (Damage d : entity.getDamageList()) {
                 if (d.owner == null || d.owner.id != owner.id || d.ownerInvntory == null) continue;
 
                 int finalI = i;
-                Equipment equipment = inv[i].computeIfAbsent(d.ownerInvntory[i], id -> new Equipment(id, d.ownerEnchants[finalI], tot));
-                // Convert enchant to String
-                String enchantStr = String.valueOf(d.ownerEnchants[finalI]);
                 Equipment equipment = inv[i].computeIfAbsent(d.ownerInvntory[i],
-                        id -> new Equipment(id, enchantStr, tot));
+                        id -> new Equipment(id, String.valueOf(d.ownerEnchants[finalI]), tot));
                 equipment.add(d.damage);
             }
         }
 
         if (equipmentFilter == 1) {
-            StringBuilder s = new StringBuilder();
-            s.append("[");
             StringBuilder s = new StringBuilder("[");
             for (int i = 0; i < 4; i++) {
-                Equipment max = inv[i].values().stream().max(Comparator.comparingInt(e -> e.dmg)).orElseThrow(NoSuchElementException::new);
                 Equipment max = inv[i].values().stream()
                         .max(Comparator.comparingInt(e -> e.dmg))
                         .orElse(new Equipment(0, "0", new AtomicInteger(0)));
                 if (i != 0) s.append(" / ");
                 s.append(IdToAsset.objectName(max.id));
             }
-            s.append("]");
-            return s.toString();
             return s.append("]").toString();
         } else if (equipmentFilter == 2) {
             StringBuilder s = new StringBuilder();
             for (int i = 0; i < 4; i++) {
-                s.append("\n");
-                Collection<Equipment> list = inv[i].values();
-                s.append("       ");
                 s.append("\n       ");
-                boolean first = true;
                 Collection<Equipment> list = inv[i].values();
+                boolean first = true;
                 for (Equipment e : list) {
-                    if (!first) s.append(" /");
                     if (list.size() > 1) {
                         if (!first) s.append(" /");
                         s.append(String.format(" %.1f%% ", 100f * e.dmg / e.totalDmg.get()));
-                        s.append(IdToAsset.objectName(e.id));
                     } else {
                         s.append(" ");
-                        s.append(IdToAsset.objectName(e.id));
                     }
                     s.append(IdToAsset.objectName(e.id));
                     first = false;
@@ -224,8 +211,9 @@ public class DpsToString {
     }
 
     public static String display(Entity entity, ArrayList<Pair<String, Integer>> deaths, Entity player) {
+        if (entity == null) return "";
+
         StringBuilder sb = new StringBuilder();
-        sb.append(entity.name()).append(" HP: ").append(entity.maxHp()).append(entity.getFightTimerString()).append("\n");
         sb.append(entity.name()).append(" HP: ").append(entity.maxHp())
                 .append(entity.getFightTimerString()).append("\n");
 
@@ -233,21 +221,19 @@ public class DpsToString {
         int counter = 0;
 
         for (Damage dmg : playerDamageList) {
+            if (dmg == null || dmg.owner == null) continue;
+
             boolean highlight = false;
             counter++;
             int filter = Filter.filter(dmg.owner, player);
-            if (Filter.shouldFilter() && filter != 1) {
-                continue;
-            } else if (filter == 2) {
-                highlight = true;
-            }
 
             if (Filter.shouldFilter() && filter != 1) continue;
-            else if (filter == 2) highlight = true;
+            if (filter == 2) highlight = true;
 
             String name = dmg.owner.getStatName();
+            if (name == null) continue;
+
             String extra = "    ";
-            String isMe = (dmg.owner.isUser() && DpsDisplayOptions.showMe) ? " ->" : (highlight ? ">>>" : "   ");
             String isMe = (dmg.owner.isUser() && DpsDisplayOptions.showMe) ? " ->" :
                     (highlight ? ">>>" : "   ");
 
@@ -264,21 +250,21 @@ public class DpsToString {
                 extra = String.format("[Garden Hits:%d Dmg:%d]", dmg.counterHits, dmg.counterDmg);
             }
 
-            for (int id : entity.playerDropped.keySet()) {
-                if (dmg.owner.id == id) {
-                    PlayerRemoved pr = entity.playerDropped.get(id);
-                    boolean dead = isDeadPlayer(name, deaths);
-                    extra += String.format("%s %.2f%% [%s / %s]", dead ? "Died" : "Nexus", ((float) pr.hp / pr.max) * 100, df.format(pr.hp).replaceAll(",", " "), df.format(pr.max).replaceAll(",", " "));
-                    extra += String.format("%s %.2f%% [%s / %s]",
-                            dead ? "Died" : "Nexus",
-                            ((float) pr.hp / pr.max) * 100,
-                            df.format(pr.hp).replaceAll(",", " "),
-                            df.format(pr.max).replaceAll(",", " "));
+            if (entity.playerDropped != null) {
+                for (int id : entity.playerDropped.keySet()) {
+                    if (dmg.owner.id == id) {
+                        PlayerRemoved pr = entity.playerDropped.get(id);
+                        boolean dead = isDeadPlayer(name, deaths);
+                        extra += String.format("%s %.2f%% [%s / %s]",
+                                dead ? "Died" : "Nexus",
+                                ((float) pr.hp / pr.max) * 100,
+                                df.format(pr.hp).replaceAll(",", " "),
+                                df.format(pr.max).replaceAll(",", " "));
+                    }
                 }
             }
 
             String inv = showInv(DpsDisplayOptions.equipmentOption, dmg.owner, entity);
-            sb.append(String.format("%s %3d %10s DMG: %7d %6.3f%% %s %s\n", isMe, counter, name, dmg.damage, pers, extra, inv));
             sb.append(String.format("%s %3d %10s DMG: %7d %6.3f%% %s %s\n",
                     isMe, counter, name, dmg.damage, pers, extra, inv));
         }
@@ -288,15 +274,13 @@ public class DpsToString {
     }
 
     private static boolean isDeadPlayer(String name, ArrayList<Pair<String, Integer>> deaths) {
+        if (name == null || deaths == null) return false;
+
         for (Pair<String, Integer> p : deaths) {
-            if (p.left().equals(name)) {
-                return true;
-            }
-            if (p.left().equals(name)) return true;
+            if (name.equals(p.left())) return true;
         }
         return false;
     }
-}
 
     private static class DataBundle {
         final MapInfoPacket map;
