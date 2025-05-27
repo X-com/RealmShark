@@ -13,15 +13,15 @@ import util.Util;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-//message={"k":"s.dungeon_opened_by","t":{"player":"PLAYERNAME",}}   key pop
-//message={"k":"s.something_by_player","t":{"name":"The Shield Monument has been activated","player":"PLAYERNAME",}}  rune pop
-//message={"k":"s.dungeon_unlocked_by","t":{"name":"The Void","player":"PLAYERNAME",}}   vial pop
-//message={"k":"s.dungeon_unlocked_by","t":{"name":"Wine Cellar","player":"PLAYERNAME",}}   Inc pop
 
 /**
  * GUI class for popping dungeons.
@@ -29,6 +29,9 @@ import java.util.regex.Pattern;
 public class KeypopGUI extends JPanel {
 
     private static JTextArea textAreaKeypop;
+    private static boolean logToFile = false;
+    private static final String LOG_FILE = "keypops.log";
+    private static final SimpleDateFormat logDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private static final Pattern keypopParse = Pattern.compile("\"player\":\"([^\"]+)\"");
     private static final Pattern nonkeypopParse = Pattern.compile("[^ ]*\"name\":\"([A-Za-z ]*)\",\"player\":\"([A-Za-z]*)[^ ]*");
@@ -39,20 +42,29 @@ public class KeypopGUI extends JPanel {
 
     public KeypopGUI() {
         loadDungeonChoices();
+        loadLoggingPreference();
 
         setLayout(new BorderLayout());
         textAreaKeypop = new JTextArea();
         add(TomatoGUI.createTextArea(textAreaKeypop, false));
 
-        JPanel south = new JPanel(new GridLayout());
+        JPanel south = new JPanel(new GridLayout(1, 3));
         JButton clearButton = new JButton("Clear");
         clearButton.addActionListener(e -> textAreaKeypop.setText(""));
         south.add(clearButton);
 
         JButton notificationButton = new JButton("Notifications");
         notificationButton.addActionListener(e -> showConfigureDialog());
-
         south.add(notificationButton);
+
+        JCheckBox logCheckbox = new JCheckBox("Log to file");
+        logCheckbox.setSelected(logToFile);
+        logCheckbox.addActionListener(e -> {
+            logToFile = logCheckbox.isSelected();
+            saveLoggingPreference();
+        });
+        south.add(logCheckbox);
+
         add(south, BorderLayout.SOUTH);
     }
 
@@ -135,12 +147,33 @@ public class KeypopGUI extends JPanel {
     }
 
     /**
-     * Add text to the key pop text area.
+     * Add text to the key pop text area and optionally log to file.
      *
      * @param s The text to be added at the end of text area.
      */
     public static void appendTextAreaKeypop(String s) {
-        if (textAreaKeypop != null) textAreaKeypop.append(s);
+        if (textAreaKeypop != null) {
+            textAreaKeypop.append(s);
+        }
+
+        if (logToFile) {
+            logToFile(s);
+        }
+    }
+
+    /**
+     * Logs the key pop message to a file with timestamp.
+     *
+     * @param message The message to log
+     */
+    private static void logToFile(String message) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG_FILE, true))) {
+            String timestamp = logDateFormat.format(new Date());
+            writer.write(timestamp + " " + message);
+            writer.newLine();
+        } catch (IOException e) {
+            System.err.println("Error writing to keypop log file: " + e.getMessage());
+        }
     }
 
     /**
@@ -275,5 +308,20 @@ public class KeypopGUI extends JPanel {
             String[] list = keySound.split(",");
             selectedDungeons.addAll(Arrays.asList(list));
         }
+    }
+
+    /**
+     * Loads logging preference from disk
+     */
+    private static void loadLoggingPreference() {
+        String loggingPref = PropertiesManager.getProperty("keypopLogging");
+        logToFile = loggingPref != null && Boolean.parseBoolean(loggingPref);
+    }
+
+    /**
+     * Saves logging preference to disk
+     */
+    private static void saveLoggingPreference() {
+        PropertiesManager.setProperties("keypopLogging", String.valueOf(logToFile));
     }
 }
