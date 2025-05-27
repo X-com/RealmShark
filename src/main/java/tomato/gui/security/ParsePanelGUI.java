@@ -439,15 +439,55 @@ public class ParsePanelGUI extends JPanel {
         panel.setPreferredSize(new Dimension(100, 24));
         panel.setMaximumSize(new Dimension(100, 24));
         panel.setLayout(new GridLayout(1, 4));
+
+        // Get enchant info for all items
+        String[] enchants = ParseEnchants.extractEnchants(p.player.playerEntity);
+
         for (int i = 0; i < 4; i++) {
             int eq = p.player.inv[i];
-            p.icon[i] = new JLabel(ImageBuffer.getOutlinedIcon(eq, 20));
+            int enchantCount = getEnchantCount(enchants[i]);
+
+            // Use regular outline for non-enchanted items, glow for enchanted ones
+            ImageIcon icon;
+            if (enchantCount == 0) {
+                icon = ImageBuffer.getOutlinedIcon(eq, 20);
+            } else {
+                Color glowColor = getGlowColor(enchantCount);
+                int glowSize = getGlowSize(enchantCount);
+                icon = ImageBuffer.getOutlinedIconWithGlow(eq, 20, glowColor, glowSize);
+            }
+
+            p.icon[i] = new JLabel(icon);
             p.player.itemName[i] = IdToAsset.objectName(eq);
             panel.add(p.icon[i]);
         }
         p.updateToolTipText();
         mainPanel.add(panel);
         return width;
+    }
+
+    // Count number of enchants in the enchant string
+    private static int getEnchantCount(String enchantString) {
+        if (enchantString == null || enchantString.isEmpty()) {
+            return 0;
+        }
+        // Count the number of newlines in the parsed enchant string
+        return enchantString.split("\n").length;
+    }
+
+    // Determine glow color based on enchant count
+    private static Color getGlowColor(int enchantCount) {
+        switch (enchantCount) {
+            case 1: return new Color(0, 255, 0);
+            case 2: return new Color(0, 200, 255);
+            case 3: return new Color(200, 0, 255);
+            case 4: return new Color(255, 215, 0);
+            default: return Color.BLACK;
+        }
+    }
+
+    private static int getGlowSize(int enchantCount) {
+        return 3;
     }
 
     private static int guildLabel(PlayerBox playerBox, JPanel mainPanel, FontMetrics fm, int y, int width) {
@@ -667,15 +707,18 @@ public class ParsePanelGUI extends JPanel {
 
         public void update() {
             Entity playerEntity = this.player.playerEntity;
-
-            // Only update if equipment has changed
             boolean hasEquipmentChanged = player.updateInv();
             if (!hasEquipmentChanged) return;
 
-            setIcon(0, playerEntity.stat.get(StatType.INVENTORY_0_STAT).statValue);
-            setIcon(1, playerEntity.stat.get(StatType.INVENTORY_1_STAT).statValue);
-            setIcon(2, playerEntity.stat.get(StatType.INVENTORY_2_STAT).statValue);
-            setIcon(3, playerEntity.stat.get(StatType.INVENTORY_3_STAT).statValue);
+            // Get the raw enchant strings first
+            String[] enchantStrings = ParseEnchants.getEnchantStrings(playerEntity);
+
+            // Keep original stat access pattern but pass raw enchant strings
+            setIcon(0, playerEntity.stat.get(StatType.INVENTORY_0_STAT).statValue, enchantStrings[0]);
+            setIcon(1, playerEntity.stat.get(StatType.INVENTORY_1_STAT).statValue, enchantStrings[1]);
+            setIcon(2, playerEntity.stat.get(StatType.INVENTORY_2_STAT).statValue, enchantStrings[2]);
+            setIcon(3, playerEntity.stat.get(StatType.INVENTORY_3_STAT).statValue, enchantStrings[3]);
+
             cruciblePanel.setBackground(playerEntity.isCrucible() ? Color.RED : playerEntity.isSeasonal() ? seasonalColor : Color.WHITE);
             updateToolTipText();
             updatePointsPanel();
@@ -708,13 +751,23 @@ public class ParsePanelGUI extends JPanel {
             return pointsPanel;
         }
 
-        private void setIcon(int i, int eq) {
+        private void setIcon(int i, int eq, String enchant) {
             try {
-                icon[i].setIcon(ImageBuffer.getOutlinedIcon(eq, 20));
-//                icon[i].setToolTipText(String.format("<html>%s<br>%s</html>", IdToAsset.objectName(eq), enchant));
+                String parsedEnchant = ParseEnchants.parse(enchant);
+                int enchantCount = getEnchantCount(parsedEnchant);
+
+                if (enchantCount == 0) {
+                    // Use original outline for non-enchanted items
+                    icon[i].setIcon(ImageBuffer.getOutlinedIcon(eq, 20));
+                } else {
+                    // Enhanced glow for enchanted items
+                    Color glowColor = getGlowColor(enchantCount);
+                    int glowSize = getGlowSize(enchantCount);
+                    icon[i].setIcon(ImageBuffer.getOutlinedIconWithGlow(eq, 20, glowColor, glowSize));
+                }
                 player.itemName[i] = IdToAsset.objectName(eq);
             } catch (Exception e) {
-                System.err.println("Failed to set icon for player " + this.player.playerEntity.name() + " on item slot " + i + " for item ID " + eq);
+                e.printStackTrace();
             }
             INSTANCE.updateUI();
         }
