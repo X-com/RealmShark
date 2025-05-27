@@ -88,6 +88,7 @@ public class LootGUI extends JPanel {
         if (Sound.playRedBagSound && isRedBag(bag)) Sound.redbag.play();
         if (Sound.playGoldBagSound && isGoldBag(bag)) Sound.goldbag.play();
         if (Sound.playRedBagSound && isEggBag(bag)) Sound.redbag.play();
+        if (Sound.playBlueBagSound && isBlueBag(bag)) Sound.bluebag.play();
 
         if (!disableLootSharing) {
             SendLoot.sendLoot(data, map, bag, dropper, player, time);
