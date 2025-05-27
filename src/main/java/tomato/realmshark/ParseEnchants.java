@@ -3,6 +3,7 @@ package tomato.realmshark;
 import org.xml.sax.SAXException;
 import packets.data.StatData;
 import packets.data.enums.StatType;
+import packets.reader.BufferReader;
 import tomato.backend.data.Entity;
 import util.StringXML;
 
@@ -156,17 +157,21 @@ public class ParseEnchants {
      * @return Decoded enchantment string.
      */
     public static String parse(String code) {
-        if (code.length() == 0) return "";
-        byte[] bytes = PcStatsDecoder.sixBitStringToBytes(code);
+        if (code.isEmpty()) return "";
 
-        ByteBuffer buff = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
-        buff.get();
-        short type = buff.getShort();
-
-        if (type == 1026) {
-            return getEnchantingString(buff, code);
+        BufferReader byteBuffer = new BufferReader(ByteBuffer.wrap(PcStatsDecoder.sixBitStringToBytes(code)).order(ByteOrder.LITTLE_ENDIAN));
+        byteBuffer.readByte();
+        StringBuilder res = new StringBuilder();
+        if (byteBuffer.readShort() != 1026) return res.toString();
+        while (!byteBuffer.isBufferFullyParsed()) {
+            short enchantId = byteBuffer.readShort();
+            if (enchantId == -3) return res.toString();
+            else if (enchantId == -2) return res + "[locked]";
+            else if (enchantId == -1) return res + "empty";
+            res.append(getEnchantmentString(enchantId));
+            res.append("\n");
         }
-        return "";
+        return res.toString();
     }
 
     /**
