@@ -22,6 +22,7 @@ public class Sound {
     public static Sound redbag;
     public static Sound goldbag;
     public static Sound eggbag;
+    public static Sound bluebag;
     public static Sound custom;
     public static Sound trade;
 
@@ -33,6 +34,7 @@ public class Sound {
     public static boolean playRedBagSound = false;
     public static boolean playGoldBagSound = false;
     public static boolean playEggBagSound = false;
+    public static boolean playBlueBagSound = false;
     public static boolean playTradeSound = false;
 
     public Sound(String file) {
