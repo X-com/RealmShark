@@ -157,18 +157,34 @@ public class ParseEnchants {
      * @return Decoded enchantment string.
      */
     public static String parse(String code) {
+        //System.out.println("Parsing enchantment code: " + code);
         if (code.isEmpty()) return "";
 
-        BufferReader byteBuffer = new BufferReader(ByteBuffer.wrap(PcStatsDecoder.sixBitStringToBytes(code)).order(ByteOrder.LITTLE_ENDIAN));
+        byte[] rawBytes = PcStatsDecoder.sixBitStringToBytes(code);
+        // Expected buffer size: 1 byte header + 2 bytes type + 4 enchantments (8 bytes)
+        int expectedSize = 1 + 2 + 8;
+        if (rawBytes.length > expectedSize) {
+            rawBytes = Arrays.copyOfRange(rawBytes, 0, expectedSize);
+        }
+
+        BufferReader byteBuffer = new BufferReader(
+                ByteBuffer.wrap(rawBytes).order(ByteOrder.LITTLE_ENDIAN)
+        );
         byteBuffer.readByte();
         StringBuilder res = new StringBuilder();
-        if (byteBuffer.readShort() != 1026) return res.toString();
+        if (byteBuffer.readShort() != 1026) {
+            //System.out.println("Invalid enchantment header, skipping.");
+            return res.toString();
+        }
         while (!byteBuffer.isBufferFullyParsed()) {
             short enchantId = byteBuffer.readShort();
+            //System.out.println("Found enchantment ID: " + enchantId);
             if (enchantId == -3) return res.toString();
             else if (enchantId == -2) return res + "[locked]";
             else if (enchantId == -1) return res + "empty";
-            res.append(getEnchantmentString(enchantId));
+            String enchantName = getEnchantmentString(enchantId);
+            //System.out.println("Enchantment: " + enchantName);
+            res.append(enchantName);
             res.append("\n");
         }
         return res.toString();
