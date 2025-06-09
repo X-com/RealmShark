@@ -316,7 +316,6 @@ public class LootGUI extends JPanel {
 
     private static int displayBagLootIcons(Entity entity, JPanel mainPanel, int width) {
         JPanel panel = new JPanel();
-//            panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         width += 200;
 
         panel.setPreferredSize(new Dimension(200, 24));
@@ -335,16 +334,53 @@ public class LootGUI extends JPanel {
                 JPanel comp = new JPanel();
                 comp.setMinimumSize(new Dimension(24, 24));
                 panel.add(comp);
+                continue;
             }
-            assert sd != null;
             int statValue = sd.statValue;
-            JLabel icon = new JLabel(ImageBuffer.getOutlinedIcon(statValue, 20));
             String itemName = IdToAsset.objectName(statValue);
+            String enchantText = "";
+            int enchantCount = 0;
+
             if (enchants != null && i < enchants.length && !enchants[i].isEmpty() && !enchants[i].equals("AAIE_f_9__3__f8=")) {
-                String e = ParseEnchants.parse(enchants[i]);
-                if (!e.isEmpty()) {
-                    itemName += "<br>" + e;
+                enchantText = ParseEnchants.parse(enchants[i]);
+                if (!enchantText.isEmpty()) {
+                    enchantCount = enchantText.split("\n").length;
                 }
+            }
+
+            /* enchantCount Debug: Print enchantCount and itemName
+            System.out.println(
+                "Item: " + itemName + " | EnchantCount: " + enchantCount
+            );*/
+
+            JLabel icon;
+            if (enchantCount == 0) {
+                icon = new JLabel(ImageBuffer.getOutlinedIcon(statValue, 20));
+            } else {
+                Color glowColor;
+                switch (enchantCount) {
+                    case 1:
+                        glowColor = new Color(0, 255, 0); // Green
+                        break;
+                    case 2:
+                        glowColor = new Color(0, 200, 255); // Blue
+                        break;
+                    case 3:
+                        glowColor = new Color(200, 0, 255); // Purple
+                        break;
+                    case 4:
+                        glowColor = new Color(255, 215, 0); // Gold
+                        break;
+                    default:
+                        glowColor = Color.BLACK;
+                }
+                int glowSize = 3;
+                icon = new JLabel(
+                        ImageBuffer.getOutlinedIconWithGlow(statValue,20, glowColor, glowSize));
+            }
+
+            if (!enchantText.isEmpty()) {
+                itemName += "<br>" + enchantText;
             }
             icon.setToolTipText("<html>" + itemName + "</html>");
             panel.add(icon);
