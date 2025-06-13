@@ -3,6 +3,7 @@ package tomato.realmshark;
 import org.xml.sax.SAXException;
 import packets.data.StatData;
 import packets.data.enums.StatType;
+import packets.reader.BufferReader;
 import tomato.backend.data.Entity;
 import util.StringXML;
 
@@ -156,17 +157,37 @@ public class ParseEnchants {
      * @return Decoded enchantment string.
      */
     public static String parse(String code) {
-        if (code.length() == 0) return "";
-        byte[] bytes = PcStatsDecoder.sixBitStringToBytes(code);
+        //System.out.println("Parsing enchantment code: " + code);
+        if (code.isEmpty()) return "";
 
-        ByteBuffer buff = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
-        buff.get();
-        short type = buff.getShort();
-
-        if (type == 1026) {
-            return getEnchantingString(buff, code);
+        byte[] rawBytes = PcStatsDecoder.sixBitStringToBytes(code);
+        // Expected buffer size: 1 byte header + 2 bytes type + 4 enchantments (8 bytes)
+        int expectedSize = 1 + 2 + 8;
+        if (rawBytes.length > expectedSize) {
+            rawBytes = Arrays.copyOfRange(rawBytes, 0, expectedSize);
         }
-        return "";
+
+        BufferReader byteBuffer = new BufferReader(
+                ByteBuffer.wrap(rawBytes).order(ByteOrder.LITTLE_ENDIAN)
+        );
+        byteBuffer.readByte();
+        StringBuilder res = new StringBuilder();
+        if (byteBuffer.readShort() != 1026) {
+            //System.out.println("Invalid enchantment header, skipping.");
+            return res.toString();
+        }
+        while (!byteBuffer.isBufferFullyParsed()) {
+            short enchantId = byteBuffer.readShort();
+            //System.out.println("Found enchantment ID: " + enchantId);
+            if (enchantId == -3) return res.toString();
+            else if (enchantId == -2) return res + "[locked]";
+            else if (enchantId == -1) return res + "empty";
+            String enchantName = getEnchantmentString(enchantId);
+            //System.out.println("Enchantment: " + enchantName);
+            res.append(enchantName);
+            res.append("\n");
+        }
+        return res.toString();
     }
 
     /**

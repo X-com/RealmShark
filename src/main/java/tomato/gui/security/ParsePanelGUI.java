@@ -10,16 +10,20 @@ import util.PropertiesManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.net.URI;
+import java.util.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.TreeMap;
+import java.util.List;
 
 public class ParsePanelGUI extends JPanel {
 
@@ -92,10 +96,34 @@ public class ParsePanelGUI extends JPanel {
 
         JButton buttonLeft = new JButton("Copy names to Clipboard");
         JButton buttonRight = new JButton("Copy all to Clipboard");
-        buttonLeft.addActionListener(e -> clicked(false));
-        buttonRight.addActionListener(e -> clicked(true));
         buttons.add(buttonLeft);
         buttons.add(buttonRight);
+        buttonLeft.setToolTipText("<html>Click: Copy names to clipboard<br>Shift+Click: Export names as text file</html>");
+        buttonRight.setToolTipText("<html>Click: Copy all to clipboard<br>Shift+Click: Export as JSON file</html>");
+
+        buttonLeft.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if ((e.getModifiers() & InputEvent.SHIFT_MASK) != 0) {
+                    // Shift+click - save names to file
+                    saveNamesAsText();
+                } else {
+                    // Normal click - copy to clipboard
+                    clicked(false);
+                }
+            }
+        });
+
+        buttonRight.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if ((e.getModifiers() & InputEvent.SHIFT_MASK) != 0) {
+                    // Shift+click - save as JSON
+                    saveAsJson(getFilteredPlayers());
+                } else {
+                    // Normal click - copy to clipboard
+                    clicked(true);
+                }
+            }
+        });
 
         // Add Sort checkbox to the buttons panel
         String stateSortCheckBox = PropertiesManager.getProperty("sortCheckBox");
@@ -172,45 +200,137 @@ public class ParsePanelGUI extends JPanel {
     }
 
     private void clicked(boolean full) {
-        // determine who's in scope to be copied
-        boolean onlyUnderReqs = copyOnlyUnderReqCheckbox.isSelected();
-
+        List<Player> players = getFilteredPlayers();
         StringBuilder sb = new StringBuilder();
-        if (full) sb.append("[\n");
-        boolean first = true;
-        int counter = 1;
-        int totalItems = playerDisplay.size();
 
-        for (PlayerBox playerBox : playerDisplay.values()) {
-            Player player = playerBox.player;
-
-            // we don't check if player meets filter criteria under default filter
-            if (currentFilter != null) {
-                // apply under reqs filter
-                if (onlyUnderReqs && !currentFilter.parsePlayer(player).isUnderReqs) continue;
-            }
-
-            if (full) {
-                if (!first) {
-                    sb.append(",").append("\n");
+        if (full) {
+            sb.append("[\n");
+            for (int i = 0; i < players.size(); i++) {
+                sb.append(players.get(i).toString());
+                if (i < players.size() - 1) {
+                    sb.append(",\n");
                 }
-                first = false;
-                sb.append(player);
-            } else {
-                sb.append(player.playerEntity.name());
-                if (counter != totalItems) sb.append(" ");
             }
-
-            counter++;
+            sb.append("\n]");
+        } else {
+            for (int i = 0; i < players.size(); i++) {
+                sb.append(players.get(i).playerEntity.name());
+                if (i < players.size() - 1) {
+                    sb.append(" ");
+                }
+            }
         }
-        if (full) sb.append("\n").append("]");
-        copyToClipboard(String.valueOf(sb));
+
+        copyToClipboard(sb.toString());
     }
 
     private static void copyToClipboard(String s) {
         StringSelection stringSelection = new StringSelection(s);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, null);
+    }
+
+    private List<Player> getFilteredPlayers() {
+        List<Player> players = new ArrayList<>();
+        boolean onlyUnderReqs = copyOnlyUnderReqCheckbox.isSelected();
+
+        for (PlayerBox playerBox : playerDisplay.values()) {
+            Player player = playerBox.player;
+
+            if (currentFilter != null && onlyUnderReqs && !currentFilter.parsePlayer(player).isUnderReqs) {
+                continue;
+            }
+
+            players.add(player);
+        }
+
+        return players;
+    }
+
+    // Method to save names as text
+    private void saveNamesAsText() {
+        List<Player> players = getFilteredPlayers();
+        StringBuilder sb = new StringBuilder();
+
+        for (Player player : players) {
+            sb.append(player.playerEntity.name()).append("\n");
+        }
+
+        saveToFile(sb.toString(), "ExportNames", ".txt");
+    }
+
+    // Method to save as JSON
+    private void saveAsJson(List<Player> players) {
+        StringBuilder sb = new StringBuilder("[\n");
+
+        for (int i = 0; i < players.size(); i++) {
+            sb.append(players.get(i).toString());
+            if (i < players.size() - 1) {
+                sb.append(",\n");
+            }
+        }
+        sb.append("\n]");
+
+        saveToFile(sb.toString(), "Export", ".json");
+    }
+
+    // Common file saving method
+    private void saveToFile(String content, String prefix, String extension) {
+        try {
+            // Create exports directory if needed
+            File directory = new File("exports");
+            if (!directory.exists()) {
+                directory.mkdir();
+            }
+
+            // Generate filename with timestamp
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMddyyyy_HHmmss");
+            String dateTimeString = dateFormat.format(new Date());
+            String filename = "exports/" + prefix + dateTimeString + extension;
+            File file = new File(filename);
+
+            // Write content to file
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write(content);
+                writer.flush();
+            }
+
+            // Copy the FILE OBJECT to clipboard (not just path/contents)
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(
+                    new Transferable() {
+                        public DataFlavor[] getTransferDataFlavors() {
+                            return new DataFlavor[]{DataFlavor.javaFileListFlavor};
+                        }
+
+                        public boolean isDataFlavorSupported(DataFlavor flavor) {
+                            return flavor.equals(DataFlavor.javaFileListFlavor);
+                        }
+
+                        public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
+                            if (!isDataFlavorSupported(flavor)) {
+                                throw new UnsupportedFlavorException(flavor);
+                            }
+                            return Collections.singletonList(file);
+                        }
+                    },
+                    null
+            );
+
+            // Show success message
+            JOptionPane.showMessageDialog(this,
+                    "Successfully exported data to:\n" + file.getAbsolutePath() +
+                            "\n\n(File object copied to clipboard - ready to paste)",
+                    "Export Successful",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Failed to export data:\n" + e.getMessage(),
+                    "Export Failed",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }
 
     private void guiUpdate() {
@@ -319,15 +439,55 @@ public class ParsePanelGUI extends JPanel {
         panel.setPreferredSize(new Dimension(100, 24));
         panel.setMaximumSize(new Dimension(100, 24));
         panel.setLayout(new GridLayout(1, 4));
+
+        // Get enchant info for all items
+        String[] enchants = ParseEnchants.extractEnchants(p.player.playerEntity);
+
         for (int i = 0; i < 4; i++) {
             int eq = p.player.inv[i];
-            p.icon[i] = new JLabel(ImageBuffer.getOutlinedIcon(eq, 20));
+            int enchantCount = getEnchantCount(enchants[i]);
+
+            // Use regular outline for non-enchanted items, glow for enchanted ones
+            ImageIcon icon;
+            if (enchantCount == 0) {
+                icon = ImageBuffer.getOutlinedIcon(eq, 20);
+            } else {
+                Color glowColor = getGlowColor(enchantCount);
+                int glowSize = getGlowSize(enchantCount);
+                icon = ImageBuffer.getOutlinedIconWithGlow(eq, 20, glowColor, glowSize);
+            }
+
+            p.icon[i] = new JLabel(icon);
             p.player.itemName[i] = IdToAsset.objectName(eq);
             panel.add(p.icon[i]);
         }
         p.updateToolTipText();
         mainPanel.add(panel);
         return width;
+    }
+
+    // Count number of enchants in the enchant string
+    private static int getEnchantCount(String enchantString) {
+        if (enchantString == null || enchantString.isEmpty()) {
+            return 0;
+        }
+        // Count the number of newlines in the parsed enchant string
+        return enchantString.split("\n").length;
+    }
+
+    // Determine glow color based on enchant count
+    private static Color getGlowColor(int enchantCount) {
+        switch (enchantCount) {
+            case 1: return new Color(0, 255, 0);
+            case 2: return new Color(0, 200, 255);
+            case 3: return new Color(200, 0, 255);
+            case 4: return new Color(255, 215, 0);
+            default: return Color.BLACK;
+        }
+    }
+
+    private static int getGlowSize(int enchantCount) {
+        return 3;
     }
 
     private static int guildLabel(PlayerBox playerBox, JPanel mainPanel, FontMetrics fm, int y, int width) {
@@ -547,15 +707,18 @@ public class ParsePanelGUI extends JPanel {
 
         public void update() {
             Entity playerEntity = this.player.playerEntity;
-
-            // Only update if equipment has changed
             boolean hasEquipmentChanged = player.updateInv();
             if (!hasEquipmentChanged) return;
 
-            setIcon(0, playerEntity.stat.get(StatType.INVENTORY_0_STAT).statValue);
-            setIcon(1, playerEntity.stat.get(StatType.INVENTORY_1_STAT).statValue);
-            setIcon(2, playerEntity.stat.get(StatType.INVENTORY_2_STAT).statValue);
-            setIcon(3, playerEntity.stat.get(StatType.INVENTORY_3_STAT).statValue);
+            // Get the raw enchant strings first
+            String[] enchantStrings = ParseEnchants.getEnchantStrings(playerEntity);
+
+            // Keep original stat access pattern but pass raw enchant strings
+            setIcon(0, playerEntity.stat.get(StatType.INVENTORY_0_STAT).statValue, enchantStrings[0]);
+            setIcon(1, playerEntity.stat.get(StatType.INVENTORY_1_STAT).statValue, enchantStrings[1]);
+            setIcon(2, playerEntity.stat.get(StatType.INVENTORY_2_STAT).statValue, enchantStrings[2]);
+            setIcon(3, playerEntity.stat.get(StatType.INVENTORY_3_STAT).statValue, enchantStrings[3]);
+
             cruciblePanel.setBackground(playerEntity.isCrucible() ? Color.RED : playerEntity.isSeasonal() ? seasonalColor : Color.WHITE);
             updateToolTipText();
             updatePointsPanel();
@@ -588,13 +751,23 @@ public class ParsePanelGUI extends JPanel {
             return pointsPanel;
         }
 
-        private void setIcon(int i, int eq) {
+        private void setIcon(int i, int eq, String enchant) {
             try {
-                icon[i].setIcon(ImageBuffer.getOutlinedIcon(eq, 20));
-//                icon[i].setToolTipText(String.format("<html>%s<br>%s</html>", IdToAsset.objectName(eq), enchant));
+                String parsedEnchant = ParseEnchants.parse(enchant);
+                int enchantCount = getEnchantCount(parsedEnchant);
+
+                if (enchantCount == 0) {
+                    // Use original outline for non-enchanted items
+                    icon[i].setIcon(ImageBuffer.getOutlinedIcon(eq, 20));
+                } else {
+                    // Enhanced glow for enchanted items
+                    Color glowColor = getGlowColor(enchantCount);
+                    int glowSize = getGlowSize(enchantCount);
+                    icon[i].setIcon(ImageBuffer.getOutlinedIconWithGlow(eq, 20, glowColor, glowSize));
+                }
                 player.itemName[i] = IdToAsset.objectName(eq);
             } catch (Exception e) {
-                System.err.println("Failed to set icon for player " + this.player.playerEntity.name() + " on item slot " + i + " for item ID " + eq);
+                e.printStackTrace();
             }
             INSTANCE.updateUI();
         }
