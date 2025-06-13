@@ -164,6 +164,110 @@ public class ImageBuffer {
         return i;
     }
 
+    public static ImageIcon getOutlinedIconWithGlow(int id, int size, Color glowColor, int glowSize) {
+        // Check if we have a matching hash for the desired id, size, glowColor and glowSize
+        long hashingNumber = (((long) id << 10) + size) ^ glowColor.getRGB() ^ glowSize;
+        if (outlinedImages.containsKey(hashingNumber)) return outlinedImages.get(hashingNumber);
+
+        BufferedImage img;
+        if (id == -1) {
+            img = ImageBuffer.getEmptyImg();
+        } else {
+            try {
+                img = ImageBuffer.getImage(id);
+            } catch (IOException e) {
+                img = ImageBuffer.getEmptyImg();
+            }
+        }
+
+        Image scaledInstance = img.getScaledInstance(size - 2, size - 2, Image.SCALE_SMOOTH);
+
+        int baseW = scaledInstance.getWidth(null);
+        int baseH = scaledInstance.getHeight(null);
+        // Increase the size of the image by the outline and glow on all 4 edges
+        int w = baseW + glowSize * 2 + 2;
+        int h = baseH + glowSize * 2 + 2;
+
+        // Base image with necessary padding added
+        BufferedImage base = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D gBase = base.createGraphics();
+        gBase.drawImage(scaledInstance, glowSize + 1, glowSize + 1, null);
+        gBase.dispose();
+
+        // Step 2: Outline image
+        BufferedImage outlineOnly = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage iconOnly = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        for (int y = 1; y < h - 1; y++) {
+            for (int x = 1; x < w - 1; x++) {
+                int rgb = base.getRGB(x, y);
+                int alpha = (rgb >> 24) & 0xff;
+
+                if (alpha == 0) {
+                    // Check neighbors for edge
+                    if (((base.getRGB(x + 1, y) >> 24) & 0xff) != 0 ||
+                            ((base.getRGB(x - 1, y) >> 24) & 0xff) != 0 ||
+                            ((base.getRGB(x, y + 1) >> 24) & 0xff) != 0 ||
+                            ((base.getRGB(x, y - 1) >> 24) & 0xff) != 0) {
+                        outlineOnly.setRGB(x, y, 0xFF000000); // black outline
+                    }
+                } else {
+                    iconOnly.setRGB(x, y, rgb); // icon itself
+                }
+            }
+        }
+
+        // Step 3: Create glow around the outline only
+        BufferedImage glow = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        for (int y = glowSize; y < h - glowSize; y++) {
+            for (int x = glowSize; x < w - glowSize; x++) {
+                int pixel = outlineOnly.getRGB(x, y);
+                int alpha = (pixel >> 24) & 0xff;
+                int rgb = pixel & 0x00FFFFFF;
+                if (alpha != 0 && rgb == 0x000000) {
+                    for (int dy = -glowSize; dy <= glowSize; dy++) {
+                        for (int dx = -glowSize; dx <= glowSize; dx++) {
+                            int nx = x + dx;
+                            int ny = y + dy;
+                            if (nx >= 0 && ny >= 0 && nx < w && ny < h) {
+                                int distSq = dx * dx + dy * dy;
+                                if (distSq <= glowSize * glowSize) {
+                                    int glowAlpha = Math.min(255, ((glowSize * glowSize - distSq) * 255) / (glowSize * glowSize));
+                                    int existing = glow.getRGB(nx, ny);
+                                    int existingAlpha = (existing >> 24) & 0xff;
+                                    int combinedAlpha = Math.max(existingAlpha, glowAlpha / 2);
+                                    glow.setRGB(nx, ny, (combinedAlpha << 24) | (glowColor.getRGB() & 0x00FFFFFF));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Mask the glow where icon has any alpha to prevent the glow bleeding into the icon
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                int iconAlpha = (base.getRGB(x, y) >> 24) & 0xff;
+                if (iconAlpha > 0) {
+                    // Block glow at this pixel
+                    glow.setRGB(x, y, 0x00000000); // fully transparent
+                }
+            }
+        }
+
+        // Step 4: Combine layers: glow + outlined icon + icon, in that order
+        BufferedImage finalImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D gFinal = finalImg.createGraphics();
+        gFinal.drawImage(glow, 0, 0, null);        // glow under everything
+        gFinal.drawImage(outlineOnly, 0, 0, null); // black outline
+        gFinal.drawImage(iconOnly, 0, 0, null);    // icon on top
+        gFinal.dispose();
+
+        ImageIcon icon = new ImageIcon(finalImg);
+        outlinedImages.put(hashingNumber, icon);
+        return icon;
+    }
+
     /**
      * Getter for transparent 8x8 image
      */
