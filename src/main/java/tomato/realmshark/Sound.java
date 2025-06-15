@@ -54,6 +54,7 @@ public class Sound {
         redbag = new Sound("sound/redbag.wav");
         goldbag = new Sound("sound/goldbag.wav");
         eggbag = new Sound("sound/eggbag.wav");
+		bluebag = new Sound("sound/bluebag.wav");
         trade = new Sound("sound/trade.wav");
         custom = new Sound("sound/custom.wav");
     }
