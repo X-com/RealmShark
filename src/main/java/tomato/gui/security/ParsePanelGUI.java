@@ -725,6 +725,10 @@ public class ParsePanelGUI extends JPanel {
         }
 
         private JPanel updatePointsPanel() {
+			if (pointsPanel == null) {
+				return null;
+			}
+			
             pointsPanel.removeAll();
 
             // Parse the player
