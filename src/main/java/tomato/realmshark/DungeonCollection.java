@@ -117,6 +117,7 @@ public class DungeonCollection {
         if (c.parasite_chambers == 0) list.add("Parasite Chambers");
         if (c.puppet_masters_encore == 0) list.add("Puppet Master's Encore");
         if (c.secluded_thicket == 0) list.add("Secluded Thicket");
+        if (c.spectral_penitentiary == 0) list.add("Spectral Penitentiary");
         if (c.sulfurous_wetlands == 0) list.add("Sulfurous Wetlands");
         if (c.the_hive == 0) list.add("The Hive");
         if (c.the_nest == 0) list.add("The Nest");
@@ -150,6 +151,7 @@ public class DungeonCollection {
         if (c.magic_woods == 0) list.add("Magic Woods");
         if (c.puppet_masters_theatre == 0) list.add("Puppet Master's Theatre");
         if (c.snake_pit == 0) list.add("Snake Pit");
+        if (c.spectral_penitentiary == 0) list.add("Spectral Penitentiary");
         if (c.sprite_world == 0) list.add("Sprite World");
         if (c.sulfurous_wetlands == 0) list.add("Sulfurous Wetlands");
         if (c.toxic_sewers == 0) list.add("Toxic Sewers");
@@ -249,6 +251,7 @@ public class DungeonCollection {
         if (c.puppet_masters_theatre == 0) list.add("Puppet Master's Theatre");
         if (c.secluded_thicket == 0) list.add("Secluded Thicket");
         if (c.snake_pit == 0) list.add("Snake Pit");
+        if (c.spectral_penitentiary == 0) list.add("Spectral Penitentiary");
         if (c.spider_den == 0) list.add("Spider Den");
         if (c.sprite_world == 0) list.add("Sprite World");
         if (c.sulfurous_wetlands == 0) list.add("Sulfurous Wetlands");
@@ -333,6 +336,7 @@ public class DungeonCollection {
         if (c.santas_workshop == 0) list.add("Santa's Workshop");
         if (c.secluded_thicket == 0) list.add("Secluded Thicket");
         if (c.snake_pit == 0) list.add("Snake Pit");
+        if (c.spectral_penitentiary == 0) list.add("Spectral Penitentiary");
         if (c.spider_den == 0) list.add("Spider Den");
         if (c.sprite_world == 0) list.add("Sprite World");
         if (c.sulfurous_wetlands == 0) list.add("Sulfurous Wetlands");
