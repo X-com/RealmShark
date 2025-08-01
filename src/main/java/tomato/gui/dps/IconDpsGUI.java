@@ -452,7 +452,7 @@ public class IconDpsGUI extends DisplayDpsGUI {
 
             // Get enchant count similar to ParsePanelGUI
             String parsedEnchant = ParseEnchants.parse(max.enchant);
-            int enchantCount = parsedEnchant.split("\n").length;
+            int enchantCount = parsedEnchant.isEmpty() ? 0 : parsedEnchant.split("\n").length;
 
             // Apply glow based on enchant count
             JLabel icon;
