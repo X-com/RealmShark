@@ -44,7 +44,7 @@ public class AssetExtractor {
     public static final String ASSETS_TILE_FILE_DIR_PATH = "assets/TileID.list";
     private static final String XML_DIR_PATH = "assets/xml";
     private static final File[] ASSET_FOLDERS = {new File("assets/flatbuffer/"), new File("assets/sprites/"), new File("assets/xml/")};
-    private static final String REALM_RES_PATH;
+    private static String REALM_RES_PATH;
     private static JOptionPane pane;
 
     static {
@@ -59,6 +59,14 @@ public class AssetExtractor {
 //        checkForExtraction(Version.VERSION);
         pane = new JOptionPane();
         extractAssetsFromXML();
+    }
+
+    /**
+     * Sets the resource path for finding where the game assets are found
+     * @param path Path to the realm resource file.
+     */
+    public static void setRealmResPath(String path) {
+        REALM_RES_PATH = path;
     }
 
     /**
