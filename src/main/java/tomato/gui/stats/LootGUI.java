@@ -17,6 +17,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
+import java.util.Set;
+import util.PropertiesManager;
 
 public class LootGUI extends JPanel {
 
@@ -328,6 +331,9 @@ public class LootGUI extends JPanel {
             enchants = udata.stringStatValue.split(",");
         }
 
+        // Load saved selected enchant IDs once for this rendering
+        Set<Short> savedEnchantIds = loadSavedEnchantIds();
+
         for (int i = 0; i < 8; i++) {
             StatData sd = entity.stat.get(StatType.INVENTORY_0_STAT.get() + i);
             if (sd == null || sd.statValue < 1) {
@@ -340,12 +346,30 @@ public class LootGUI extends JPanel {
             String itemName = IdToAsset.objectName(statValue);
             String enchantText = "";
             int enchantCount = 0;
+            boolean hasSavedMatch = false;
 
             if (enchants != null && i < enchants.length && !enchants[i].isEmpty() && !enchants[i].equals("AAIE_f_9__3__f8=")) {
                 enchantText = ParseEnchants.parse(enchants[i]);
                 if (!enchantText.isEmpty()) {
-                    enchantCount = enchantText.split("\n").length;
+                    String[] enchantNames = enchantText.split("\n");
+                    enchantCount = enchantNames.length;
                 }
+                // Check enchant IDs against saved selections
+                try {
+                    java.util.List<Short> ids = ParseEnchants.extractEnchantIds(enchants[i]);
+                    for (Short id : ids) {
+                        if (savedEnchantIds.contains(id)) {
+                            hasSavedMatch = true;
+                            break;
+                        }
+                    }
+                } catch (Exception ignore) {
+                }
+            }
+
+            // If it has a saved match, play a sound
+            if (hasSavedMatch) {
+                Sound.custom.play();
             }
 
             /* enchantCount Debug: Print enchantCount and itemName
@@ -388,6 +412,22 @@ public class LootGUI extends JPanel {
 
         mainPanel.add(panel);
         return width;
+    }
+
+    // Load saved enchant ids from PropertiesManager key 'enchantPing.selected'
+    private static Set<Short> loadSavedEnchantIds() {
+        Set<Short> s = new HashSet<>();
+        String saved = PropertiesManager.getProperty("enchantPing.selected");
+        if (saved == null || saved.isEmpty()) return s;
+        String[] parts = saved.split(",");
+        for (String p : parts) {
+            try {
+                short v = Short.parseShort(p.trim());
+                s.add(v);
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        return s;
     }
 
     private static void displayBagIcon(Entity entity, long lootTime, JPanel panel) {

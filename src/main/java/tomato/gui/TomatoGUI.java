@@ -10,6 +10,7 @@ import tomato.gui.dps.DpsDisplayOptions;
 import tomato.gui.dps.DpsGUI;
 import tomato.gui.character.CharacterPanelGUI;
 import tomato.gui.maingui.CustomPingGUI;
+import tomato.gui.maingui.EnchantPingGUI;
 import tomato.gui.stats.DungeonStats;
 import tomato.gui.stats.StatisticsGUI;
 import tomato.gui.keypop.KeypopGUI;
@@ -278,5 +279,12 @@ public class TomatoGUI {
      */
     public static void openEntityIdPing(){
         CustomPingGUI.open(data);
+    }
+
+    /**
+     * Opens enchantment ping window.
+     */
+    public static void openEnchantPing(){
+        EnchantPingGUI.open();
     }
 }
