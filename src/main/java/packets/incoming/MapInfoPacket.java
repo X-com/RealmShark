@@ -3,94 +3,47 @@ package packets.incoming;
 import packets.Packet;
 import packets.reader.BufferReader;
 
-import java.util.Arrays;
-
 /**
  * Received in response to the `HelloPacket`
  */
 public class MapInfoPacket extends Packet {
-    /**
-     * The width of the map
-     */
     public int width;
-    /**
-     * The height of the map
-     */
     public int height;
-    /**
-     * The name of the map
-     */
     public String name;
-    /**
-     * > Unknown.
-     */
     public String displayName;
-    /**
-     * The name of the realm
-     */
     public String realmName;
-    /**
-     * The difficulty rating of the map
-     */
-    public float difficulty;
-    /**
-     * The seed value for the client's PRNG
-     */
-    public long seed;
-    /**
-     * > Unknown
-     */
+    public int fp;
+    @Deprecated
+    public int seed;
     public int background;
-    /**
-     * Whether or not players can teleport in the map
-     */
+    public float difficulty;
     public boolean allowPlayerTeleport;
-    /**
-     * > Unknown
-     */
-    public boolean showDisplays;
-    /**
-     * unknown
-     */
     public boolean noSave;
-    /**
-     * The int of players allowed in this map
-     */
-    public short maxPlayers;
-    /**
-     * The time the connection to the game was started
-     */
-    public long gameOpenedTime;
-    /**
-     * Build version
-     */
-    public String buildVersion;
-    /**
-     * unknown
-     */
+    public boolean showDisplays;
+    public short maxPlayerCount;
+    public int gameOpenedTime;
+    public String versionNumber;
+    public short unknown1;
+    public short viewDistance;
+    public boolean unknown2;
     public int unknownInt;
+
     /**
-     * Background color
-     */
-    public int BGColor;
-    /**
-     * String of all modifiers the dungeon has.
+     * Dungeon modifiers (can be 0–4).
      */
     public String dungeonModifiers;
     public String dungeonModifiers2;
     public String dungeonModifiers3;
+    public String dungeonModifiers4;
+
     /**
-     * Max score of the realm
+     * Dungeon grade (e.g. "S", "A", "B", "C").
      */
-    public int maxRealmScore;
-    /**
-     * Current score of the realm
-     */
-    public int currentRealmScore;
-    /**
-     * Unknown
-     */
-    public byte unknownByte;
+    public String dungeonGrade;
+
+    public short bgColor;
+    public int maxRealmScore = -1;
+    public int currentRealmScore = -1;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
@@ -99,25 +52,58 @@ public class MapInfoPacket extends Packet {
         name = buffer.readString();
         displayName = buffer.readString();
         realmName = buffer.readString();
-        seed = buffer.readUnsignedInt();
+
+        fp = buffer.readInt();
+        seed = fp;
+
         background = buffer.readInt();
         difficulty = buffer.readFloat();
         allowPlayerTeleport = buffer.readBoolean();
         noSave = buffer.readBoolean();
         showDisplays = buffer.readBoolean();
-        maxPlayers = buffer.readShort();
-        gameOpenedTime = buffer.readUnsignedInt();
-        buildVersion = buffer.readString();
-        if (buffer.getRemainingBytes() > 0) {
-            BGColor = buffer.readInt();
+        maxPlayerCount = buffer.readShort();
+        gameOpenedTime = buffer.readInt();
+        versionNumber = buffer.readString();
+        unknown1 = buffer.readShort();
+        viewDistance = buffer.readShort();
+        unknown2 = buffer.readBoolean();
+        unknownInt = buffer.readInt();
+
+        // Modifiers string(s)
+        String modifiers = buffer.readString();
+        String[] parts = modifiers.split(";", -1); // allow unlimited, keep empties
+
+        dungeonModifiers = parts.length > 0 ? parts[0] : null;
+        dungeonModifiers2 = parts.length > 1 ? parts[1] : null;
+        dungeonModifiers3 = parts.length > 2 ? parts[2] : null;
+        dungeonModifiers4 = parts.length > 3 ? parts[3] : null;
+
+        // Handle grade safely
+        if (parts.length > 4 && parts[4].startsWith("|")) {
+            dungeonGrade = parts[4].substring(1); // remove leading "|"
+        } else {
+            String[] lastSplit = null;
+            if (dungeonModifiers4 != null && dungeonModifiers4.contains("|")) {
+                lastSplit = dungeonModifiers4.split("\\|", 2);
+                dungeonModifiers4 = lastSplit[0];
+            } else if (dungeonModifiers3 != null && dungeonModifiers3.contains("|")) {
+                lastSplit = dungeonModifiers3.split("\\|", 2);
+                dungeonModifiers3 = lastSplit[0];
+            } else if (dungeonModifiers2 != null && dungeonModifiers2.contains("|")) {
+                lastSplit = dungeonModifiers2.split("\\|", 2);
+                dungeonModifiers2 = lastSplit[0];
+            } else if (dungeonModifiers != null && dungeonModifiers.contains("|")) {
+                lastSplit = dungeonModifiers.split("\\|", 2);
+                dungeonModifiers = lastSplit[0];
+            }
+            if (lastSplit != null) {
+                dungeonGrade = lastSplit[1]; // no leading "|"
+            }
         }
-        unknownByte = buffer.readByte();
-        if (buffer.getRemainingBytes() > 0) {
-            dungeonModifiers = buffer.readString();
-            dungeonModifiers2 = buffer.readString();
-            dungeonModifiers3 = buffer.readString();
-        }
-        if (buffer.getRemainingBytes() > 7) {
+
+        bgColor = buffer.readShort();
+
+        if (buffer.getRemainingBytes() >= 8) {
             maxRealmScore = buffer.readInt();
             currentRealmScore = buffer.readInt();
         }
@@ -131,21 +117,28 @@ public class MapInfoPacket extends Packet {
                 "\n   name=" + name +
                 "\n   displayName=" + displayName +
                 "\n   realmName=" + realmName +
-                "\n   difficulty=" + difficulty +
-                "\n   seed=" + seed +
+                "\n   fp=" + fp +
+                "\n   seed (alias)=" + seed +
                 "\n   background=" + background +
+                "\n   difficulty=" + difficulty +
                 "\n   allowPlayerTeleport=" + allowPlayerTeleport +
-                "\n   showDisplays=" + showDisplays +
                 "\n   noSave=" + noSave +
-                "\n   maxPlayers=" + maxPlayers +
+                "\n   showDisplays=" + showDisplays +
+                "\n   maxPlayerCount=" + maxPlayerCount +
                 "\n   gameOpenedTime=" + gameOpenedTime +
-                "\n   buildVersion=" + buildVersion +
-                "\n   BGColor=" + BGColor +
-                "\n   unknownByte=" + unknownByte +
+                "\n   versionNumber=" + versionNumber +
+                "\n   unknown1=" + unknown1 +
+                "\n   viewDistance=" + viewDistance +
+                "\n   unknown2=" + unknown2 +
+                "\n   unknownInt=" + unknownInt +
                 "\n   dungeonModifiers=" + dungeonModifiers +
                 "\n   dungeonModifiers2=" + dungeonModifiers2 +
                 "\n   dungeonModifiers3=" + dungeonModifiers3 +
+                "\n   dungeonModifiers4=" + dungeonModifiers4 +
+                "\n   dungeonGrade=" + dungeonGrade +
+                "\n   bgColor=" + bgColor +
                 "\n   maxRealmScore=" + maxRealmScore +
-                "\n   currentRealmScore=" + currentRealmScore;
+                "\n   currentRealmScore=" + currentRealmScore +
+                "\n}";
     }
 }
