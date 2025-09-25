@@ -24,12 +24,14 @@ switch (org.gradle.internal.os.OperatingSystem.current()) {
 repositories {
     mavenCentral()
     maven {url="https://s01.oss.sonatype.org/content/repositories/snapshots/"}
+    maven {url="https://mvnrepository.com/artifact/org.slf4j/slf4j-nop/"}
 }
 
 dependencies {
     implementation files("libs/RealmShark-v1.1.jar")
     implementation 'com.github.weisj:darklaf-core:3.0.2'
     implementation 'org.java-websocket:Java-WebSocket:1.5.3'
+    runtimeOnly 'org.slf4j:slf4j-nop:2.0.17'
 }
 
 mainClassName = applicationName.toLowerCase() + '.' + applicationName
