@@ -71,6 +71,7 @@ public class TomatoData {
     private static final int MOONLIGHT_BOSS_FLAME_ID = 20518;
     private boolean updatedExaltStats = false;
     private ArrayList<Integer> idEntityPing = new ArrayList<>();
+    private ArrayList<String> itemPing = new ArrayList<>();
 
     /**
      * Sets the current realm.
@@ -763,5 +764,24 @@ public class TomatoData {
     }
     public ArrayList<Integer> getEntityIdPings() {
         return idEntityPing;
+    }
+
+    /** Get and set Items the player wants to ping when appearing.
+     *
+     * @param a Array of all the item values
+     */
+    public void setItemPing(ArrayList<String> a) {
+        itemPing = a;
+    }
+    public ArrayList<String> getItemPings() {
+        return itemPing;
+    }
+    public boolean isItemPing(String item) {
+        for(String s : itemPing) {
+            if(item.toLowerCase().contains(s.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

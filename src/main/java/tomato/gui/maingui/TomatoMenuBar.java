@@ -22,7 +22,7 @@ import java.awt.event.ActionListener;
  * Menu bar builder class
  */
 public class TomatoMenuBar implements ActionListener {
-    private JMenuItem about, borders, clearChat, bandwidth, javav, clearDpsLogs, theme, fontMenu, dpsOptions, chat, sound, chatPingMessage, entityIdPingMessage, enchantPingMessage;
+    private JMenuItem about, borders, clearChat, bandwidth, javav, clearDpsLogs, theme, fontMenu, dpsOptions, chat, sound, chatPingMessage, entityIdPingMessage, itemPingMessage, enchantPingMessage;
     private JRadioButtonMenuItem fontSize8, fontSize12, fontSize16, fontSize24, fontSize48, fontSizeCustom;
     private JRadioButtonMenuItem themeDarcula, themeighContrastDark, themeHighContrastLight, themeIntelliJ, themeSolarizedDark, themeSolarizedLight;
     private JRadioButtonMenuItem fontNameMonospaced, fontNameDialog, fontNameDialogInput, fontNameSerif, fontNameSansSerif, fontNameSegoe;
@@ -113,6 +113,9 @@ public class TomatoMenuBar implements ActionListener {
         entityIdPingMessage = new JMenuItem("Entity ID Pings");
         entityIdPingMessage.addActionListener(this);
 
+        itemPingMessage = new JMenuItem("Item Drop Pings");
+        itemPingMessage.addActionListener(this);
+
         enchantPingMessage = new JMenuItem("Enchant Pings");
         enchantPingMessage.addActionListener(this);
 
@@ -120,6 +123,7 @@ public class TomatoMenuBar implements ActionListener {
         sound.add(soundSlider);
         sound.add(new JSeparator(SwingConstants.HORIZONTAL));
         sound.add(entityIdPingMessage);
+        sound.add(itemPingMessage);
         sound.add(enchantPingMessage);
         sound.add(new JSeparator(SwingConstants.HORIZONTAL));
         sound.add(chatPing);
@@ -738,6 +742,8 @@ public class TomatoMenuBar implements ActionListener {
             TomatoGUI.openChatPingMessage();
         } else if (e.getSource() == entityIdPingMessage) { // entity id ping message
             TomatoGUI.openEntityIdPing();
+        } else if (e.getSource() == itemPingMessage) { // entity id ping message
+            TomatoGUI.openItemPing();
         } else if (e.getSource() == enchantPingMessage) { // enchant ping message
             TomatoGUI.openEnchantPing();
         } else if (e.getSource() == saveChat) { // chat save logs

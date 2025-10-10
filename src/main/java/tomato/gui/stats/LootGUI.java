@@ -348,6 +348,11 @@ public class LootGUI extends JPanel {
             int enchantCount = 0;
             boolean hasSavedMatch = false;
 
+            // Check for ping items and ping if found
+d            if (data.isItemPing(String.valueOf(statValue)) || data.isItemPing(itemName)) {
+                Sound.custom.play();
+            }
+
             if (enchants != null && i < enchants.length && !enchants[i].isEmpty() && !enchants[i].equals("AAIE_f_9__3__f8=")) {
                 enchantText = ParseEnchants.parse(enchants[i]);
                 if (!enchantText.isEmpty()) {

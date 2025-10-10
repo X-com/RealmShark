@@ -11,6 +11,7 @@ import tomato.backend.data.TomatoData;
 import tomato.gui.TomatoGUI;
 import tomato.gui.chat.ChatGUI;
 import tomato.gui.maingui.CustomPingGUI;
+import tomato.gui.maingui.ItemPingGUI;
 import tomato.gui.maingui.TomatoBandwidth;
 import tomato.gui.maingui.TomatoMenuBar;
 import tomato.gui.warnings.JavaOutOfMemoryGUI;
@@ -197,5 +198,6 @@ public class Tomato {
     private static void bootload(TomatoData data) {
         data.bootload();
         CustomPingGUI.loadIdPing(data);
+        ItemPingGUI.loadIdPing(data);
     }
 }
