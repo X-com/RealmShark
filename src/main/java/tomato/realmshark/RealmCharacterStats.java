@@ -70,7 +70,7 @@ public class RealmCharacterStats {
     public int heroic_undead_lair;
     public int hidden_interregnum;
     public int high_tech_terror;
-    public int ice_cave;
+    public int ice_citadel;
     public int ice_tomb;
     public int katalund;
     public int kogbold_steamworks;
@@ -218,7 +218,7 @@ public class RealmCharacterStats {
                 heroic_undead_lair,
                 hidden_interregnum,
                 high_tech_terror,
-                ice_cave,
+                ice_citadel,
                 ice_tomb,
                 katalund,
                 kogbold_steamworks,
@@ -377,8 +377,8 @@ public class RealmCharacterStats {
         if (readStat(bitArray, CharacterStatistics.DAVY_JONES_LOCKER.getPcStatId())) {
             davy_jones_locker = reader.readCompressedInt();
         }
-        if (readStat(bitArray, CharacterStatistics.ICE_CAVE.getPcStatId())) {
-            ice_cave = reader.readCompressedInt();
+        if (readStat(bitArray, CharacterStatistics.ICE_CITADEL.getPcStatId())) {
+            ice_citadel = reader.readCompressedInt();
         }
         if (readStat(bitArray, CharacterStatistics.DEADWATER_DOCKS.getPcStatId())) {
             deadwater_docks = reader.readCompressedInt();
@@ -643,7 +643,7 @@ public class RealmCharacterStats {
                 "\n   heroic_undead_lair=" + heroic_undead_lair +
                 "\n   hidden_interregnum=" + hidden_interregnum +
                 "\n   high_tech_terror=" + high_tech_terror +
-                "\n   ice_cave=" + ice_cave +
+                "\n   ice_citadel=" + ice_citadel +
                 "\n   ice_tomb=" + ice_tomb +
                 "\n   katalund=" + katalund +
                 "\n   kogbold_steamworks=" + kogbold_steamworks +
