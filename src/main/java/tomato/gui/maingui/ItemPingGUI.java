@@ -5,87 +5,169 @@ import tomato.realmshark.Sound;
 import util.PropertiesManager;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class ItemPingGUI extends JPanel {
 
-    private static ArrayList<JTextField> textFieldNames = new ArrayList<>();
+    // Table columns: 0 = item name/id (String), 1 = remove button (String placeholder)
+    private final JTable table;
+    private final DefaultTableModel model;
 
     public ItemPingGUI(ArrayList<String> pingMessages) {
         setLayout(new BorderLayout());
 
-        JPanel boxScroll = new JPanel();
-        JScrollPane scrollPane = new JScrollPane(boxScroll);
+        // Model with two columns: Item, Remove
+        model = new DefaultTableModel(new Object[]{"Item ID or Name to ping on", ""}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                // allow editing the item text (col 0) and allow pressing the remove button (col 1)
+                return column == 0 || column == 1;
+            }
 
-        int w = 260;
-        int h = 150;
-        scrollPane.setBounds(0, 0, w + 15, h);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(40);
-        JPanel contentPane = new JPanel(null);
-        contentPane.setPreferredSize(new Dimension(w, h));
-        contentPane.add(scrollPane);
-        add(contentPane, BorderLayout.CENTER);
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                if (columnIndex == 0) return String.class;
+                return Object.class;
+            }
+        };
 
-        addTextFields(boxScroll, pingMessages);
-    }
+        table = new JTable(model);
+        table.setRowHeight(28);
+        table.getColumnModel().getColumn(1).setMaxWidth(60);
 
-    private void addTextFields(JPanel mainPanel, ArrayList<String> pingMessages) {
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.add(new JLabel("Item ID or Name to ping on."), BorderLayout.NORTH);
+        // Button renderer and editor for the remove column
+        table.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
+        table.getColumnModel().getColumn(1).setCellEditor(new ButtonEditor());
 
-        JPanel body = new JPanel();
-        body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
-        topPanel.add(body, BorderLayout.CENTER);
-
+        // Populate initial rows
         if (pingMessages != null && !pingMessages.isEmpty()) {
             for (String s : pingMessages) {
-                JTextField comp1 = new JTextField();
-                comp1.setText(s);
-                textFieldNames.add(comp1);
-                body.add(comp1);
+                model.addRow(new Object[]{s, "-"});
             }
         } else {
-            JTextField comp1 = new JTextField();
-            textFieldNames.add(comp1);
-            body.add(comp1);
+            model.addRow(new Object[]{"", "-"});
         }
 
-        JPanel bot = new JPanel();
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+        add(scrollPane, BorderLayout.CENTER);
+
+        // Bottom panel with Add button
+        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton addButton = new JButton("+");
         addButton.addActionListener(e -> {
-            JTextField comp2 = new JTextField();
-            textFieldNames.add(comp2);
-            body.add(comp2);
-            revalidate();
+            model.addRow(new Object[]{"", "-"});
+            // scroll to bottom
+            Rectangle rect = table.getCellRect(model.getRowCount() - 1, 0, true);
+            table.scrollRectToVisible(rect);
         });
-        bot.setPreferredSize(new Dimension(250, 34));
-        bot.add(addButton);
-        topPanel.add(bot, BorderLayout.SOUTH);
+        bottom.add(addButton);
+        add(bottom, BorderLayout.SOUTH);
+    }
 
-        mainPanel.add(topPanel);
+    // Renderer for the remove button cell
+    private static class ButtonRenderer extends JButton implements TableCellRenderer {
+        public ButtonRenderer() {
+            setOpaque(true);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            setText(value == null ? "" : value.toString());
+            return this;
+        }
+    }
+
+    // Editor for the remove button cell
+    private class ButtonEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
+        private final JButton button = new JButton();
+        private Object currentValue;
+
+        public ButtonEditor() {
+            button.addActionListener(this);
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            this.currentValue = value;
+            button.setText(value == null ? "" : value.toString());
+            return button;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return currentValue;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // Determine the view row being edited, and map to model row
+            final int viewRow = table.getEditingRow();
+            final int modelRow = viewRow >= 0 ? table.convertRowIndexToModel(viewRow) : -1;
+
+            // Stop editing first (this will call fireEditingStopped internally)
+            // Then remove the row on the EDT after editing has fully stopped to avoid
+            // ArrayIndexOutOfBoundsException from listeners that observe editing state.
+            fireEditingStopped();
+
+            if (modelRow >= 0) {
+                SwingUtilities.invokeLater(() -> {
+                    if (modelRow < model.getRowCount()) {
+                        model.removeRow(modelRow);
+                        // Ensure there's always at least one empty row for convenience
+                        if (model.getRowCount() == 0) {
+                            model.addRow(new Object[]{"", "-"});
+                        }
+                    }
+                });
+            }
+        }
     }
 
     public static void open(TomatoData data) {
         Sound.custom.play();
-        textFieldNames.clear();
-        ItemPingGUI itemPing = new ItemPingGUI(data.getItemPings());
+        ItemPingGUI gui = new ItemPingGUI(data.getItemPings());
 
         JButton close = new JButton("Save");
-        JOptionPane pane = new JOptionPane(itemPing, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, new JButton[]{close}, close);
+        JOptionPane pane = new JOptionPane(gui, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, new JButton[]{close}, close);
         close.addActionListener(e -> {
             Window w = SwingUtilities.getWindowAncestor(close);
             pane.setValue(-1);
+
+            // If a cell is being edited, finish editing so the model reflects the latest text
+            if (gui.table.isEditing()) {
+                TableCellEditor editor = gui.table.getCellEditor();
+                if (editor != null) {
+                    try {
+                        editor.stopCellEditing();
+                    } catch (Exception ignored) {
+                        // If stopping the editor fails for any reason, proceed to dispose
+                    }
+                }
+            }
+
             w.dispose();
+
+            // collect items from table model
             ArrayList<String> arr = new ArrayList<>();
-            for (JTextField f : textFieldNames) {
-                String v = f.getText().trim();
-                if (!arr.contains(v) && !v.isEmpty()) {
+            DefaultTableModel m = gui.model;
+            for (int i = 0; i < m.getRowCount(); i++) {
+                Object o = m.getValueAt(i, 0);
+                if (o == null) continue;
+                String v = o.toString().trim();
+                if (!v.isEmpty() && !arr.contains(v)) {
                     arr.add(v);
                 }
             }
             setPingIds(data, arr);
         });
+
         JDialog dialog = pane.createDialog(null, "Custom Item Drop Ping");
 //        dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         dialog.setVisible(true);
@@ -93,7 +175,7 @@ public class ItemPingGUI extends JPanel {
 
     public static void setPingIds(TomatoData data, ArrayList<String> pingList) {
         data.setItemPing(pingList);
-        if (pingList.isEmpty()) {
+        if (pingList == null || pingList.isEmpty()) {
             PropertiesManager.setProperties("itemPings", "");
             return;
         }
