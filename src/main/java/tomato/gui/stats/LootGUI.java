@@ -349,7 +349,7 @@ public class LootGUI extends JPanel {
             boolean hasSavedMatch = false;
 
             // Check for ping items and ping if found
-d            if (data.isItemPing(String.valueOf(statValue)) || data.isItemPing(itemName)) {
+            if (data.isItemPing(String.valueOf(statValue)) || data.isItemPing(itemName)) {
                 Sound.custom.play();
             }
 

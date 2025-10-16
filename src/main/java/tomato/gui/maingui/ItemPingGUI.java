@@ -101,7 +101,7 @@ public class ItemPingGUI extends JPanel {
         for (String i : pingList) {
             s.append("§").append(i);
         }
-        PropertiesManager.setProperties("itemPings", s.substring(2));
+        PropertiesManager.setProperties("itemPings", s.substring(1));
     }
 
     public static void loadIdPing(TomatoData data) {
