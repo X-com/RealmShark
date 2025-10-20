@@ -23,6 +23,7 @@ import tomato.realmshark.RealmCharacterStats;
 import tomato.realmshark.Sound;
 import tomato.realmshark.enums.CharacterClass;
 import tomato.realmshark.enums.LootBags;
+import util.PropertiesManager;
 import util.RNG;
 
 import java.io.IOException;
@@ -70,8 +71,8 @@ public class TomatoData {
     private int moonlightFlames = 0;
     private static final int MOONLIGHT_BOSS_FLAME_ID = 20518;
     private boolean updatedExaltStats = false;
+    private final HashMap<String, ArrayList<String>> propLists = new HashMap<>();
     private ArrayList<Integer> idEntityPing = new ArrayList<>();
-    private ArrayList<String> itemPing = new ArrayList<>();
 
     /**
      * Sets the current realm.
@@ -771,17 +772,76 @@ public class TomatoData {
      * @param a Array of all the item values
      */
     public void setItemPing(ArrayList<String> a) {
-        itemPing = a;
+        savePropList(a, "itemPings");
     }
+
     public ArrayList<String> getItemPings() {
-        return itemPing;
+        return propLists.get("itemPings");
     }
+
     public boolean isItemPing(String item) {
+        ArrayList<String> itemPing = propLists.get("itemPings");
         for(String s : itemPing) {
             if(item.toLowerCase().contains(s.toLowerCase())) {
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * Get a list property from the data storage.
+     *
+     * @param propName  Property name to get
+     * @param list      Property list to set
+     */
+    public void setPropList(String propName, ArrayList<String> list) {
+        propLists.put(propName, list);
+    }
+
+    /**
+     * Load a list property from the properties manager into the data storage.
+     *
+     * @param propName  Property name to load
+     * @param delimiter Delimiter used to split the property string
+     */
+    public void loadPropList(String propName, String delimiter) {
+        ArrayList<String> arr = new ArrayList<>();
+        String messages = PropertiesManager.getProperty(propName);
+        if (messages == null) return;
+        for (String s : messages.split(delimiter)) {
+            if (!s.isEmpty()) {
+                arr.add(s);
+            }
+        }
+        this.setPropList(propName, arr);
+    }
+
+    public void loadPropList(String propName) {
+        loadPropList(propName, "§");
+    }
+
+    /**
+     * Save a list property from the data storage into the properties manager.
+     *
+     * @param list      List to save
+     * @param propName  Property name to save
+     * @param delimiter Delimiter used to join the list into a string
+     */
+    public void savePropList(ArrayList<String> list, String propName, String delimiter) {
+        this.setPropList(propName, list);
+        if (list == null || list.isEmpty()) {
+            PropertiesManager.setProperties(propName, "");
+            return;
+        }
+        StringBuilder s = new StringBuilder();
+        for (String i : list) {
+            s.append(delimiter).append(i);
+        }
+        PropertiesManager.setProperties(propName, s.substring(1));
+    }
+
+    public void savePropList(ArrayList<String> list, String propName) {
+        savePropList(list, propName, "§");
     }
 }

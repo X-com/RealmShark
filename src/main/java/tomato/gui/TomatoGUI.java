@@ -9,13 +9,10 @@ import tomato.gui.chat.ChatPingGUI;
 import tomato.gui.dps.DpsDisplayOptions;
 import tomato.gui.dps.DpsGUI;
 import tomato.gui.character.CharacterPanelGUI;
-import tomato.gui.maingui.CustomPingGUI;
-import tomato.gui.maingui.EnchantPingGUI;
-import tomato.gui.maingui.ItemPingGUI;
+import tomato.gui.maingui.*;
 import tomato.gui.stats.DungeonStats;
 import tomato.gui.stats.StatisticsGUI;
 import tomato.gui.keypop.KeypopGUI;
-import tomato.gui.maingui.TomatoMenuBar;
 import tomato.gui.myinfo.MyInfoGUI;
 import tomato.gui.quest.QuestGUI;
 import tomato.gui.security.ParsePanelGUI;
@@ -285,9 +282,7 @@ public class TomatoGUI {
     /**
      * Opens entity ID ping window.
      */
-    public static void openItemPing(){
-        ItemPingGUI.open(data);
-    }
+    public static void openItemPing(){ new ItemPingGUI(data).open(); }
 
     /**
      * Opens enchantment ping window.
