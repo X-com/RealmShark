@@ -1,6 +1,8 @@
 package tomato.backend.data;
 
 import assets.IdToAsset;
+import java.io.IOException;
+import java.util.*;
 import packets.Packet;
 import packets.data.ObjectData;
 import packets.data.StatData;
@@ -26,14 +28,12 @@ import tomato.realmshark.enums.LootBags;
 import util.PropertiesManager;
 import util.RNG;
 
-import java.io.IOException;
-import java.util.*;
-
 /**
  * Main data class storing all incoming packet data regarding an instance the user is in.
  * Resets the data after leaving the instance.
  */
 public class TomatoData {
+
     private String token;
     public MapInfoPacket map;
     protected int worldPlayerId;
@@ -57,21 +57,28 @@ public class TomatoData {
     public ArrayList<RealmCharacter> chars;
     public HashMap<Integer, RealmCharacter> charMap;
     public ArrayList<DpsData> dpsData = new ArrayList<>();
-    protected ArrayList<NotificationPacket> deathNotifications = new ArrayList<>();
+    protected ArrayList<NotificationPacket> deathNotifications =
+        new ArrayList<>();
     protected final HashMap<Integer, Entity> dropList = new HashMap<>();
     private ArrayList<Packet> dpsPacketLog = new ArrayList<>();
     private boolean petyard;
     private RealmCharacterStats currentCharacterStats;
     private final TreeSet<Integer> lootBags = new TreeSet<>();
     private int lootTickToggle = 0;
-    private final ArrayList<Entity>[] lootTickContainer = new ArrayList[]{new ArrayList<>(), new ArrayList<>()};
+    private final ArrayList<Entity>[] lootTickContainer = new ArrayList[] {
+        new ArrayList<>(),
+        new ArrayList<>(),
+    };
     private final ArrayList<Entity> killedEntitys = new ArrayList<>();
-    protected final HashMap<Long, Projectile> enemyProjectiles = new HashMap<>();
+
+    protected final HashMap<Long, Projectile> enemyProjectiles =
+        new HashMap<>();
     private final DungeonStatData dungeonStatData = new DungeonStatData();
     private int moonlightFlames = 0;
     private static final int MOONLIGHT_BOSS_FLAME_ID = 20518;
     private boolean updatedExaltStats = false;
-    private final HashMap<String, ArrayList<String>> propLists = new HashMap<>();
+    private final HashMap<String, ArrayList<String>> propLists =
+        new HashMap<>();
 
     /**
      * Sets the current realm.
@@ -117,7 +124,10 @@ public class TomatoData {
     }
 
     private void updateDungeonStats(int charId, String str) {
-        if (currentCharacterStats == null || !currentCharacterStats.pcStats.equals(str)) {
+        if (
+            currentCharacterStats == null ||
+            !currentCharacterStats.pcStats.equals(str)
+        ) {
             currentCharacterStats = new RealmCharacterStats();
             currentCharacterStats.decode(str);
         }
@@ -126,7 +136,9 @@ public class TomatoData {
             return;
         }
         RealmCharacter r = charMap.get(charId);
-        if (r != null && r.charStats != null && !r.charStats.pcStats.equals(str)) {
+        if (
+            r != null && r.charStats != null && !r.charStats.pcStats.equals(str)
+        ) {
             r.updateCharStats(currentCharacterStats);
             CharacterStatsGUI.updateRealmChars();
             CharacterCollectionGUI.updateRealmChars();
@@ -185,9 +197,12 @@ public class TomatoData {
             Entity e = entityList.get(dropId);
             dropList.put(dropId, e);
             if (e != null) {
-//                e.entityDropped(timePc);
+                //                e.entityDropped(timePc);
                 if (isPlayerEntity(e.objectType)) {
-                    for (Map.Entry<Integer, Entity> dropCheck : entityHitList.entrySet()) {
+                    for (Map.Entry<
+                        Integer,
+                        Entity
+                    > dropCheck : entityHitList.entrySet()) {
                         int k = dropCheck.getKey();
                         if (!dropList.containsKey(k)) {
                             dropCheck.getValue().addPlayerDrop(dropId, timePc);
@@ -195,6 +210,7 @@ public class TomatoData {
                     }
                 }
             }
+
             if (entityHitList.containsKey(dropId)) {
                 killedEntitys.add(e);
             }
@@ -212,7 +228,9 @@ public class TomatoData {
     private void entityUpdate(ObjectData object) {
         int id = object.status.objectId;
         boolean newObject = !entityList.containsKey(id);
-        Entity entity = entityList.computeIfAbsent(id, idd -> new Entity(this, idd, timePc));
+        Entity entity = entityList.computeIfAbsent(id, idd ->
+            new Entity(this, idd, timePc)
+        );
         int idType = object.objectType;
         entity.entityUpdate(idType, object.status, timePc);
 
@@ -249,46 +267,73 @@ public class TomatoData {
      */
     private void customSoundAlert(int idType) {
         ArrayList<String> idEntityPing = getEntityIdPings();
-        for(String id : idEntityPing) {
-            if(String.valueOf(idType).equals(id)) {
-                Sound.custom.play();
-                break;
+        if (idEntityPing != null) {
+            for (String id : idEntityPing) {
+                if (String.valueOf(idType).equals(id)) {
+                    Sound.custom.play();
+                    break;
+                }
             }
         }
     }
 
     /**
+
      * Method to connect loot bag drops to mobs that drop them.
-     * If an entity drops a tick after loot bag shows up and is
-     * close enough it is most likely the entity that dropped the bag.
+     * Attribution logic is centralized in LootAttributionManager.
      */
     private void lootTick() {
         lootTickToggle ^= 1;
+
         if (!lootTickContainer[lootTickToggle].isEmpty()) {
             try {
+                // First pass: determine mob associations and collect results (do not send yet)
+                lootAttribution.beginLootTick(map != null ? map.seed : -1);
+                tomato.realmshark.SendLoot.beginLootTick(
+                    map != null ? map.seed : -1
+                );
+
+                ArrayList<Entity> processedBags = new ArrayList<>();
+
+                ArrayList<Entity> processedDroppers = new ArrayList<>();
+
                 for (Entity bag : lootTickContainer[lootTickToggle]) {
-                    double dist = 0;
-                    Entity mob = null;
-                    for (Entity k : killedEntitys) {
-                        double d = bag.distSqrd(k.pos);
-                        if (mob == null) {
-                            dist = d;
-                            mob = k;
-                        } else if (d < dist) {
-                            dist = d;
-                            mob = k;
-                        }
-                    }
+                    Entity mob = lootAttribution.findAttributionForBag(
+                        this,
+                        bag,
+                        killedEntitys,
+                        map != null ? map.seed : -1,
+                        timePc
+                    );
+                    processedBags.add(bag);
+                    processedDroppers.add(mob);
+                }
+
+                // Apply any per-tick overrides (e.g., HM/TR variants) after all fabricated attributions are known
+                lootAttribution.applyPerTickOverrides();
+
+                // Second pass: update stats + GUI + SendLoot (SendLoot invoked inside LootGUI)
+
+                for (int i = 0; i < processedBags.size(); i++) {
+                    Entity bag = processedBags.get(i);
+
+                    Entity mob = processedDroppers.get(i);
+
                     if (map != null) {
                         dungeonStatData.updateItems(map.name, mob, bag);
                     }
+
                     LootGUI.update(map, bag, mob, player, timePc);
                 }
+
+                // Finish tick (decrement windows and reset if necessary)
+                lootAttribution.endLootTick();
             } catch (Exception e) {
                 e.printStackTrace();
             }
             lootTickContainer[lootTickToggle].clear();
         }
+
         if (!killedEntitys.isEmpty()) {
             killedEntitys.clear();
         }
@@ -358,7 +403,9 @@ public class TomatoData {
         setTime(p.serverRealTimeMS);
         for (int i = 0; i < p.status.length; i++) {
             int id = p.status[i].objectId;
-            Entity entity = entityList.computeIfAbsent(id, idd -> new Entity(this, idd, timePc));
+            Entity entity = entityList.computeIfAbsent(id, idd ->
+                new Entity(this, idd, timePc)
+            );
             entity.updateStats(p.status[i], timePc);
         }
         SecurityAbilityUseCheck.decreaseDecoyCounter();
@@ -371,7 +418,12 @@ public class TomatoData {
      * @param p Projectile info.
      */
     public void playerShoot(PlayerShootPacket p) {
-        projectiles[p.bulletId] = new Projectile(rng, player, p.weaponId, p.projectileId);
+        projectiles[p.bulletId] = new Projectile(
+            rng,
+            player,
+            p.weaponId,
+            p.projectileId
+        );
     }
 
     /**
@@ -381,12 +433,22 @@ public class TomatoData {
      */
     public void serverPlayerShoot(ServerPlayerShootPacket p) {
         if (p.bulletCount > 1) {
-            Projectile projectile = new Projectile(p.damage, p.containerType, p.bulletType, p.summonerId);
+            Projectile projectile = new Projectile(
+                p.damage,
+                p.containerType,
+                p.bulletType,
+                p.summonerId
+            );
             for (int j = p.bulletId; j < p.bulletId + p.bulletCount; j++) {
-                projectiles[j % 256 + 256] = projectile;
+                projectiles[(j % 256) + 256] = projectile;
             }
         } else if (p.bulletId > 255 && p.bulletId < 512) {
-            Projectile projectile = new Projectile(p.damage, p.containerType, p.bulletType, p.summonerId);
+            Projectile projectile = new Projectile(
+                p.damage,
+                p.containerType,
+                p.bulletType,
+                p.summonerId
+            );
             projectiles[p.bulletId] = projectile;
         }
     }
@@ -399,7 +461,9 @@ public class TomatoData {
     public void enemtyHit(EnemyHitPacket p) {
         Projectile projectile = projectiles[p.bulletId];
         int id = p.targetId;
-        Entity target = entityList.computeIfAbsent(id, idd -> new Entity(this, idd, timePc));
+        Entity target = entityList.computeIfAbsent(id, idd ->
+            new Entity(this, idd, timePc)
+        );
         int shooterId = p.shooterID;
         if (projectile != null && projectile.getSummonerId() != 0) {
             shooterId = projectile.getSummonerId();
@@ -422,7 +486,9 @@ public class TomatoData {
      */
     public void damage(DamagePacket p) {
         int id = p.targetId;
-        Entity target = entityList.computeIfAbsent(id, idd -> new Entity(this, idd, timePc));
+        Entity target = entityList.computeIfAbsent(id, idd ->
+            new Entity(this, idd, timePc)
+        );
         Entity attacker = playerList.get(p.objectId);
         if (p.damageAmount > 0) {
             Projectile projectile = new Projectile(p.damageAmount);
@@ -464,8 +530,7 @@ public class TomatoData {
             int btype = p.bulletType;
             try {
                 ap = IdToAsset.getIdProjectileArmorPierces(etype, btype);
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
         }
         for (int i = 0; i < p.numShots; i++) {
             long id = p.ownerId + ((long) (p.bulletId + i) << 24);
@@ -481,7 +546,11 @@ public class TomatoData {
     public void aoeDamage(AoePacket p) {
         if (player != null) {
             if (player.distSqrd(p.pos) < (p.radius * p.radius)) {
-                player.userDamageTaken(null, timePc, new Projectile(p.damage, p.armorPiercing));
+                player.userDamageTaken(
+                    null,
+                    timePc,
+                    new Projectile(p.damage, p.armorPiercing)
+                );
             }
         }
     }
@@ -508,7 +577,7 @@ public class TomatoData {
      */
     private static boolean isLoggedDungeon(String dungName) {
         switch (dungName) {
-            case "{s.vault}":  // vault
+            case "{s.vault}": // vault
             case "Daily Quest Room": // quest room
             case "Pet Yard": // pet yard
             case "{s.guildhall}": // guild hall
@@ -528,7 +597,16 @@ public class TomatoData {
         charId = -1;
         time = -1;
         if (map != null && isLoggedDungeon(map.displayName)) {
-            dpsData.add(new DpsData(map, entityHitList, deathNotifications, dungeonTime(), timePcFirst, dpsPacketLog));
+            dpsData.add(
+                new DpsData(
+                    map,
+                    entityHitList,
+                    deathNotifications,
+                    dungeonTime(),
+                    timePcFirst,
+                    dpsPacketLog
+                )
+            );
             DpsGUI.updateLabel();
         }
         if (map != null) {
@@ -544,10 +622,15 @@ public class TomatoData {
         crystalTracker.clear();
         playerListUpdated.clear();
         dropList.clear();
+
         lootBags.clear();
+
         enemyProjectiles.clear();
+
         deathNotifications = new ArrayList<>();
+
         entityHitList = new HashMap<>();
+
         for (int[] row : mapTiles) {
             Arrays.fill(row, 0);
         }
@@ -565,7 +648,16 @@ public class TomatoData {
     public void exaltUpdate(ExaltationUpdatePacket p) {
         int[] exalts = RealmCharacter.exalts.get((int) p.objType);
         if (exalts == null) return;
-        int[] update = new int[]{p.dexterityProgress, p.speedProgress, p.vitalityProgress, p.wisdomProgress, p.defenseProgress, p.attackProgress, p.manaProgress, p.healthProgress};
+        int[] update = new int[] {
+            p.dexterityProgress,
+            p.speedProgress,
+            p.vitalityProgress,
+            p.wisdomProgress,
+            p.defenseProgress,
+            p.attackProgress,
+            p.manaProgress,
+            p.healthProgress,
+        };
         if (!Arrays.equals(exalts, update)) {
             RealmCharacter.exalts.put((int) p.objType, update);
             CharacterExaltGUI.updateExalts();
@@ -630,20 +722,33 @@ public class TomatoData {
 
         pet.stat.get(StatType.SKIN_ID).statValue = currentChar.petSkin;
         pet.stat.get(StatType.PET_TYPE_STAT).statValue = currentChar.petType;
-        pet.stat.get(StatType.PET_NAME_STAT).stringStatValue = currentChar.petName;
-        pet.stat.get(StatType.PET_RARITY_STAT).statValue = currentChar.petRarity;
-        pet.stat.get(StatType.PET_INSTANCE_ID_STAT).statValue = currentChar.petInstanceId;
-        pet.stat.get(StatType.PET_MAX_ABILITY_POWER_STAT).statValue = currentChar.petMaxAbilityPower;
+        pet.stat.get(StatType.PET_NAME_STAT).stringStatValue =
+            currentChar.petName;
+        pet.stat.get(StatType.PET_RARITY_STAT).statValue =
+            currentChar.petRarity;
+        pet.stat.get(StatType.PET_INSTANCE_ID_STAT).statValue =
+            currentChar.petInstanceId;
+        pet.stat.get(StatType.PET_MAX_ABILITY_POWER_STAT).statValue =
+            currentChar.petMaxAbilityPower;
 
-        pet.stat.get(StatType.PET_FIRST_ABILITY_POINT_STAT).statValue = currentChar.petAbilitys[0];
-        pet.stat.get(StatType.PET_FIRST_ABILITY_POWER_STAT).statValue = currentChar.petAbilitys[1];
-        pet.stat.get(StatType.PET_FIRST_ABILITY_TYPE_STAT).statValue = currentChar.petAbilitys[2];
-        pet.stat.get(StatType.PET_SECOND_ABILITY_POINT_STAT).statValue = currentChar.petAbilitys[3];
-        pet.stat.get(StatType.PET_SECOND_ABILITY_POWER_STAT).statValue = currentChar.petAbilitys[4];
-        pet.stat.get(StatType.PET_SECOND_ABILITY_TYPE_STAT).statValue = currentChar.petAbilitys[5];
-        pet.stat.get(StatType.PET_THIRD_ABILITY_POINT_STAT).statValue = currentChar.petAbilitys[6];
-        pet.stat.get(StatType.PET_THIRD_ABILITY_POWER_STAT).statValue = currentChar.petAbilitys[7];
-        pet.stat.get(StatType.PET_THIRD_ABILITY_TYPE_STAT).statValue = currentChar.petAbilitys[8];
+        pet.stat.get(StatType.PET_FIRST_ABILITY_POINT_STAT).statValue =
+            currentChar.petAbilitys[0];
+        pet.stat.get(StatType.PET_FIRST_ABILITY_POWER_STAT).statValue =
+            currentChar.petAbilitys[1];
+        pet.stat.get(StatType.PET_FIRST_ABILITY_TYPE_STAT).statValue =
+            currentChar.petAbilitys[2];
+        pet.stat.get(StatType.PET_SECOND_ABILITY_POINT_STAT).statValue =
+            currentChar.petAbilitys[3];
+        pet.stat.get(StatType.PET_SECOND_ABILITY_POWER_STAT).statValue =
+            currentChar.petAbilitys[4];
+        pet.stat.get(StatType.PET_SECOND_ABILITY_TYPE_STAT).statValue =
+            currentChar.petAbilitys[5];
+        pet.stat.get(StatType.PET_THIRD_ABILITY_POINT_STAT).statValue =
+            currentChar.petAbilitys[6];
+        pet.stat.get(StatType.PET_THIRD_ABILITY_POWER_STAT).statValue =
+            currentChar.petAbilitys[7];
+        pet.stat.get(StatType.PET_THIRD_ABILITY_TYPE_STAT).statValue =
+            currentChar.petAbilitys[8];
     }
 
     /**
@@ -656,7 +761,9 @@ public class TomatoData {
     public void charListHttpRequest() {
         try {
             String httpString = HttpCharListRequest.getChartList(token);
-            ArrayList<RealmCharacter> charList = RealmCharacter.getCharList(httpString);
+            ArrayList<RealmCharacter> charList = RealmCharacter.getCharList(
+                httpString
+            );
             if (charList != null) characterListUpdate(charList);
         } catch (IOException e) {
             e.printStackTrace();
@@ -693,13 +800,23 @@ public class TomatoData {
      *
      * @param p Text info.
      */
+
     public void text(TextPacket p) {
-        if (p.text.equals("I SAID DO NOT INTERRUPT ME! For this I shall hasten your end!")) {
+        if (
+            p.text.equals(
+                "I SAID DO NOT INTERRUPT ME! For this I shall hasten your end!"
+            )
+        ) {
             Entity e = entityList.get(p.objectId);
+
             if (e != null) {
                 e.dammahCountered = true;
             }
         }
+
+        // Centralized loot attribution trigger handling
+        lootAttribution.handleTextPacket(p, map != null ? map.seed : -1);
+
         ChatGUI.updateChat(p);
     }
 
@@ -741,6 +858,15 @@ public class TomatoData {
     }
 
     /**
+     * Gets the current character ID.
+     *
+     * @return Current character ID, or -1 if no character is loaded.
+     */
+    public int getCharId() {
+        return charId;
+    }
+
+    /**
      * Gets the number of flames from moonlight village boss phases
      *
      * @return Moonlight village boss flames
@@ -763,8 +889,10 @@ public class TomatoData {
     public void setChatMessagePings(ArrayList<String> a) {
         savePropList(a, "chatPingMessages");
     }
+
     public ArrayList<String> getChatMessagePings() {
-        return propLists.get("chatPingMessages");
+        ArrayList<String> result = propLists.get("chatPingMessages");
+        return result != null ? result : new ArrayList<>();
     }
 
     /** Get and set Entity ID's the player wants to ping when appearing.
@@ -774,8 +902,10 @@ public class TomatoData {
     public void setIdEntityPing(ArrayList<String> a) {
         savePropList(a, "entityIdPings");
     }
+
     public ArrayList<String> getEntityIdPings() {
-        return propLists.get("entityIdPings");
+        ArrayList<String> result = propLists.get("entityIdPings");
+        return result != null ? result : new ArrayList<>();
     }
 
     /** Get and set Items the player wants to ping when appearing.
@@ -787,14 +917,17 @@ public class TomatoData {
     }
 
     public ArrayList<String> getItemPings() {
-        return propLists.get("itemPings");
+        ArrayList<String> result = propLists.get("itemPings");
+        return result != null ? result : new ArrayList<>();
     }
 
     public boolean isItemPing(String item) {
         ArrayList<String> itemPing = propLists.get("itemPings");
-        for(String s : itemPing) {
-            if(item.toLowerCase().contains(s.toLowerCase())) {
-                return true;
+        if (itemPing != null) {
+            for (String s : itemPing) {
+                if (item.toLowerCase().contains(s.toLowerCase())) {
+                    return true;
+                }
             }
         }
         return false;
@@ -839,7 +972,11 @@ public class TomatoData {
      * @param propName  Property name to save
      * @param delimiter Delimiter used to join the list into a string
      */
-    public void savePropList(ArrayList<String> list, String propName, String delimiter) {
+    public void savePropList(
+        ArrayList<String> list,
+        String propName,
+        String delimiter
+    ) {
         this.setPropList(propName, list);
         if (list == null || list.isEmpty()) {
             PropertiesManager.setProperties(propName, "");
@@ -854,5 +991,246 @@ public class TomatoData {
 
     public void savePropList(ArrayList<String> list, String propName) {
         savePropList(list, propName, "§");
+    }
+
+    // --- Moonlight Village Umi / Miko loot & other attribution support ---
+    // Umi (20493) and Miko (20451) wander off without death packets.
+    // After their concluding dialogue lines we attribute ALL loot bags that appear
+    // on the very next lootTick (only that tick) to the corresponding mob id.
+    // Implementation: text() sets nextTickAttributionMobId, lootTick() consumes it once.
+
+    // Centralized loot attribution manager instance
+    private final LootAttributionManager lootAttribution =
+        new LootAttributionManager();
+
+    // Centralized manager for next-tick loot attribution logic
+    private static class LootAttributionManager {
+
+        // --- Known special mob IDs ---
+        private static final int UMI_KITSUNE_ID = 20493;
+        private static final int MIKO_DANCER_ID = 20451;
+        private static final int VOID_ENTITY_ID = 45076;
+        private static final int BRIDGE_SENTINEL_ID = 29003;
+        private static final int TWILIGHT_ARCHMAGE_ID = 29021;
+        private static final int ACCURSED_KING_ID = 29039;
+
+        // --- State for attribution windows ---
+        private int nextTickAttributionMobId = -1; // -1 = no attribution pending
+
+        private String forcedVariantSuffix = null; // if non-null, force variant suffix (e.g., HM/TR) during the attribution window
+
+        private int nextTickAttributionSeed = -1; // map.seed at time of trigger to prevent cross-instance carryover
+
+        private int remainingAttributionTicks = 0; // number of loot ticks still allowed to attribute (e.g. 2 for Goddess of Revelry)
+
+        // --- Per-tick bookkeeping ---
+        private int currentTickSeed = -1;
+        private final ArrayList<Entity> fabricatedAttributions =
+            new ArrayList<>();
+
+        // Handle TextPacket triggers that open attribution windows
+
+        void handleTextPacket(TextPacket p, int seed) {
+            // Kitsune Umi (Moonlight Village)
+
+            if (
+                "#Kitsune Umi".equals(p.name) &&
+                "This fully concludes the Moonlight Festival!".equals(p.text)
+            ) {
+                openWindow(UMI_KITSUNE_ID, seed, 1, null);
+                return;
+            }
+
+            // Dancer Miko (Moonlight Village)
+
+            if (
+                "#Dancer Miko".equals(p.name) &&
+                "Thank you all for coming tonight.".equals(p.text)
+            ) {
+                openWindow(MIKO_DANCER_ID, seed, 1, null);
+                return;
+            }
+
+            // Umi, Goddess of Revelry (Moonlight Village - True Umi variant, allow delayed bag)
+
+            if (
+                "#Umi, Goddess of Revelry".equals(p.name) &&
+                "This fully concludes the Moonlight Festival.".equals(p.text)
+            ) {
+                openWindow(UMI_KITSUNE_ID, seed, 2, "TR"); // initial + delayed bag
+                return;
+            }
+
+            // Void Entity (The Void, allow delayed bag)
+
+            if (
+                "#Void Entity".equals(p.name) &&
+                "You fools... You can never truly defeat me! I am in all of you! I AM all of you!".equals(
+                    p.text
+                )
+            ) {
+                openWindow(VOID_ENTITY_ID, seed, 1, null);
+                return;
+            }
+
+            // Bridge Sentinel (The Shatters)
+
+            if (
+                "#The Bridge Sentinel".equals(p.name) &&
+                "I tried to protect you... I have failed.".equals(p.text)
+            ) {
+                openWindow(BRIDGE_SENTINEL_ID, seed, 1, null); // initial + delayed bag
+                return;
+            }
+
+            if (
+                "#Valen the Unbreakable".equals(p.name) &&
+                "I see now... my strength could not have held against this growing power.".equals(
+                    p.text
+                )
+            ) {
+                openWindow(BRIDGE_SENTINEL_ID, seed, 1, "HM"); // initial + delayed bag
+                return;
+            }
+
+            // Twilight Archmage (The Shatters)
+
+            if (
+                "#Twilight Archmage".equals(p.name) &&
+                "Wait, there's still time! I JUST NEED MORE POWER! WAIT!".equals(
+                    p.text
+                )
+            ) {
+                openWindow(TWILIGHT_ARCHMAGE_ID, seed, 1, null); // initial + delayed bag
+                return;
+            }
+
+            if (
+                "#Nox the Wild Shadow".equals(p.name) &&
+                "Unworthy as you are to know what hides beyond, I've had... an epiphany. So in case you've failed to realize...".equals(
+                    p.text
+                )
+            ) {
+                openWindow(TWILIGHT_ARCHMAGE_ID, seed, 1, "HM"); // initial + delayed bag
+                return;
+            }
+
+            // King Azamoth (The Shatters)
+
+            if (
+                "#The Accursed King".equals(p.name) &&
+                "...do you truly think your end will be any different?".equals(
+                    p.text
+                )
+            ) {
+                openWindow(ACCURSED_KING_ID, seed, 1, null); // initial + delayed bag
+                return;
+            }
+
+            if (
+                "#King Azamoth".equals(p.name) &&
+                "This fate is mine to bear... not hers.".equals(p.text)
+            ) {
+                openWindow(ACCURSED_KING_ID, seed, 1, "HM"); // initial + delayed bag
+                return;
+            }
+        }
+
+        // Open an attribution window (generic)
+
+        private void openWindow(
+            int mobId,
+            int seed,
+            int ticks,
+            String forcedVariantSuffix
+        ) {
+            nextTickAttributionMobId = mobId;
+
+            nextTickAttributionSeed = seed;
+
+            this.forcedVariantSuffix = forcedVariantSuffix;
+            remainingAttributionTicks = ticks;
+        }
+
+        // Begin a loot tick (reset per-tick structures)
+
+        void beginLootTick(int currentSeed) {
+            this.currentTickSeed = currentSeed;
+            fabricatedAttributions.clear();
+        }
+
+        // Determine attribution for a single bag
+        Entity findAttributionForBag(
+            TomatoData parent,
+            Entity bag,
+            ArrayList<Entity> killedEntitys,
+            int mapSeed,
+            long timePc
+        ) {
+            Entity mob = null;
+            double best = Double.MAX_VALUE;
+
+            // Prefer killed this tick (closest)
+            for (Entity k : killedEntitys) {
+                double d = bag.distSqrd(k.pos);
+                if (d < best) {
+                    best = d;
+                    mob = k;
+                }
+            }
+
+            // Fallback to next-tick attribution window, guarded by map seed
+            if (
+                mob == null &&
+                remainingAttributionTicks > 0 &&
+                mapSeed == nextTickAttributionSeed &&
+                nextTickAttributionMobId > 0
+            ) {
+                Entity attribution = new Entity(
+                    parent,
+                    nextTickAttributionMobId,
+                    timePc
+                ); // ephemeral fabricated entity
+                attribution.objectType = nextTickAttributionMobId;
+                mob = attribution;
+                fabricatedAttributions.add(attribution);
+            }
+
+            return mob;
+        }
+
+        // Apply HM/TR overrides after we know how many fabricated attributions occurred this tick
+        void applyPerTickOverrides() {
+            if (fabricatedAttributions.isEmpty()) return;
+
+            if (forcedVariantSuffix != null && !forcedVariantSuffix.isEmpty()) {
+                for (Entity f : fabricatedAttributions) {
+                    f.lootMobIdOverride =
+                        String.valueOf(f.objectType) + forcedVariantSuffix;
+                }
+            } else if (fabricatedAttributions.size() > 1) {
+                for (Entity f : fabricatedAttributions) {
+                    if (f.objectType == UMI_KITSUNE_ID) {
+                        f.lootMobIdOverride = "20493HM";
+                    } else if (f.objectType == MIKO_DANCER_ID) {
+                        f.lootMobIdOverride = "20451HM";
+                    }
+                }
+            }
+        }
+
+        // End-of-tick housekeeping (decrement and possibly reset attribution window)
+        void endLootTick() {
+            if (remainingAttributionTicks > 0) {
+                remainingAttributionTicks--;
+            }
+
+            if (remainingAttributionTicks == 0) {
+                nextTickAttributionMobId = -1;
+
+                forcedVariantSuffix = null;
+                nextTickAttributionSeed = -1;
+            }
+        }
     }
 }

@@ -5,6 +5,7 @@ package tomato.gui.stats.data;
  * This class is used for serialization and persistence of map fame data
  */
 public class MapFameData {
+
     public String mapName;
     public long startTime;
     public long endTime;
@@ -12,8 +13,7 @@ public class MapFameData {
     public double endFame;
 
     // Default constructor for Gson serialization
-    public MapFameData() {
-    }
+    public MapFameData() {}
 
     public MapFameData(String mapName, long startTime, double startFame) {
         this.mapName = mapName;
@@ -41,14 +41,24 @@ public class MapFameData {
 
     @Override
     public String toString() {
-        return "MapFameData{" +
-                "mapName='" + mapName + '\'' +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", startFame=" + startFame +
-                ", endFame=" + endFame +
-                ", fameGained=" + getFameGained() +
-                ", timeSpent=" + getTimeSpentFormatted() +
-                '}';
+        return (
+            "MapFameData{" +
+            "mapName='" +
+            mapName +
+            '\'' +
+            ", startTime=" +
+            startTime +
+            ", endTime=" +
+            endTime +
+            ", startFame=" +
+            startFame +
+            ", endFame=" +
+            endFame +
+            ", fameGained=" +
+            getFameGained() +
+            ", timeSpent=" +
+            getTimeSpentFormatted() +
+            '}'
+        );
     }
 }

@@ -2,6 +2,10 @@ package tomato.gui.stats;
 
 import assets.IdToAsset;
 import assets.ImageBuffer;
+import java.awt.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import javax.swing.*;
 import packets.data.StatData;
 import packets.data.enums.StatType;
 import packets.incoming.MapInfoPacket;
@@ -13,25 +17,20 @@ import tomato.realmshark.*;
 import tomato.realmshark.enums.CharacterStatistics;
 import tomato.realmshark.enums.LootBags;
 
-import javax.swing.*;
-import java.awt.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.Set;
-import util.PropertiesManager;
-
 public class LootGUI extends JPanel {
-
 
     private static LootGUI INSTANCE;
 
     private static TomatoData data;
+
     private static boolean cleared = false;
+
     private static boolean update = false;
+
     private static JPanel lootPanel;
-    private static JTextArea textArea;
+
     private static Font mainFont;
+
     private static int lootDrops;
     private boolean disableLootSharing = false;
     public static boolean filterWhiteBag = false;
@@ -44,7 +43,6 @@ public class LootGUI extends JPanel {
     public static boolean filterPurpleBag = false;
     public static boolean filterPinkBag = false;
     public static boolean filterBrownBag = false;
-
 
     public LootGUI(TomatoData data) {
         LootGUI.data = data;
@@ -60,12 +58,20 @@ public class LootGUI extends JPanel {
         validate();
 
         JScrollPane scroll = new JScrollPane(lootPanel);
-        scroll.getVerticalScrollBar().setUnitIncrement(40);
+        scroll.setVerticalScrollBarPolicy(
+            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS
+        );
         new SmartScroller(scroll, 0);
         add(scroll, BorderLayout.CENTER);
     }
 
-    public static void update(MapInfoPacket map, Entity bag, Entity dropper, Entity player, long time) {
+    public static void update(
+        MapInfoPacket map,
+        Entity bag,
+        Entity dropper,
+        Entity player,
+        long time
+    ) {
         INSTANCE.updateGui(map, bag, dropper, player, time);
     }
 
@@ -74,11 +80,17 @@ public class LootGUI extends JPanel {
         if (!cleared) {
             cleared = true;
             lootPanel.removeAll();
-            INSTANCE.guiUpdate();
+            INSTANCE.safeRefreshPanel();
         }
     }
 
-    private void updateGui(MapInfoPacket map, Entity bag, Entity dropper, Entity player, long time) {
+    private void updateGui(
+        MapInfoPacket map,
+        Entity bag,
+        Entity dropper,
+        Entity player,
+        long time
+    ) {
         if (player == null || !update) return;
 
         JPanel panel = createMainBox(map, bag, dropper, player, time);
@@ -87,7 +99,9 @@ public class LootGUI extends JPanel {
         panel.setVisible(isBagVisible(bag));
 
         if (Sound.playWhiteBagSound && isWhiteBag(bag)) Sound.whitebag.play();
-        if (Sound.playOrangeBagSound && isOrangeBag(bag)) Sound.orangebag.play();
+        if (
+            Sound.playOrangeBagSound && isOrangeBag(bag)
+        ) Sound.orangebag.play();
         if (Sound.playRedBagSound && isRedBag(bag)) Sound.redbag.play();
         if (Sound.playGoldBagSound && isGoldBag(bag)) Sound.goldbag.play();
         if (Sound.playEggBagSound && isEggBag(bag)) Sound.eggbag.play();
@@ -97,7 +111,7 @@ public class LootGUI extends JPanel {
             SendLoot.sendLoot(data, map, bag, dropper, player, time);
         }
 
-        INSTANCE.guiUpdate();
+        safeRefreshPanel();
     }
 
     private boolean isBagVisible(Entity bag) {
@@ -131,37 +145,53 @@ public class LootGUI extends JPanel {
 
     private boolean isBrownBag(Entity bag) {
         int id = bag.objectType;
-        return id == LootBags.BROWN.getId() || id == LootBags.BOOSTED_BROWN.getId();
+        return (
+            id == LootBags.BROWN.getId() || id == LootBags.BOOSTED_BROWN.getId()
+        );
     }
 
     private boolean isPinkBag(Entity bag) {
         int id = bag.objectType;
-        return id == LootBags.PINK.getId() || id == LootBags.BOOSTED_PINK.getId();
+        return (
+            id == LootBags.PINK.getId() || id == LootBags.BOOSTED_PINK.getId()
+        );
     }
 
     private boolean isPurpleBag(Entity bag) {
         int id = bag.objectType;
-        return id == LootBags.PURPLE.getId() || id == LootBags.BOOSTED_PURPLE.getId();
+        return (
+            id == LootBags.PURPLE.getId() ||
+            id == LootBags.BOOSTED_PURPLE.getId()
+        );
     }
 
     private boolean isTealBag(Entity bag) {
         int id = bag.objectType;
-        return id == LootBags.TEAL.getId() || id == LootBags.BOOSTED_TEAL.getId();
+        return (
+            id == LootBags.TEAL.getId() || id == LootBags.BOOSTED_TEAL.getId()
+        );
     }
 
     private boolean isBlueBag(Entity bag) {
         int id = bag.objectType;
-        return id == LootBags.BLUE.getId() || id == LootBags.BOOSTED_BLUE.getId();
+        return (
+            id == LootBags.BLUE.getId() || id == LootBags.BOOSTED_BLUE.getId()
+        );
     }
 
     private boolean isWhiteBag(Entity bag) {
         int id = bag.objectType;
-        return id == LootBags.WHITE.getId() || id == LootBags.BOOSTED_WHITE.getId();
+        return (
+            id == LootBags.WHITE.getId() || id == LootBags.BOOSTED_WHITE.getId()
+        );
     }
 
     private boolean isOrangeBag(Entity bag) {
         int id = bag.objectType;
-        return id == LootBags.ORANGE.getId() || id == LootBags.BOOSTED_ORANGE.getId();
+        return (
+            id == LootBags.ORANGE.getId() ||
+            id == LootBags.BOOSTED_ORANGE.getId()
+        );
     }
 
     private boolean isRedBag(Entity bag) {
@@ -171,7 +201,9 @@ public class LootGUI extends JPanel {
 
     private boolean isGoldBag(Entity bag) {
         int id = bag.objectType;
-        return id == LootBags.GOLD.getId() || id == LootBags.BOOSTED_GOLD.getId();
+        return (
+            id == LootBags.GOLD.getId() || id == LootBags.BOOSTED_GOLD.getId()
+        );
     }
 
     private boolean isEggBag(Entity bag) {
@@ -180,13 +212,23 @@ public class LootGUI extends JPanel {
     }
 
     private void guiUpdate() {
-        revalidate();
-        repaint();
+        safeRefreshPanel();
     }
 
-    private static JPanel createMainBox(MapInfoPacket map, Entity bag, Entity dropper, Entity player, long time) {
+    private static JPanel createMainBox(
+        MapInfoPacket map,
+        Entity bag,
+        Entity dropper,
+        Entity player,
+        long time
+    ) {
         JPanel mainPanel = new JPanel();
-        mainPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.gray), BorderFactory.createEmptyBorder(0, 20, 0, 20)));
+        mainPanel.setBorder(
+            BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 1, 0, Color.gray),
+                BorderFactory.createEmptyBorder(0, 20, 0, 20)
+            )
+        );
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
 
         mainPanel.putClientProperty("bagEntity", bag); // Store the bag entity for filtering
@@ -206,7 +248,16 @@ public class LootGUI extends JPanel {
         mainPanel.add(Box.createHorizontalStrut(10));
         width = displayTime(mainPanel, width);
         mainPanel.add(Box.createHorizontalStrut(10));
-        width = displayBagDungMob(map, bag, player, dropper, mainPanel, width, exaltBonus, lootTime);
+        width = displayBagDungMob(
+            map,
+            bag,
+            player,
+            dropper,
+            mainPanel,
+            width,
+            exaltBonus,
+            lootTime
+        );
         mainPanel.add(Box.createHorizontalStrut(30));
         width = displayBagLootIcons(bag, mainPanel, width);
 
@@ -217,7 +268,16 @@ public class LootGUI extends JPanel {
         return mainPanel;
     }
 
-    private static int displayBagDungMob(MapInfoPacket map, Entity entity, Entity player, Entity dropper, JPanel mainPanel, int width, int exaltBonus, long lootTime) {
+    private static int displayBagDungMob(
+        MapInfoPacket map,
+        Entity entity,
+        Entity player,
+        Entity dropper,
+        JPanel mainPanel,
+        int width,
+        int exaltBonus,
+        long lootTime
+    ) {
         JPanel panel = new JPanel();
         width += 100;
 
@@ -252,7 +312,7 @@ public class LootGUI extends JPanel {
             o.setAlignmentX(JLabel.LEFT);
             o.setAlignmentX(LEFT_ALIGNMENT);
             timeLabel.setHorizontalAlignment(SwingConstants.LEFT);
-            timeLabel.setFont(mainFont);
+            timeLabel.setFont(getMainFont());
             o.add(timeLabel);
         } catch (Exception e) {
             e.printStackTrace();
@@ -271,14 +331,14 @@ public class LootGUI extends JPanel {
         o.setLayout(new BorderLayout());
 
         try {
-            String text = timeShort();
+            String text = time();
             JLabel timeLabel = new JLabel(text, JLabel.CENTER);
 
             timeLabel.setAlignmentX(JLabel.LEFT);
             o.setAlignmentX(JLabel.LEFT);
             o.setAlignmentX(LEFT_ALIGNMENT);
             timeLabel.setHorizontalAlignment(SwingConstants.LEFT);
-            timeLabel.setFont(mainFont);
+            timeLabel.setFont(getMainFont());
             o.add(timeLabel);
         } catch (Exception e) {
             e.printStackTrace();
@@ -287,7 +347,12 @@ public class LootGUI extends JPanel {
         return width;
     }
 
-    private static void displayPlayerIcon(MapInfoPacket map, Entity player, int exaltBonus, JPanel panel) {
+    private static void displayPlayerIcon(
+        MapInfoPacket map,
+        Entity player,
+        int exaltBonus,
+        JPanel panel
+    ) {
         int picon = 100;
         boolean isSeasonal = false;
         String name = "Unknown";
@@ -317,7 +382,11 @@ public class LootGUI extends JPanel {
         panel.add(icon);
     }
 
-    private static int displayBagLootIcons(Entity entity, JPanel mainPanel, int width) {
+    private static int displayBagLootIcons(
+        Entity entity,
+        JPanel mainPanel,
+        int width
+    ) {
         JPanel panel = new JPanel();
         width += 200;
 
@@ -331,9 +400,6 @@ public class LootGUI extends JPanel {
             enchants = udata.stringStatValue.split(",");
         }
 
-        // Load saved selected enchant IDs once for this rendering
-        Set<Short> savedEnchantIds = loadSavedEnchantIds();
-
         for (int i = 0; i < 8; i++) {
             StatData sd = entity.stat.get(StatType.INVENTORY_0_STAT.get() + i);
             if (sd == null || sd.statValue < 1) {
@@ -346,41 +412,27 @@ public class LootGUI extends JPanel {
             String itemName = IdToAsset.objectName(statValue);
             String enchantText = "";
             int enchantCount = 0;
-            boolean hasSavedMatch = false;
 
             // Check for ping items and ping if found
-            if (data.isItemPing(String.valueOf(statValue)) || data.isItemPing(itemName)) {
+            if (
+                data.isItemPing(String.valueOf(statValue)) ||
+                data.isItemPing(itemName)
+            ) {
                 Sound.custom.play();
             }
 
-            if (enchants != null && i < enchants.length && !enchants[i].isEmpty() && !enchants[i].equals("AAIE_f_9__3__f8=")) {
+            if (
+                enchants != null &&
+                i < enchants.length &&
+                !enchants[i].isEmpty() &&
+                !enchants[i].equals("AAIE_f_9__3__f8=")
+            ) {
                 enchantText = ParseEnchants.parse(enchants[i]);
                 if (!enchantText.isEmpty()) {
                     String[] enchantNames = enchantText.split("\n");
                     enchantCount = enchantNames.length;
                 }
-                // Check enchant IDs against saved selections
-                try {
-                    java.util.List<Short> ids = ParseEnchants.extractEnchantIds(enchants[i]);
-                    for (Short id : ids) {
-                        if (savedEnchantIds.contains(id)) {
-                            hasSavedMatch = true;
-                            break;
-                        }
-                    }
-                } catch (Exception ignore) {
-                }
             }
-
-            // If it has a saved match, play a sound
-            if (hasSavedMatch) {
-                Sound.custom.play();
-            }
-
-            /* enchantCount Debug: Print enchantCount and itemName
-            System.out.println(
-                "Item: " + itemName + " | EnchantCount: " + enchantCount
-            );*/
 
             JLabel icon;
             if (enchantCount == 0) {
@@ -405,7 +457,13 @@ public class LootGUI extends JPanel {
                 }
                 int glowSize = 3;
                 icon = new JLabel(
-                        ImageBuffer.getOutlinedIconWithGlow(statValue,20, glowColor, glowSize));
+                    ImageBuffer.getOutlinedIconWithGlow(
+                        statValue,
+                        20,
+                        glowColor,
+                        glowSize
+                    )
+                );
             }
 
             if (!enchantText.isEmpty()) {
@@ -419,23 +477,11 @@ public class LootGUI extends JPanel {
         return width;
     }
 
-    // Load saved enchant ids from PropertiesManager key 'enchantPing.selected'
-    private static Set<Short> loadSavedEnchantIds() {
-        Set<Short> s = new HashSet<>();
-        String saved = PropertiesManager.getProperty("enchantPing.selected");
-        if (saved == null || saved.isEmpty()) return s;
-        String[] parts = saved.split(",");
-        for (String p : parts) {
-            try {
-                short v = Short.parseShort(p.trim());
-                s.add(v);
-            } catch (NumberFormatException ignored) {
-            }
-        }
-        return s;
-    }
-
-    private static void displayBagIcon(Entity entity, long lootTime, JPanel panel) {
+    private static void displayBagIcon(
+        Entity entity,
+        long lootTime,
+        JPanel panel
+    ) {
         int bag = entity.objectType;
         JLabel icon = new JLabel(ImageBuffer.getOutlinedIcon(bag, 20));
         String name = time();
@@ -473,10 +519,14 @@ public class LootGUI extends JPanel {
         String dungeonModifiers = "";
         if (map != null) {
             dungeonName = map.name;
-            dungeonModifiers = dungeonBuff(map.dungeonModifiers3);
+            dungeonModifiers = dungeonBuff(
+                ParseDungeon.getModifiersString(map)
+            );
             dungeon = ParseDungeon.getPortalId(dungeonName);
             if (dungeon == -1) {
-                CharacterStatistics cs = CharacterStatistics.statByName(dungeonName);
+                CharacterStatistics cs = CharacterStatistics.statByName(
+                    dungeonName
+                );
                 if (cs != null) {
                     dungeon = cs.getSpriteId();
                 } else {
@@ -503,7 +553,8 @@ public class LootGUI extends JPanel {
                         throw new RuntimeException(e);
                     }
                     data.resetMoonlightFlames();
-                }).start();
+                })
+                    .start();
             }
         }
 
@@ -511,46 +562,9 @@ public class LootGUI extends JPanel {
         panel.add(icon);
     }
 
-    public static String timeShort() {
-        DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
-        LocalDateTime dateTime = LocalDateTime.now();
-        return dateTimeFormat.format(dateTime);
-    }
-
-    public static String time() {
-        DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy/MM/dd-HH:mm:ss");
-        LocalDateTime dateTime = LocalDateTime.now();
-        return dateTimeFormat.format(dateTime);
-    }
-
-    private String lootInfo(Entity entity) {
-        StringBuilder s = new StringBuilder();
-        boolean first = true;
-        String[] enchants = null;
-
-        StatData udata = entity.stat.get(StatType.UNIQUE_DATA_STRING);
-        if (udata != null && udata.stringStatValue != null) {
-            enchants = udata.stringStatValue.split(",");
-        }
-
-        for (int i = 0; i < 8; i++) {
-            StatData sd = entity.stat.get(StatType.INVENTORY_0_STAT.get() + i);
-            if (sd == null) continue;
-            int statValue = sd.statValue;
-            if (statValue < 1) continue;
-            if (!first) s.append(" * ");
-            first = false;
-            s.append(IdToAsset.objectName(statValue));
-            if (enchants != null && i < enchants.length && !enchants[i].isEmpty() && !enchants[i].equals("AAIE_f_9__3__f8=")) {
-                s.append("[E]");
-            }
-            s.append("[").append(statValue).append("]");
-        }
-        return s.toString();
-    }
-
     private static String dungeonBuff(String buffs) {
         String b = "";
+        if (buffs == null || buffs.isEmpty()) return b;
         for (String s : buffs.split(";")) {
             if (s.contains("REWARDSBOOSTBOSS_")) {
                 b += " Boss " + getaChar(s) * 15 + "% ";
@@ -569,7 +583,40 @@ public class LootGUI extends JPanel {
         return s.charAt(s.length() - 1) - 48;
     }
 
+    public static void editFont(Font font) {
+        if (INSTANCE != null) {
+            INSTANCE.handleFontUpdate(font);
+        }
+    }
+
     public static void lootSharing(boolean b) {
         INSTANCE.disableLootSharing = b;
+    }
+
+    private static String time() {
+        return LocalDateTime.now().format(
+            DateTimeFormatter.ofPattern("HH:mm:ss")
+        );
+    }
+
+    private static Font getMainFont() {
+        if (mainFont == null) {
+            mainFont = new Font("Arial", Font.PLAIN, 12);
+        }
+        return mainFont;
+    }
+
+    private void handleFontUpdate(Font font) {
+        mainFont = font;
+        guiUpdate();
+    }
+
+    private void safeRefreshPanel() {
+        try {
+            lootPanel.revalidate();
+            lootPanel.repaint();
+        } catch (Exception e) {
+            // Ignore
+        }
     }
 }
