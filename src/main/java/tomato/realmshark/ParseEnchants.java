@@ -13,6 +13,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -24,7 +26,7 @@ import java.util.stream.Collectors;
 public class ParseEnchants {
 
     private static final String ENCHANT_XML_PATH = "assets/xml/enchantments.xml";
-    private static final HashMap<Short, String> ENCHANTS = new HashMap<>();
+    public static final HashMap<Short, String> ENCHANTS = new HashMap<>();
 
     /**
      * Load Enchant XML data to get names from file.
@@ -188,6 +190,36 @@ public class ParseEnchants {
             res.append("\n");
         }
         return res.toString();
+    }
+
+    /**
+     * Extract all enchant IDs from an encoded enchant string.
+     * Returns an empty list if none or if the format is invalid.
+     */
+    public static List<Short> extractEnchantIds(String code) {
+        List<Short> ids = new ArrayList<>();
+        if (code == null || code.isEmpty()) return ids;
+
+        byte[] rawBytes = PcStatsDecoder.sixBitStringToBytes(code);
+        int expectedSize = 1 + 2 + 8;
+        if (rawBytes.length > expectedSize) {
+            rawBytes = Arrays.copyOfRange(rawBytes, 0, expectedSize);
+        }
+
+        BufferReader byteBuffer = new BufferReader(
+                ByteBuffer.wrap(rawBytes).order(ByteOrder.LITTLE_ENDIAN)
+        );
+        byteBuffer.readByte();
+        if (byteBuffer.readShort() != 1026) {
+            return ids;
+        }
+        while (!byteBuffer.isBufferFullyParsed()) {
+            short enchantId = byteBuffer.readShort();
+            if (enchantId == -3) break;
+            if (enchantId == -2 || enchantId == -1) continue;
+            ids.add(enchantId);
+        }
+        return ids;
     }
 
     /**
