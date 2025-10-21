@@ -7,7 +7,13 @@ import tomato.realmshark.Sound;
 public class ChatPingGUI extends CustomListGUI {
 
     public ChatPingGUI(TomatoData data, ChatGUI main) {
-        super(data, "chatPingMessages", "Chat Messages Ping Customization", main.getPingMessages(), "Chat Message");
+        super(
+            data,
+            "chatPingMessages",
+            "Chat Messages Ping Customization",
+            main.getPingMessages(),
+            "Chat Message"
+        );
     }
 
     public void open() {

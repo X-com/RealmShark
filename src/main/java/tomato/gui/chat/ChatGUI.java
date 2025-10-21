@@ -1,22 +1,19 @@
 package tomato.gui.chat;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.awt.*;
+import java.io.*;
+import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import javax.swing.*;
 import packets.incoming.TextPacket;
 import tomato.backend.data.TomatoData;
 import tomato.gui.TomatoGUI;
 import tomato.realmshark.Sound;
 import util.Util;
-
-import javax.swing.*;
-import java.awt.*;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-
-import java.lang.reflect.Type;
-
-import com.google.gson.reflect.TypeToken;
 
 public class ChatGUI extends JPanel {
 
@@ -28,7 +25,8 @@ public class ChatGUI extends JPanel {
     private static TomatoData data;
 
     private static final ArrayList<String> blockedSpam = new ArrayList<>();
-    private static final String API_URL = "https://api.realmshark.cc/blocked-keywords";
+    private static final String API_URL =
+        "https://api.realmshark.cc/blocked-keywords";
     private static final String BLOCK_FILE = "block.txt";
 
     public ChatGUI(TomatoData data) {
@@ -66,7 +64,9 @@ public class ChatGUI extends JPanel {
             File f = new File(BLOCK_FILE);
             if (f.exists()) {
                 FileInputStream file = new FileInputStream(BLOCK_FILE);
-                BufferedReader in = new BufferedReader(new InputStreamReader(file));
+                BufferedReader in = new BufferedReader(
+                    new InputStreamReader(file)
+                );
                 String inputLine;
 
                 while ((inputLine = in.readLine()) != null) {
@@ -94,7 +94,10 @@ public class ChatGUI extends JPanel {
 
             // Check response code and follow redirect if necessary
             int responseCode = conn.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_MOVED_PERM || responseCode == HttpURLConnection.HTTP_MOVED_TEMP) {
+            if (
+                responseCode == HttpURLConnection.HTTP_MOVED_PERM ||
+                responseCode == HttpURLConnection.HTTP_MOVED_TEMP
+            ) {
                 String newUrl = conn.getHeaderField("Location");
                 URL redirectedUrl = new URL(newUrl);
                 conn = (HttpURLConnection) redirectedUrl.openConnection();
@@ -103,7 +106,9 @@ public class ChatGUI extends JPanel {
             }
 
             // Read the response
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            BufferedReader in = new BufferedReader(
+                new InputStreamReader(conn.getInputStream())
+            );
             String inputLine;
             StringBuilder response = new StringBuilder();
 
@@ -113,9 +118,11 @@ public class ChatGUI extends JPanel {
             in.close();
 
             // Process the response (assuming it's a JSON array of keywords)
-            Type listType = new TypeToken<ArrayList<String>>() {
-            }.getType();
-            ArrayList<String> blocked = new Gson().fromJson(response.toString(), listType);
+            Type listType = new TypeToken<ArrayList<String>>() {}.getType();
+            ArrayList<String> blocked = new Gson().fromJson(
+                response.toString(),
+                listType
+            );
             blockedSpam.addAll(blocked);
         } catch (IOException e) {
             e.printStackTrace();
@@ -154,7 +161,10 @@ public class ChatGUI extends JPanel {
      * @param p Text packet with chat data.
      */
     public static void updateChat(TextPacket p) {
-        if (!blockedSpam.isEmpty() && blockedSpam.stream().anyMatch(p.text::contains)) return;
+        if (
+            !blockedSpam.isEmpty() &&
+            blockedSpam.stream().anyMatch(p.text::contains)
+        ) return;
 
         String a = "";
         int type = 0;
@@ -198,7 +208,9 @@ public class ChatGUI extends JPanel {
         if (!pinged) {
             for (String s : data.getChatMessagePings()) {
                 if (s.startsWith("\"") && s.endsWith("\"")) {
-                    String exactMatch = s.substring(1, s.length() - 1).toLowerCase();
+                    String exactMatch = s
+                        .substring(1, s.length() - 1)
+                        .toLowerCase();
                     for (String m : p.text.toLowerCase().split(" ")) {
                         if (exactMatch.equals(m)) {
                             Sound.pm.play();
@@ -211,13 +223,23 @@ public class ChatGUI extends JPanel {
                 }
             }
         }
-        String s = String.format("%s %s[%s]: %s", Util.getHourTime(), a, name, p.text);
+        String s = String.format(
+            "%s %s[%s]: %s",
+            Util.getHourTime(),
+            a,
+            name,
+            p.text
+        );
         switch (type) {
             case 1:
-                if (textAreaChatGuild != null) textAreaChatGuild.append(s + "\n");
+                if (textAreaChatGuild != null) textAreaChatGuild.append(
+                    s + "\n"
+                );
                 break;
             case 2:
-                if (textAreaChatParty != null) textAreaChatParty.append(s + "\n");
+                if (textAreaChatParty != null) textAreaChatParty.append(
+                    s + "\n"
+                );
                 break;
             case 3:
                 if (textAreaChatPm != null) textAreaChatPm.append(s + "\n");
@@ -228,19 +250,32 @@ public class ChatGUI extends JPanel {
         String response = getString(p);
 
         if (response != null) {
-            String responseFormatted = String.format("%s %s[Umi Response]: %s", Util.getHourTime(), a, response);
+            String responseFormatted = String.format(
+                "%s %s[Umi Response]: %s",
+                Util.getHourTime(),
+                a,
+                response
+            );
             switch (type) {
                 case 1:
-                    if (textAreaChatGuild != null) textAreaChatGuild.append(responseFormatted + "\n");
+                    if (textAreaChatGuild != null) textAreaChatGuild.append(
+                        responseFormatted + "\n"
+                    );
                     break;
                 case 2:
-                    if (textAreaChatParty != null) textAreaChatParty.append(responseFormatted + "\n");
+                    if (textAreaChatParty != null) textAreaChatParty.append(
+                        responseFormatted + "\n"
+                    );
                     break;
                 case 3:
-                    if (textAreaChatPm != null) textAreaChatPm.append(responseFormatted + "\n");
+                    if (textAreaChatPm != null) textAreaChatPm.append(
+                        responseFormatted + "\n"
+                    );
                     break;
             }
-            if (textAreaChatAll != null) textAreaChatAll.append(responseFormatted + "\n");
+            if (textAreaChatAll != null) textAreaChatAll.append(
+                responseFormatted + "\n"
+            );
         }
 
         if (save) {
@@ -250,11 +285,26 @@ public class ChatGUI extends JPanel {
 
     private static String getString(TextPacket p) {
         String response = null;
-        if ("I've been intrigued by folktales from foreign lands recently.".equals(p.text) && "#Village Girl Umi".equals(p.name)) {
+        if (
+            "I've been intrigued by folktales from foreign lands recently.".equals(
+                p.text
+            ) &&
+            "#Village Girl Umi".equals(p.name)
+        ) {
             response = "The Happy Prince";
-        } else if ("The delicious smells coming from the festival stalls are making me hungry...".equals(p.text) && "#Village Girl Umi".equals(p.name)) {
+        } else if (
+            "The delicious smells coming from the festival stalls are making me hungry...".equals(
+                p.text
+            ) &&
+            "#Village Girl Umi".equals(p.name)
+        ) {
             response = "Mushroom";
-        } else if ("How did you find tonight's performance? It looked extremely fun, I couldn't help cheering you on!".equals(p.text) && "#Village Girl Umi".equals(p.name)) {
+        } else if (
+            "How did you find tonight's performance? It looked extremely fun, I couldn't help cheering you on!".equals(
+                p.text
+            ) &&
+            "#Village Girl Umi".equals(p.name)
+        ) {
             response = "Carosburg";
         }
         return response;

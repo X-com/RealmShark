@@ -1,221 +1,99 @@
 package tomato.gui.dps;
 
 import assets.IdToAsset;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import packets.incoming.MapInfoPacket;
 import packets.incoming.NotificationPacket;
-import tomato.backend.data.*;
+import tomato.backend.data.Damage;
+import tomato.backend.data.Entity;
+import tomato.backend.data.Equipment;
+import tomato.backend.data.PlayerRemoved;
+import tomato.gui.dps.shared.DeathParser;
+import tomato.gui.dps.shared.DpsTextFormat;
+import tomato.gui.dps.shared.EquipmentUsageAggregator;
+import tomato.gui.dps.shared.GuardsHandler;
 import tomato.realmshark.enums.CharacterClass;
-import util.Pair;
 
-import java.text.DecimalFormat;
-import java.util.*;
-import java.util.List;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
-
+/**
+ * Builds the string-based DPS view used in the "logs" tab.
+ *
+ * Behavior preserved:
+ * - Header and per-entity sections
+ * - Player filter/highlight and "me" indicator
+ * - Extra notes (guarded/dammah/garden) + death/nexus info
+ * - Equipment:
+ *   - option 0: hidden
+ *   - option 1: bracketed "[slot0 / slot1 / slot2 / slot3]" showing most-used item per slot
+ *   - option 2: per-slot line with slash-separated items in that slot, sorted by descending %
+ *     - Single-item slot shows "100%"
+ *     - Tiny non-zero percentages show "< 0.1%"
+ */
 public class DpsToString {
-    private TomatoData data;
-    private static final DecimalFormat df = new DecimalFormat("#,###,###");
-
-    // Batch processing and throttling components
-    private final BlockingQueue<DataBundle> packetQueue = new LinkedBlockingQueue<>();
-    private final ExecutorService processingExecutor = Executors.newSingleThreadExecutor();
-    private volatile String lastDisplayString = "";
-    private long lastUpdateTime = 0;
-    private static final long UPDATE_INTERVAL_MS = 100; // 100ms update interval
-
-    // Data sampling components
-    private static final long SAMPLE_INTERVAL_MS = 50; // Sample every 50ms
-    private long lastSampleTime = 0;
-    private DataBundle lastSampledBundle = null;
-
-    public DpsToString(TomatoData data) {
-        this.data = data;
-    }
 
     /**
      * Real time string display.
      *
      * @return logged dps output as a string.
      */
-    public static String stringDmgRealtime(MapInfoPacket map, List<Entity> sortedEntityHitList, ArrayList<NotificationPacket> notifications, Entity player, long totalDungeonPcTime) {
+    public static String stringDmgRealtime(
+        MapInfoPacket map,
+        List<Entity> sortedEntityHitList,
+        ArrayList<NotificationPacket> notifications,
+        Entity player,
+        long totalDungeonPcTime
+    ) {
         StringBuilder sb = new StringBuilder();
 
-        if(DpsDisplayOptions.equipmentOption == 3) sb.append("Icons are not visible in live tab. Use \"<\" to see icons.\n\n");
+        if (DpsDisplayOptions.equipmentOption == 3) {
+            sb.append(
+                "Icons are not visible in live tab. Use \"<\" to see icons.\n\n"
+            );
+        }
 
         if (map != null) {
-            sb.append(map.name).append(" ").append(DpsGUI.systemTimeToString(totalDungeonPcTime)).append("\n\n");
+            sb
+                .append(map.name)
+                .append(" ")
+                .append(DpsGUI.systemTimeToString(totalDungeonPcTime))
+                .append("\n\n");
         }
 
-        ArrayList<Pair<String, Integer>> deaths = new ArrayList<>();
-        for (NotificationPacket n : notifications) {
-            if (n.message != null) {
-                String[] parts = n.message.split("\"");
-                if (parts.length > 9) {
-                    String name = parts[9];
-                    deaths.add(new Pair<>(name, n.pictureType));
-                }
-            }
-        }
+        Map<String, Integer> deathMap = DeathParser.parseDeathsToMap(
+            notifications
+        );
 
         for (Entity e : sortedEntityHitList) {
-            if (e == null || e.maxHp() <= 0 || CharacterClass.isPlayerCharacter(e.objectType)) continue;
-            sb.append(display(e, deaths, player)).append("\n");
+            if (!isValidEntity(e)) continue;
+
+            EquipmentUsageAggregator eqAgg =
+                (DpsDisplayOptions.equipmentOption == 0)
+                    ? null
+                    : EquipmentUsageAggregator.of(e);
+
+            sb.append(display(e, deathMap, player, eqAgg)).append("\n");
         }
 
         return sb.toString();
     }
 
     /**
-     * New batch processing entry point with data sampling
+     * Renders a single entity section.
      */
-    public void handleNewData(MapInfoPacket map, List<Entity> sortedEntityHitList,
-                              ArrayList<NotificationPacket> notifications,
-                              Entity player, long totalDungeonPcTime) {
-        long now = System.currentTimeMillis();
-
-        // Only add to queue if it's time for a new sample
-        if (now - lastSampleTime >= SAMPLE_INTERVAL_MS) {
-            lastSampleTime = now;
-            DataBundle newBundle = new DataBundle(map, new ArrayList<>(sortedEntityHitList),
-                    new ArrayList<>(notifications), player, totalDungeonPcTime);
-
-            // Merge with previous sample if needed
-            if (lastSampledBundle != null) {
-                newBundle = mergeBundles(lastSampledBundle, newBundle);
-            }
-
-            packetQueue.add(newBundle);
-            lastSampledBundle = newBundle;
-            processingExecutor.submit(this::processPackets);
-        }
-    }
-
-    public String getCurrentDisplay() {
-        return lastDisplayString;
-    }
-
-    private void processPackets() {
-        try {
-            List<DataBundle> batch = new ArrayList<>();
-            packetQueue.drainTo(batch, 100);
-
-            if (!batch.isEmpty()) {
-                DataBundle aggregated = aggregateBundles(batch);
-
-                long now = System.currentTimeMillis();
-                if (now - lastUpdateTime >= UPDATE_INTERVAL_MS) {
-                    lastUpdateTime = now;
-                    lastDisplayString = stringDmgRealtime(
-                            aggregated.map,
-                            aggregated.sortedEntityHitList,
-                            aggregated.notifications,
-                            aggregated.player,
-                            aggregated.totalDungeonPcTime
-                    );
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private DataBundle aggregateBundles(List<DataBundle> bundles) {
-        MapInfoPacket currentMap = null;
-        List<Entity> currentEntities = new ArrayList<>();
-        ArrayList<NotificationPacket> currentNotifications = new ArrayList<>();
-        Entity currentPlayer = null;
-        long currentTime = 0;
-
-        for (DataBundle bundle : bundles) {
-            if (bundle.map != null) currentMap = bundle.map;
-            currentEntities.addAll(bundle.sortedEntityHitList);
-            currentNotifications.addAll(bundle.notifications);
-            if (bundle.player != null) currentPlayer = bundle.player;
-            currentTime = bundle.totalDungeonPcTime;
-        }
-
-        return new DataBundle(currentMap, currentEntities, currentNotifications, currentPlayer, currentTime);
-    }
-
-    /**
-     * Helper method to merge two data bundles for sampling
-     */
-    private DataBundle mergeBundles(DataBundle oldBundle, DataBundle newBundle) {
-        // For map and player, prefer newer data if available
-        MapInfoPacket map = newBundle.map != null ? newBundle.map : oldBundle.map;
-        Entity player = newBundle.player != null ? newBundle.player : oldBundle.player;
-
-        // For time, use the latest
-        long time = Math.max(newBundle.totalDungeonPcTime, oldBundle.totalDungeonPcTime);
-
-        // For entities and notifications, combine both
-        List<Entity> combinedEntities = new ArrayList<>(oldBundle.sortedEntityHitList);
-        combinedEntities.addAll(newBundle.sortedEntityHitList);
-
-        ArrayList<NotificationPacket> combinedNotifs = new ArrayList<>(oldBundle.notifications);
-        combinedNotifs.addAll(newBundle.notifications);
-
-        return new DataBundle(map, combinedEntities, combinedNotifs, player, time);
-    }
-
-    public static String showInv(int equipmentFilter, Entity owner, Entity entity) {
-        if (equipmentFilter == 0 || owner == null || owner.getStatName() == null) return "";
-
-        HashMap<Integer, Equipment>[] inv = new HashMap[4];
-
-        for (int i = 0; i < 4; i++) {
-            AtomicInteger tot = new AtomicInteger(0);
-            inv[i] = new HashMap<>();
-            for (Damage d : entity.getDamageList()) {
-                if (d.owner == null || d.owner.id != owner.id || d.ownerInvntory == null) continue;
-
-                int finalI = i;
-                Equipment equipment = inv[i].computeIfAbsent(d.ownerInvntory[i],
-                        id -> new Equipment(id, String.valueOf(d.ownerEnchants[finalI]), tot));
-                equipment.add(d.damage);
-            }
-        }
-
-        if (equipmentFilter == 1) {
-            StringBuilder s = new StringBuilder("[");
-            for (int i = 0; i < 4; i++) {
-                Equipment max = inv[i].values().stream()
-                        .max(Comparator.comparingInt(e -> e.dmg))
-                        .orElse(new Equipment(0, "0", new AtomicInteger(0)));
-                if (i != 0) s.append(" / ");
-                s.append(IdToAsset.objectName(max.id));
-            }
-            return s.append("]").toString();
-        } else if (equipmentFilter == 2) {
-            StringBuilder s = new StringBuilder();
-            for (int i = 0; i < 4; i++) {
-                s.append("\n       ");
-                Collection<Equipment> list = inv[i].values();
-                boolean first = true;
-                for (Equipment e : list) {
-                    if (list.size() > 1) {
-                        if (!first) s.append(" /");
-                        s.append(String.format(" %.1f%% ", 100f * e.dmg / e.totalDmg.get()));
-                    } else {
-                        s.append(" ");
-                    }
-                    s.append(IdToAsset.objectName(e.id));
-                    first = false;
-                }
-            }
-            return s.toString();
-        }
-
-        return "";
-    }
-
-    public static String display(Entity entity, ArrayList<Pair<String, Integer>> deaths, Entity player) {
+    public static String display(
+        Entity entity,
+        Map<String, Integer> deathMap,
+        Entity player,
+        EquipmentUsageAggregator eqAgg
+    ) {
         if (entity == null) return "";
 
         StringBuilder sb = new StringBuilder();
-        sb.append(entity.name()).append(" HP: ").append(entity.maxHp())
-                .append(entity.getFightTimerString()).append("\n");
+
+        // Entity header + table header
+        sb.append(buildEntityHeader(entity));
 
         List<Damage> playerDamageList = entity.getPlayerDamageList();
         int counter = 0;
@@ -223,92 +101,167 @@ public class DpsToString {
         for (Damage dmg : playerDamageList) {
             if (dmg == null || dmg.owner == null) continue;
 
-            boolean highlight = false;
             counter++;
-            int filter = Filter.filter(dmg.owner, player);
 
-            if (Filter.shouldFilter() && filter != 1) continue;
-            if (filter == 2) highlight = true;
+            // Filter logic
+            int filterDecision = Filter.filter(dmg.owner, player);
+            if (Filter.shouldFilter() && filterDecision != 1) continue;
 
-            String name = dmg.owner.getStatName();
-            if (name == null) continue;
+            boolean highlight = (filterDecision == 2);
 
-            String extra = "    ";
-            String isMe = (dmg.owner.isUser() && DpsDisplayOptions.showMe) ? " ->" :
-                    (highlight ? ">>>" : "   ");
+            // Name cleanup and prefix
+            String rawName = dmg.owner.getStatName();
+            if (rawName == null) continue;
+            String name = cleanName(rawName);
 
-            int index = name.indexOf(',');
-            if (index != -1) name = name.substring(0, index);
+            String prefix = formatUserPrefix(dmg, highlight);
 
-            float pers = ((float) dmg.damage * 100 / (float) entity.maxHp());
+            // Damage contribution vs mob HP
+            float percentOfMob = safePercent(dmg.damage, entity.maxHp());
 
-            if (dmg.oryx3GuardDmg) {
-                extra = String.format("[Guarded Hits:%d Dmg:%d]", dmg.counterHits, dmg.counterDmg);
-            } else if (entity.dammahCountered && dmg.chancellorDammahDmg) {
-                extra = String.format("[Dammah Hits:%d Dmg:%d]", dmg.counterHits, dmg.counterDmg);
-            } else if (dmg.walledGardenReflectors) {
-                extra = String.format("[Garden Hits:%d Dmg:%d]", dmg.counterHits, dmg.counterDmg);
-            }
+            // Extra tag (guarded/dammah/garden), or 4 spaces
+            String extra = GuardsHandler.buildExtraTag(entity, dmg);
+            if (extra.isEmpty()) extra = "    ";
 
+            // Death/Nexus info, if available
             if (entity.playerDropped != null) {
-                for (int id : entity.playerDropped.keySet()) {
-                    if (dmg.owner.id == id) {
-                        PlayerRemoved pr = entity.playerDropped.get(id);
-                        boolean dead = isDeadPlayer(name, deaths);
-                        extra += String.format("%s %.2f%% [%s / %s]",
-                                dead ? "Died" : "Nexus",
-                                ((float) pr.hp / pr.max) * 100,
-                                df.format(pr.hp).replaceAll(",", " "),
-                                df.format(pr.max).replaceAll(",", " "));
-                    }
+                PlayerRemoved pr = entity.playerDropped.get(dmg.owner.id);
+                if (pr != null) {
+                    boolean dead =
+                        deathMap != null && deathMap.containsKey(name);
+                    float hpPct = safePercent(pr.hp, pr.max);
+                    extra +=
+                        (dead ? "Died " : "Nexus ") +
+                        DpsTextFormat.percent2(hpPct) +
+                        "% [" +
+                        DpsTextFormat.grouped(pr.hp) +
+                        " / " +
+                        DpsTextFormat.grouped(pr.max) +
+                        "]";
                 }
             }
 
-            String inv = showInv(DpsDisplayOptions.equipmentOption, dmg.owner, entity);
-            sb.append(String.format("%s %3d %10s DMG: %7d %6.3f%% %s %s\n",
-                    isMe, counter, name, dmg.damage, pers, extra, inv));
-        }
-        sb.append("\n");
+            // Equipment
+            String inv = "";
+            if (DpsDisplayOptions.equipmentOption != 0 && eqAgg != null) {
+                int ownerId = dmg.owner.id;
+                if (DpsDisplayOptions.equipmentOption == 1) {
+                    inv = formatEquipmentOption1(eqAgg, ownerId);
+                } else if (DpsDisplayOptions.equipmentOption == 2) {
+                    inv = formatEquipmentOption2(eqAgg, ownerId);
+                }
+            }
 
+            // Row
+            sb.append(prefix).append(' ');
+            DpsTextFormat.appendPaddedInt(sb, counter, 3);
+            sb.append("  ");
+            DpsTextFormat.appendPaddedRight(sb, name, 10);
+            sb.append(" DMG: ");
+            DpsTextFormat.appendPaddedInt(sb, dmg.damage, 7);
+            sb
+                .append(' ')
+                .append(DpsTextFormat.percent3(percentOfMob))
+                .append("% ")
+                .append(extra);
+            if (!inv.isEmpty()) {
+                sb.append(' ').append(inv);
+            }
+            sb.append('\n');
+        }
+
+        sb.append("\n");
         return sb.toString();
     }
 
-    private static boolean isDeadPlayer(String name, ArrayList<Pair<String, Integer>> deaths) {
-        if (name == null || deaths == null) return false;
+    // === Helpers ========================================================================
 
-        for (Pair<String, Integer> p : deaths) {
-            if (name.equals(p.left())) return true;
-        }
-        return false;
+    private static boolean isValidEntity(Entity e) {
+        return (
+            e != null &&
+            e.maxHp() > 0 &&
+            !CharacterClass.isPlayerCharacter(e.objectType)
+        );
     }
 
-    private static class DataBundle {
-        final MapInfoPacket map;
-        final List<Entity> sortedEntityHitList;
-        final ArrayList<NotificationPacket> notifications;
-        final Entity player;
-        final long totalDungeonPcTime;
-
-        DataBundle(MapInfoPacket map, List<Entity> sortedEntityHitList,
-                   ArrayList<NotificationPacket> notifications,
-                   Entity player, long totalDungeonPcTime) {
-            this.map = map;
-            this.sortedEntityHitList = sortedEntityHitList;
-            this.notifications = notifications;
-            this.player = player;
-            this.totalDungeonPcTime = totalDungeonPcTime;
-        }
+    private static String buildEntityHeader(Entity entity) {
+        StringBuilder sb = new StringBuilder();
+        sb
+            .append(entity.name())
+            .append(" HP: ")
+            .append(entity.maxHp())
+            .append(entity.getFightTimerString())
+            .append("\n")
+            .append("    #   Player      DMG         % \n")
+            .append("    -----------------------------------------------\n");
+        return sb.toString();
     }
 
-    public void shutdown() {
-        processingExecutor.shutdown();
-        try {
-            if (!processingExecutor.awaitTermination(1, TimeUnit.SECONDS)) {
-                processingExecutor.shutdownNow();
+    private static String cleanName(String statName) {
+        int index = statName.indexOf(',');
+        return (index != -1) ? statName.substring(0, index) : statName;
+    }
+
+    private static String formatUserPrefix(Damage dmg, boolean highlight) {
+        if (dmg.owner.isUser() && DpsDisplayOptions.showMe) return " ->";
+        return highlight ? ">>>" : "   ";
+    }
+
+    private static float safePercent(int part, int total) {
+        if (total <= 0) return 0f;
+        return ((float) part * 100f) / (float) total;
+    }
+
+    private static String formatEquipmentOption1(
+        EquipmentUsageAggregator eqAgg,
+        int ownerId
+    ) {
+        StringBuilder s = new StringBuilder("[");
+        for (int i = 0; i < EquipmentUsageAggregator.SLOT_COUNT; i++) {
+            if (i != 0) s.append(" / ");
+            Equipment max = eqAgg.getMostUsedItem(ownerId, i);
+            int id = (max != null) ? max.id : 0;
+            s.append(IdToAsset.objectName(id));
+        }
+        s.append("]");
+        return s.toString();
+    }
+
+    private static String formatEquipmentOption2(
+        EquipmentUsageAggregator eqAgg,
+        int ownerId
+    ) {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < EquipmentUsageAggregator.SLOT_COUNT; i++) {
+            s.append("\n       ");
+            Collection<Equipment> list = eqAgg.getSlotBreakdown(ownerId, i);
+            int total = eqAgg.getSlotTotalDamage(ownerId, i);
+
+            // Sort by descending contribution
+            List<Equipment> sorted = new ArrayList<>(list);
+            sorted.sort((a, b) -> Integer.compare(b.dmg, a.dmg));
+
+            boolean first = true;
+            int size = sorted.size();
+
+            for (Equipment e2 : sorted) {
+                if (size > 1) {
+                    if (!first) s.append(" /");
+                    double pct = (total > 0) ? (100.0 * e2.dmg) / total : 0.0;
+                    s
+                        .append(' ')
+                        .append(
+                            DpsTextFormat.formatPercentWithTinyThreshold(pct)
+                        )
+                        .append(' ');
+                } else {
+                    // Single item => 100%
+                    s.append(" 100% ");
+                }
+                s.append(IdToAsset.objectName(e2.id));
+                first = false;
             }
-        } catch (InterruptedException e) {
-            processingExecutor.shutdownNow();
-            Thread.currentThread().interrupt();
         }
+        return s.toString();
     }
 }

@@ -1,11 +1,10 @@
 package tomato.gui.dps;
 
-import tomato.backend.data.Entity;
-import tomato.realmshark.enums.CharacterClass;
-
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.HashSet;
+import javax.swing.*;
+import tomato.backend.data.Entity;
+import tomato.realmshark.enums.CharacterClass;
 
 public class Filter {
 
@@ -73,7 +72,9 @@ public class Filter {
                 } else if (fieldIndex == 1 && s.equals("1")) {
                     myClassFilter = true;
                 } else if (s.equals("1")) {
-                    filterClasses.add(CharacterClass.CHAR_CLASS_LIST[fieldIndex - 2].getId());
+                    filterClasses.add(
+                        CharacterClass.CHAR_CLASS_LIST[fieldIndex - 2].getId()
+                    );
                 }
                 fieldIndex++;
             }
