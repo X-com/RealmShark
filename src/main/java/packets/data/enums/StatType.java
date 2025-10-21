@@ -144,6 +144,7 @@ public enum StatType implements Serializable {
     BACKPACK_14_STAT(145),
     BACKPACK_15_STAT(146),
     DUST_AMOUNT_STAT(147),
+    UNKNOWN_STRING_155_STAT(155),
     ;
 
     private final int index;
