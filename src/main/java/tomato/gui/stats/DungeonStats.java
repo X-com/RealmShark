@@ -2,20 +2,19 @@ package tomato.gui.stats;
 
 import assets.IdToAsset;
 import assets.ImageBuffer;
-import tomato.backend.data.DungeonStatData;
-import tomato.backend.data.DungeonStatData.DungeonInfo;
-import tomato.backend.data.DungeonStatData.Loot;
-import tomato.gui.SmartScroller;
-import tomato.gui.dps.DpsGUI;
-
-import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import tomato.backend.data.DungeonStatData;
+import tomato.backend.data.DungeonStatData.DungeonInfo;
+import tomato.backend.data.DungeonStatData.Loot;
+import tomato.gui.SmartScroller;
+import tomato.gui.dps.DpsGUI;
 
 public class DungeonStats extends JPanel {
 
@@ -33,10 +32,14 @@ public class DungeonStats extends JPanel {
         setLayout(new BorderLayout());
 
         dungeonStatPanel = new JPanel();
-        dungeonStatPanel.setLayout(new BoxLayout(dungeonStatPanel, BoxLayout.Y_AXIS));
+        dungeonStatPanel.setLayout(
+            new BoxLayout(dungeonStatPanel, BoxLayout.Y_AXIS)
+        );
         radioPanel = new JPanel();
         radioPanel.setLayout(new BoxLayout(radioPanel, BoxLayout.Y_AXIS));
-        radioPanel.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, Color.GRAY));
+        radioPanel.setBorder(
+            BorderFactory.createMatteBorder(0, 1, 0, 0, Color.GRAY)
+        );
 
         validate();
 
@@ -52,7 +55,11 @@ public class DungeonStats extends JPanel {
     }
 
     private void updateGUI() {
-        if (dungeonStatData == null || dungeonStatData.data == null || selectionName == null) return;
+        if (
+            dungeonStatData == null ||
+            dungeonStatData.data == null ||
+            selectionName == null
+        ) return;
 
         dungeonStatPanel.removeAll();
 
@@ -73,7 +80,11 @@ public class DungeonStats extends JPanel {
 
     private void updateRadioButtons() {
         if (dungeonStatData == null || dungeonStatData.data == null) return;
-        String[] list = dungeonStatData.data.keySet().stream().sorted().toArray(String[]::new);
+        String[] list = dungeonStatData.data
+            .keySet()
+            .stream()
+            .sorted()
+            .toArray(String[]::new);
         if (list.length == dungeonSize) return;
         dungeonSize = list.length;
         radioPanel.removeAll();
@@ -91,11 +102,25 @@ public class DungeonStats extends JPanel {
 
     private void displayDungeon(DungeonInfo info) {
         JPanel titlePanel = new JPanel();
-        titlePanel.setBorder(BorderFactory.createTitledBorder(null, info.getName() + " [" + info.getEnteredDungeon() + "] " + DpsGUI.systemTimeToString(info.getTotalTime()), TitledBorder.CENTER, TitledBorder.CENTER, mainFont));
+        titlePanel.setBorder(
+            BorderFactory.createTitledBorder(
+                null,
+                info.getName() +
+                " [" +
+                info.getEnteredDungeon() +
+                "] " +
+                DpsGUI.systemTimeToString(info.getTotalTime()),
+                TitledBorder.CENTER,
+                TitledBorder.CENTER,
+                mainFont
+            )
+        );
         dungeonStatPanel.add(titlePanel);
 
         TreeMap<String, JPanel> list = new TreeMap<>();
-        for (Map.Entry<Integer, Integer> e : info.getEntityDamaged().entrySet()) {
+        for (Map.Entry<Integer, Integer> e : info
+            .getEntityDamaged()
+            .entrySet()) {
             Integer id = e.getKey();
             if (id == null || id == 0) continue;
 
@@ -104,7 +129,9 @@ public class DungeonStats extends JPanel {
             if (p == null) continue;
             list.put(str, p);
         }
-        list.keySet().stream().sorted().forEach(s -> dungeonStatPanel.add(list.get(s)));
+
+        list.keySet().forEach(s -> dungeonStatPanel.add(list.get(s)));
+
         JPanel unknownItems = addMobTitle(0, 0, info);
         if (unknownItems != null) {
             dungeonStatPanel.add(unknownItems);
@@ -114,7 +141,12 @@ public class DungeonStats extends JPanel {
     private JPanel addMobTitle(int id, int num, DungeonInfo di) {
         StringBuilder sb = new StringBuilder();
         JPanel mobPanel = new JPanel();
-        mobPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY), BorderFactory.createEmptyBorder(0, 0, 0, 0)));
+        mobPanel.setBorder(
+            BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY),
+                BorderFactory.createEmptyBorder(0, 0, 0, 0)
+            )
+        );
         mobPanel.setLayout(new BoxLayout(mobPanel, BoxLayout.Y_AXIS));
 
         if (id == 0) {
@@ -137,10 +169,14 @@ public class DungeonStats extends JPanel {
             }
 
             l.setFont(mainFont);
-            l.setToolTipText("Total number of hits on mob type (not confirmed killed or soulbound)");
+            l.setToolTipText(
+                "Total number of hits on mob type (not confirmed killed or soulbound)"
+            );
             mobPanel.add(l);
         } catch (Exception e) {
-            System.out.println("Entity id: " + id + " " + IdToAsset.tileName(id));
+            System.out.println(
+                "Entity id: " + id + " " + IdToAsset.tileName(id)
+            );
             e.printStackTrace();
         }
 
@@ -151,8 +187,16 @@ public class DungeonStats extends JPanel {
         for (Map.Entry<Integer, Integer> e : loot.getItems().entrySet()) {
             StringBuilder sb2 = new StringBuilder();
             Integer idItem = e.getKey();
-            sb2.append(IdToAsset.objectName(idItem)).append(" : ").append(e.getValue()).append("\n");
-            JLabel itemLabel = new JLabel(sb2.toString(), ImageBuffer.getOutlinedIcon(idItem, 16), JLabel.LEFT);
+            sb2
+                .append(IdToAsset.objectName(idItem))
+                .append(" : ")
+                .append(e.getValue())
+                .append("\n");
+            JLabel itemLabel = new JLabel(
+                sb2.toString(),
+                ImageBuffer.getOutlinedIcon(idItem, 16),
+                JLabel.LEFT
+            );
             itemLabel.setFont(mainFont);
             list.add(itemLabel);
         }
@@ -169,7 +213,9 @@ public class DungeonStats extends JPanel {
         if (INSTANCE == null) return;
         INSTANCE.dungeonStatData = data;
         INSTANCE.updateRadioButtons();
-        if (dungeon == null || dungeon.equals(INSTANCE.selectionName)) INSTANCE.updateGUI();
+        if (
+            dungeon == null || dungeon.equals(INSTANCE.selectionName)
+        ) INSTANCE.updateGUI();
     }
 
     public static void editFont(Font font) {

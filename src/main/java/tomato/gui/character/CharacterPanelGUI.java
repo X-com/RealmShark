@@ -1,10 +1,9 @@
 package tomato.gui.character;
 
-import tomato.backend.data.TomatoData;
-
+import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.*;
+import tomato.backend.data.TomatoData;
 
 /**
  * Character GUI class to display character data in the character tab.
@@ -24,7 +23,8 @@ public class CharacterPanelGUI extends JPanel {
 
         CharacterStatsGUI characterStatsGUI = new CharacterStatsGUI(data);
 
-        JPanel characterCollectionGUI = new CharacterCollectionGUI(data);
+        CharacterCollectionGUI characterCollectionGUI =
+            new CharacterCollectionGUI(data);
 
         CharacterPetsGUI characterPetsGUI = new CharacterPetsGUI(data);
 
@@ -37,28 +37,28 @@ public class CharacterPanelGUI extends JPanel {
         tabbedPane.addTab("Stat Maxing", mainMaxingPanel);
         tabbedPane.addTab("Pets", characterPetsGUI);
 
-//        JButton button = new JButton("Test");
-//        button.addActionListener(e -> {
-//            try {
-//                mainMaxingPanel.removeAll();
-//                mainMaxingPanel.add(scrollPaneMaxing, BorderLayout.CENTER);
-//                mainMaxingPanel.add(missingPotsPanel(), BorderLayout.NORTH);
-//                mainMaxingPanel.revalidate();
-//                java.io.InputStream is = Util.resourceFilePath("char");
+        //        JButton button = new JButton("Test");
+        //        button.addActionListener(e -> {
+        //            try {
+        //                mainMaxingPanel.removeAll();
+        //                mainMaxingPanel.add(scrollPaneMaxing, BorderLayout.CENTER);
+        //                mainMaxingPanel.add(missingPotsPanel(), BorderLayout.NORTH);
+        //                mainMaxingPanel.revalidate();
+        //                java.io.InputStream is = Util.resourceFilePath("char");
 
-//                java.io.InputStream is = CharacterStatsGUI.class.getClassLoader().getResourceAsStream("f");
-//                String result = new java.io.BufferedReader(new java.io.InputStreamReader(is)).lines().collect(java.util.stream.Collectors.joining("\n"));
-//                java.util.ArrayList<tomato.realmshark.RealmCharacter> l = tomato.realmshark.HttpCharListRequest.getCharList(result);
-//                data.characterListUpdate(l);
+        //                java.io.InputStream is = CharacterStatsGUI.class.getClassLoader().getResourceAsStream("f");
+        //                String result = new java.io.BufferedReader(new java.io.InputStreamReader(is)).lines().collect(java.util.stream.Collectors.joining("\n"));
+        //                java.util.ArrayList<tomato.realmshark.RealmCharacter> l = tomato.realmshark.HttpCharListRequest.getCharList(result);
+        //                data.characterListUpdate(l);
 
-//                chars = l;
-//                updateCharPanel(chars);
-//                updateMaxingPanel(l);
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        add(button, BorderLayout.SOUTH);
+        //                chars = l;
+        //                updateCharPanel(chars);
+        //                updateMaxingPanel(l);
+        //            } catch (Exception ex) {
+        //                ex.printStackTrace();
+        //            }
+        //        });
+        //        add(button, BorderLayout.SOUTH);
     }
 
     /**
@@ -66,7 +66,11 @@ public class CharacterPanelGUI extends JPanel {
      *
      * @return Right mid larger box to fill with components
      */
-    static JPanel createMidRightBox(JPanel panelTop, JPanel panelMid, JPanel panelBot) {
+    static JPanel createMidRightBox(
+        JPanel panelTop,
+        JPanel panelMid,
+        JPanel panelBot
+    ) {
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(240, 120));
         panel.setLayout(new GridLayout(3, 1));
@@ -89,7 +93,9 @@ public class CharacterPanelGUI extends JPanel {
      */
     static JPanel createMainBox() {
         JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.GRAY));
+        panel.setBorder(
+            BorderFactory.createMatteBorder(1, 0, 1, 0, Color.GRAY)
+        );
         panel.setPreferredSize(new Dimension(370, CHAR_PANEL_SIZE));
         panel.setMaximumSize(new Dimension(370, CHAR_PANEL_SIZE));
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
@@ -126,5 +132,6 @@ public class CharacterPanelGUI extends JPanel {
         CharacterStatMaxingGUI.updateRealmChars();
         CharacterCollectionGUI.updateRealmChars();
         CharacterPetsGUI.updateEquipedPet();
+        tomato.gui.stats.FameTablePanel.updateRealmChars();
     }
 }
