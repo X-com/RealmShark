@@ -57,12 +57,13 @@ public class Texture2D {
         name = reader.readAlignedString();
 
 //        if self.version >= (2017, 3){
-        m_ForcedFallbackFormat = reader.readInt();
-        m_DownscaleFallback = reader.readBoolean();
+//        m_ForcedFallbackFormat = reader.readInt();
+//        m_DownscaleFallback = reader.readBoolean();
 //        if self.version >= (2020,2): # 2020.2 and up {
         m_IsAlphaChannelOptional = reader.readBoolean();
 //        }
         reader.alignStream();
+
 //        }
 
         m_Width = reader.readInt();

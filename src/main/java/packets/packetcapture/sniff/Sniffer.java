@@ -97,18 +97,19 @@ public class Sniffer {
                 } else {
                     pcap = service.live(interfaceList[i], defaultLiveOptions);
                 }
+
+                // If pcap is null, meaning this was not a 'valid' interface on macOS continue on to the next one
+                if (pcap == null) {
+                    continue;
+                }
+
+                pcap.setFilter("tcp port " + port, true);
+                pcaps[i] = pcap;
+
             } catch (Exception e) {
                 e.printStackTrace();
                 continue;
             }
-
-            // If pcap is null, meaning this was not a 'valid' interface on macOS continue on to the next one
-            if (pcap == null) {
-                continue;
-            }
-
-            pcap.setFilter("tcp port " + port, true);
-            pcaps[i] = pcap;
 
             startPacketSniffer(pcap);
         }
