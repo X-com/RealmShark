@@ -241,10 +241,10 @@ public class GraphPanel extends JPanel implements MouseMotionListener {
                 g2.setColor(Color.GRAY);
                 String yLabel = String.valueOf(
                     ((int) ((minMax.minScoreY +
-                                    (minMax.maxScoreY - minMax.minScoreY) *
-                                    ((i * 1.0) / NUMBER_Y_DIVISIONS)) *
-                                100)) /
-                        100
+                                (minMax.maxScoreY - minMax.minScoreY) *
+                                ((i * 1.0) / NUMBER_Y_DIVISIONS)) *
+                            100)) /
+                    100
                 );
                 FontMetrics metrics = g2.getFontMetrics();
                 int labelWidth = metrics.stringWidth(yLabel);

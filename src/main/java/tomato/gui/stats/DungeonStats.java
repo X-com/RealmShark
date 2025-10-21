@@ -106,10 +106,10 @@ public class DungeonStats extends JPanel {
             BorderFactory.createTitledBorder(
                 null,
                 info.getName() +
-                    " [" +
-                    info.getEnteredDungeon() +
-                    "] " +
-                    DpsGUI.systemTimeToString(info.getTotalTime()),
+                " [" +
+                info.getEnteredDungeon() +
+                "] " +
+                DpsGUI.systemTimeToString(info.getTotalTime()),
                 TitledBorder.CENTER,
                 TitledBorder.CENTER,
                 mainFont

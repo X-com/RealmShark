@@ -15,12 +15,9 @@ import java.util.Locale;
 public final class Formatters {
 
     // Common date/time patterns used across the UI
-    public static final DateTimeFormatter DATE_TIME =
-        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    public static final DateTimeFormatter TIME_SHORT =
-        DateTimeFormatter.ofPattern("HH:mm:ss");
-    public static final DateTimeFormatter DATE_TIME_COMPACT =
-        DateTimeFormatter.ofPattern("yyyy/MM/dd-HH:mm:ss");
+    public static final DateTimeFormatter DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static final DateTimeFormatter TIME_SHORT = DateTimeFormatter.ofPattern("HH:mm:ss");
+    public static final DateTimeFormatter DATE_TIME_COMPACT = DateTimeFormatter.ofPattern("yyyy/MM/dd-HH:mm:ss");
 
     private Formatters() {
         // no instances
@@ -84,9 +81,7 @@ public final class Formatters {
      * Format an epoch millis timestamp using the local system zone and "yyyy-MM-dd HH:mm:ss".
      */
     public static String formatTimestamp(long epochMillis) {
-        return DATE_TIME.format(
-            Instant.ofEpochMilli(epochMillis).atZone(ZoneId.systemDefault())
-        );
+        return DATE_TIME.format(Instant.ofEpochMilli(epochMillis).atZone(ZoneId.systemDefault()));
     }
 
     /**
@@ -100,9 +95,7 @@ public final class Formatters {
      * Format current local date-time as "yyyy/MM/dd-HH:mm:ss".
      */
     public static String formatNowCompact() {
-        return DATE_TIME_COMPACT.format(
-            Instant.now().atZone(ZoneId.systemDefault())
-        );
+        return DATE_TIME_COMPACT.format(Instant.now().atZone(ZoneId.systemDefault()));
     }
 
     /**
@@ -115,13 +108,7 @@ public final class Formatters {
         long hours = d.toHours();
         long minutes = d.minusHours(hours).toMinutes();
         long seconds = d.minusHours(hours).minusMinutes(minutes).getSeconds();
-        return String.format(
-            Locale.ROOT,
-            "%02d:%02d:%02d",
-            hours,
-            minutes,
-            seconds
-        );
+        return String.format(Locale.ROOT, "%02d:%02d:%02d", hours, minutes, seconds);
     }
 
     /**
