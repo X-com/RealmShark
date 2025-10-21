@@ -1,17 +1,16 @@
 package tomato.gui.character;
 
 import assets.ImageBuffer;
-import tomato.realmshark.RealmCharacter;
-import tomato.backend.data.TomatoData;
-import tomato.realmshark.enums.CharacterClass;
-
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
+import tomato.backend.data.TomatoData;
+import tomato.realmshark.RealmCharacter;
+import tomato.realmshark.enums.CharacterClass;
 
 public class CharacterExaltGUI extends JPanel {
 
     private static CharacterExaltGUI INSTANCE;
-    private static final int[] exaltOrder = {7, 6, 5, 4, 1, 0, 2, 3};
+    private static final int[] exaltOrder = { 7, 6, 5, 4, 1, 0, 2, 3 };
 
     private final JLabel[][] grid;
     private final TomatoData data;
@@ -29,12 +28,20 @@ public class CharacterExaltGUI extends JPanel {
         JScrollPane spLeft = new JScrollPane(left);
         JScrollPane spRight = new JScrollPane(right);
 
-        spRight.getVerticalScrollBar().setModel(spLeft.getVerticalScrollBar().getModel());
+        spRight
+            .getVerticalScrollBar()
+            .setModel(spLeft.getVerticalScrollBar().getModel());
         spRight.getVerticalScrollBar().setUnitIncrement(9);
 
-        spLeft.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        spRight.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        spRight.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        spLeft.setHorizontalScrollBarPolicy(
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+        );
+        spRight.setHorizontalScrollBarPolicy(
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+        );
+        spRight.setVerticalScrollBarPolicy(
+            JScrollPane.VERTICAL_SCROLLBAR_NEVER
+        );
 
         setLayout(new BorderLayout());
         JPanel leftBar = new JPanel();
@@ -59,14 +66,25 @@ public class CharacterExaltGUI extends JPanel {
     }
 
     private void fixTop(JPanel top) {
-        String[] exaltList = {"Life", "Mana", "Atk", "Def", "Spd", "Dex", "Vit", "Wis"};
+        String[] exaltList = {
+            "Life",
+            "Mana",
+            "Atk",
+            "Def",
+            "Spd",
+            "Dex",
+            "Vit",
+            "Wis",
+        };
         top.setLayout(new GridLayout(1, exaltList.length));
 
         for (String ex : exaltList) {
             JLabel exalts = new JLabel(ex);
 
             JPanel p = new JPanel();
-            p.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.gray));
+            p.setBorder(
+                BorderFactory.createMatteBorder(0, 0, 1, 1, Color.gray)
+            );
             p.add(exalts);
             p.setPreferredSize(new Dimension(35, 27));
             top.add(p);
@@ -86,7 +104,9 @@ public class CharacterExaltGUI extends JPanel {
                 classes = new JLabel("Missing");
             }
             JPanel p = new JPanel(new GridBagLayout());
-            p.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.gray));
+            p.setBorder(
+                BorderFactory.createMatteBorder(0, 0, 1, 1, Color.gray)
+            );
             p.setPreferredSize(new Dimension(110, 27));
             p.add(classes);
 
@@ -100,7 +120,9 @@ public class CharacterExaltGUI extends JPanel {
         for (int i = 0; i < charListSize + 2; i++) {
             for (int j = 0; j < 8; j++) {
                 JPanel p = new JPanel();
-                p.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.gray));
+                p.setBorder(
+                    BorderFactory.createMatteBorder(0, 0, 1, 1, Color.gray)
+                );
                 grid[i][j] = new JLabel("-");
                 p.add(grid[i][j]);
                 right.add(p);
@@ -151,6 +173,10 @@ public class CharacterExaltGUI extends JPanel {
     }
 
     private JLabel classIcon(int skin, String classString) {
-        return new JLabel(classString, ImageBuffer.getOutlinedIcon(skin, 15), JLabel.CENTER);
+        return new JLabel(
+            classString,
+            ImageBuffer.getOutlinedIcon(skin, 15),
+            JLabel.CENTER
+        );
     }
 }

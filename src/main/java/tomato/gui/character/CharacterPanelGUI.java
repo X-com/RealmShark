@@ -23,7 +23,8 @@ public class CharacterPanelGUI extends JPanel {
 
         CharacterStatsGUI characterStatsGUI = new CharacterStatsGUI(data);
 
-        JPanel characterCollectionGUI = new CharacterCollectionGUI(data);
+        CharacterCollectionGUI characterCollectionGUI =
+            new CharacterCollectionGUI(data);
 
         CharacterPetsGUI characterPetsGUI = new CharacterPetsGUI(data);
 

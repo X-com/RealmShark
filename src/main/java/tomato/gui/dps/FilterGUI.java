@@ -1,182 +1,407 @@
 package tomato.gui.dps;
 
-import java.util.HashSet;
-import java.util.Locale;
-import tomato.backend.data.Entity;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import javax.swing.*;
+import tomato.gui.dps.shared.FilterPresetSerializer;
 import tomato.realmshark.enums.CharacterClass;
 
-/**
- * Centralized filter/highlight logic for DPS views.
- *
- * Semantics:
- * - filter == 0 => disabled
- * - filter == 1 => "Filter" mode (only show matching entries)
- * - filter == 2 => "Highlight" mode (show all, mark matching entries)
- *
- * Matching is true if ANY of the following are true (in order):
- * - My Guild matches (when enabled)
- * - My Class matches (when enabled)
- * - Name is in filterNames
- * - Guild is in filterGuilds
- * - Class type is in filterClasses
- */
-public final class Filter {
+public class FilterGUI extends JPanel {
 
-    // Preset name (purely informational for UI)
-    public static String name;
+    private final ArrayList<JTextField> textFieldNames = new ArrayList<>();
+    private final ArrayList<JTextField> textFieldGuild = new ArrayList<>();
+    private final ArrayList<JCheckBox> classCheckBoxes = new ArrayList<>();
+    private JPanel namePanelBody;
+    private JPanel guildPanelBody;
+    private final JTextField nameText;
+    private final JRadioButton filter;
+    private final JRadioButton highlight;
+    private final JComboBox<String> filterComboBox;
+    private final DpsGUI dpsGui;
 
-    // 0: disabled, 1: filter, 2: highlight
-    public static int filter = 1;
+    public FilterGUI(DpsGUI dpsGui) {
+        this.dpsGui = dpsGui;
+        setLayout(new BorderLayout());
 
-    // "My ..." toggles (driven by part-4 fields of the preset)
-    public static boolean myGuildFilter;
-    public static boolean myClassFilter;
+        // Top controls
+        JPanel top = new JPanel();
+        top.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
 
-    // Matching sets (lowercased for names/guilds)
-    public static final HashSet<String> filterNames = new HashSet<>();
-    public static final HashSet<String> filterGuilds = new HashSet<>();
-    public static final HashSet<Integer> filterClasses = new HashSet<>();
+        filterComboBox = new JComboBox<>(dpsGui.getComboBoxStrings());
+        nameText = addTextField(true, true);
+        JButton loadButton = new JButton("Load");
+        JButton saveButton = new JButton("Save");
+        JButton newButton = new JButton("New");
+        JButton deleteButton = new JButton("Delete");
+        JLabel nameLabel = new JLabel("Name: ");
 
-    private Filter() {
-        // no instances
+        JPanel radio = new JPanel();
+        ButtonGroup group = new ButtonGroup();
+        filter = new JRadioButton("Filter");
+        highlight = new JRadioButton("Highlight");
+        group.add(filter);
+        group.add(highlight);
+        radio.add(filter);
+        radio.add(highlight);
+        filter.setSelected(true);
+
+        nameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        top.add(saveButton, gbc);
+
+        gbc.gridx = 1;
+        top.add(loadButton, gbc);
+
+        gbc.gridx = 2;
+        top.add(filterComboBox, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        top.add(newButton, gbc);
+
+        gbc.gridx = 1;
+        top.add(nameLabel, gbc);
+
+        gbc.gridx = 2;
+        gbc.weightx = 1000;
+        gbc.fill = GridBagConstraints.BOTH;
+        top.add(nameText, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.NORTH;
+        top.add(deleteButton, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.gridwidth = 2;
+        top.add(radio, gbc);
+
+        add(top, BorderLayout.NORTH);
+
+        // Main content scroll area (increased width/height)
+        JPanel boxScroll = new JPanel();
+        JScrollPane scrollPane = new JScrollPane(boxScroll);
+        int w = 360; // increased width
+        int h = 360; // increased height
+        scrollPane.setBounds(0, 0, w + 20, h);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(40);
+
+        JPanel contentPane = new JPanel(null);
+        contentPane.setPreferredSize(new Dimension(w, h));
+        contentPane.add(scrollPane);
+        add(contentPane, BorderLayout.CENTER);
+
+        largeMethod(boxScroll);
+
+        // Actions
+        loadButton.addActionListener(e -> loadButton());
+        saveButton.addActionListener(e -> saveButton());
+        newButton.addActionListener(e -> newButton());
+        deleteButton.addActionListener(e -> deleteButton());
     }
 
-    /**
-     * Returns the filter decision for the given owner vs. the current player.
-     * - 0 => NOT matched (in filter mode, row is hidden; in highlight mode, normal row)
-     * - 1 => matched while in filter mode (row is shown)
-     * - 2 => matched while in highlight mode (row is shown and highlighted)
-     */
+    private void deleteButton() {
+        Object n = filterComboBox.getSelectedItem();
+        if (n == null) return;
+        filterComboBox.removeItem(n);
+        dpsGui.removeComboBox(String.valueOf(n));
+    }
 
-    public static int filter(Entity owner, Entity player) {
-        if (filter == 0 || owner == null) return 0;
+    private void loadButton() {
+        Object sel = filterComboBox.getSelectedItem();
+        if (sel == null) return;
+        String presetName = String.valueOf(sel);
+        String serialized = dpsGui.getFilterString(presetName);
+        if (serialized == null || serialized.isEmpty()) return;
 
-        int classType = owner.objectType;
+        newButton(); // reset fields
+        if (namePanelBody != null) namePanelBody.removeAll();
+        if (guildPanelBody != null) guildPanelBody.removeAll();
 
-        String ownerName = lower(owner.name());
+        FilterPresetSerializer.FilterPreset preset =
+            FilterPresetSerializer.deserialize(serialized);
 
-        String ownerGuild = lower(owner.getStatGuild());
+        nameText.setText(preset.name);
+        filter.setSelected(preset.filterMode);
+        highlight.setSelected(preset.highlightMode);
 
-        String myGuild = (player != null) ? lower(player.getStatGuild()) : "";
+        for (String s : preset.names) {
+            JTextField comp = addTextField(false, false);
+            textFieldNames.add(comp);
+            namePanelBody.add(comp);
+            comp.setText(s);
+        }
 
-        // Only perform player-dependent checks when player is available
-        if (player != null) {
-            if (
-                myGuildFilter &&
-                !myGuild.isEmpty() &&
-                myGuild.equals(ownerGuild)
-            ) {
-                return filter;
-            } else if (myClassFilter && player.objectType == classType) {
-                return filter;
+        for (String s : preset.guilds) {
+            JTextField comp = addTextField(true, false);
+            textFieldGuild.add(comp);
+            guildPanelBody.add(comp);
+            comp.setText(s);
+        }
+
+        int max = Math.min(
+            classCheckBoxes.size(),
+            preset.flagsInGuiOrder.size()
+        );
+        for (int i = 0; i < max; i++) {
+            classCheckBoxes
+                .get(i)
+                .setSelected(
+                    Boolean.TRUE.equals(preset.flagsInGuiOrder.get(i))
+                );
+        }
+
+        revalidate();
+        repaint();
+    }
+
+    private void saveButton() {
+        String nameField = nameText.getText() != null
+            ? nameText.getText().trim()
+            : "";
+        if (nameField.replaceAll(" ", "").length() == 0) {
+            return;
+        }
+
+        ArrayList<String> names = new ArrayList<>();
+        for (JTextField field : textFieldNames) {
+            String text = field.getText();
+            if (text != null) {
+                text = text.trim();
+                if (!text.isEmpty()) names.add(text);
             }
         }
 
-        // Class/name/guild filters work even when player is null
-        if (!ownerName.isEmpty() && filterNames.contains(ownerName)) {
-            return filter;
-        } else if (!ownerGuild.isEmpty() && filterGuilds.contains(ownerGuild)) {
-            return filter;
-        } else if (filterClasses.contains(classType)) {
-            return filter;
+        ArrayList<String> guilds = new ArrayList<>();
+        for (JTextField field : textFieldGuild) {
+            String text = field.getText();
+            if (text != null) {
+                text = text.trim();
+                if (!text.isEmpty()) guilds.add(text);
+            }
         }
 
-        return 0;
+        ArrayList<Boolean> flags = new ArrayList<>();
+        for (JCheckBox field : classCheckBoxes) {
+            flags.add(field.isSelected());
+        }
+
+        String serialized = FilterPresetSerializer.serialize(
+            nameField,
+            filter.isSelected(),
+            highlight.isSelected(),
+            names,
+            guilds,
+            flags
+        );
+
+        boolean add = dpsGui.addComboBox(nameField, serialized);
+        if (add) {
+            filterComboBox.addItem(nameField);
+        }
     }
 
-    /**
-     * True when the current mode is "Filter" (1). In this mode, only matching entries are shown.
-     * When false, the mode is "Highlight" (2) or disabled (0).
-     */
-    public static boolean shouldFilter() {
-        return filter == 1;
+    private void newButton() {
+        textFieldNames.clear();
+        textFieldGuild.clear();
+        for (JCheckBox c : classCheckBoxes) {
+            c.setSelected(false);
+        }
+        nameText.setText("");
+
+        if (namePanelBody != null) namePanelBody.removeAll();
+        if (guildPanelBody != null) guildPanelBody.removeAll();
+
+        filter.setSelected(true);
+        highlight.setSelected(false);
+
+        // Create starter fields
+        JTextField comp1 = addTextField(false, false);
+        textFieldNames.add(comp1);
+        if (namePanelBody != null) namePanelBody.add(comp1);
+
+        // Re-add "My Guild" checkbox into the guild body if present in registry as index 0
+        if (!classCheckBoxes.isEmpty() && guildPanelBody != null) {
+            guildPanelBody.add(classCheckBoxes.get(0));
+        }
+
+        JTextField comp2 = addTextField(true, false);
+        textFieldGuild.add(comp2);
+        if (guildPanelBody != null) guildPanelBody.add(comp2);
+
+        revalidate();
+        repaint();
     }
 
-    /**
-     * Disables all filtering/highlighting (filter == 0).
-     */
-    public static void disable() {
-        filter = 0;
+    private void largeMethod(JPanel mainPanel) {
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+
+        textFieldOptions(mainPanel, "By Name", textFieldNames, false);
+        mainPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+
+        textFieldOptions(mainPanel, "By Guild", textFieldGuild, true);
+        mainPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+
+        checkBoxOptions(mainPanel);
     }
 
-    /**
-     * Parses and applies a serialized filter preset.
-     *
-     * Format (comma-separated fields, with "-" to advance to the next section):
-     * - Part 0: preset name
-     * - Part 1: mode flags: "F" => filter(1), "H" => highlight(2)
-     * - Part 2: names (multiple entries)
-     * - Part 3: guilds (multiple entries)
-     * - Part 4: flags and class toggles:
-     *     index 0 => "My Guild" (1/0)
-     *     index 1 => "My Class" (1/0)
-     *     index 2+ => class toggles aligned to CharacterClass.CHAR_CLASS_LIST[index-2]
-     */
-    public static void selectFilter(String ss) {
-        // reset toggles and sets
-        myGuildFilter = false;
-        myClassFilter = false;
-        filterNames.clear();
-        filterGuilds.clear();
-        filterClasses.clear();
+    private void checkBoxOptions(JPanel mainPanel) {
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BorderLayout());
 
-        if (ss == null || ss.isEmpty()) return;
+        // Header
+        JPanel top = new JPanel();
+        JLabel n = new JLabel("By Class");
+        top.setLayout(new BoxLayout(top, BoxLayout.X_AXIS));
+        top.add(n);
+        top.add(Box.createHorizontalGlue());
+        topPanel.add(top, BorderLayout.NORTH);
 
-        int part = 0;
-        int fieldIndex = 0;
+        // Body: My Class + grid of class checkboxes in two rows
+        JPanel body = new JPanel(new BorderLayout());
+        topPanel.add(body, BorderLayout.CENTER);
 
-        for (String raw : ss.split(",")) {
-            String s = (raw == null) ? "" : raw.trim();
-            if (s.equals("-")) {
-                part++;
-                continue;
-            }
+        JCheckBox myClass = new JCheckBox("My Class");
+        classCheckBoxes.add(myClass);
+        body.add(myClass, BorderLayout.NORTH);
 
-            switch (part) {
-                case 0:
-                    // preset name (for UI)
-                    name = s;
-                    break;
-                case 1:
-                    // mode selection
-                    if (s.equals("F")) filter = 1;
-                    if (s.equals("H")) filter = 2;
-                    break;
-                case 2:
-                    // names (lowercased)
-                    if (!s.isEmpty()) filterNames.add(lower(s));
-                    break;
-                case 3:
-                    // guilds (lowercased)
-                    if (!s.isEmpty()) filterGuilds.add(lower(s));
-                    break;
-                case 4:
-                    // flags/classes
-                    if (fieldIndex == 0) {
-                        myGuildFilter = s.equals("1");
-                    } else if (fieldIndex == 1) {
-                        myClassFilter = s.equals("1");
-                    } else if (s.equals("1")) {
-                        int idx = fieldIndex - 2;
-                        if (
-                            idx >= 0 &&
-                            idx < CharacterClass.CHAR_CLASS_LIST.length
-                        ) {
-                            filterClasses.add(
-                                CharacterClass.CHAR_CLASS_LIST[idx].getId()
-                            );
-                        }
+        JPanel grid = new JPanel(new GridLayout(0, 2, 10, 5)); // 2 columns, dynamic rows
+
+        // Build checkboxes in CHAR_CLASS_LIST order for consistent serialization,
+        // but display them alphabetically by class name.
+        java.util.ArrayList<JCheckBox> display = new java.util.ArrayList<>();
+        java.util.ArrayList<String> displayNames = new java.util.ArrayList<>();
+
+        for (CharacterClass s : CharacterClass.CHAR_CLASS_LIST) {
+            String className = CharacterClass.getName(s.getId());
+            JCheckBox comp = new JCheckBox(className);
+
+            // Keep internal order (My Guild, My Class, then CHAR_CLASS_LIST) for flags
+            classCheckBoxes.add(comp);
+
+            // Collect for alphabetical display
+            display.add(comp);
+
+            displayNames.add(className);
+        }
+
+        // Sort by name for display while preserving internal order for serialization
+        java.util.ArrayList<Integer> order = new java.util.ArrayList<>();
+        for (int i = 0; i < display.size(); i++) order.add(i);
+        order.sort((a, b) ->
+            displayNames.get(a).compareToIgnoreCase(displayNames.get(b))
+        );
+        for (Integer i : order) {
+            grid.add(display.get(i));
+        }
+
+        body.add(grid, BorderLayout.CENTER);
+
+        mainPanel.add(topPanel);
+    }
+
+    private void textFieldOptions(
+        JPanel mainPanel,
+        String labelName,
+        ArrayList<JTextField> fields,
+        boolean isGuild
+    ) {
+        JPanel body = new JPanel();
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BorderLayout());
+
+        // Header
+        JPanel top = new JPanel();
+        JLabel n = new JLabel(labelName);
+        top.setLayout(new BoxLayout(top, BoxLayout.X_AXIS));
+        top.add(n);
+        top.add(Box.createHorizontalGlue());
+        topPanel.add(top, BorderLayout.NORTH);
+        topPanel.add(body, BorderLayout.CENTER);
+
+        body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
+
+        // My Guild checkbox goes here (and registered first in classCheckBoxes)
+        if (isGuild) {
+            JCheckBox myGuildCheckBox = new JCheckBox("My Guild");
+            body.add(myGuildCheckBox);
+            classCheckBoxes.add(myGuildCheckBox);
+            guildPanelBody = body;
+        } else {
+            namePanelBody = body;
+        }
+
+        // Bottom tools
+        JPanel bot = new JPanel(new GridBagLayout());
+        JButton addButton = new JButton("+");
+        bot.add(addButton);
+
+        // One initial field
+        JTextField comp1 = addTextField(isGuild, false);
+        fields.add(comp1);
+        body.add(comp1);
+
+        addButton.addActionListener(e -> {
+            JTextField comp2 = addTextField(isGuild, false);
+            fields.add(comp2);
+            body.add(comp2);
+            revalidate();
+            repaint();
+        });
+        topPanel.add(bot, BorderLayout.SOUTH);
+
+        mainPanel.add(topPanel);
+    }
+
+    private JTextField addTextField(boolean withSpace, boolean withNumbers) {
+        JTextField comp = new JTextField();
+        comp.addKeyListener(
+            new KeyAdapter() {
+                public void keyTyped(KeyEvent e) {
+                    char caracter = e.getKeyChar();
+                    if (
+                        ((caracter < 'a') || (caracter > 'z')) &&
+                        ((caracter < 'A') || (caracter > 'Z')) &&
+                        (!withNumbers ||
+                            (caracter < '0') ||
+                            (caracter > '9')) &&
+                        (caracter != '\b') &&
+                        (!withSpace || (caracter != ' '))
+                    ) {
+                        e.consume();
                     }
-                    fieldIndex++;
-                    break;
-                default:
-                    // ignore unknown parts to be forward compatible
-                    break;
+                }
             }
-        }
+        );
+        return comp;
     }
 
-    private static String lower(String s) {
-        return (s == null) ? "" : s.toLowerCase(Locale.ROOT);
+    public static void open(DpsGUI dpsGui) {
+        FilterGUI filter = new FilterGUI(dpsGui);
+
+        JButton close = new JButton("Close");
+        JOptionPane pane = new JOptionPane(
+            filter,
+            JOptionPane.PLAIN_MESSAGE,
+            JOptionPane.OK_CANCEL_OPTION,
+            null,
+            new JButton[] { close },
+            close
+        );
+        close.addActionListener(e -> {
+            Window w = SwingUtilities.getWindowAncestor(close);
+            pane.setValue(-1);
+            w.dispose();
+        });
+        JDialog dialog = pane.createDialog(dpsGui, "Filter Options");
+        dialog.setVisible(true);
     }
 }
