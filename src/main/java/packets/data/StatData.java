@@ -62,6 +62,7 @@ public class StatData implements Serializable {
                 || StatType.CRUCIBLE_STAT.get() == statTypeNum
                 || StatType.DUST_AMOUNT_STAT.get() == statTypeNum
                 || StatType.PET_NAME_STAT.get() == statTypeNum
+                || StatType.UNKNOWN_STRING_155_STAT.get() == statTypeNum
         ) {
             return true;
         }
