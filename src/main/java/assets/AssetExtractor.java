@@ -1,23 +1,6 @@
 package assets;
 
 import assets.resextractor.UnityExtractor;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import realmshark.version.Version;
-import util.PropertiesManager;
-import util.Util;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +16,22 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import realmshark.version.Version;
+import util.PropertiesManager;
+import util.Util;
 
 /**
  * Main loader for assets. If assets are missing or are outdated,
@@ -40,23 +39,30 @@ import java.util.stream.Stream;
  */
 public class AssetExtractor {
 
-    public static final String ASSETS_OBJECT_FILE_DIR_PATH = "assets/ObjectID.list";
+    public static final String ASSETS_OBJECT_FILE_DIR_PATH =
+        "assets/ObjectID.list";
     public static final String ASSETS_TILE_FILE_DIR_PATH = "assets/TileID.list";
     private static final String XML_DIR_PATH = "assets/xml";
-    private static final File[] ASSET_FOLDERS = {new File("assets/flatbuffer/"), new File("assets/sprites/"), new File("assets/xml/")};
+    private static final File[] ASSET_FOLDERS = {
+        new File("assets/flatbuffer/"),
+        new File("assets/sprites/"),
+        new File("assets/xml/"),
+    };
     private static String REALM_RES_PATH;
     private static JOptionPane pane;
 
     static {
         if (System.getProperty("os.name").toLowerCase().contains("mac")) {
-            REALM_RES_PATH = "/RealmOfTheMadGod/Production/RotMGExalt.app/Contents/Resources/Data/resources.assets";
+            REALM_RES_PATH =
+                "/RealmOfTheMadGod/Production/RotMGExalt.app/Contents/Resources/Data/resources.assets";
         } else {
-            REALM_RES_PATH = "/RealmOfTheMadGod/Production/RotMG Exalt_Data/resources.assets";
+            REALM_RES_PATH =
+                "/Documents/RealmOfTheMadGod/Production/RotMG Exalt_Data/resources.assets";
         }
     }
 
     public static void main(String[] args) throws Throwable {
-//        checkForExtraction(Version.VERSION);
+        //        checkForExtraction(Version.VERSION);
         pane = new JOptionPane();
         extractAssetsFromXML();
     }
@@ -91,21 +97,22 @@ public class AssetExtractor {
      *
      * @param lastModifiedTime Last modified time of the assets file.
      */
-    private static void assetExtractionWindow(String lastModifiedTime) throws Throwable {
+    private static void assetExtractionWindow(String lastModifiedTime)
+        throws Throwable {
         JFrame frame = new JFrame("Realm Shark Asset Extractor");
         frame.setResizable(false);
         frame.setVisible(true);
-        Object[] options = {"Extract",
-                "Ignore"};
-        int n = JOptionPane.showOptionDialog(frame,
-                "New update available\n"
-                        + "Assets are needed for some features?",
-                "Asset Extractor",
-                JOptionPane.YES_NO_CANCEL_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,//do not use a custom Icon
-                options,//the titles of buttons
-                options[1]);//default button title
+        Object[] options = { "Extract", "Ignore" };
+        int n = JOptionPane.showOptionDialog(
+            frame,
+            "New update available\n" + "Assets are needed for some features?",
+            "Asset Extractor",
+            JOptionPane.YES_NO_CANCEL_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null, //do not use a custom Icon
+            options, //the titles of buttons
+            options[1]
+        ); //default button title
         if (n == 0) {
             File assetsFile = getAssetsFile();
             if (assetsFile != null) {
@@ -121,15 +128,28 @@ public class AssetExtractor {
      *
      * @return The resources.assets file used for extraction
      */
-    private static File getAssetsFile() throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+    private static File getAssetsFile()
+        throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         File f = assetFile();
 
         if (!f.exists()) {
-            int i = JOptionPane.showOptionDialog(null, "Please select realm folder", "Realm folder not found", JOptionPane.ERROR_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{"Realm Folder", "Cancel"}, null);
+            int i = JOptionPane.showOptionDialog(
+                null,
+                "Please select realm folder",
+                "Realm folder not found",
+                JOptionPane.ERROR_MESSAGE,
+                JOptionPane.DEFAULT_OPTION,
+                null,
+                new Object[] { "Realm Folder", "Cancel" },
+                null
+            );
             if (i == 0) {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                UIManager.setLookAndFeel(
+                    UIManager.getSystemLookAndFeelClassName()
+                );
 
-                File path = FileSystemView.getFileSystemView().getDefaultDirectory();
+                File path =
+                    FileSystemView.getFileSystemView().getDefaultDirectory();
                 while (true) {
                     JFileChooser fc = new JFileChooser();
                     fc.setCurrentDirectory(path);
@@ -138,12 +158,27 @@ public class AssetExtractor {
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         path = fc.getSelectedFile();
 
-                        try (Stream<Path> pathStream = Files.find(path.toPath(), 5, (p, basicFileAttributes) -> p.getFileName().toString().equalsIgnoreCase("resources.assets"))) {
-                            List<Path> list = pathStream.collect(Collectors.toList());
+                        try (
+                            Stream<Path> pathStream = Files.find(
+                                path.toPath(),
+                                5,
+                                (p, basicFileAttributes) ->
+                                    p
+                                        .getFileName()
+                                        .toString()
+                                        .equalsIgnoreCase("resources.assets")
+                            )
+                        ) {
+                            List<Path> list = pathStream.collect(
+                                Collectors.toList()
+                            );
                             if (list.size() == 1) {
                                 Path p = list.get(0);
                                 f = p.toFile();
-                                PropertiesManager.setProperties("realmResPath", f.getPath());
+                                PropertiesManager.setProperties(
+                                    "realmResPath",
+                                    f.getPath()
+                                );
                                 break;
                             }
                         } catch (IOException e) {
@@ -166,7 +201,11 @@ public class AssetExtractor {
      * @param assetsFile       The resources.assets file to be extracted.
      * @param lastModifiedTime Last modified time used to keep track of updates on the assets file.
      */
-    private static void waitWhileExtracting(JFrame frame, File assetsFile, String lastModifiedTime) throws Throwable {
+    private static void waitWhileExtracting(
+        JFrame frame,
+        File assetsFile,
+        String lastModifiedTime
+    ) throws Throwable {
         JPanel panel = new JPanel(new BorderLayout());
         JButton ok = new JButton("OK");
         ok.setEnabled(false);
@@ -183,7 +222,14 @@ public class AssetExtractor {
             }
             win.dispose();
         });
-        pane = new JOptionPane("Extracting. Please wait.", JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, new JButton[]{ok}, ok);
+        pane = new JOptionPane(
+            "Extracting. Please wait.",
+            JOptionPane.PLAIN_MESSAGE,
+            JOptionPane.OK_CANCEL_OPTION,
+            null,
+            new JButton[] { ok },
+            ok
+        );
         JDialog dialog = pane.createDialog(frame, "Extracting");
         dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
@@ -212,7 +258,10 @@ public class AssetExtractor {
         Throwable throwable = throwableReference.get();
         if (throwable == null) return;
         if (throwable instanceof AccessDeniedException) {
-            JOptionPane.showMessageDialog(pane, "<html>Extraction access denied, failed to extract!<br/>Please move Tomato to a different folder,<br/>Windows is blocking access in current folder.</html>\"");
+            JOptionPane.showMessageDialog(
+                pane,
+                "<html>Extraction access denied, failed to extract!<br/>Please move Tomato to a different folder,<br/>Windows is blocking access in current folder.</html>\""
+            );
             System.exit(0);
         }
         throw throwable;
@@ -229,12 +278,30 @@ public class AssetExtractor {
      * @return Absolute path to resources.assets file.
      */
     public static File assetFile() {
-        String p = PropertiesManager.getProperty("realmResPath");
-        if (p != null) {
-            return new File(p);
+        File defaultFile;
+        try {
+            if (Paths.get(REALM_RES_PATH).isAbsolute()) {
+                defaultFile = new File(REALM_RES_PATH);
+            } else {
+                String homeDir = System.getProperty("user.home");
+                Path defaultPath = Paths.get(homeDir, REALM_RES_PATH);
+                defaultFile = defaultPath.toFile();
+            }
+        } catch (java.nio.file.InvalidPathException e) {
+            System.err.println(
+                "ERROR: Invalid path format in REALM_RES_PATH: " +
+                    REALM_RES_PATH
+            );
+            return null;
         }
-        String path = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
-        return new File(path + REALM_RES_PATH);
+        if (defaultFile.exists()) {
+            System.out.println("Using path: " + defaultFile.getAbsolutePath());
+            return defaultFile;
+        }
+        System.err.println(
+            "ERROR: Default path not found: " + defaultFile.getAbsolutePath()
+        );
+        return null;
     }
 
     /**
@@ -243,7 +310,8 @@ public class AssetExtractor {
      * @param file             File path to resrouces.assets.
      * @param lastModifiedTime Last modified time of the assets file.
      */
-    private static void extractAssets(File file, String lastModifiedTime) throws IOException {
+    private static void extractAssets(File file, String lastModifiedTime)
+        throws IOException {
         new UnityExtractor().extract(file, ASSET_FOLDERS);
         PropertiesManager.setProperties("lastModifiedTime", lastModifiedTime);
     }
@@ -257,19 +325,28 @@ public class AssetExtractor {
     private static int checkUpdateAssets(String lastModifiedTime) {
         if (!new File(ASSETS_OBJECT_FILE_DIR_PATH).exists()) return 1;
         if (!new File(ASSETS_TILE_FILE_DIR_PATH).exists()) return 2;
-        if (!Objects.equals(PropertiesManager.getProperty("lastModifiedTime"), lastModifiedTime)) return 3;
+        if (
+            !Objects.equals(
+                PropertiesManager.getProperty("lastModifiedTime"),
+                lastModifiedTime
+            )
+        ) return 3;
         return 0;
     }
 
     /**
      * Extracts assets from XML files.
      */
-    private static void extractAssetsFromXML() throws IOException, ParserConfigurationException {
+    private static void extractAssetsFromXML()
+        throws IOException, ParserConfigurationException {
         ArrayList<AssetObject> objectAssets = new ArrayList<>();
         ArrayList<AssetTile> tileAssets = new ArrayList<>();
         ArrayList<Path> files = new ArrayList<>();
 
-        Files.walk(Paths.get(XML_DIR_PATH)).filter(Files::isRegularFile).filter(p -> p.toString().endsWith("xml")).forEach(files::add);
+        Files.walk(Paths.get(XML_DIR_PATH))
+            .filter(Files::isRegularFile)
+            .filter(p -> p.toString().endsWith("xml"))
+            .forEach(files::add);
 
         int counter = 0;
         for (Path p : files) {
@@ -277,15 +354,18 @@ public class AssetExtractor {
             AssetExtractor.setDisplay("Parsing XML Files " + counter);
             try {
                 parseXML(p, objectAssets, tileAssets);
-            } catch (SAXException e) {
-            }
+            } catch (SAXException e) {}
         }
 
         objectAssets.sort(Comparator.comparing(a -> a.id));
-        objectAssets.forEach(e -> Util.print(ASSETS_OBJECT_FILE_DIR_PATH + "-", e.toString()));
+        objectAssets.forEach(e ->
+            Util.print(ASSETS_OBJECT_FILE_DIR_PATH + "-", e.toString())
+        );
 
         tileAssets.sort(Comparator.comparing(a -> a.id));
-        tileAssets.forEach(e -> Util.print(ASSETS_TILE_FILE_DIR_PATH + "-", e.toString()));
+        tileAssets.forEach(e ->
+            Util.print(ASSETS_TILE_FILE_DIR_PATH + "-", e.toString())
+        );
     }
 
     /**
@@ -303,7 +383,8 @@ public class AssetExtractor {
      * @param path Path to a XML file.
      * @return Returns Document object.
      */
-    private static Document getDocumentElement(Path path) throws ParserConfigurationException, SAXException, IOException {
+    private static Document getDocumentElement(Path path)
+        throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         DocumentBuilder db = dbf.newDocumentBuilder();
@@ -320,7 +401,11 @@ public class AssetExtractor {
      * @param objectAssets Object assets array to store parsed XML objects into.
      * @param tileAssets   Tile asset array to st store parsed XML tiles into.
      */
-    private static void parseXML(Path path, ArrayList<AssetObject> objectAssets, ArrayList<AssetTile> tileAssets) throws ParserConfigurationException, IOException, SAXException {
+    private static void parseXML(
+        Path path,
+        ArrayList<AssetObject> objectAssets,
+        ArrayList<AssetTile> tileAssets
+    ) throws ParserConfigurationException, IOException, SAXException {
         Document doc = getDocumentElement(path);
 
         NodeList listObjects = doc.getElementsByTagName("Object");
@@ -527,7 +612,9 @@ public class AssetExtractor {
         addNode(node, (name, value, n) -> {
             switch (name) {
                 case "Index":
-                    texture.index = value.startsWith("0x") ? Integer.decode(value) : Integer.parseInt(value);
+                    texture.index = value.startsWith("0x")
+                        ? Integer.decode(value)
+                        : Integer.parseInt(value);
                     break;
                 case "File":
                     texture.file = value;
@@ -551,6 +638,7 @@ public class AssetExtractor {
      * Superclass to store XML parsed object and tile data into.
      */
     private static class Asset {
+
         int id;
         String idName = "";
 
@@ -574,11 +662,11 @@ public class AssetExtractor {
 
         @Override
         public String toString() {
-//            if (clazz != null && clazz.equals("Equipment") && labels.contains("UT")) {
-//                idName = "UT " + idName;
-//            } else if (clazz != null && clazz.equals("Equipment") && !tier.equals("")) {
-//                idName = "T" + tier + " " + idName;
-//            }
+            //            if (clazz != null && clazz.equals("Equipment") && labels.contains("UT")) {
+            //                idName = "UT " + idName;
+            //            } else if (clazz != null && clazz.equals("Equipment") && !tier.equals("")) {
+            //                idName = "T" + tier + " " + idName;
+            //            }
 
             StringBuilder projectileString = new StringBuilder();
             if (projectiles != null) {
@@ -603,7 +691,17 @@ public class AssetExtractor {
                 textureString.deleteCharAt(textureString.length() - 1);
             }
 
-            return String.format("%s;%s;%s;%s;%s;%s;%s;%s", id, display, clazz, group, projectileString, textureString, labels, idName);
+            return String.format(
+                "%s;%s;%s;%s;%s;%s;%s;%s",
+                id,
+                display,
+                clazz,
+                group,
+                projectileString,
+                textureString,
+                labels,
+                idName
+            );
         }
     }
 
@@ -611,6 +709,7 @@ public class AssetExtractor {
      * Class to store XML parsed tile data into.
      */
     private static class AssetTile extends Asset {
+
         AssetDamage damage;
 
         @Override
@@ -627,7 +726,13 @@ public class AssetExtractor {
                 }
                 textureString.deleteCharAt(textureString.length() - 1);
             }
-            return String.format("%d;%s;%s;%s", id, textureString, damageString, idName);
+            return String.format(
+                "%d;%s;%s;%s",
+                id,
+                textureString,
+                damageString,
+                idName
+            );
         }
     }
 
@@ -635,13 +740,20 @@ public class AssetExtractor {
      * Class to store XML parsed projectile data into.
      */
     private static class AssetProjectile {
+
         String min;
         String max;
         boolean peirce = false;
 
         @Override
         public String toString() {
-            return min.replaceAll("\t", "") + "," + max.replaceAll("\t", "") + "," + (peirce ? "1," : "0,");
+            return (
+                min.replaceAll("\t", "") +
+                "," +
+                max.replaceAll("\t", "") +
+                "," +
+                (peirce ? "1," : "0,")
+            );
         }
     }
 
@@ -649,6 +761,7 @@ public class AssetExtractor {
      * Class to store XML parsed damage data into.
      */
     private static class AssetDamage {
+
         String min;
         String max;
 
@@ -662,6 +775,7 @@ public class AssetExtractor {
      * Class to store XML parsed texture/sprite data into.
      */
     private static class AssetTexture {
+
         int index = -1;
         String file;
 
@@ -674,15 +788,13 @@ public class AssetExtractor {
     private static class IgnoreErrorHandler implements ErrorHandler {
 
         @Override
-        public void warning(SAXParseException exception) throws SAXException {
-        }
+        public void warning(SAXParseException exception) throws SAXException {}
 
         @Override
-        public void error(SAXParseException exception) throws SAXException {
-        }
+        public void error(SAXParseException exception) throws SAXException {}
 
         @Override
-        public void fatalError(SAXParseException exception) throws SAXException {
-        }
+        public void fatalError(SAXParseException exception)
+            throws SAXException {}
     }
 }
