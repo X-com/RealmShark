@@ -229,12 +229,30 @@ public class AssetExtractor {
      * @return Absolute path to resources.assets file.
      */
     public static File assetFile() {
-        String p = PropertiesManager.getProperty("realmResPath");
-        if (p != null) {
-            return new File(p);
+        File defaultFile;
+        try {
+            if (Paths.get(REALM_RES_PATH).isAbsolute()) {
+                defaultFile = new File(REALM_RES_PATH);
+            } else {
+                String homeDir = System.getProperty("user.home");
+                Path defaultPath = Paths.get(homeDir, REALM_RES_PATH);
+                defaultFile = defaultPath.toFile();
+            }
+        } catch (java.nio.file.InvalidPathException e) {
+            System.err.println(
+                "ERROR: Invalid path format in REALM_RES_PATH: " +
+                    REALM_RES_PATH
+            );
+            return null;
         }
-        String path = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
-        return new File(path + REALM_RES_PATH);
+        if (defaultFile.exists()) {
+            System.out.println("Using path: " + defaultFile.getAbsolutePath());
+            return defaultFile;
+        }
+        System.err.println(
+            "ERROR: Default path not found: " + defaultFile.getAbsolutePath()
+        );
+        return null;
     }
 
     /**
