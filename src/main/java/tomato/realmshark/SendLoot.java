@@ -183,6 +183,11 @@ public class SendLoot {
 
                     if (!enchantText.isEmpty()) {
                         sl = Math.min(4, enchantText.split("\n").length);
+
+                        // Check for enchant pings
+                        if (data.isEnchantPing(enchantText)) {
+                            Sound.custom.play();
+                        }
                     }
                 }
 

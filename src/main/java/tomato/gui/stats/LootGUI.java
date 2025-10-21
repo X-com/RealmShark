@@ -421,6 +421,11 @@ public class LootGUI extends JPanel {
                 Sound.custom.play();
             }
 
+            // Check for enchant pings
+            if (data.isEnchantPing(enchantText)) {
+                Sound.custom.play();
+            }
+
             if (
                 enchants != null &&
                 i < enchants.length &&
