@@ -16,7 +16,7 @@ public class EntityPingGUI extends CustomListGUI {
     }
 
     @Override
-    boolean validateEntry(String entry) {
+    protected boolean validateEntry(String entry) {
         try {
             Integer.parseInt(entry);
             return true;

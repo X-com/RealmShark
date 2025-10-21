@@ -214,5 +214,5 @@ public abstract class CustomListGUI extends JPanel {
         this.dialog.setVisible(true);
     }
 
-    abstract boolean validateEntry(String entry);
+    protected abstract boolean validateEntry(String entry);
 }
