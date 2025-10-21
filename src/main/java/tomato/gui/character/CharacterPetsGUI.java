@@ -2,19 +2,18 @@ package tomato.gui.character;
 
 import assets.IdToAsset;
 import assets.ImageBuffer;
+import java.awt.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.stream.Collectors;
+import javax.swing.*;
 import packets.data.ObjectData;
 import packets.data.StatData;
 import packets.data.enums.StatType;
 import tomato.backend.data.Entity;
 import tomato.backend.data.Stat;
 import tomato.backend.data.TomatoData;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.stream.Collectors;
 
 public class CharacterPetsGUI extends JPanel {
 
@@ -24,7 +23,7 @@ public class CharacterPetsGUI extends JPanel {
     private HashMap<Integer, Pet> petList = new HashMap<>();
     private final JPanel petPanel;
     private JTextField feed;
-    private static final float[] feedMultiplier = {1f, 0.65f, 0.3f};
+    private static final float[] feedMultiplier = { 1f, 0.65f, 0.3f };
 
     private static final HashMap<Integer, String> petAbilitys = new HashMap<>();
     private static final HashMap<Integer, Integer> feedCost = new HashMap<>();
@@ -76,7 +75,11 @@ public class CharacterPetsGUI extends JPanel {
     private void update() {
         petPanel.removeAll();
 
-        Collection<Pet> values = petList.values().stream().sorted(Comparator.comparingInt(Pet::sort).reversed()).collect(Collectors.toList());
+        Collection<Pet> values = petList
+            .values()
+            .stream()
+            .sorted(Comparator.comparingInt(Pet::sort).reversed())
+            .collect(Collectors.toList());
         for (Pet p : values) {
             addPetToPanel(p);
         }
@@ -93,9 +96,22 @@ public class CharacterPetsGUI extends JPanel {
             Pet oldPet = petList.get(id.statValue);
             if (oldPet != null) {
                 if (
-                        oldPet.stat.get(StatType.PET_FIRST_ABILITY_POINT_STAT).statValue != stat.get(StatType.PET_FIRST_ABILITY_POINT_STAT).statValue ||
-                                oldPet.stat.get(StatType.PET_SECOND_ABILITY_POINT_STAT).statValue != stat.get(StatType.PET_SECOND_ABILITY_POINT_STAT).statValue ||
-                                oldPet.stat.get(StatType.PET_THIRD_ABILITY_POINT_STAT).statValue != stat.get(StatType.PET_THIRD_ABILITY_POINT_STAT).statValue
+                    oldPet.stat.get(
+                            StatType.PET_FIRST_ABILITY_POINT_STAT
+                        ).statValue !=
+                        stat.get(
+                            StatType.PET_FIRST_ABILITY_POINT_STAT
+                        ).statValue ||
+                    oldPet.stat.get(
+                        StatType.PET_SECOND_ABILITY_POINT_STAT
+                    ).statValue !=
+                    stat.get(
+                        StatType.PET_SECOND_ABILITY_POINT_STAT
+                    ).statValue ||
+                    oldPet.stat.get(
+                        StatType.PET_THIRD_ABILITY_POINT_STAT
+                    ).statValue !=
+                    stat.get(StatType.PET_THIRD_ABILITY_POINT_STAT).statValue
                 ) {
                     oldPet.update(object);
                 }
@@ -123,7 +139,11 @@ public class CharacterPetsGUI extends JPanel {
         g.gridwidth = 2;
         g.gridheight = 1;
         int skin = pet.skin();
-        JLabel petIcon = new JLabel(ImageBuffer.getOutlinedIcon(skin, 40), JLabel.CENTER);
+        ImageIcon petImage = ImageBuffer.getOutlinedIcon(skin, 40);
+        JLabel petIcon = new JLabel(
+            petImage != null ? petImage : new ImageIcon(),
+            JLabel.CENTER
+        );
         box.add(petIcon, g);
         g.weightx = 0.7f;
 
@@ -145,6 +165,9 @@ public class CharacterPetsGUI extends JPanel {
     }
 
     private void addPacketPet() {
+        if (data.pet == null) {
+            return;
+        }
         Pet newPet = new Pet(data.pet);
 
         petList.put(newPet.getId(), newPet);
@@ -152,6 +175,7 @@ public class CharacterPetsGUI extends JPanel {
     }
 
     private class Pet {
+
         Stat stat;
         JLabel[] labels = new JLabel[15];
         JPanel info = new JPanel(new GridLayout(3, 5));
@@ -204,25 +228,37 @@ public class CharacterPetsGUI extends JPanel {
             try {
                 String s = feed.getText();
                 feedAmount = Integer.parseInt(s);
-            } catch (NumberFormatException e) {
-            }
+            } catch (NumberFormatException e) {}
 
             int maxLevel = 0;
             int cost = -1;
 
-            if (stat.get(StatType.PET_MAX_ABILITY_POWER_STAT) != null) maxLevel = stat.get(StatType.PET_MAX_ABILITY_POWER_STAT).statValue;
+            if (
+                stat.get(StatType.PET_MAX_ABILITY_POWER_STAT) != null
+            ) maxLevel = stat.get(
+                StatType.PET_MAX_ABILITY_POWER_STAT
+            ).statValue;
             Integer cc = feedCost.get(maxLevel);
             if (cc != null) cost = cc;
 
-            if (stat.get(StatType.PET_FIRST_ABILITY_POINT_STAT) != null) a[0] = stat.get(StatType.PET_FIRST_ABILITY_POINT_STAT).statValue;
-            if (stat.get(StatType.PET_SECOND_ABILITY_POINT_STAT) != null) a[1] = stat.get(StatType.PET_SECOND_ABILITY_POINT_STAT).statValue;
-            if (stat.get(StatType.PET_THIRD_ABILITY_POINT_STAT) != null) a[2] = stat.get(StatType.PET_THIRD_ABILITY_POINT_STAT).statValue;
-            if (stat.get(StatType.PET_FIRST_ABILITY_POWER_STAT) != null) a[3] = stat.get(StatType.PET_FIRST_ABILITY_POWER_STAT).statValue;
-            if (stat.get(StatType.PET_SECOND_ABILITY_POWER_STAT) != null) a[4] = stat.get(StatType.PET_SECOND_ABILITY_POWER_STAT).statValue;
-            if (stat.get(StatType.PET_THIRD_ABILITY_POWER_STAT) != null) a[5] = stat.get(StatType.PET_THIRD_ABILITY_POWER_STAT).statValue;
-            if (stat.get(StatType.PET_FIRST_ABILITY_TYPE_STAT) != null) a[6] = stat.get(StatType.PET_FIRST_ABILITY_TYPE_STAT).statValue;
-            if (stat.get(StatType.PET_SECOND_ABILITY_TYPE_STAT) != null) a[7] = stat.get(StatType.PET_SECOND_ABILITY_TYPE_STAT).statValue;
-            if (stat.get(StatType.PET_THIRD_ABILITY_TYPE_STAT) != null) a[8] = stat.get(StatType.PET_THIRD_ABILITY_TYPE_STAT).statValue;
+            if (stat.get(StatType.PET_FIRST_ABILITY_POINT_STAT) != null) a[0] =
+                stat.get(StatType.PET_FIRST_ABILITY_POINT_STAT).statValue;
+            if (stat.get(StatType.PET_SECOND_ABILITY_POINT_STAT) != null) a[1] =
+                stat.get(StatType.PET_SECOND_ABILITY_POINT_STAT).statValue;
+            if (stat.get(StatType.PET_THIRD_ABILITY_POINT_STAT) != null) a[2] =
+                stat.get(StatType.PET_THIRD_ABILITY_POINT_STAT).statValue;
+            if (stat.get(StatType.PET_FIRST_ABILITY_POWER_STAT) != null) a[3] =
+                stat.get(StatType.PET_FIRST_ABILITY_POWER_STAT).statValue;
+            if (stat.get(StatType.PET_SECOND_ABILITY_POWER_STAT) != null) a[4] =
+                stat.get(StatType.PET_SECOND_ABILITY_POWER_STAT).statValue;
+            if (stat.get(StatType.PET_THIRD_ABILITY_POWER_STAT) != null) a[5] =
+                stat.get(StatType.PET_THIRD_ABILITY_POWER_STAT).statValue;
+            if (stat.get(StatType.PET_FIRST_ABILITY_TYPE_STAT) != null) a[6] =
+                stat.get(StatType.PET_FIRST_ABILITY_TYPE_STAT).statValue;
+            if (stat.get(StatType.PET_SECOND_ABILITY_TYPE_STAT) != null) a[7] =
+                stat.get(StatType.PET_SECOND_ABILITY_TYPE_STAT).statValue;
+            if (stat.get(StatType.PET_THIRD_ABILITY_TYPE_STAT) != null) a[8] =
+                stat.get(StatType.PET_THIRD_ABILITY_TYPE_STAT).statValue;
 
             for (int i = 0; i < 3; i++) {
                 String abilityName = petAbilitys.get(a[i + 6]);
@@ -230,7 +266,9 @@ public class CharacterPetsGUI extends JPanel {
                 int fp = (int) (a[i] / feedMultiplier[i]);
 
                 labels[i * 5].setText(String.format("%s ", abilityName));
-                labels[i * 5 + 1].setText(String.format("[Level: %d]", abilityLevel));
+                labels[i * 5 + 1].setText(
+                    String.format("[Level: %d]", abilityLevel)
+                );
                 labels[i * 5 + 2].setText(String.format("FP: %d", fp));
 
                 if (i == 1 && maxLevel < 50) continue;
@@ -238,12 +276,20 @@ public class CharacterPetsGUI extends JPanel {
 
                 if (feedAmount != -1) {
                     int nextLevelPet = Math.min(abilityLevel + 1, maxLevel);
-                    int maxing = (int) (20 / feedMultiplier[i] * (Math.pow(1.08, maxLevel - 1) - 1) / (1.08 - 1));
-                    int levelMax = (int) (20 / feedMultiplier[i] * (Math.pow(1.08, nextLevelPet - 1) - 1) / (1.08 - 1));
+                    int maxing = (int) (((20 / feedMultiplier[i]) *
+                            (Math.pow(1.08, maxLevel - 1) - 1)) /
+                        (1.08 - 1));
+                    int levelMax = (int) (((20 / feedMultiplier[i]) *
+                            (Math.pow(1.08, nextLevelPet - 1) - 1)) /
+                        (1.08 - 1));
                     int leftFullMax = maxing - fp;
-                    int countFullMax = (int) Math.ceil((double) leftFullMax / feedAmount);
+                    int countFullMax = (int) Math.ceil(
+                        (double) leftFullMax / feedAmount
+                    );
                     int leftLevelMax = levelMax - fp;
-                    int countLevelMax = (int) Math.ceil((double) leftLevelMax / feedAmount);
+                    int countLevelMax = (int) Math.ceil(
+                        (double) leftLevelMax / feedAmount
+                    );
 
                     String s = "<html>";
                     s += "Feed Points " + fp + " / " + maxing;
@@ -261,10 +307,18 @@ public class CharacterPetsGUI extends JPanel {
                     labels[i * 5 + 2].setToolTipText(s);
 
                     if (leftFullMax > 0) {
-                        labels[i * 5 + 3].setText(String.format(" N: %d", countFullMax));
-                        labels[i * 5 + 3].setToolTipText("Number of items to max pet");
-                        labels[i * 5 + 4].setText(String.format(" F: %d", countFullMax * cost));
-                        labels[i * 5 + 4].setToolTipText("Fame needed to max pet");
+                        labels[i * 5 + 3].setText(
+                            String.format(" N: %d", countFullMax)
+                        );
+                        labels[i * 5 + 3].setToolTipText(
+                            "Number of items to max pet"
+                        );
+                        labels[i * 5 + 4].setText(
+                            String.format(" F: %d", countFullMax * cost)
+                        );
+                        labels[i * 5 + 4].setToolTipText(
+                            "Fame needed to max pet"
+                        );
                     } else {
                         labels[i * 5 + 3].setText(" -");
                         labels[i * 5 + 4].setText(" -");

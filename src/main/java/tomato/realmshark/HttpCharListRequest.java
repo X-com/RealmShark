@@ -27,7 +27,8 @@ public class HttpCharListRequest {
      * @param accessToken Access token of the currently logged in user.
      * @return Exalt data of all characters
      */
-    public static String getPowerUpStats(String accessToken) throws IOException {
+    public static String getPowerUpStats(String accessToken)
+        throws IOException {
         return webRequest(accessToken, "account/listPowerUpStats");
     }
 
@@ -36,10 +37,14 @@ public class HttpCharListRequest {
      *
      * @return Request info
      */
-    public static String webRequest(String accessToken, String requestType) throws IOException {
+    public static String webRequest(String accessToken, String requestType)
+        throws IOException {
         String encoded = URLEncoder.encode(accessToken, "UTF-8");
         String s1 = "https://www.realmofthemadgod.com/" + requestType + "?";
-        String s2 = "do_login=true&accessToken=" + encoded + "&game_net=Unity&play_platform=Unity&game_net_user_id";
+        String s2 =
+            "do_login=true&accessToken=" +
+            encoded +
+            "&game_net=Unity&play_platform=Unity&game_net_user_id";
 
         URL obj = new URL(s1 + s2);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -53,8 +58,11 @@ public class HttpCharListRequest {
         }
 
         int responseCode = con.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_OK) { // success
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            // success
+            BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream())
+            );
             String inputLine;
             StringBuffer response = new StringBuffer();
 
@@ -64,10 +72,12 @@ public class HttpCharListRequest {
             in.close();
 
             // print result
-//            System.out.println(response);
+            //            System.out.println(response);
             return response.toString();
         } else {
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+            BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getErrorStream())
+            );
             String inputLine;
             StringBuffer response = new StringBuffer();
 

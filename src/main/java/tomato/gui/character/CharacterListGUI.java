@@ -1,11 +1,10 @@
 package tomato.gui.character;
 
 import assets.ImageBuffer;
-import tomato.realmshark.RealmCharacter;
-import tomato.backend.data.TomatoData;
-
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
+import tomato.backend.data.TomatoData;
+import tomato.realmshark.RealmCharacter;
 
 public class CharacterListGUI extends JPanel {
 
@@ -26,15 +25,15 @@ public class CharacterListGUI extends JPanel {
         add(scrollPaneChars);
     }
 
-//    /**
-//     * Tooltip showing exalts when hovering over char.
-//     */
-//    private String exaltStats(RealmCharacter c) {
-//        int[] exalts = RealmCharacter.exalts.get(c.classNum);
-//        ToolTipManager.sharedInstance().setInitialDelay(200);
-//        ToolTipManager.sharedInstance().setDismissDelay(1000000000);
-//        return String.format("<html>%d :HP<br>%d :MP<br>%d :Atk<br>%d :Def<br>%d :Spd<br>%d :Dex<br>%5d :Vit<br>%d :Wis</html>", exalts[7], exalts[6], exalts[5], exalts[4], exalts[1], exalts[0], exalts[2], exalts[3]);
-//    }
+    //    /**
+    //     * Tooltip showing exalts when hovering over char.
+    //     */
+    //    private String exaltStats(RealmCharacter c) {
+    //        int[] exalts = RealmCharacter.exalts.get(c.classNum);
+    //        ToolTipManager.sharedInstance().setInitialDelay(200);
+    //        ToolTipManager.sharedInstance().setDismissDelay(1000000000);
+    //        return String.format("<html>%d :HP<br>%d :MP<br>%d :Atk<br>%d :Def<br>%d :Spd<br>%d :Dex<br>%5d :Vit<br>%d :Wis</html>", exalts[7], exalts[6], exalts[5], exalts[4], exalts[1], exalts[0], exalts[2], exalts[3]);
+    //    }
 
     /**
      * Section made for adding Char skin, char type, char level, char fame and char stats.
@@ -44,7 +43,11 @@ public class CharacterListGUI extends JPanel {
 
         int eq = c.skin;
         if (eq == 0) eq = c.classNum;
-        JLabel characterLabel = new JLabel(c.classString + " " + c.level, ImageBuffer.getOutlinedIcon(eq, 15), JLabel.CENTER);
+        JLabel characterLabel = new JLabel(
+            c.classString + " " + c.level,
+            ImageBuffer.getOutlinedIcon(eq, 15),
+            JLabel.CENTER
+        );
         panel.add(characterLabel);
 
         panel.add(new JLabel(String.format("Fame:%d", c.fame)));
@@ -61,8 +64,12 @@ public class CharacterListGUI extends JPanel {
      */
     private JPanel midColumn(RealmCharacter c) {
         JPanel panel = new JPanel();
-        panel.setMaximumSize(new Dimension(120, CharacterPanelGUI.CHAR_PANEL_SIZE));
-        panel.setPreferredSize(new Dimension(120, CharacterPanelGUI.CHAR_PANEL_SIZE));
+        panel.setMaximumSize(
+            new Dimension(120, CharacterPanelGUI.CHAR_PANEL_SIZE)
+        );
+        panel.setPreferredSize(
+            new Dimension(120, CharacterPanelGUI.CHAR_PANEL_SIZE)
+        );
 
         JPanel panelEquip = new JPanel();
         panelEquip.setBorder(BorderFactory.createLineBorder(Color.GRAY));
@@ -124,8 +131,12 @@ public class CharacterListGUI extends JPanel {
      */
     private JPanel invBackpack(RealmCharacter c) {
         JPanel panel = new JPanel();
-        panel.setMaximumSize(new Dimension(120, CharacterPanelGUI.CHAR_PANEL_SIZE));
-        panel.setPreferredSize(new Dimension(120, CharacterPanelGUI.CHAR_PANEL_SIZE));
+        panel.setMaximumSize(
+            new Dimension(120, CharacterPanelGUI.CHAR_PANEL_SIZE)
+        );
+        panel.setPreferredSize(
+            new Dimension(120, CharacterPanelGUI.CHAR_PANEL_SIZE)
+        );
 
         panel.add(rightColumn(c, false));
 
@@ -147,6 +158,8 @@ public class CharacterListGUI extends JPanel {
      * Character tab update, clears all data in the tab and repopulates it.
      */
     private void updateCharPanel() {
+        if (data.chars == null) return;
+
         charPanel.setLayout(new BoxLayout(charPanel, BoxLayout.Y_AXIS));
         charPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
         charPanel.add(Box.createVerticalGlue());

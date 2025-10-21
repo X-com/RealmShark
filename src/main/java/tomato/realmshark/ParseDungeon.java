@@ -1,9 +1,5 @@
 package tomato.realmshark;
 
-import org.xml.sax.SAXException;
-import util.StringXML;
-
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -11,14 +7,24 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
+import packets.incoming.MapInfoPacket;
+import util.StringXML;
 
 public class ParseDungeon {
 
-    private static final String MODS_XML_PATHS[] = {"assets/xml/mods.xml", "assets/xml/mods2.xml"};
+    private static final String MODS_XML_PATHS[] = {
+        "assets/xml/mods.xml",
+        "assets/xml/mods2.xml",
+    };
     private static final String PORTAL_XML_PATH = "assets/xml/portals.xml";
-    private static final HashMap<Integer, String> ID_TO_NAME_MODS = new HashMap<>();
-    private static final HashMap<String, Integer> NAME_TO_ID_MODS = new HashMap<>();
-    private static final HashMap<String, Integer> NAME_TO_ID_PORTAL = new HashMap<>();
+    private static final HashMap<Integer, String> ID_TO_NAME_MODS =
+        new HashMap<>();
+    private static final HashMap<String, Integer> NAME_TO_ID_MODS =
+        new HashMap<>();
+    private static final HashMap<String, Integer> NAME_TO_ID_PORTAL =
+        new HashMap<>();
 
     /**
      * Load Dungeon modifiers XML data to get names from file.
@@ -32,7 +38,9 @@ public class ParseDungeon {
         for (String path : MODS_XML_PATHS) {
             try {
                 FileInputStream file = new FileInputStream(path);
-                String result = new BufferedReader(new InputStreamReader(file)).lines().collect(Collectors.joining("\n"));
+                String result = new BufferedReader(new InputStreamReader(file))
+                    .lines()
+                    .collect(Collectors.joining("\n"));
                 StringXML base = StringXML.getParsedXML(result);
                 for (StringXML xml : base) {
                     if (Objects.equals(xml.name, "DungeonModifier")) {
@@ -55,7 +63,11 @@ public class ParseDungeon {
                         NAME_TO_ID_MODS.put(modifier.name, modifier.modId);
                     }
                 }
-            } catch (ParserConfigurationException | IOException | SAXException e) {
+            } catch (
+                ParserConfigurationException
+                | IOException
+                | SAXException e
+            ) {
                 throw new RuntimeException(e);
             }
         }
@@ -69,7 +81,9 @@ public class ParseDungeon {
     private static void parseDungeonPortalId() {
         try {
             FileInputStream file = new FileInputStream(PORTAL_XML_PATH);
-            String result = new BufferedReader(new InputStreamReader(file)).lines().collect(Collectors.joining("\n"));
+            String result = new BufferedReader(new InputStreamReader(file))
+                .lines()
+                .collect(Collectors.joining("\n"));
             StringXML base = StringXML.getParsedXML(result);
             for (StringXML xml : base) {
                 if (Objects.equals(xml.name, "Object")) {
@@ -98,12 +112,14 @@ public class ParseDungeon {
     }
 
     public static int[] getModIds(String dungeonString) {
-        if (dungeonString.isEmpty()) return new int[0];
+        if (dungeonString == null || dungeonString.isEmpty()) return new int[0];
+
         String[] split = dungeonString.split(";");
 
         int[] array = new int[split.length];
         for (int i = 0; i < split.length; i++) {
             String key = split[i];
+
             Integer integer = NAME_TO_ID_MODS.get(key);
             array[i] = integer;
         }
@@ -123,8 +139,42 @@ public class ParseDungeon {
     }
 
     private static class DungeonModifier {
+
         public int modId;
+
         public String name;
+
         public String description;
+    }
+
+    /**
+     * Build the canonical modifiers string from a MapInfoPacket by combining up to four modifier fields
+     * and the optional dungeon grade. Example output: "BONUSCONSUMABLES;ENERGIZEDMINIONS_1;|D".
+     */
+    public static String getModifiersString(MapInfoPacket map) {
+        if (map == null) return "";
+        StringBuilder sb = new StringBuilder();
+        // Append non-empty modifier fields in order
+        if (map.dungeonModifiers != null && !map.dungeonModifiers.isEmpty()) {
+            sb.append(map.dungeonModifiers);
+        }
+        if (map.dungeonModifiers2 != null && !map.dungeonModifiers2.isEmpty()) {
+            if (sb.length() > 0) sb.append(';');
+            sb.append(map.dungeonModifiers2);
+        }
+        if (map.dungeonModifiers3 != null && !map.dungeonModifiers3.isEmpty()) {
+            if (sb.length() > 0) sb.append(';');
+            sb.append(map.dungeonModifiers3);
+        }
+        if (map.dungeonModifiers4 != null && !map.dungeonModifiers4.isEmpty()) {
+            if (sb.length() > 0) sb.append(';');
+            sb.append(map.dungeonModifiers4);
+        }
+        // Append grade as separate token like "|D"
+        if (map.dungeonGrade != null && !map.dungeonGrade.isEmpty()) {
+            if (sb.length() > 0) sb.append(';');
+            sb.append('|').append(map.dungeonGrade);
+        }
+        return sb.toString();
     }
 }

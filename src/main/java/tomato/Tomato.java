@@ -41,16 +41,14 @@ public class Tomato {
         System.out.println("Java Version: " + System.getProperty("java.version") + " : (" + System.getProperty("sun.arch.data.model") + " - bit)");
         parseCustomAssetPath(args);
 
+
+        parseCustomAssetPath(args);
         Util.setSaveLogs(false); // turns the logger to, save in to files.
         TcpStreamErrorHandler.INSTANCE.setErrorMessageHandler(Tomato::errorMessageHandler);
         TcpStreamErrorHandler.INSTANCE.setErrorStopHandler(TomatoMenuBar::stopPacketSniffer);
         load();
     }
 
-    /**
-     * Allows custom realm resource path to be set by run arguments.
-     * @param args Argument string used  when running app.
-     */
     private static void parseCustomAssetPath(String[] args) {
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("--path") && i + 1 < args.length) {
@@ -59,7 +57,7 @@ public class Tomato {
                 if (customFile.exists() && customFile.isFile()) {
                     AssetExtractor.setRealmResPath(customPath);
                     System.out.println(
-                            "Using custom resources.assets path: " + customPath
+                        "Using custom resources.assets path: " + customPath
                     );
                 } else {
                     System.err.println("Invalid path provided: " + customPath);

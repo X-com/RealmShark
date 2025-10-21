@@ -3,9 +3,14 @@ package tomato.gui.dps;
 import assets.IdToAsset;
 import assets.ImageBuffer;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -18,40 +23,62 @@ import packets.incoming.MapInfoPacket;
 import packets.incoming.NotificationPacket;
 import tomato.backend.data.*;
 import tomato.gui.SmartScroller;
+import tomato.gui.dps.shared.DeathParser;
+import tomato.gui.dps.shared.DpsTextFormat;
+import tomato.gui.dps.shared.EquipmentUsageAggregator;
+import tomato.gui.dps.shared.GuardsHandler;
 import tomato.realmshark.ParseEnchants;
 import tomato.realmshark.enums.CharacterClass;
-import util.Pair;
 
 public class IconDpsGUI extends DisplayDpsGUI {
 
     private static JPanel charPanel;
+
+    private JScrollPane scrollPane;
+
     private final TomatoData data;
+
     private static Font mainFont;
+
     private ArrayList<NotificationPacket> notifications;
-    private static final DecimalFormat df = new DecimalFormat("#,###,###");
-    private static HashMap<Integer, Image> imgMap = new HashMap<>();
+
     private static final BufferedImage ig = new BufferedImage(
         1,
         1,
         BufferedImage.TYPE_INT_ARGB
     );
 
+    // Dynamic icon sizes based on current font size
+    private static int smallIconSize() {
+        int fs = (mainFont != null) ? mainFont.getSize() : 12;
+        // Base 16px at 12pt font, clamp to at least 12px
+        return Math.max(12, Math.round((16f * fs) / 12f));
+    }
+
+    private static int largeIconSize() {
+        int fs = (mainFont != null) ? mainFont.getSize() : 12;
+        // Base 40px at 12pt font, clamp to at least 24px
+        return Math.max(24, Math.round((40f * fs) / 12f));
+    }
+
     public IconDpsGUI(TomatoData data) {
         this.data = data;
 
         setLayout(new BorderLayout());
-        charPanel = new JPanel();
-        charPanel.setLayout(new GridBagLayout());
-        charPanel.setLayout(new BoxLayout(charPanel, BoxLayout.Y_AXIS));
-        validate();
 
-        JScrollPane scroll = new JScrollPane(charPanel);
-        scroll.getVerticalScrollBar().setUnitIncrement(40);
-        new SmartScroller(scroll);
-        add(scroll, BorderLayout.CENTER);
-        //        JButton button = new JButton("String Display");
-        //        button.addActionListener(e -> clicked());
-        //        add(button, BorderLayout.SOUTH);
+        charPanel = new JPanel();
+
+        charPanel.setLayout(new BoxLayout(charPanel, BoxLayout.Y_AXIS));
+
+        scrollPane = new JScrollPane(charPanel);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(40);
+        new SmartScroller(scrollPane);
+        add(scrollPane, BorderLayout.CENTER);
+
+        // Add screenshot button
+        JButton screenshotButton = new JButton("Copy Screenshot to Clipboard");
+        screenshotButton.addActionListener(e -> takeScreenshot());
+        add(screenshotButton, BorderLayout.SOUTH);
     }
 
     //    private void clicked() {
@@ -63,12 +90,9 @@ public class IconDpsGUI extends DisplayDpsGUI {
         List<Entity> sortedEntityHitList,
         long totalDungeonPcTime
     ) {
-        ArrayList<Pair<String, Integer>> deaths = new ArrayList<>();
-        for (NotificationPacket n : notifications) {
-            String name = n.message.split("\"")[9];
-            int graveIcon = n.pictureType;
-            deaths.add(new Pair<>(name, graveIcon));
-        }
+        Map<String, Integer> deaths = DeathParser.parseDeathsToMap(
+            notifications
+        );
         charPanel.removeAll();
 
         {
@@ -88,10 +112,15 @@ public class IconDpsGUI extends DisplayDpsGUI {
         }
 
         //        sb.append("Total time in dungeon:").append(DpsGUI.systemTimeToString(totalDungeonPcTime)).append("\n");
+
         for (Entity e : sortedEntityHitList) {
             if (e.maxHp() <= 0) continue;
+
             if (CharacterClass.isPlayerCharacter(e.objectType)) continue;
-            JPanel panel = createMainBox(e, deaths, data.player);
+
+            EquipmentUsageAggregator eqAgg = EquipmentUsageAggregator.of(e);
+            JPanel panel = createMainBox(e, deaths, data.player, eqAgg);
+
             if (panel != null) {
                 charPanel.add(panel);
             }
@@ -105,8 +134,9 @@ public class IconDpsGUI extends DisplayDpsGUI {
 
     private static JPanel createMainBox(
         Entity entity,
-        ArrayList<Pair<String, Integer>> deaths,
-        Entity player
+        Map<String, Integer> deaths,
+        Entity player,
+        EquipmentUsageAggregator eqAgg
     ) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -129,11 +159,14 @@ public class IconDpsGUI extends DisplayDpsGUI {
             .append("\n");
         sb.append(entity.getFightTimerString());
         String mobName = sb.toString();
+
+        int iconLarge = largeIconSize();
         JLabel l = new JLabel(
             mobName,
-            ImageBuffer.getOutlinedIcon(entity.objectType, 40),
+            ImageBuffer.getOutlinedIcon(entity.objectType, iconLarge),
             JLabel.LEFT
         );
+
         int firstHP = getHighestHP(entity);
         l.setToolTipText("Fight start HP: " + firstHP);
         int mobNameStringSize = getStringSize(mobName) + 48;
@@ -172,32 +205,15 @@ public class IconDpsGUI extends DisplayDpsGUI {
             }
 
             String name = dmg.owner.name();
+
             JPanel inv = equipment(
                 DpsDisplayOptions.equipmentOption,
                 dmg.owner,
-                entity
+                eqAgg
             );
 
-            String extra = "";
-            if (dmg.oryx3GuardDmg) {
-                extra = String.format(
-                    "[Guarded Hits:%d Dmg:%d]",
-                    dmg.counterHits,
-                    dmg.counterDmg
-                );
-            } else if (entity.dammahCountered && dmg.chancellorDammahDmg) {
-                extra = String.format(
-                    "[Dammah Hits:%d Dmg:%d]",
-                    dmg.counterHits,
-                    dmg.counterDmg
-                );
-            } else if (dmg.walledGardenReflectors) {
-                extra = String.format(
-                    "[Garden Hits:%d Dmg:%d]",
-                    dmg.counterHits,
-                    dmg.counterDmg
-                );
-            }
+            String extra = GuardsHandler.buildExtraTag(entity, dmg);
+
             float pers = (((float) dmg.damage * 100) / (float) entity.maxHp());
 
             String userIndicator = String.format(
@@ -221,23 +237,26 @@ public class IconDpsGUI extends DisplayDpsGUI {
             } else if (dmg.owner != null) {
                 icon = dmg.owner.objectType;
             }
+
+            int iconSmall = smallIconSize();
             JLabel playerIconLabel = new JLabel(
                 userIndicator,
-                ImageBuffer.getOutlinedIcon(icon, 16),
+                ImageBuffer.getOutlinedIcon(icon, iconSmall),
                 JLabel.LEFT
             );
+
             JLabel nameLabel = new JLabel(name);
             JLabel dpsDataLabel = new JLabel(s2);
             JLabel deathNexusLabel = new JLabel();
             for (int id : entity.playerDropped.keySet()) {
                 if (dmg.owner.id == id) {
                     PlayerRemoved pr = entity.playerDropped.get(id);
-                    int dead = isDeadPlayer(name, deaths);
+                    int dead = DeathParser.getGraveIcon(deaths, name);
                     if (dead != -1) {
                         try {
                             ImageBuffer.getImage(dead);
                             deathNexusLabel = new JLabel(
-                                ImageBuffer.getOutlinedIcon(dead, 16)
+                                ImageBuffer.getOutlinedIcon(dead, iconSmall)
                             );
                         } catch (IOException e) {
                             deathNexusLabel = new JLabel("Died");
@@ -245,12 +264,13 @@ public class IconDpsGUI extends DisplayDpsGUI {
                     } else {
                         deathNexusLabel = new JLabel("Nexus");
                     }
+
                     deathNexusLabel.setToolTipText(
                         String.format(
                             "%.2f%% [%s / %s]",
                             ((float) pr.hp / pr.max) * 100,
-                            df.format(pr.hp).replaceAll(",", " "),
-                            df.format(pr.max).replaceAll(",", " ")
+                            DpsTextFormat.grouped(pr.hp),
+                            DpsTextFormat.grouped(pr.max)
                         )
                     );
                 }
@@ -291,18 +311,16 @@ public class IconDpsGUI extends DisplayDpsGUI {
             }
 
             float fightDuration = entity.getFightDuration() / 60000f;
-            float damagePerMinute = (float) dmg.damage / fightDuration;
-            DecimalFormat df = new DecimalFormat("###,###.##");
 
-            float guardedDamagePercentage = 0;
-            boolean hasGuardedDamage =
-                dmg.oryx3GuardDmg ||
-                (entity.dammahCountered && dmg.chancellorDammahDmg) ||
-                dmg.walledGardenReflectors;
-            if (hasGuardedDamage) {
-                guardedDamagePercentage =
-                    ((float) dmg.counterDmg / dmg.damage) * 100;
-            }
+            float damagePerMinute = (float) dmg.damage / fightDuration;
+
+            double guardedDamagePercentage =
+                GuardsHandler.guardedDamagePercentage(entity, dmg);
+
+            boolean hasGuardedDamage = GuardsHandler.hasGuardedDamage(
+                entity,
+                dmg
+            );
 
             int[] damageFight = dmg.owner.damageTaken(entity);
             int[] damageTotal = dmg.owner.damageTaken(null);
@@ -321,23 +339,27 @@ public class IconDpsGUI extends DisplayDpsGUI {
                     damageTotal[1]
                 );
             }
-            tooltipText += String.format(
-                "Damage per Minute: %s",
-                df.format(damagePerMinute)
-            );
+
+            tooltipText +=
+                "Damage per Minute: " +
+                DpsTextFormat.fixed2GroupedComma(damagePerMinute);
+
             if (hasGuardedDamage) {
-                tooltipText += String.format(
-                    "\nGuarded Damage: %s%%",
-                    df.format(guardedDamagePercentage)
-                );
+                tooltipText +=
+                    "\nGuarded Damage: " +
+                    DpsTextFormat.percent2(guardedDamagePercentage) +
+                    "%";
             }
+
             pp.setToolTipText(
                 "<html>" + tooltipText.replace("\n", "<br>") + "</html>"
             );
 
             panelAllPlayers.add(pp);
         }
-        pref[0] = 40;
+
+        int minFirstCol = Math.max(smallIconSize(), getStringSize("Nexus") + 6);
+        pref[0] = Math.max(pref[0], minFirstCol);
         for (int i = 0; i < panels.length; i++) {
             for (JPanel p : panels[i]) {
                 Dimension preferredSize = new Dimension(
@@ -376,27 +398,6 @@ public class IconDpsGUI extends DisplayDpsGUI {
         return size;
     }
 
-    private static int isDeadPlayer(
-        String name,
-        ArrayList<Pair<String, Integer>> deaths
-    ) {
-        for (Pair<String, Integer> p : deaths) {
-            if (p.left().equals(name)) {
-                return p.right();
-            }
-        }
-        return -1;
-    }
-
-    private static Image getScaledImg(int id, BufferedImage img) {
-        if (imgMap.containsKey(id)) {
-            return imgMap.get(id);
-        } else {
-            imgMap.put(id, img.getScaledInstance(40, 40, Image.SCALE_DEFAULT));
-        }
-        return img.getScaledInstance(40, 40, Image.SCALE_DEFAULT);
-    }
-
     private static boolean filter(String name) {
         if (
             !DpsDisplayOptions.nameFilter ||
@@ -413,74 +414,69 @@ public class IconDpsGUI extends DisplayDpsGUI {
     private static JPanel equipment(
         int equipmentFilter,
         Entity owner,
-        Entity entity
+        EquipmentUsageAggregator eqAgg
     ) {
         JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(76, 16));
+
+        int s = smallIconSize();
+        panel.setPreferredSize(new Dimension(s * 4 + 12, s));
+
         panel.setLayout(new GridLayout(1, 4));
 
-        if (owner.getStatName() == null) return panel;
-
-        HashMap<Integer, Equipment>[] inv = new HashMap[4];
-
-        for (int i = 0; i < 4; i++) {
-            AtomicInteger tot = new AtomicInteger(0);
-            if (inv[i] == null) inv[i] = new HashMap<>();
-            for (Damage d : entity.getDamageList()) {
-                if (
-                    d.owner == null ||
-                    d.owner.id != owner.id ||
-                    d.ownerInvntory == null
-                ) continue;
-
-                int finalI = i;
-                Equipment equipment =
-                    inv[i].computeIfAbsent(d.ownerInvntory[i], id ->
-                            new Equipment(id, d.ownerEnchants[finalI], tot)
-                        );
-                equipment.add(d.damage);
-            }
-        }
+        if (
+            owner.getStatName() == null || equipmentFilter == 0 || eqAgg == null
+        ) return panel;
 
         for (int i = 0; i < 4; i++) {
-            Equipment max =
-                inv[i].values()
-                    .stream()
-                    .max(Comparator.comparingInt(e -> e.dmg))
-                    .orElseThrow(NoSuchElementException::new);
-            int eq = max.id;
+            Equipment max = eqAgg.getMostUsedItem(owner.id, i);
+            int eq = (max != null) ? max.id : 0;
 
             // Get enchant count similar to ParsePanelGUI
-            String parsedEnchant = ParseEnchants.parse(max.enchant);
-            int enchantCount = parsedEnchant.isEmpty() ? 0 : parsedEnchant.split("\n").length;
+
+            String parsedEnchant = (max != null)
+                ? ParseEnchants.parse(max.enchant)
+                : "";
+
+            int enchantCount = parsedEnchant.isEmpty()
+                ? 0
+                : parsedEnchant.split("\n").length;
 
             // Apply glow based on enchant count
+
             JLabel icon;
+
             if (enchantCount == 0) {
-                icon = new JLabel(ImageBuffer.getOutlinedIcon(eq, 16));
+                icon = new JLabel(ImageBuffer.getOutlinedIcon(eq, s));
             } else {
                 Color glowColor;
+
                 switch (enchantCount) {
                     case 1:
                         glowColor = new Color(0, 255, 0);
+
                         break;
                     case 2:
                         glowColor = new Color(0, 200, 255);
+
                         break;
                     case 3:
                         glowColor = new Color(200, 0, 255);
+
                         break;
                     case 4:
                         glowColor = new Color(255, 215, 0);
+
                         break;
                     default:
                         glowColor = Color.BLACK;
                 }
+
                 int glowSize = 3; // Same as ParsePanelGUI
+
                 icon = new JLabel(
                     ImageBuffer.getOutlinedIconWithGlow(
                         eq,
-                        16,
+                        s,
                         glowColor,
                         glowSize
                     )
@@ -494,10 +490,87 @@ public class IconDpsGUI extends DisplayDpsGUI {
                     parsedEnchant
                 )
             );
+
             panel.add(icon);
         }
 
         return panel;
+    }
+
+    private void takeScreenshot() {
+        try {
+            // Get the visible rectangle of the scroll pane
+            Rectangle visibleRect = scrollPane.getViewport().getViewRect();
+
+            // Create a buffered image of the visible area
+            BufferedImage screenshot = new BufferedImage(
+                visibleRect.width,
+                visibleRect.height,
+                BufferedImage.TYPE_INT_RGB
+            );
+
+            // Paint the visible content to the screenshot
+            Graphics2D g2d = screenshot.createGraphics();
+            g2d.translate(-visibleRect.x, -visibleRect.y);
+            charPanel.paint(g2d);
+            g2d.dispose();
+
+            // Create filename with timestamp for reference
+            SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd_HH-mm-ss"
+            );
+            String timestamp = dateFormat.format(new Date());
+            String filename = "DamageLog_Realmshark_" + timestamp + ".png";
+
+            // Copy image to clipboard
+            Clipboard clipboard =
+                Toolkit.getDefaultToolkit().getSystemClipboard();
+            ImageTransferable transferable = new ImageTransferable(screenshot);
+            clipboard.setContents(transferable, null);
+
+            JOptionPane.showMessageDialog(
+                this,
+                "Screenshot copied to clipboard!\nFilename: " + filename,
+                "Screenshot Copied",
+                JOptionPane.INFORMATION_MESSAGE
+            );
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(
+                this,
+                "Error copying screenshot to clipboard: " + ex.getMessage(),
+                "Screenshot Error",
+                JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    // Helper class to make BufferedImage transferable to clipboard
+    private static class ImageTransferable implements Transferable {
+
+        private final BufferedImage image;
+
+        public ImageTransferable(BufferedImage image) {
+            this.image = image;
+        }
+
+        @Override
+        public DataFlavor[] getTransferDataFlavors() {
+            return new DataFlavor[] { DataFlavor.imageFlavor };
+        }
+
+        @Override
+        public boolean isDataFlavorSupported(DataFlavor flavor) {
+            return DataFlavor.imageFlavor.equals(flavor);
+        }
+
+        @Override
+        public Object getTransferData(DataFlavor flavor)
+            throws UnsupportedFlavorException {
+            if (!DataFlavor.imageFlavor.equals(flavor)) {
+                throw new UnsupportedFlavorException(flavor);
+            }
+            return image;
+        }
     }
 
     @Override
