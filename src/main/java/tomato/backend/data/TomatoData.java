@@ -756,6 +756,17 @@ public class TomatoData {
         moonlightFlames = 0;
     }
 
+    /** Get and set Chat Messages the player wants to ping when received.
+     *
+     * @param a Array of all the messages
+     */
+    public void setChatMessagePings(ArrayList<String> a) {
+        savePropList(a, "chatPingMessages");
+    }
+    public ArrayList<String> getChatMessagePings() {
+        return propLists.get("chatPingMessages");
+    }
+
     /** Get and set Entity ID's the player wants to ping when appearing.
      *
      * @param a Array of all the entity IDs

@@ -195,6 +195,7 @@ public class Tomato {
      */
     private static void bootload(TomatoData data) {
         data.bootload();
+        data.loadPropList("chatPingMessages");
         data.loadPropList("entityIdPings");
         data.loadPropList("itemPings");
     }

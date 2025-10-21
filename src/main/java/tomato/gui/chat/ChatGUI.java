@@ -5,7 +5,6 @@ import packets.incoming.TextPacket;
 import tomato.backend.data.TomatoData;
 import tomato.gui.TomatoGUI;
 import tomato.realmshark.Sound;
-import util.PropertiesManager;
 import util.Util;
 
 import javax.swing.*;
@@ -14,10 +13,6 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import java.lang.reflect.Type;
 
@@ -32,11 +27,9 @@ public class ChatGUI extends JPanel {
     public static boolean save;
     private static TomatoData data;
 
-    private static ArrayList<String> blockedSpam = new ArrayList<>();
+    private static final ArrayList<String> blockedSpam = new ArrayList<>();
     private static final String API_URL = "https://api.realmshark.cc/blocked-keywords";
     private static final String BLOCK_FILE = "block.txt";
-
-    private static ArrayList<String> pingMessages = new ArrayList<>();
 
     public ChatGUI(TomatoData data) {
         ChatGUI.data = data;
@@ -64,7 +57,6 @@ public class ChatGUI extends JPanel {
         tabbedPane.addTab("Guild", guild);
         add(tabbedPane);
 
-        loadChatPingMessages();
         loadBlockedChatMessageSpamFromFile();
         new Thread(this::loadBlockedSpam).start();
     }
@@ -162,7 +154,7 @@ public class ChatGUI extends JPanel {
      * @param p Text packet with chat data.
      */
     public static void updateChat(TextPacket p) {
-        if (blockedSpam != null && blockedSpam.stream().anyMatch(p.text::contains)) return;
+        if (!blockedSpam.isEmpty() && blockedSpam.stream().anyMatch(p.text::contains)) return;
 
         String a = "";
         int type = 0;
@@ -204,7 +196,7 @@ public class ChatGUI extends JPanel {
             }
         }
         if (!pinged) {
-            for (String s : pingMessages) {
+            for (String s : data.getChatMessagePings()) {
                 if (s.startsWith("\"") && s.endsWith("\"")) {
                     String exactMatch = s.substring(1, s.length() - 1).toLowerCase();
                     for (String m : p.text.toLowerCase().split(" ")) {
@@ -269,30 +261,10 @@ public class ChatGUI extends JPanel {
     }
 
     public void setPingMessages(ArrayList<String> messages) {
-        pingMessages = messages;
-
-        if (messages.isEmpty()) {
-            PropertiesManager.setProperties("chatPingMessages", "");
-            return;
-        }
-        StringBuilder s = new StringBuilder();
-        for (String m : messages) {
-            s.append("§").append(m);
-        }
-        PropertiesManager.setProperties("chatPingMessages", s.substring(2));
+        data.savePropList(messages, "chatPingMessages");
     }
 
     public ArrayList<String> getPingMessages() {
-        return pingMessages;
-    }
-
-    public void loadChatPingMessages() {
-        String messages = PropertiesManager.getProperty("chatPingMessages");
-        if (messages == null) return;
-        for (String s : messages.split("§")) {
-            if (!s.isEmpty()) {
-                pingMessages.add(s);
-            }
-        }
+        return data.getChatMessagePings();
     }
 }

@@ -268,9 +268,7 @@ public class TomatoGUI {
     /**
      * Opens chat message ping window.
      */
-    public static void openChatPingMessage(){
-        ChatPingGUI.open(chatPanel);
-    }
+    public static void openChatPingMessage(){ new ChatPingGUI(data, chatPanel).open(); }
 
     /**
      * Opens entity ID ping window.
