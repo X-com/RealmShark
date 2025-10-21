@@ -1,17 +1,17 @@
 package tomato.backend;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.stream.Stream;
 import packets.Packet;
 import packets.data.QuestData;
 import packets.incoming.*;
 import packets.outgoing.*;
 import tomato.backend.data.TomatoData;
-import tomato.gui.dps.DpsGUI;
 import tomato.gui.TomatoGUI;
+import tomato.gui.dps.DpsGUI;
+import tomato.gui.stats.FameTablePanel;
 import tomato.realmshark.Sound;
-
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.stream.Stream;
 
 /**
  * Main packet handling class for incoming packets.
@@ -79,6 +79,8 @@ public class TomatoPacketCapture implements Controller {
             MapInfoPacket p = (MapInfoPacket) packet;
             data.setNewRealm(p);
             data.logPacket(packet);
+            // Notify fame table panel about map change
+            FameTablePanel.handleMapChange(p.displayName);
         } else if (packet instanceof CreateSuccessPacket) {
             CreateSuccessPacket p = (CreateSuccessPacket) packet;
             data.setUserId(p.objectId, p.charId, p.str);
@@ -98,7 +100,9 @@ public class TomatoPacketCapture implements Controller {
             data.updateToken(p.accessToken);
         } else if (packet instanceof QuestFetchResponsePacket) {
             QuestFetchResponsePacket p = (QuestFetchResponsePacket) packet;
-            Stream<QuestData> list = Arrays.stream(p.quests).sorted(Comparator.comparing(questData -> questData.category));
+            Stream<QuestData> list = Arrays.stream(p.quests).sorted(
+                Comparator.comparing(questData -> questData.category)
+            );
             TomatoGUI.updateQuests(list.toArray(QuestData[]::new));
         } else if (packet instanceof TradeRequestedPacket) {
             if (Sound.playTradeSound) {
@@ -108,7 +112,5 @@ public class TomatoPacketCapture implements Controller {
     }
 
     @Override
-    public void dispose() {
-
-    }
+    public void dispose() {}
 }
