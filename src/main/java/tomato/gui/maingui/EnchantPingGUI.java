@@ -1,8 +1,5 @@
 package tomato.gui.maingui;
 
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -12,11 +9,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import tomato.realmshark.ParseEnchants;
+import tomato.realmshark.Sound;
 import util.PropertiesManager;
 
 public class EnchantPingGUI extends JPanel {
+
     private static final long serialVersionUID = 1L;
 
     private final JTextField searchField = new JTextField(20);
@@ -38,8 +39,7 @@ public class EnchantPingGUI extends JPanel {
                 try {
                     short v = Short.parseShort(p.trim());
                     savedSelected.add(v);
-                } catch (NumberFormatException ignored) {
-                }
+                } catch (NumberFormatException ignored) {}
             }
         }
 
@@ -52,7 +52,9 @@ public class EnchantPingGUI extends JPanel {
         // Middle: scroll pane with checkbox list (grouped)
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         JScrollPane scrollPane = new JScrollPane(listPanel);
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setVerticalScrollBarPolicy(
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS
+        );
         this.add(scrollPane, BorderLayout.CENTER);
 
         // Bottom: save button + global controls
@@ -69,39 +71,54 @@ public class EnchantPingGUI extends JPanel {
         buildGroupedListFromParseEnchants();
 
         // Search filtering: simple filter that shows matching checkboxes (expands groups with matches)
-        searchField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                filterList();
-            }
+        searchField
+            .getDocument()
+            .addDocumentListener(
+                new DocumentListener() {
+                    @Override
+                    public void insertUpdate(DocumentEvent e) {
+                        filterList();
+                    }
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                filterList();
-            }
+                    @Override
+                    public void removeUpdate(DocumentEvent e) {
+                        filterList();
+                    }
 
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                filterList();
-            }
-        });
+                    @Override
+                    public void changedUpdate(DocumentEvent e) {
+                        filterList();
+                    }
+                }
+            );
 
         // Save action - persist IDs
         saveButton.addActionListener(e -> {
             List<String> ids = new ArrayList<>();
             for (Map.Entry<Short, JCheckBox> en : checkBoxMap.entrySet()) {
-                if (en.getValue().isSelected()) ids.add(Short.toString(en.getKey()));
+                if (en.getValue().isSelected()) ids.add(
+                    Short.toString(en.getKey())
+                );
             }
-            PropertiesManager.setProperties("enchantPing.selected", String.join(",", ids));
-            JOptionPane.showMessageDialog(EnchantPingGUI.this,
-                    "Saved " + ids.size() + " items.",
-                    "Save",
-                    JOptionPane.INFORMATION_MESSAGE);
+            PropertiesManager.setProperties(
+                "enchantPing.selected",
+                String.join(",", ids)
+            );
+            JOptionPane.showMessageDialog(
+                EnchantPingGUI.this,
+                "Saved " + ids.size() + " items.",
+                "Save",
+                JOptionPane.INFORMATION_MESSAGE
+            );
         });
 
         // Global select/clear
-        selectAllBtn.addActionListener(e -> checkBoxMap.values().forEach(cb -> cb.setSelected(true)));
-        clearAllBtn.addActionListener(e -> checkBoxMap.values().forEach(cb -> cb.setSelected(false)));
+        selectAllBtn.addActionListener(e ->
+            checkBoxMap.values().forEach(cb -> cb.setSelected(true))
+        );
+        clearAllBtn.addActionListener(e ->
+            checkBoxMap.values().forEach(cb -> cb.setSelected(false))
+        );
     }
 
     // Build grouped UI using ParseEnchants.ENCHANTS
@@ -112,22 +129,32 @@ public class EnchantPingGUI extends JPanel {
         // Group enchants by first character (A-Z or Unique for all caps)
         Map<String, List<Map.Entry<Short, String>>> groups = new TreeMap<>();
 
-        ParseEnchants.ENCHANTS.entrySet().stream()
-                .sorted(Comparator.comparing(e -> e.getValue().toLowerCase()))
-                .forEach(entry -> {
-                    String name = entry.getValue();
-                    if (name.equals(name.toUpperCase())) {
-                        // All uppercase names go to "Unique" group
-                        groups.computeIfAbsent("Unique", k -> new ArrayList<>()).add(entry);
-                        return;
-                    }
-                    char c = name.isEmpty() ? '#' : name.charAt(0);
-                    String key = (Character.isLetter(c)) ? String.valueOf(Character.toUpperCase(c)) : "#";
-                    groups.computeIfAbsent(key, k -> new java.util.ArrayList<>()).add(entry);
-                });
+        ParseEnchants.ENCHANTS.entrySet()
+            .stream()
+            .sorted(Comparator.comparing(e -> e.getValue().toLowerCase()))
+            .forEach(entry -> {
+                String name = entry.getValue();
+                if (name.equals(name.toUpperCase())) {
+                    // All uppercase names go to "Unique" group
+                    groups
+                        .computeIfAbsent("Unique", k -> new ArrayList<>())
+                        .add(entry);
+                    return;
+                }
+                char c = name.isEmpty() ? '#' : name.charAt(0);
+                String key = (Character.isLetter(c))
+                    ? String.valueOf(Character.toUpperCase(c))
+                    : "#";
+                groups
+                    .computeIfAbsent(key, k -> new java.util.ArrayList<>())
+                    .add(entry);
+            });
 
         // For each group, create a collapsible panel
-        for (Map.Entry<String, List<Map.Entry<Short, String>>> g : groups.entrySet()) {
+        for (Map.Entry<
+            String,
+            List<Map.Entry<Short, String>>
+        > g : groups.entrySet()) {
             String groupName = g.getKey();
             List<Map.Entry<Short, String>> entries = g.getValue();
 
@@ -137,12 +164,14 @@ public class EnchantPingGUI extends JPanel {
 
             // Header with toggle and group controls
             JPanel header = new JPanel(new BorderLayout());
-//            header.setBackground(new Color(0,0,0,0));
+            //            header.setBackground(new Color(0,0,0,0));
             JButton toggle = new JButton("▶ " + groupName);
             toggle.setFocusPainted(false);
             toggle.setBorderPainted(false);
             toggle.setContentAreaFilled(false);
-            JPanel headerRight = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+            JPanel headerRight = new JPanel(
+                new FlowLayout(FlowLayout.RIGHT, 5, 0)
+            );
             headerRight.setOpaque(false);
             JButton groupSelect = new JButton("All");
             JButton groupClear = new JButton("Clear");
@@ -171,7 +200,9 @@ public class EnchantPingGUI extends JPanel {
             }
 
             // If any of the group's items were saved as selected, expand this group by default
-            boolean groupHasSaved = entries.stream().anyMatch(en -> savedSelected.contains(en.getKey()));
+            boolean groupHasSaved = entries
+                .stream()
+                .anyMatch(en -> savedSelected.contains(en.getKey()));
             content.setVisible(groupHasSaved ? true : false);
             groupContainer.add(content, BorderLayout.CENTER);
             listPanel.add(groupContainer);
@@ -192,16 +223,19 @@ public class EnchantPingGUI extends JPanel {
             if (groupHasSaved) {
                 toggle.setText("▼ " + groupName);
             }
-            ;
             // Group select/clear actions
-            groupSelect.addActionListener(e -> entries.forEach(en -> {
-                JCheckBox cb = checkBoxMap.get(en.getKey());
-                if (cb != null) cb.setSelected(true);
-            }));
-            groupClear.addActionListener(e -> entries.forEach(en -> {
-                JCheckBox cb = checkBoxMap.get(en.getKey());
-                if (cb != null) cb.setSelected(false);
-            }));
+            groupSelect.addActionListener(e ->
+                entries.forEach(en -> {
+                    JCheckBox cb = checkBoxMap.get(en.getKey());
+                    if (cb != null) cb.setSelected(true);
+                })
+            );
+            groupClear.addActionListener(e ->
+                entries.forEach(en -> {
+                    JCheckBox cb = checkBoxMap.get(en.getKey());
+                    if (cb != null) cb.setSelected(false);
+                })
+            );
         }
 
         listPanel.revalidate();
@@ -231,9 +265,15 @@ public class EnchantPingGUI extends JPanel {
             // Alternative: find content by scanning children
             if (content == null) {
                 for (Component c : groupContainer.getComponents()) {
-                    if (c instanceof JPanel && ((JPanel) c).getComponentCount() > 0) {
+                    if (
+                        c instanceof JPanel &&
+                        ((JPanel) c).getComponentCount() > 0
+                    ) {
                         JPanel p = (JPanel) c;
-                        if (p.getComponentCount() > 0 && p.getComponent(0) instanceof JCheckBox) {
+                        if (
+                            p.getComponentCount() > 0 &&
+                            p.getComponent(0) instanceof JCheckBox
+                        ) {
                             content = p;
                             break;
                         }
@@ -246,7 +286,8 @@ public class EnchantPingGUI extends JPanel {
                 for (Component itemComp : content.getComponents()) {
                     if (!(itemComp instanceof JCheckBox)) continue;
                     JCheckBox cb = (JCheckBox) itemComp;
-                    boolean matches = q.isEmpty() || cb.getText().toLowerCase().contains(q);
+                    boolean matches =
+                        q.isEmpty() || cb.getText().toLowerCase().contains(q);
                     cb.setVisible(matches);
                     if (matches) groupHasMatch = true;
                 }
@@ -260,7 +301,9 @@ public class EnchantPingGUI extends JPanel {
                                 if (hc instanceof JButton) {
                                     JButton tb = (JButton) hc;
                                     String text = tb.getText();
-                                    if (!text.startsWith("▼")) tb.setText("▼ " + text.replaceAll("^[▶▼] ", ""));
+                                    if (!text.startsWith("▼")) tb.setText(
+                                        "▼ " + text.replaceAll("^[▶▼] ", "")
+                                    );
                                 }
                             }
                         }
@@ -296,6 +339,7 @@ public class EnchantPingGUI extends JPanel {
      * Call EnchantPingGUI.open() from other code to show the dialog.
      */
     public static void open() {
+        Sound.custom.play();
         open(java.util.Collections.emptyList());
     }
 
@@ -305,6 +349,7 @@ public class EnchantPingGUI extends JPanel {
      * @param items list of strings to populate checkboxes (ignored currently, ParseEnchants used)
      */
     public static void open(List<String> items) {
+        Sound.custom.play();
         JFrame parent = tomato.gui.TomatoGUI.getFrame();
         EnchantPingGUI panel = new EnchantPingGUI(items);
         JDialog dialog = new JDialog(parent, "Enchant Pings", true);

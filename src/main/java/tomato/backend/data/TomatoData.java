@@ -934,6 +934,53 @@ public class TomatoData {
     }
 
     /**
+     * Checks if any enchant in the enchant text matches selected enchant pings
+     */
+    public boolean isEnchantPing(String enchantText) {
+        if (enchantText == null || enchantText.isEmpty()) {
+            return false;
+        }
+
+        // Load saved enchant ping selections
+        String saved = PropertiesManager.getProperty("enchantPing.selected");
+        if (saved == null || saved.trim().isEmpty()) {
+            return false;
+        }
+
+        Set<Short> selectedEnchants = new HashSet<>();
+        String[] parts = saved.split(",");
+        for (String p : parts) {
+            try {
+                short v = Short.parseShort(p.trim());
+                selectedEnchants.add(v);
+            } catch (NumberFormatException ignored) {}
+        }
+
+        // Check each enchant line against selected enchants
+        // Format is "EnchantName(ID)" per line
+        String[] enchantLines = enchantText.split("\n");
+        for (String enchantLine : enchantLines) {
+            // Parse enchant ID from the line (format: "EnchantName(ID)")
+            if (enchantLine.contains("(") && enchantLine.contains(")")) {
+                try {
+                    int start = enchantLine.lastIndexOf("(") + 1;
+                    int end = enchantLine.lastIndexOf(")");
+                    String idStr = enchantLine.substring(start, end);
+                    short enchantId = Short.parseShort(idStr);
+                    if (selectedEnchants.contains(enchantId)) {
+                        return true;
+                    }
+                } catch (
+                    NumberFormatException
+                    | IndexOutOfBoundsException ignored
+                ) {}
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Get a list property from the data storage.
      *
      * @param propName  Property name to get
