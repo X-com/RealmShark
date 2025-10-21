@@ -1,9 +1,8 @@
 package tomato.gui.stats;
 
-import tomato.backend.data.TomatoData;
-
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
+import tomato.backend.data.TomatoData;
 
 public class StatisticsGUI extends JPanel {
 
@@ -13,7 +12,17 @@ public class StatisticsGUI extends JPanel {
         add(tabbedPane);
 
         FameTrackerGUI fameTracker = new FameTrackerGUI();
-        tabbedPane.addTab("Fame", fameTracker);
+        tabbedPane.addTab("Fame Graph", fameTracker);
+
+        FameTablePanel fameTable = new FameTablePanel(data);
+        tabbedPane.addTab("Fame Table", fameTable);
+
+        // Initialize and connect the fame table bridge
+        FameTableBridge.initialize();
+        FameTableBridge bridge = FameTableBridge.getInstance();
+        bridge.setFameTablePanel(fameTable);
+        bridge.setFameTrackerGUI(fameTracker);
+
         LootGUI loot = new LootGUI(data);
         tabbedPane.addTab("Loot", loot);
         DungeonStats dungeonStats = new DungeonStats();
