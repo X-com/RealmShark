@@ -13,4 +13,10 @@ public class ItemPingGUI extends CustomListGUI {
         Sound.custom.play();
         super.open();
     }
+
+    @Override
+    boolean validateEntry(String entry) {
+        // no validation needed for item names/IDs
+        return true;
+    }
 }

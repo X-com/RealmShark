@@ -18,6 +18,7 @@ public abstract class CustomListGUI extends JPanel {
     private final DefaultTableModel model;
     private final JDialog dialog;
     private final String propName;
+    public String validationErrorMessage = "Invalid entry! Please correct the input.";
 
     public CustomListGUI(
             TomatoData data,
@@ -54,6 +55,9 @@ public abstract class CustomListGUI extends JPanel {
         table.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
         table.getColumnModel().getColumn(1).setCellEditor(new ButtonEditor());
 
+        // Set a validating text editor for column 0 so invalid entries can't be committed
+        table.getColumnModel().getColumn(0).setCellEditor(new ValidatingTextEditor());
+
         // Populate initial rows
         if (items != null && !items.isEmpty()) {
             for (String s : items) {
@@ -89,20 +93,26 @@ public abstract class CustomListGUI extends JPanel {
         JOptionPane pane = new JOptionPane(gui, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, new JButton[]{close}, close);
         close.addActionListener(e -> {
             Window w = SwingUtilities.getWindowAncestor(close);
-            pane.setValue(-1);
 
             // If a cell is being edited, finish editing so the model reflects the latest text
             if (gui.table.isEditing()) {
-                TableCellEditor editor = gui.table.getCellEditor();
+                // Use the CellEditor interface which returns a boolean from stopCellEditing()
+                javax.swing.CellEditor editor = gui.table.getCellEditor();
                 if (editor != null) {
                     try {
-                        editor.stopCellEditing();
+                        boolean stopped = editor.stopCellEditing();
+                        if (!stopped) {
+                            // Editor refused to stop (validation failed) -> do not close/save
+                            return;
+                        }
                     } catch (Exception ignored) {
-                        // If stopping the editor fails for any reason, proceed to dispose
+                        // If stopping the editor throws, abort save to be safe
+                        return;
                     }
                 }
             }
 
+            pane.setValue(-1);
             w.dispose();
 
             // collect items from table model
@@ -180,7 +190,29 @@ public abstract class CustomListGUI extends JPanel {
         }
     }
 
+    // Editor for column 0 that validates before allowing the edit to be committed
+    private class ValidatingTextEditor extends DefaultCellEditor {
+        public ValidatingTextEditor() {
+            super(new JTextField());
+        }
+
+        @Override
+        public boolean stopCellEditing() {
+            Object value = getCellEditorValue();
+            String text = value == null ? "" : value.toString();
+            if (text != null && !CustomListGUI.this.validateEntry(text)) {
+                // Validation failed; notify the user and keep the editor active
+                JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(CustomListGUI.this),
+                        validationErrorMessage, "Validation error", JOptionPane.WARNING_MESSAGE);
+                return false;
+            }
+            return super.stopCellEditing();
+        }
+    }
+
     public void open() {
         this.dialog.setVisible(true);
     }
+
+    abstract boolean validateEntry(String entry);
 }

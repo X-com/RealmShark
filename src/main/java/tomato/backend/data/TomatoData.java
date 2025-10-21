@@ -72,7 +72,6 @@ public class TomatoData {
     private static final int MOONLIGHT_BOSS_FLAME_ID = 20518;
     private boolean updatedExaltStats = false;
     private final HashMap<String, ArrayList<String>> propLists = new HashMap<>();
-    private ArrayList<Integer> idEntityPing = new ArrayList<>();
 
     /**
      * Sets the current realm.
@@ -249,8 +248,9 @@ public class TomatoData {
      * @param idType ID of sound alert entity
      */
     private void customSoundAlert(int idType) {
-        for(int id : idEntityPing) {
-            if(idType == id) {
+        ArrayList<String> idEntityPing = getEntityIdPings();
+        for(String id : idEntityPing) {
+            if(String.valueOf(idType).equals(id)) {
                 Sound.custom.play();
                 break;
             }
@@ -760,11 +760,11 @@ public class TomatoData {
      *
      * @param a Array of all the entity IDs
      */
-    public void setIdEntityPing(ArrayList<Integer> a) {
-        idEntityPing = a;
+    public void setIdEntityPing(ArrayList<String> a) {
+        savePropList(a, "entityIdPings");
     }
-    public ArrayList<Integer> getEntityIdPings() {
-        return idEntityPing;
+    public ArrayList<String> getEntityIdPings() {
+        return propLists.get("entityIdPings");
     }
 
     /** Get and set Items the player wants to ping when appearing.

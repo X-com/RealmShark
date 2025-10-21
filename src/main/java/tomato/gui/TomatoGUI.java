@@ -275,9 +275,7 @@ public class TomatoGUI {
     /**
      * Opens entity ID ping window.
      */
-    public static void openEntityIdPing(){
-        CustomPingGUI.open(data);
-    }
+    public static void openEntityIdPing(){ new EntityPingGUI(data).open(); }
 
     /**
      * Opens entity ID ping window.
