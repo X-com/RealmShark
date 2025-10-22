@@ -54,10 +54,10 @@ public class AssetExtractor {
     static {
         if (System.getProperty("os.name").toLowerCase().contains("mac")) {
             REALM_RES_PATH =
-                "/RealmOfTheMadGod/Production/RotMGExalt.app/Contents/Resources/Data/resources.assets";
+                "RealmOfTheMadGod/Production/RotMGExalt.app/Contents/Resources/Data/resources.assets";
         } else {
             REALM_RES_PATH =
-                "/Documents/RealmOfTheMadGod/Production/RotMG Exalt_Data/resources.assets";
+                "Documents/RealmOfTheMadGod/Production/RotMG Exalt_Data/resources.assets";
         }
     }
 
