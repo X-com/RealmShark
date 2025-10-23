@@ -1084,7 +1084,7 @@ public class TomatoData {
                 "#Kitsune Umi".equals(p.name) &&
                 "This fully concludes the Moonlight Festival!".equals(p.text)
             ) {
-                openWindow(UMI_KITSUNE_ID, seed, 1, null);
+                openWindow(UMI_KITSUNE_ID, seed, 2, null);
                 return;
             }
 
@@ -1094,7 +1094,7 @@ public class TomatoData {
                 "#Dancer Miko".equals(p.name) &&
                 "Thank you all for coming tonight.".equals(p.text)
             ) {
-                openWindow(MIKO_DANCER_ID, seed, 1, null);
+                openWindow(MIKO_DANCER_ID, seed, 2, null);
                 return;
             }
 
@@ -1116,7 +1116,7 @@ public class TomatoData {
                     p.text
                 )
             ) {
-                openWindow(VOID_ENTITY_ID, seed, 1, null);
+                openWindow(VOID_ENTITY_ID, seed, 2, null);
                 return;
             }
 
@@ -1126,7 +1126,7 @@ public class TomatoData {
                 "#The Bridge Sentinel".equals(p.name) &&
                 "I tried to protect you... I have failed.".equals(p.text)
             ) {
-                openWindow(BRIDGE_SENTINEL_ID, seed, 1, null); // initial + delayed bag
+                openWindow(BRIDGE_SENTINEL_ID, seed, 2, null); // initial + delayed bag
                 return;
             }
 
@@ -1136,7 +1136,7 @@ public class TomatoData {
                     p.text
                 )
             ) {
-                openWindow(BRIDGE_SENTINEL_ID, seed, 1, "HM"); // initial + delayed bag
+                openWindow(BRIDGE_SENTINEL_ID, seed, 2, "HM"); // initial + delayed bag
                 return;
             }
 
@@ -1148,7 +1148,7 @@ public class TomatoData {
                     p.text
                 )
             ) {
-                openWindow(TWILIGHT_ARCHMAGE_ID, seed, 1, null); // initial + delayed bag
+                openWindow(TWILIGHT_ARCHMAGE_ID, seed, 2, null); // initial + delayed bag
                 return;
             }
 
@@ -1158,7 +1158,7 @@ public class TomatoData {
                     p.text
                 )
             ) {
-                openWindow(TWILIGHT_ARCHMAGE_ID, seed, 1, "HM"); // initial + delayed bag
+                openWindow(TWILIGHT_ARCHMAGE_ID, seed, 2, "HM"); // initial + delayed bag
                 return;
             }
 
@@ -1170,7 +1170,7 @@ public class TomatoData {
                     p.text
                 )
             ) {
-                openWindow(ACCURSED_KING_ID, seed, 1, null); // initial + delayed bag
+                openWindow(ACCURSED_KING_ID, seed, 2, null); // initial + delayed bag
                 return;
             }
 
@@ -1178,7 +1178,7 @@ public class TomatoData {
                 "#King Azamoth".equals(p.name) &&
                 "This fate is mine to bear... not hers.".equals(p.text)
             ) {
-                openWindow(ACCURSED_KING_ID, seed, 1, "HM"); // initial + delayed bag
+                openWindow(ACCURSED_KING_ID, seed, 2, "HM"); // initial + delayed bag
                 return;
             }
         }
