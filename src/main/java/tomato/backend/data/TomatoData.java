@@ -1103,7 +1103,7 @@ public class TomatoData {
                 "#Kitsune Umi".equals(p.name) &&
                 "This fully concludes the Moonlight Festival!".equals(p.text)
             ) {
-                openWindow(UMI_KITSUNE_ID, seed, 1, null);
+                openWindow(UMI_KITSUNE_ID, seed, 2, null);
                 return;
             }
 
@@ -1113,7 +1113,7 @@ public class TomatoData {
                 "#Dancer Miko".equals(p.name) &&
                 "Thank you all for coming tonight.".equals(p.text)
             ) {
-                openWindow(MIKO_DANCER_ID, seed, 1, null);
+                openWindow(MIKO_DANCER_ID, seed, 2, null);
                 return;
             }
 
