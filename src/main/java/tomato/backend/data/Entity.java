@@ -298,9 +298,9 @@ public class Entity implements Serializable {
         damage.walledGardenReflectors =
             objectType == FORGOTTEN_KING &&
             stat.get(StatType.ANIMATION_STAT) != null &&
-            (stat.get(StatType.ANIMATION_STAT).statValue ==
-                    FORGOTTEN_KING_REFLECTOR_ANIMATION &&
-                tomatoData.floorPlanCrystals() == 12);
+            stat.get(StatType.ANIMATION_STAT).statValue ==
+            FORGOTTEN_KING_REFLECTOR_ANIMATION &&
+            tomatoData.hasGuardedPhaseEntity();
         damage.chancellorDammahDmg =
             objectType == CHANCELLOR_DAMMAH && !dammahCountered;
     }

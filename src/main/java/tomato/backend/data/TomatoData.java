@@ -385,6 +385,25 @@ public class TomatoData {
     }
 
     /**
+     * Checks if any guarded phase entities exist for Forgotten King fight.
+     *
+     * @return True if any of the guarded phase entities (33656, 33557, 33572) exist
+     */
+    public boolean hasGuardedPhaseEntity() {
+        for (Entity entity : entityList.values()) {
+            int objectType = entity.objectType;
+            if (
+                objectType == 33656 ||
+                objectType == 33557 ||
+                objectType == 33572
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Checks if objectType is a player entity.
      *
      * @param objectType ID of the object
@@ -1116,7 +1135,7 @@ public class TomatoData {
                     p.text
                 )
             ) {
-                openWindow(VOID_ENTITY_ID, seed, 1, null);
+                openWindow(VOID_ENTITY_ID, seed, 2, null);
                 return;
             }
 
@@ -1126,7 +1145,7 @@ public class TomatoData {
                 "#The Bridge Sentinel".equals(p.name) &&
                 "I tried to protect you... I have failed.".equals(p.text)
             ) {
-                openWindow(BRIDGE_SENTINEL_ID, seed, 1, null); // initial + delayed bag
+                openWindow(BRIDGE_SENTINEL_ID, seed, 2, null); // initial + delayed bag
                 return;
             }
 
@@ -1136,7 +1155,7 @@ public class TomatoData {
                     p.text
                 )
             ) {
-                openWindow(BRIDGE_SENTINEL_ID, seed, 1, "HM"); // initial + delayed bag
+                openWindow(BRIDGE_SENTINEL_ID, seed, 2, "HM"); // initial + delayed bag
                 return;
             }
 
@@ -1148,7 +1167,7 @@ public class TomatoData {
                     p.text
                 )
             ) {
-                openWindow(TWILIGHT_ARCHMAGE_ID, seed, 1, null); // initial + delayed bag
+                openWindow(TWILIGHT_ARCHMAGE_ID, seed, 2, null); // initial + delayed bag
                 return;
             }
 
@@ -1158,7 +1177,7 @@ public class TomatoData {
                     p.text
                 )
             ) {
-                openWindow(TWILIGHT_ARCHMAGE_ID, seed, 1, "HM"); // initial + delayed bag
+                openWindow(TWILIGHT_ARCHMAGE_ID, seed, 2, "HM"); // initial + delayed bag
                 return;
             }
 
@@ -1170,7 +1189,7 @@ public class TomatoData {
                     p.text
                 )
             ) {
-                openWindow(ACCURSED_KING_ID, seed, 1, null); // initial + delayed bag
+                openWindow(ACCURSED_KING_ID, seed, 2, null); // initial + delayed bag
                 return;
             }
 
@@ -1178,7 +1197,7 @@ public class TomatoData {
                 "#King Azamoth".equals(p.name) &&
                 "This fate is mine to bear... not hers.".equals(p.text)
             ) {
-                openWindow(ACCURSED_KING_ID, seed, 1, "HM"); // initial + delayed bag
+                openWindow(ACCURSED_KING_ID, seed, 2, "HM"); // initial + delayed bag
                 return;
             }
         }

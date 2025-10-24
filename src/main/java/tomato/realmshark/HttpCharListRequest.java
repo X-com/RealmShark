@@ -72,7 +72,8 @@ public class HttpCharListRequest {
             in.close();
 
             // print result
-            //            System.out.println(response);
+            //System.out.println(response);
+            //System.out.println(accessToken);
             return response.toString();
         } else {
             BufferedReader in = new BufferedReader(

@@ -3,6 +3,7 @@ package tomato.realmshark;
 import com.google.gson.*;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.Stack;
 import java.util.concurrent.Semaphore;
 import packets.data.StatData;
@@ -414,6 +415,13 @@ public class SendLoot {
                         byte[] mout = merged
                             .toString()
                             .getBytes(StandardCharsets.UTF_8);
+                        /*
+                        System.out.println(
+                            "[" +
+                                new Date() +
+                                "] Queued merged loot data: " +
+                                merged.toString()
+                                ); */
                         stack.push(mout);
                         sem.release();
                         pendingFullBag = null;
@@ -455,6 +463,12 @@ public class SendLoot {
                         byte[] pout = flush
                             .toString()
                             .getBytes(StandardCharsets.UTF_8);
+                        /* System.out.println(
+                                "[" +
+                                    new Date() +
+                                    "] Queued merged loot data (flush): " +
+                                    flush.toString()
+                            ); */
                         stack.push(pout);
                         sem.release();
                         // Start new pending with current bag
@@ -504,6 +518,14 @@ public class SendLoot {
         jsonObject.addProperty("ver", Version.VERSION);
 
         byte[] out = jsonObject.toString().getBytes(StandardCharsets.UTF_8);
+        /*
+        System.out.println(
+            "[" +
+                new Date() +
+                "] Queued loot data for WebSocket: " +
+                jsonObject.toString()
+        );
+        */
         stack.push(out);
         sem.release();
     }
@@ -522,7 +544,13 @@ public class SendLoot {
 
                     // Log the exact JSON string being sent
                     String payload = new String(out, StandardCharsets.UTF_8);
-                    //System.out.println(payload);
+                    /*
+                    System.out.println(
+                        "[" +
+                            new Date() +
+                            "] WebSocket Sending: " + payload
+                    );
+                    */
                     webSocket.sendBytes(out);
                 }
             }
