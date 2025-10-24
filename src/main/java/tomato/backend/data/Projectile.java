@@ -44,13 +44,31 @@ public class Projectile implements Serializable {
         if (projectileId == -1) {
             projectileId = 0;
         }
-        int min = IdToAsset.getIdProjectileMinDmg(weaponId, projectileId);
-        int max = IdToAsset.getIdProjectileMaxDmg(weaponId, projectileId);
-        boolean ap = IdToAsset.getIdProjectileArmorPierces(
-            weaponId,
-            projectileId
-        );
-        int slot = IdToAsset.getIdProjectileSlotType(weaponId);
+        int min = 0;
+        int max = 0;
+        boolean ap = false;
+        int slot = 0;
+        try {
+            min = IdToAsset.getIdProjectileMinDmg(weaponId, projectileId);
+            max = IdToAsset.getIdProjectileMaxDmg(weaponId, projectileId);
+            ap = IdToAsset.getIdProjectileArmorPierces(weaponId, projectileId);
+            slot = IdToAsset.getIdProjectileSlotType(weaponId);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            // For main weapons with enchantment issues, skip entirely
+            slot = IdToAsset.getIdProjectileSlotType(weaponId);
+            boolean mainWeapon = isMainWeapon(slot);
+            if (mainWeapon) {
+                // Skip this projectile for main weapons with enchantment issues
+                return;
+            }
+            // System.err.println(
+            //     "ArrayIndexOutOfBoundsException in IdToAsset for weaponId: " +
+            //         weaponId +
+            //         ", projectileId: " +
+            //         projectileId
+            // );
+            return;
+        }
         boolean mainWeapon = isMainWeapon(slot);
         int dmg;
         if (min != max) {
@@ -89,21 +107,12 @@ public class Projectile implements Serializable {
                 dmg += statBonus;
             } else {
                 // System.out.println(
-                //     "Projectile no scaling - weaponId: " +
-                //         weaponId +
-                //         ", baseDmg: " +
-                //         dmg +
-                //         " (ability but no scaling data)"
-                // );
+                //     "Projectile no scaling - weaponId: " +weaponId +", baseDmg: "
+                // +dmg +" (ability but no scaling data)");
             }
         } else {
-            // System.out.println(
-            //     "Projectile no scaling - weaponId: " +
-            //         weaponId +
-            //         ", baseDmg: " +
-            //         dmg +
-            //         " (weapon, not ability)"
-            // );
+            // System.out.println("Projectile no scaling - weaponId: " + weaponId +", baseDmg: " +
+            // dmg +" (weapon, not ability)");
         }
 
         float f = 1f;

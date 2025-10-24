@@ -58,7 +58,33 @@ public class Tomato {
         TcpStreamErrorHandler.INSTANCE.setErrorStopHandler(
             TomatoMenuBar::stopPacketSniffer
         );
+
+        // Initialize crucible data from API on startup
+        initializeCrucibleData();
+
         load();
+    }
+
+    /**
+     * Initializes crucible data by fetching from API on startup
+     * This provides pre-launch crucible bonuses without waiting for game packets
+     */
+    private static void initializeCrucibleData() {
+        long startTime = System.currentTimeMillis();
+        tomato.backend.data.CrucibleBonusManager.fetchCrucibleDataFromApi();
+        long endTime = System.currentTimeMillis();
+
+        boolean apiDataLoaded =
+            tomato.backend.data.CrucibleBonusManager.isApiDataLoaded();
+        if (apiDataLoaded) {
+            System.out.println(
+                "[Crucible] API data loaded (" + (endTime - startTime) + "ms)"
+            );
+        } else {
+            System.out.println(
+                "[Crucible] Using packet data (" + (endTime - startTime) + "ms)"
+            );
+        }
     }
 
     private static void parseCustomAssetPath(String[] args) {

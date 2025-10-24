@@ -10,11 +10,12 @@ import packets.Packet;
 import packets.data.StatData;
 import packets.data.enums.StatType;
 import tomato.backend.data.Entity;
+import tomato.realmshark.CrucibleApiClient;
 
 /**
  * Manages crucible bonuses dynamically by:
- * 1. Tracking the player's stat 155 string value
- * 2. Storing crucible configuration data from CrucibleResponsePacket
+ * 1. Tracking the player's stat 128 & 155 string value
+ * 2. Storing crucible configuration data from CrucibleResponsePacket or API
  * 3. Providing damage multipliers based on current crucible bonus
  */
 public class CrucibleBonusManager {
@@ -24,6 +25,7 @@ public class CrucibleBonusManager {
     private static String currentPlayerCrucibleId128 = null;
     private static String currentPlayerCrucibleId155 = null;
     private static final Gson gson = new Gson();
+    private static boolean apiDataLoaded = false;
 
     /**
      * Processes a CrucibleResponsePacket to extract and store damage multipliers
@@ -31,21 +33,28 @@ public class CrucibleBonusManager {
      * @param packet The CrucibleResponsePacket containing crucible configuration
      */
     public static void processCrucibleResponse(Packet packet) {
+        System.out.println("[Crucible] Processing packet from game server...");
+
         try {
             // The packet should contain JSON data with crucible configurations
             String jsonData = extractJsonFromPacket(packet);
             if (jsonData == null || jsonData.isEmpty()) {
+                System.err.println(
+                    "[Crucible] Failed to extract JSON from packet"
+                );
                 return;
             }
 
+            // Mark that we have packet data (overrides API data)
+            apiDataLoaded = false;
+            // DEBUG: System.out.println("API data flag cleared - using packet data");
+
             // Debug: Print raw JSON data to see what we're working with
-            System.out.println("=== RAW CRUCIBLE RESPONSE DATA ===");
-            System.out.println(
-                "Packet class: " + packet.getClass().getSimpleName()
-            );
-            System.out.println("Raw packet toString: " + packet.toString());
-            System.out.println("Extracted JSON data: " + jsonData);
-            System.out.println("=== END RAW DATA ===");
+            //System.out.println(
+            //    "[Crucible] Packet class: " + packet.getClass().getSimpleName()
+            //);
+            // DEBUG: System.out.println("Raw packet toString: " + packet.toString());
+            // DEBUG: System.out.println("Extracted JSON data: " + jsonData);
 
             // The crucibleJsons field contains an array of JSON objects
             // Each object has an "array" field containing the actual crucible data
@@ -59,8 +68,12 @@ public class CrucibleBonusManager {
 
             // Clear previous multipliers
             crucibleDamageMultipliers.clear();
+            // DEBUG: System.out.println("Cleared previous crucible multipliers");
 
             // Parse each crucible configuration
+            int totalCruciblesProcessed = 0;
+            int totalType5BonusesFound = 0;
+
             for (JsonElement crucibleJsonElement : crucibleJsonsArray) {
                 JsonObject crucibleJsonObj =
                     crucibleJsonElement.getAsJsonObject();
@@ -74,31 +87,45 @@ public class CrucibleBonusManager {
                         .get("array")
                         .getAsJsonArray();
 
+                    // DEBUG: System.out.println("Processing crucible array with " + crucibleArray.size() + " entries");
+
                     for (JsonElement element : crucibleArray) {
                         JsonObject crucibleObj = element.getAsJsonObject();
                         if (crucibleObj.has("id")) {
                             String crucibleId = crucibleObj
                                 .get("id")
                                 .getAsString();
+                            totalCruciblesProcessed++;
 
-                            // Debug: Print crucible object structure
-                            System.out.println(
-                                "Processing crucible ID: " + crucibleId
-                            );
+                            // DEBUG: System.out.println("Processing crucible ID: " + crucibleId);
+
+                            // Store current multiplier count before processing
+                            int multipliersBefore =
+                                crucibleDamageMultipliers.size();
 
                             // Recursively search for type 5 bonuses in any JSON structure
                             findAndStoreType5Bonuses(crucibleObj, crucibleId);
+
+                            // Check if we found any new multipliers
+                            int multipliersAfter =
+                                crucibleDamageMultipliers.size();
+                            if (multipliersAfter > multipliersBefore) {
+                                totalType5BonusesFound++;
+                                // DEBUG: System.out.println("Found type 5 bonus for crucible ID: " + crucibleId);
+                            }
                         }
                     }
                 }
             }
 
             System.out.println(
-                "Loaded " +
+                "[Crucible] Loaded " +
                     crucibleDamageMultipliers.size() +
-                    " crucible damage multipliers"
+                    " damage multipliers from packet"
             );
-            System.out.println("Multipliers map: " + crucibleDamageMultipliers);
+            // DEBUG: System.out.println("Total crucibles processed: " + totalCruciblesProcessed);
+            // DEBUG: System.out.println("Total type 5 bonuses found: " + totalType5BonusesFound);
+            // DEBUG: System.out.println("Multipliers map: " + crucibleDamageMultipliers);
         } catch (Exception e) {
             System.err.println(
                 "Error processing crucible response: " + e.getMessage()
@@ -177,22 +204,13 @@ public class CrucibleBonusManager {
 
         Double multiplier = crucibleDamageMultipliers.get(crucibleId);
         if (multiplier != null) {
-            System.out.println(
-                "Found multiplier for crucible ID " +
-                    crucibleId +
-                    ": " +
-                    multiplier
-            );
+            // DEBUG: System.out.println("Found multiplier for crucible ID " + crucibleId + ": " + multiplier);
             return multiplier;
         }
 
         // No multiplier found for current crucible ID
-        System.out.println(
-            "No damage multiplier found for crucible ID: " + crucibleId
-        );
-        System.out.println(
-            "Available multipliers: " + crucibleDamageMultipliers
-        );
+        // DEBUG: System.out.println("No damage multiplier found for crucible ID: " + crucibleId);
+        // DEBUG: System.out.println("Available multipliers: " + crucibleDamageMultipliers);
         return 1.0;
     }
 
@@ -245,7 +263,7 @@ public class CrucibleBonusManager {
             System.out.println("Packet toString: " + packetString);
             // Try to access packet fields via reflection
             Class<?> packetClass = packet.getClass();
-            System.out.println("Packet class fields:");
+            // DEBUG: System.out.println("Packet class fields:");
 
             // Look for the crucibleJsons field specifically
             for (java.lang.reflect.Field field : packetClass.getDeclaredFields()) {
@@ -254,7 +272,8 @@ public class CrucibleBonusManager {
                 );
                 field.setAccessible(true);
                 Object value = field.get(packet);
-                System.out.println("  Value: " + value);
+                // DEBUG: System.out.println("  Field: " + field.getName() + " type: " + field.getType());
+                // DEBUG: System.out.println("  Value: " + value);
 
                 // Look for the crucibleJsons field specifically
                 if ("crucibleJsons".equals(field.getName())) {
@@ -339,6 +358,8 @@ public class CrucibleBonusManager {
             // Check if this object has a "bonuses" array
             if (obj.has("bonuses") && obj.get("bonuses").isJsonArray()) {
                 JsonArray bonuses = obj.get("bonuses").getAsJsonArray();
+                // DEBUG: System.out.println("Found bonuses array with " + bonuses.size() + " entries for crucible ID: " + crucibleId);
+
                 for (JsonElement bonusElement : bonuses) {
                     if (bonusElement.isJsonObject()) {
                         JsonObject bonus = bonusElement.getAsJsonObject();
@@ -355,13 +376,17 @@ public class CrucibleBonusManager {
                                     crucibleId,
                                     multiplier
                                 );
-                                System.out.println(
-                                    "Found type 5 bonus in bonuses array: " +
-                                        crucibleId +
-                                        " = " +
-                                        multiplier
-                                );
+                                // DEBUG: System.out.println("Found type 5 bonus in bonuses array: " + crucibleId + " = " + multiplier);
+
                                 return; // Found type 5, no need to search further
+                            } else {
+                                // DEBUG: System.out.println("Type 5 bonus found but missing 'amount' field for crucible ID: " + crucibleId);
+                            }
+                        } else {
+                            // Log other bonus types for debugging
+                            if (bonus.has("type")) {
+                                int bonusType = bonus.get("type").getAsInt();
+                                // DEBUG: System.out.println("Found bonus type " + bonusType + " (not type 5) for crucible ID: " + crucibleId);
                             }
                         }
                     }
@@ -390,11 +415,120 @@ public class CrucibleBonusManager {
     }
 
     /**
+     * Fetches crucible data from the RealmShark API
+     * This provides pre-launch crucible data without waiting for game packets
+     */
+    public static void fetchCrucibleDataFromApi() {
+        System.out.println("[Crucible] Fetching data from API...");
+
+        try {
+            // Only fetch from API if we haven't already loaded packet data
+            if (apiDataLoaded) {
+                // DEBUG: System.out.println("API data already loaded, skipping fetch");
+                return;
+            }
+
+            String jsonData = CrucibleApiClient.fetchCrucibleData();
+            if (
+                jsonData != null &&
+                CrucibleApiClient.validateCrucibleData(jsonData)
+            ) {
+                // DEBUG: System.out.println("API data fetched and validated successfully");
+                // Process the JSON data the same way as from packets
+                JsonArray crucibleJsonsArray = gson.fromJson(
+                    jsonData,
+                    JsonArray.class
+                );
+                if (crucibleJsonsArray != null) {
+                    // Clear previous multipliers but keep player IDs
+                    crucibleDamageMultipliers.clear();
+
+                    int totalCruciblesProcessed = 0;
+                    int totalType5BonusesFound = 0;
+
+                    for (JsonElement crucibleJsonElement : crucibleJsonsArray) {
+                        JsonObject crucibleJsonObj =
+                            crucibleJsonElement.getAsJsonObject();
+                        if (
+                            crucibleJsonObj.has("array") &&
+                            crucibleJsonObj.get("array").isJsonArray()
+                        ) {
+                            JsonArray crucibleArray = crucibleJsonObj
+                                .get("array")
+                                .getAsJsonArray();
+
+                            // DEBUG: System.out.println("Processing API crucible array with " + crucibleArray.size() + " entries");
+
+                            for (JsonElement element : crucibleArray) {
+                                JsonObject crucibleObj =
+                                    element.getAsJsonObject();
+                                if (crucibleObj.has("id")) {
+                                    String crucibleId = crucibleObj
+                                        .get("id")
+                                        .getAsString();
+                                    totalCruciblesProcessed++;
+                                    // DEBUG: System.out.println("Processing API crucible ID: " + crucibleId);
+
+                                    // Store current multiplier count before processing
+                                    int multipliersBefore =
+                                        crucibleDamageMultipliers.size();
+
+                                    findAndStoreType5Bonuses(
+                                        crucibleObj,
+                                        crucibleId
+                                    );
+
+                                    // Check if we found any new multipliers
+                                    int multipliersAfter =
+                                        crucibleDamageMultipliers.size();
+                                    if (multipliersAfter > multipliersBefore) {
+                                        totalType5BonusesFound++;
+                                        // DEBUG: System.out.println("Found type 5 bonus for API crucible ID: " + crucibleId);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    apiDataLoaded = true;
+                    System.out.println(
+                        "[Crucible] Loaded " +
+                            crucibleDamageMultipliers.size() +
+                            " damage multipliers from API"
+                    );
+                } else {
+                    System.err.println(
+                        "❌ Failed to parse API JSON data as array"
+                    );
+                }
+            } else {
+                System.err.println(
+                    "[Crucible] API data not available or invalid"
+                );
+            }
+        } catch (Exception e) {
+            System.err.println(
+                "[Crucible] Error fetching data: " + e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * Checks if crucible data has been loaded from API
+     *
+     * @return true if API data is loaded, false otherwise
+     */
+    public static boolean isApiDataLoaded() {
+        return apiDataLoaded;
+    }
+
+    /**
      * Clears all stored crucible data (for testing or reset purposes)
      */
     public static void clear() {
         crucibleDamageMultipliers.clear();
         currentPlayerCrucibleId128 = null;
         currentPlayerCrucibleId155 = null;
+        apiDataLoaded = false;
     }
 }
