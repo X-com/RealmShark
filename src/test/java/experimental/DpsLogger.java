@@ -77,11 +77,24 @@ public class DpsLogger {
         } else if (packet instanceof PlayerShootPacket) {
             PlayerShootPacket p = (PlayerShootPacket) packet;
             Bullet bullet = new Bullet(p);
-            //            try {
-            //                calculateBulletDamage(bullet, rng, player, p.weaponId, p.projectileId);
-            //            } catch (AssetMissingException e) {
-            //                e.printStackTrace();
-            //            }
+
+            // Detect ability projectiles using meaningful criteria:
+            // 1. ProjectileId == -1 (indicates ability)
+            // 2. Specific weaponIds that are known abilities
+            boolean isAbilityProjectile =
+                p.projectileId == -1 || isAbilityWeapon(p.weaponId);
+
+            bullet.summonerId = isAbilityProjectile ? 1 : 0; // Non-zero for abilities
+
+            if (isAbilityProjectile) {
+                // Calculate ability damage using asset data
+                calculateBulletDamage(
+                    bullet,
+                    player,
+                    p.weaponId,
+                    p.projectileId
+                );
+            }
             player.setBullet(p.bulletId, bullet);
         } else if (packet instanceof ServerPlayerShootPacket) {
             ServerPlayerShootPacket p = (ServerPlayerShootPacket) packet;
@@ -382,27 +395,107 @@ public class DpsLogger {
     //    private static void calculateBulletDamage(Bullet bullet, RNG rng, Entity player, int weaponId, int projectileId) throws AssetMissingException {
     //        if (player == null || rng == null) return;
     //
-    //        if (projectileId == -1) {
-    //            projectileId = 0;
-    //        }
-    //        int min = IdToAsset.getIdProjectileMinDmg(weaponId, projectileId);
-    //        int max = IdToAsset.getIdProjectileMaxDmg(weaponId, projectileId);
-    //        boolean ap = IdToAsset.getIdProjectileArmorPierces(weaponId, projectileId);
-    //        int dmg;
-    //        if (min != max) {
-    //            long r = rng.next();
-    //            dmg = (int) (min + r % (max - min));
-    //        } else {
-    //            dmg = min;
-    //        }
-    //        float f = playerStatsMultiplier(player);
-    //        bullet.totalDmg = (int) (dmg * f);
-    //        bullet.armorPiercing = ap;
-    //    }
+    private static void calculateBulletDamage(
+        Bullet bullet,
+        Entity player,
+        int weaponId,
+        int projectileId
+    ) {
+        if (player == null) return;
+
+        if (projectileId == -1) {
+            projectileId = 0;
+        }
+        try {
+            int min = IdToAsset.getIdProjectileMinDmg(weaponId, projectileId);
+            int max = IdToAsset.getIdProjectileMaxDmg(weaponId, projectileId);
+            boolean ap = IdToAsset.getIdProjectileArmorPierces(
+                weaponId,
+                projectileId
+            );
+            int dmg;
+            if (min != max) {
+                // Use simple random for now - in complete implementation use proper RNG
+                dmg = min + (int) (Math.random() * (max - min));
+            } else {
+                dmg = min;
+            }
+
+            // Add stat modifier bonus for abilities
+            if (bullet.summonerId != 0) {
+                int statBonus = calculateStatModifierBonus(player, weaponId);
+                dmg += statBonus;
+            }
+
+            float f = playerStatsMultiplier(player);
+            bullet.totalDmg = (int) (dmg * f);
+            bullet.armorPiercing = ap;
+        } catch (Exception e) {
+            // If asset lookup fails, set reasonable default for abilities
+            if (bullet.summonerId != 0) {
+                bullet.totalDmg = 1000; // Fallback for ability damage
+            }
+        }
+    }
 
     // Placeholder method for bullet damage calculation
     // In a complete implementation, this would calculate damage based on weapon/projectile stats
     // For now, we rely on EnemyHitPacket to provide the actual damage values
+
+    /**
+     * Detects if a weapon ID corresponds to an ability weapon.
+     * This is a simplified implementation - in a complete system, this would check
+     * against a comprehensive list of ability weapon IDs.
+     */
+    private static boolean isAbilityWeapon(int weaponId) {
+        // Common ability weapon IDs - this list should be expanded based on actual game data
+        // These are placeholder examples - replace with actual ability weapon IDs
+        switch (weaponId) {
+            case 8290: // Example ability weapon ID from your logs
+            case 1234: // Placeholder - add actual ability weapon IDs here
+            case 5678: // Placeholder - add actual ability weapon IDs here
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Calculates stat modifier bonus for abilities.
+     * For abilities that scale with stats (like +20 damage per WIS over 50),
+     * this calculates the additional damage from stat scaling.
+     *
+     * TODO: This should read scaling data from XML assets dynamically
+     * Currently uses hardcoded values - needs proper XML parsing implementation
+     */
+    private static int calculateStatModifierBonus(Entity player, int weaponId) {
+        int bonus = 0;
+
+        // TODO: Replace with dynamic XML parsing to get:
+        // - scalingStat (WIS, DEX, ATT, etc.)
+        // - statModScalingMin (minimum stat for scaling)
+        // - statModDamage (damage per stat point)
+
+        // Temporary hardcoded examples - remove when XML parsing is implemented
+        switch (weaponId) {
+            case 8290: // Dynastic Star: +20 damage per WIS over 50
+                StatData wisStat = player.getStat(27); // WIS stat ID
+                if (wisStat != null && wisStat.statValue > 50) {
+                    bonus = (wisStat.statValue - 50) * 20;
+                }
+                break;
+            // Add more weapon-specific stat scaling here
+            // Example for different weapons with different scaling:
+            // case 1234: // Some other ability: +15 damage per DEX over 40
+            //     StatData dexStat = player.getStat(26); // DEX stat ID
+            //     if (dexStat != null && dexStat.statValue > 40) {
+            //         bonus = (dexStat.statValue - 40) * 15;
+            //     }
+            //     break;
+        }
+
+        return bonus;
+    }
 
     /**
      * Player entity stats multiplier such as attack, exalts and other buffs.

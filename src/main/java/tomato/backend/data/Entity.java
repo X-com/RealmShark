@@ -201,37 +201,92 @@ public class Entity implements Serializable {
     ) {
         if (projectile == null || projectile.getDamage() == 0) return;
 
-        int dmg;
+        int dmg = 0;
+        // System.out.println(
+        //     "DEBUG: userProjectileHit - containerType: " +
+        //         projectile.getContainerType() +
+        //         ", summonerId: " +
+        //         projectile.getSummonerId() +
+        //         ", baseDamage: " +
+        //         projectile.getDamage()
+        // );
 
         // Check if this is an ability projectile (created by ServerPlayerShootPacket)
         // Ability projectiles have non-zero summonerId and use pre-calculated damage from server
         // Weapon projectiles have summonerId = 0 and need client-side defense calculations
+        // Proc projectiles have summonerId = 0 but may have stat scaling that needs to be applied
         boolean isAbilityProjectile = projectile.getSummonerId() != 0;
+        boolean isProcProjectile = false;
 
         if (isAbilityProjectile) {
             // Ability projectile: server has already calculated final damage including defense
             // Use damage as-is without additional defense calculations
             dmg = projectile.getDamage();
         } else {
-            // Weapon projectile: calculate damage client-side with defense
-            int[] conditions = new int[2];
+            // Check if this is a proc projectile with stat scaling
+            // Proc projectiles come from ServerPlayerShootPacket with containerType as projectile ID
+            int containerType = projectile.getContainerType();
+            // System.out.println(
+            //     "DEBUG: Checking proc projectile - containerType: " +
+            //         containerType +
+            //         " (0x" +
+            //         Integer.toHexString(containerType) +
+            //         ")"
+            // );
+            if (containerType != -1) {
+                AbilityScalingManager scalingManager =
+                    AbilityScalingManager.getInstance();
+                boolean hasScaling = scalingManager.hasScaling(containerType);
+                // System.out.println(
+                //     "DEBUG: hasScaling result for containerType " +
+                //         containerType +
+                //         ": " +
+                //         hasScaling
+                // );
+                if (hasScaling) {
+                    // This is a proc projectile with scaling - recalculate damage with stat bonus
+                    int statBonus = scalingManager.calculateStatBonus(
+                        containerType,
+                        attacker
+                    );
+                    int baseDamage = projectile.getDamage();
+                    dmg = baseDamage + statBonus;
+                    // System.out.println(
+                    //     "Proc projectile scaling - containerType: " +
+                    //         containerType +
+                    //         ", baseDamage: " +
+                    //         baseDamage +
+                    //         ", statBonus: " +
+                    //         statBonus +
+                    //         ", total: " +
+                    //         dmg
+                    // );
+                    isProcProjectile = true;
+                }
+            }
 
-            conditions[0] = stat.get(StatType.CONDITION_STAT) == null
-                ? 0
-                : stat.get(StatType.CONDITION_STAT).statValue;
-            conditions[1] = stat.get(StatType.NEW_CON_STAT) == null
-                ? 0
-                : stat.get(StatType.NEW_CON_STAT).statValue;
-            int defence = stat.get(StatType.DEFENSE_STAT) == null
-                ? 0
-                : stat.get(StatType.DEFENSE_STAT).statValue;
+            // If not a proc projectile with scaling, treat as regular weapon projectile
+            if (!isProcProjectile) {
+                // Weapon projectile: calculate damage client-side with defense
+                int[] conditions = new int[2];
 
-            dmg = Projectile.damageWithDefense(
-                projectile.getDamage(),
-                projectile.isArmorPiercing(),
-                defence,
-                conditions
-            );
+                conditions[0] = stat.get(StatType.CONDITION_STAT) == null
+                    ? 0
+                    : stat.get(StatType.CONDITION_STAT).statValue;
+                conditions[1] = stat.get(StatType.NEW_CON_STAT) == null
+                    ? 0
+                    : stat.get(StatType.NEW_CON_STAT).statValue;
+                int defence = stat.get(StatType.DEFENSE_STAT) == null
+                    ? 0
+                    : stat.get(StatType.DEFENSE_STAT).statValue;
+
+                dmg = Projectile.damageWithDefense(
+                    projectile.getDamage(),
+                    projectile.isArmorPiercing(),
+                    defence,
+                    conditions
+                );
+            }
         }
 
         if (dmg > 0) {

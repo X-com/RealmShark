@@ -11,6 +11,7 @@ import packets.packetcapture.register.Register;
 import packets.packetcapture.sniff.assembly.TcpStreamErrorHandler;
 import tomato.backend.TomatoPacketCapture;
 import tomato.backend.TomatoRootController;
+import tomato.backend.data.AbilityScalingManager;
 import tomato.backend.data.TomatoData;
 import tomato.gui.TomatoGUI;
 import tomato.gui.chat.ChatGUI;
@@ -124,6 +125,9 @@ public class Tomato {
         TomatoPacketCapture packCap = new TomatoPacketCapture(data);
         packetRegister(packCap);
         rootController.addController(packCap);
+
+        // Initialize ability scaling manager
+        AbilityScalingManager.getInstance().initialize();
     }
 
     /**

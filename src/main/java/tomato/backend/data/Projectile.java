@@ -2,6 +2,7 @@ package tomato.backend.data;
 
 import assets.IdToAsset;
 import java.io.Serializable;
+import packets.data.enums.StatType;
 import util.RNG;
 
 public class Projectile implements Serializable {
@@ -9,6 +10,7 @@ public class Projectile implements Serializable {
     private int damage;
     private int summonerId;
     private boolean armorPiercing;
+    private int containerType = -1;
 
     public Projectile(int damage) {
         this.damage = damage;
@@ -22,6 +24,7 @@ public class Projectile implements Serializable {
     public Projectile(short damage, int id, int type, int summonerId) {
         this.damage = damage;
         this.summonerId = summonerId;
+        this.containerType = id; // Store containerType for proc projectile scaling
         try {
             armorPiercing = IdToAsset.getIdProjectileArmorPierces(id, type);
         } catch (Exception e) {}
@@ -56,6 +59,53 @@ public class Projectile implements Serializable {
         } else {
             dmg = min;
         }
+
+        // Add stat modifier bonus for abilities with scaling
+        // Note: For multi-shot abilities, each individual projectile gets the full stat bonus
+        // Only apply scaling to ability projectiles (not regular weapons)
+        boolean isAbilityProjectile = !mainWeapon; // Abilities are not main weapons
+        if (isAbilityProjectile) {
+            AbilityScalingManager scalingManager =
+                AbilityScalingManager.getInstance();
+            if (scalingManager.hasScaling(weaponId)) {
+                int statBonus = scalingManager.calculateStatBonus(
+                    weaponId,
+                    player
+                );
+                // System.out.println(
+                //     "Projectile scaling - weaponId: " +
+                //         weaponId +
+                //         ", baseDmg: " +
+                //         dmg +
+                //         ", statBonus: " +
+                //         statBonus +
+                //         ", total: " +
+                //         (dmg + statBonus) +
+                //         ", numShots: " +
+                //         (scalingManager.getScalingData(weaponId) != null
+                //             ? scalingManager.getScalingData(weaponId).numShots
+                //             : 1)
+                // );
+                dmg += statBonus;
+            } else {
+                // System.out.println(
+                //     "Projectile no scaling - weaponId: " +
+                //         weaponId +
+                //         ", baseDmg: " +
+                //         dmg +
+                //         " (ability but no scaling data)"
+                // );
+            }
+        } else {
+            // System.out.println(
+            //     "Projectile no scaling - weaponId: " +
+            //         weaponId +
+            //         ", baseDmg: " +
+            //         dmg +
+            //         " (weapon, not ability)"
+            // );
+        }
+
         float f = 1f;
         if (mainWeapon) f = player.playerStatsMultiplier();
         damage = (int) (dmg * f);
@@ -121,6 +171,10 @@ public class Projectile implements Serializable {
 
     public boolean isArmorPiercing() {
         return armorPiercing;
+    }
+
+    public int getContainerType() {
+        return containerType;
     }
 
     public int getSummonerId() {
