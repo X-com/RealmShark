@@ -1,9 +1,8 @@
 package tomato.backend.data;
 
 import assets.IdToAsset;
-import util.RNG;
-
 import java.io.Serializable;
+import util.RNG;
 
 public class Projectile implements Serializable {
 
@@ -25,8 +24,7 @@ public class Projectile implements Serializable {
         this.summonerId = summonerId;
         try {
             armorPiercing = IdToAsset.getIdProjectileArmorPierces(id, type);
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
     }
 
     /**
@@ -45,13 +43,16 @@ public class Projectile implements Serializable {
         }
         int min = IdToAsset.getIdProjectileMinDmg(weaponId, projectileId);
         int max = IdToAsset.getIdProjectileMaxDmg(weaponId, projectileId);
-        boolean ap = IdToAsset.getIdProjectileArmorPierces(weaponId, projectileId);
+        boolean ap = IdToAsset.getIdProjectileArmorPierces(
+            weaponId,
+            projectileId
+        );
         int slot = IdToAsset.getIdProjectileSlotType(weaponId);
         boolean mainWeapon = isMainWeapon(slot);
         int dmg;
         if (min != max) {
             long r = rng.next();
-            dmg = (int) (min + r % (max - min));
+            dmg = (int) (min + (r % (max - min)));
         } else {
             dmg = min;
         }
@@ -83,7 +84,12 @@ public class Projectile implements Serializable {
      * @param conditions    condition effects the entity being shot can have.
      * @return final damage applied to the entity.
      */
-    public static int damageWithDefense(int damage, boolean armorPiercing, int defence, int[] conditions) {
+    public static int damageWithDefense(
+        int damage,
+        boolean armorPiercing,
+        int defence,
+        int[] conditions
+    ) {
         if (damage == 0) return 0;
 
         if (armorPiercing || (conditions[0] & 0x4000000) != 0) {
@@ -94,7 +100,7 @@ public class Projectile implements Serializable {
         if ((conditions[1] & 0x20000) != 0) {
             defence = defence - 20;
         }
-        int minDmg = damage * 2 / 20;
+        int minDmg = (damage * 2) / 20;
         int dmg = Math.max(minDmg, damage - defence);
 
         if ((conditions[0] & 0x1000000) != 0) {

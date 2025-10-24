@@ -183,6 +183,14 @@ public class Entity implements Serializable {
         if (damaging) {
             number *= 1.25;
         }
+
+        // Apply crucible damage bonus if active
+        if (this == tomatoData.player) {
+            double crucibleMultiplier =
+                CrucibleBonusManager.getPlayerDamageMultiplier();
+            number *= crucibleMultiplier;
+        }
+
         return number * exaltDmgBonus;
     }
 
@@ -193,24 +201,38 @@ public class Entity implements Serializable {
     ) {
         if (projectile == null || projectile.getDamage() == 0) return;
 
-        int[] conditions = new int[2];
+        int dmg;
 
-        conditions[0] = stat.get(StatType.CONDITION_STAT) == null
-            ? 0
-            : stat.get(StatType.CONDITION_STAT).statValue;
-        conditions[1] = stat.get(StatType.NEW_CON_STAT) == null
-            ? 0
-            : stat.get(StatType.NEW_CON_STAT).statValue;
-        int defence = stat.get(StatType.DEFENSE_STAT) == null
-            ? 0
-            : stat.get(StatType.DEFENSE_STAT).statValue;
+        // Check if this is an ability projectile (created by ServerPlayerShootPacket)
+        // Ability projectiles have non-zero summonerId and use pre-calculated damage from server
+        // Weapon projectiles have summonerId = 0 and need client-side defense calculations
+        boolean isAbilityProjectile = projectile.getSummonerId() != 0;
 
-        int dmg = Projectile.damageWithDefense(
-            projectile.getDamage(),
-            projectile.isArmorPiercing(),
-            defence,
-            conditions
-        );
+        if (isAbilityProjectile) {
+            // Ability projectile: server has already calculated final damage including defense
+            // Use damage as-is without additional defense calculations
+            dmg = projectile.getDamage();
+        } else {
+            // Weapon projectile: calculate damage client-side with defense
+            int[] conditions = new int[2];
+
+            conditions[0] = stat.get(StatType.CONDITION_STAT) == null
+                ? 0
+                : stat.get(StatType.CONDITION_STAT).statValue;
+            conditions[1] = stat.get(StatType.NEW_CON_STAT) == null
+                ? 0
+                : stat.get(StatType.NEW_CON_STAT).statValue;
+            int defence = stat.get(StatType.DEFENSE_STAT) == null
+                ? 0
+                : stat.get(StatType.DEFENSE_STAT).statValue;
+
+            dmg = Projectile.damageWithDefense(
+                projectile.getDamage(),
+                projectile.isArmorPiercing(),
+                defence,
+                conditions
+            );
+        }
 
         if (dmg > 0) {
             Damage damage = new Damage(attacker, projectile, timePc, dmg);
