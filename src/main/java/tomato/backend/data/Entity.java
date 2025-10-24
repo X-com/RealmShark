@@ -218,14 +218,18 @@ public class Entity implements Serializable {
         boolean isAbilityProjectile = projectile.getSummonerId() != 0;
         boolean isProcProjectile = false;
 
-        if (isAbilityProjectile) {
-            // Ability projectile: server has already calculated final damage including defense
+        // Always do client-side calculations for projectiles with containerType (weapon ID)
+        // This ensures proper scaling and defense ignore calculations
+        int containerType = projectile.getContainerType();
+        boolean hasContainerType = containerType != -1;
+
+        if (isAbilityProjectile && !hasContainerType) {
+            // Ability projectile without containerType: server has already calculated final damage
             // Use damage as-is without additional defense calculations
             dmg = projectile.getDamage();
         } else {
             // Check if this is a proc projectile with stat scaling
             // Proc projectiles come from ServerPlayerShootPacket with containerType as projectile ID
-            int containerType = projectile.getContainerType();
             // System.out.println(
             //     "DEBUG: Checking proc projectile - containerType: " +
             //         containerType +
@@ -265,9 +269,10 @@ public class Entity implements Serializable {
                 }
             }
 
-            // If not a proc projectile with scaling, treat as regular weapon projectile
-            if (!isProcProjectile) {
-                // Weapon projectile: calculate damage client-side with defense
+            // Apply defense calculations to all projectiles with containerType
+            // This ensures Lethal Strike defense ignore and proper scaling are applied
+            if (containerType != -1 || !isProcProjectile) {
+                // Calculate damage client-side with defense for all projectiles with containerType
                 int[] conditions = new int[2];
 
                 conditions[0] = stat.get(StatType.CONDITION_STAT) == null
@@ -280,11 +285,18 @@ public class Entity implements Serializable {
                     ? 0
                     : stat.get(StatType.DEFENSE_STAT).statValue;
 
+                // For proc projectiles with scaling, use the stat-scaled damage as base
+                int baseDamage = isProcProjectile
+                    ? dmg
+                    : projectile.getDamage();
+
                 dmg = Projectile.damageWithDefense(
-                    projectile.getDamage(),
+                    baseDamage,
                     projectile.isArmorPiercing(),
                     defence,
-                    conditions
+                    conditions,
+                    projectile.getContainerType(),
+                    attacker
                 );
             }
         }

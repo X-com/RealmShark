@@ -540,6 +540,22 @@ public class DpsLogger {
         int defence,
         int[] conditions
     ) {
+        return damageWithDefense(
+            damage,
+            armorPiercing,
+            defence,
+            conditions,
+            -1
+        );
+    }
+
+    private static int damageWithDefense(
+        int damage,
+        boolean armorPiercing,
+        int defence,
+        int[] conditions,
+        int weaponId
+    ) {
         if (damage == 0) return 0;
 
         if (armorPiercing || (conditions[0] & 0x4000000) != 0) {
@@ -633,7 +649,8 @@ public class DpsLogger {
                 bullet.totalDmg,
                 bullet.armorPiercing,
                 defence,
-                conditions
+                conditions,
+                bullet.weaponId
             );
             b.armorPiercing = bullet.armorPiercing;
 

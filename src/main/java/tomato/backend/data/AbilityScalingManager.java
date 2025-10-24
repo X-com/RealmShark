@@ -35,6 +35,9 @@ public class AbilityScalingManager {
         public final int scalingMin;
         public final float damagePerStat;
         public final int numShots;
+        public final float ignoreFlat;
+        public final float ignorePerc;
+        public final float statModPerc;
 
         public AbilityScalingData(
             int weaponId,
@@ -48,10 +51,37 @@ public class AbilityScalingManager {
             this.scalingMin = scalingMin;
             this.damagePerStat = damagePerStat;
             this.numShots = numShots;
+            this.ignoreFlat = 0;
+            this.ignorePerc = 0;
+            this.statModPerc = 0;
+        }
+
+        public AbilityScalingData(
+            int weaponId,
+            StatType scalingStat,
+            int scalingMin,
+            float damagePerStat,
+            int numShots,
+            float ignoreFlat,
+            float ignorePerc,
+            float statModPerc
+        ) {
+            this.weaponId = weaponId;
+            this.scalingStat = scalingStat;
+            this.scalingMin = scalingMin;
+            this.damagePerStat = damagePerStat;
+            this.numShots = numShots;
+            this.ignoreFlat = ignoreFlat;
+            this.ignorePerc = ignorePerc;
+            this.statModPerc = statModPerc;
         }
 
         public boolean hasScaling() {
             return scalingStat != null && damagePerStat > 0;
+        }
+
+        public boolean hasDefenseIgnore() {
+            return ignoreFlat > 0 || ignorePerc > 0;
         }
     }
 
@@ -514,6 +544,10 @@ public class AbilityScalingManager {
                             lethalStrikeElement.getAttribute("statModFlat");
                         String statModPercAttr =
                             lethalStrikeElement.getAttribute("statModPerc");
+                        String ignoreFlatAttr =
+                            lethalStrikeElement.getAttribute("ignoreFlat");
+                        String ignorePercAttr =
+                            lethalStrikeElement.getAttribute("ignorePerc");
 
                         if (
                             !scalingStatAttr.isEmpty() &&
@@ -530,16 +564,28 @@ public class AbilityScalingManager {
                             float percBonus = !statModPercAttr.isEmpty()
                                 ? Float.parseFloat(statModPercAttr)
                                 : 0;
+                            float ignoreFlat = !ignoreFlatAttr.isEmpty()
+                                ? Float.parseFloat(ignoreFlatAttr)
+                                : 0;
+                            float ignorePerc = !ignorePercAttr.isEmpty()
+                                ? Float.parseFloat(ignorePercAttr)
+                                : 0;
 
-                            // Estimate damage per stat (flat + percentage)
-                            float damagePerStat = flatBonus + (percBonus * 50); // Estimate based on typical stat values
+                            // For Lethal Strike, store defense ignore values for proper scaling
+                            // For Lethal Strike, use actual stat scaling values
+                            // flatBonus = statModFlat, percBonus = statModPerc
+                            // These provide additional flat damage per stat above scalingMin
+                            float damagePerStat = flatBonus + (percBonus * 50); // Estimate for typical stat values
 
                             // Find projectile types used by this item
                             findAndAddLethalStrikeProjectiles(
                                 objectElement,
                                 scalingStat,
                                 scalingMin,
-                                damagePerStat
+                                damagePerStat,
+                                ignoreFlat,
+                                ignorePerc,
+                                percBonus
                             );
                             lethalStrikeCount++;
                         }
@@ -560,7 +606,10 @@ public class AbilityScalingManager {
         Element weaponElement,
         StatType scalingStat,
         int scalingMin,
-        float damagePerStat
+        float damagePerStat,
+        float ignoreFlat,
+        float ignorePerc,
+        float statModPerc
     ) {
         String weaponId = weaponElement.getAttribute("type");
         String weaponName = weaponElement.getAttribute("id");
@@ -592,7 +641,10 @@ public class AbilityScalingManager {
                                 scalingStat,
                                 scalingMin,
                                 damagePerStat,
-                                1 // Lethal Strike typically creates 1 projectile per activation
+                                1, // Lethal Strike typically creates 1 projectile per activation
+                                ignoreFlat,
+                                ignorePerc,
+                                statModPerc // statModPerc for defense ignore scaling
                             );
                         projectileScalingData.put(
                             projectileId,
@@ -703,6 +755,44 @@ public class AbilityScalingManager {
         // Calculate bonus: (stat - min) × damage per stat
         int statBonus = statValue - data.scalingMin;
         return (int) (statBonus * data.damagePerStat);
+    }
+
+    /**
+     * Calculates the defense ignore bonus for Lethal Strike based on target defense and player stats.
+     */
+    public int calculateDefenseIgnoreBonus(
+        int weaponId,
+        int targetDefense,
+        Entity player
+    ) {
+        AbilityScalingData data = getScalingData(weaponId);
+        if (
+            data == null ||
+            !data.hasDefenseIgnore() ||
+            targetDefense <= 0 ||
+            player == null
+        ) {
+            return 0;
+        }
+
+        // Get the relevant stat from player for percentage scaling
+        Integer statValue = getPlayerStatValue(player, data.scalingStat);
+        if (statValue == null || statValue <= data.scalingMin) {
+            // Use base ignorePerc if player doesn't meet stat requirements
+            int defenseIgnore = (int) (data.ignoreFlat +
+                (targetDefense * data.ignorePerc));
+            return Math.max(0, defenseIgnore);
+        }
+
+        // Calculate scaled ignore percentage: base ignorePerc + (statBonus * statModPerc)
+        int statBonus = statValue - data.scalingMin;
+        float scaledIgnorePerc =
+            data.ignorePerc + (statBonus * data.statModPerc);
+
+        // Calculate defense ignore: ignoreFlat + (targetDefense * scaledIgnorePerc)
+        int defenseIgnore = (int) (data.ignoreFlat +
+            (targetDefense * scaledIgnorePerc));
+        return Math.max(0, defenseIgnore);
     }
 
     /**
