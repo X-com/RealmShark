@@ -222,10 +222,13 @@ public class Entity implements Serializable {
         boolean isAbilityProjectile = projectile.getSummonerId() != 0;
         boolean isProcProjectile = false;
 
-        // Always do client-side calculations for projectiles with containerType (weapon ID)
-        // This ensures proper scaling and defense ignore calculations
+        // Only perform client-side calculations for projectiles with containerType (weapon ID)
+        // when they originate from the local user. The server sends final damage for other players'
+        // shots, so we must not re-calculate those on the client.
         int containerType = projectile.getContainerType();
-        boolean hasContainerType = containerType != -1;
+        boolean isLocalAttacker = attacker != null && attacker.isUser();
+        // Only treat containerType as client-calculable when the attacker is the local user.
+        boolean hasContainerType = isLocalAttacker && containerType != -1;
         // Initialize scaling manager here so it's available to the entire hit/defense flow.
         AbilityScalingManager scalingManager =
             AbilityScalingManager.getInstance();
