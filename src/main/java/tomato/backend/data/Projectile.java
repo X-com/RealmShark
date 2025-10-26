@@ -11,6 +11,13 @@ public class Projectile implements Serializable {
     private int summonerId;
     private boolean armorPiercing;
     private int containerType = -1;
+    // originAbilityItem: optional id of the ability item (inventory slot 1) that originated this projectile.
+    // This is set externally when available (e.g., in serverPlayerShoot or the RNG-based constructor)
+    // so Damage creation can attribute proc hits directly to the correct item.
+    private int originAbilityItem = -1;
+    // Snapshot of the relevant stat value used for scaling (e.g., WIS/VIT) at shot time.
+    // If not set, will be Integer.MIN_VALUE to indicate absence.
+    private int originScalingStat = Integer.MIN_VALUE;
 
     public Projectile(int damage) {
         this.damage = damage;
@@ -233,8 +240,42 @@ public class Projectile implements Serializable {
         return summonerId;
     }
 
+    /**
+     * Returns the ability item id (inventory slot 1) associated with the originating ability for this projectile.
+     * May be -1 if unknown/not set.
+     */
+    public int getOriginAbilityItem() {
+        return originAbilityItem;
+    }
+
+    /**
+     * Set the originating ability item id for this projectile.
+     * Other code (e.g., TomatoData.serverPlayerShoot or the RNG-based constructor)
+     * should call this when the originating item id is known.
+     */
+    public void setOriginAbilityItem(int itemId) {
+        this.originAbilityItem = itemId;
+    }
+
+    /**
+     * Returns the snapshot of the scaling stat value that should be used for scaling/defense-ignore calculations.
+     * If this is Integer.MIN_VALUE, no snapshot is available and callers should fall back to current Entity stats.
+     */
+    public int getOriginScalingStat() {
+        return originScalingStat;
+    }
+
+    /**
+     * Set the snapshot of the scaling stat value (e.g., WIS/VIT) for this projectile.
+     */
+    public void setOriginScalingStat(int statValue) {
+        this.originScalingStat = statValue;
+    }
+
     public void clear() {
         damage = 0;
         armorPiercing = false;
+        originAbilityItem = -1;
+        originScalingStat = Integer.MIN_VALUE;
     }
 }

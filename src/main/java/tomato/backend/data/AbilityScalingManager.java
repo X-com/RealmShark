@@ -483,30 +483,163 @@ public class AbilityScalingManager {
 
     /**
      * Maps projectile objects to their parent weapons.
+     *
+     * Best-effort heuristic: scan the entire XML document for weapons whose
+     * Activate / OnPlayerShootActivate (or generic Activate) elements reference
+     * this projectile via a 'type' attribute or embedded "0x..." hex strings.
      */
     private void mapProjectileToWeapon(
         Element projectileElement,
         int projectileId
     ) {
-        // Look for the parent weapon by checking if this projectile is referenced
-        // in any weapon's Activate element with type attribute
         String projectileType =
             "0x" + Integer.toHexString(projectileId).toUpperCase();
 
-        // For now, we'll use a simple heuristic: if this is a projectile object,
-        // we'll need to find which weapon uses it by checking Activate elements
-        // This would require more complex XML traversal to be fully accurate
-        // System.out.println(
-        //     "Found projectile object: " +
-        //         projectileId +
-        //         " (" +
-        //         projectileType +
-        //         "): " +
-        //         projectileElement.getAttribute("id")
-        // );
+        try {
+            Document doc = projectileElement.getOwnerDocument();
+            if (doc == null) return;
+            NodeList objectNodes = doc.getElementsByTagName("Object");
+            for (int i = 0; i < objectNodes.getLength(); i++) {
+                Node objectNode = objectNodes.item(i);
+                if (objectNode.getNodeType() != Node.ELEMENT_NODE) continue;
+                Element objectElement = (Element) objectNode;
 
-        // TODO: Implement proper projectile-to-weapon mapping
-        // This would require parsing all weapons and finding which ones reference this projectile
+                // Helper to attempt mapping from a candidate attribute value
+                boolean mapFound = false;
+
+                // Check OnPlayerShootActivate nodes first (most common for projectiles)
+                NodeList shootActivates = objectElement.getElementsByTagName(
+                    "OnPlayerShootActivate"
+                );
+                for (
+                    int j = 0;
+                    j < shootActivates.getLength() && !mapFound;
+                    j++
+                ) {
+                    Element act = (Element) shootActivates.item(j);
+                    String typeAttr = act.getAttribute("type");
+                    String text = act.getTextContent();
+                    String candidate = (typeAttr != null && !typeAttr.isEmpty())
+                        ? typeAttr.trim()
+                        : (text != null ? text.trim() : "");
+                    if (candidate.isEmpty()) continue;
+
+                    // Direct match or embedded hex match
+                    if (
+                        candidate.equalsIgnoreCase(projectileType) ||
+                        candidate.toUpperCase().endsWith(projectileType)
+                    ) {
+                        String parentType = objectElement.getAttribute("type");
+                        if (!parentType.isEmpty()) {
+                            try {
+                                int parentId = Integer.parseInt(
+                                    parentType.replace("0x", ""),
+                                    16
+                                );
+                                projectileToWeaponMap.put(
+                                    projectileId,
+                                    parentId
+                                );
+                                System.out.println(
+                                    "AbilityScalingManager: mapped projectile " +
+                                        projectileId +
+                                        " -> weapon " +
+                                        parentId +
+                                        " (from object " +
+                                        objectElement.getAttribute("id") +
+                                        ")"
+                                );
+                                return;
+                            } catch (NumberFormatException e) {}
+                        }
+                    }
+
+                    int idx = candidate.indexOf("0x");
+                    if (idx != -1) {
+                        int end = idx + 2;
+                        while (
+                            end < candidate.length() &&
+                            Character.digit(candidate.charAt(end), 16) != -1
+                        ) end++;
+                        String hex = candidate.substring(idx, end);
+                        if (hex.equalsIgnoreCase(projectileType)) {
+                            String parentType = objectElement.getAttribute(
+                                "type"
+                            );
+                            if (!parentType.isEmpty()) {
+                                try {
+                                    int parentId = Integer.parseInt(
+                                        parentType.replace("0x", ""),
+                                        16
+                                    );
+                                    projectileToWeaponMap.put(
+                                        projectileId,
+                                        parentId
+                                    );
+                                    System.out.println(
+                                        "AbilityScalingManager: mapped projectile " +
+                                            projectileId +
+                                            " -> weapon " +
+                                            parentId +
+                                            " (from object " +
+                                            objectElement.getAttribute("id") +
+                                            ")"
+                                    );
+                                    return;
+                                } catch (NumberFormatException e) {}
+                            }
+                        }
+                    }
+                }
+
+                // Fallback: check generic Activate elements for a 'type' attribute
+                NodeList genericActivates = objectElement.getElementsByTagName(
+                    "Activate"
+                );
+                for (
+                    int j = 0;
+                    j < genericActivates.getLength() && !mapFound;
+                    j++
+                ) {
+                    Element act = (Element) genericActivates.item(j);
+                    String typeAttr = act.getAttribute("type");
+                    if (typeAttr == null || typeAttr.isEmpty()) continue;
+                    String candidate = typeAttr.trim();
+                    if (
+                        candidate.equalsIgnoreCase(projectileType) ||
+                        candidate.toUpperCase().endsWith(projectileType)
+                    ) {
+                        String parentType = objectElement.getAttribute("type");
+                        if (!parentType.isEmpty()) {
+                            try {
+                                int parentId = Integer.parseInt(
+                                    parentType.replace("0x", ""),
+                                    16
+                                );
+                                projectileToWeaponMap.put(
+                                    projectileId,
+                                    parentId
+                                );
+                                System.out.println(
+                                    "AbilityScalingManager: mapped projectile " +
+                                        projectileId +
+                                        " -> weapon " +
+                                        parentId +
+                                        " (from object " +
+                                        objectElement.getAttribute("id") +
+                                        ")"
+                                );
+                                return;
+                            } catch (NumberFormatException e) {}
+                        }
+                    }
+                }
+
+                // If we didn't find anything, continue to next object element
+            }
+        } catch (Exception e) {
+            // Best-effort: ignore any parsing/mapping exceptions
+        }
     }
 
     /**
@@ -532,11 +665,25 @@ public class AbilityScalingManager {
                     Element lethalStrikeElement =
                         (Element) lethalStrikeNodes.item(j);
 
-                    // Check if this is a LethalStrike activation
+                    // Check if this is a LethalStrike activation (robust: check text and attributes, case-insensitive)
+                    String lethalText = "";
+                    try {
+                        if (lethalStrikeElement.getTextContent() != null) {
+                            lethalText = lethalStrikeElement.getTextContent();
+                        }
+                    } catch (Exception e) {
+                        // ignore
+                    }
+                    String lethalAttr = "";
+                    try {
+                        lethalAttr = lethalStrikeElement.getAttribute("type");
+                    } catch (Exception e) {
+                        // ignore
+                    }
                     if (
-                        lethalStrikeElement
-                            .getTextContent()
-                            .contains("LethalStrike")
+                        (lethalText + " " + lethalAttr).toLowerCase().contains(
+                            "lethalstrike"
+                        )
                     ) {
                         String scalingStatAttr =
                             lethalStrikeElement.getAttribute("scalingStat");
@@ -601,6 +748,11 @@ public class AbilityScalingManager {
 
     /**
      * Find projectile types used by a Lethal Strike item and add their scaling data.
+     *
+     * This implementation is a bit more tolerant of different ways projectile
+     * IDs may be specified in equip.xml: either as a 'type' attribute
+     * (e.g., "0x1234"), embedded "0x..." hex in text content, or nested
+     * 'Projectile' child elements.
      */
     private void findAndAddLethalStrikeProjectiles(
         Element weaponElement,
@@ -619,54 +771,148 @@ public class AbilityScalingManager {
         try {
             int weaponIdInt = Integer.parseInt(weaponId.replace("0x", ""), 16);
 
-            // Look for OnPlayerShootActivate elements to find projectile types
-            NodeList shootActivateNodes = weaponElement.getElementsByTagName(
-                "OnPlayerShootActivate"
-            );
-            for (int i = 0; i < shootActivateNodes.getLength(); i++) {
-                Element shootElement = (Element) shootActivateNodes.item(i);
-                String projectileType = shootElement.getAttribute("type");
+            java.util.HashSet<Integer> added = new java.util.HashSet<>();
 
-                if (!projectileType.isEmpty()) {
+            // Helper inline parser to extract hex projectile id from a string
+            for (String tagName : new String[] {
+                "OnPlayerShootActivate",
+                "Activate",
+            }) {
+                NodeList nodes = weaponElement.getElementsByTagName(tagName);
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    Element el = (Element) nodes.item(i);
+                    String candidate = "";
+                    try {
+                        candidate = el.getAttribute("type");
+                        if (candidate == null || candidate.isEmpty()) {
+                            candidate = el.getTextContent() != null
+                                ? el.getTextContent()
+                                : "";
+                        }
+                    } catch (Exception e) {
+                        candidate = el.getTextContent() != null
+                            ? el.getTextContent()
+                            : "";
+                    }
+                    if (
+                        candidate == null || candidate.trim().isEmpty()
+                    ) continue;
+                    candidate = candidate.trim();
+
+                    // Try to find a hex substring starting with 0x
+                    int idx = candidate.indexOf("0x");
+                    if (idx == -1) {
+                        // No explicit hex sequence found; try to use entire candidate if it looks like hex
+                        candidate = candidate.replaceAll("[^0-9A-Fa-fxX]", "");
+                        idx = candidate.indexOf("0x");
+                    }
+
+                    while (idx != -1 && idx < candidate.length()) {
+                        int end = idx + 2;
+                        while (
+                            end < candidate.length() &&
+                            Character.digit(candidate.charAt(end), 16) != -1
+                        ) end++;
+                        if (end > idx + 2) {
+                            String hex = candidate.substring(idx, end);
+                            try {
+                                int projectileId = Integer.parseInt(
+                                    hex.replace("0x", "").replace("0X", ""),
+                                    16
+                                );
+                                if (!added.contains(projectileId)) {
+                                    AbilityScalingData projectileScaling =
+                                        new AbilityScalingData(
+                                            projectileId,
+                                            scalingStat,
+                                            scalingMin,
+                                            damagePerStat,
+                                            1,
+                                            ignoreFlat,
+                                            ignorePerc,
+                                            statModPerc
+                                        );
+                                    projectileScalingData.put(
+                                        projectileId,
+                                        projectileScaling
+                                    );
+                                    System.out.println(
+                                        "AbilityScalingManager: added lethal strike scaling for projectile " +
+                                            projectileId +
+                                            " from " +
+                                            weaponName +
+                                            " (weaponType=" +
+                                            weaponId +
+                                            ")"
+                                    );
+                                    added.add(projectileId);
+                                }
+                            } catch (NumberFormatException e) {
+                                // skip invalid hex
+                            }
+                        }
+                        // look for next 0x occurrence (if any)
+                        idx = candidate.indexOf("0x", idx + 1);
+                    }
+                }
+            }
+
+            // Also check for explicit nested Projectile elements (some XML variants)
+            NodeList projNodes = weaponElement.getElementsByTagName(
+                "Projectile"
+            );
+            for (int i = 0; i < projNodes.getLength(); i++) {
+                Element pEl = (Element) projNodes.item(i);
+                String idAttr = pEl.getAttribute("id");
+                String text = pEl.getTextContent();
+                String candidate = (idAttr != null && !idAttr.isEmpty())
+                    ? idAttr
+                    : (text != null ? text : "");
+                if (candidate == null || candidate.trim().isEmpty()) continue;
+                candidate = candidate.trim();
+                int idx = candidate.indexOf("0x");
+                if (idx == -1) continue;
+                int end = idx + 2;
+                while (
+                    end < candidate.length() &&
+                    Character.digit(candidate.charAt(end), 16) != -1
+                ) end++;
+                if (end > idx + 2) {
+                    String hex = candidate.substring(idx, end);
                     try {
                         int projectileId = Integer.parseInt(
-                            projectileType.replace("0x", ""),
+                            hex.replace("0x", "").replace("0X", ""),
                             16
                         );
-
-                        // Add scaling for this projectile type
-                        AbilityScalingData projectileScaling =
-                            new AbilityScalingData(
+                        if (!added.contains(projectileId)) {
+                            AbilityScalingData projectileScaling =
+                                new AbilityScalingData(
+                                    projectileId,
+                                    scalingStat,
+                                    scalingMin,
+                                    damagePerStat,
+                                    1,
+                                    ignoreFlat,
+                                    ignorePerc,
+                                    statModPerc
+                                );
+                            projectileScalingData.put(
                                 projectileId,
-                                scalingStat,
-                                scalingMin,
-                                damagePerStat,
-                                1, // Lethal Strike typically creates 1 projectile per activation
-                                ignoreFlat,
-                                ignorePerc,
-                                statModPerc // statModPerc for defense ignore scaling
+                                projectileScaling
                             );
-                        projectileScalingData.put(
-                            projectileId,
-                            projectileScaling
-                        );
-
-                        // System.out.println(
-                        //     "Added Lethal Strike scaling for projectile " +
-                        //         projectileId +
-                        //         " (0x" +
-                        //         Integer.toHexString(projectileId) +
-                        //         ") from " +
-                        //         weaponName +
-                        //         ": " +
-                        //         scalingStat +
-                        //         " scaling, +" +
-                        //         damagePerStat +
-                        //         " per stat over " +
-                        //         scalingMin
-                        // );
+                            System.out.println(
+                                "AbilityScalingManager: added lethal strike scaling for projectile " +
+                                    projectileId +
+                                    " from " +
+                                    weaponName +
+                                    " (weaponType=" +
+                                    weaponId +
+                                    ")"
+                            );
+                            added.add(projectileId);
+                        }
                     } catch (NumberFormatException e) {
-                        // Skip invalid projectile types
+                        // skip invalid hex
                     }
                 }
             }
@@ -739,30 +985,90 @@ public class AbilityScalingManager {
 
     /**
      * Calculates the stat modifier bonus for a weapon based on player stats.
+     *
+     * Backwards-compatible wrapper that delegates to the snapshot-aware implementation.
      */
     public int calculateStatBonus(int weaponId, Entity player) {
+        return calculateStatBonus(weaponId, null, player);
+    }
+
+    /**
+     * Calculates the stat modifier bonus for a weapon.
+     * If statSnapshot is non-null, that value will be used as the player's stat for scaling
+     * instead of reading the current value from the Entity. This supports hot-swap behavior
+     * where the item that created the projectile (and its stat value) should be used for the calculation.
+     */
+    public int calculateStatBonus(
+        int weaponId,
+        Integer statSnapshot,
+        Entity player
+    ) {
         AbilityScalingData data = getScalingData(weaponId);
         if (data == null || !data.hasScaling() || player == null) {
             return 0;
         }
 
-        // Get the relevant stat from player
-        Integer statValue = getPlayerStatValue(player, data.scalingStat);
+        // Get the relevant stat: prefer statSnapshot if provided
+        Integer statValue = null;
+        if (statSnapshot != null) {
+            statValue = statSnapshot;
+        } else {
+            statValue = getPlayerStatValue(player, data.scalingStat);
+        }
+
         if (statValue == null || statValue <= data.scalingMin) {
             return 0;
         }
 
         // Calculate bonus: (stat - min) × damage per stat
         int statBonus = statValue - data.scalingMin;
-        return (int) (statBonus * data.damagePerStat);
+        int result = (int) (statBonus * data.damagePerStat);
+        if (result > 0) {
+            System.out.println(
+                "AbilityScalingManager: calculateStatBonus weaponId=" +
+                    weaponId +
+                    " stat=" +
+                    data.scalingStat +
+                    " statValue=" +
+                    statValue +
+                    " bonus=" +
+                    result +
+                    (statSnapshot != null
+                        ? " (using snapshot)"
+                        : " (using current)")
+            );
+        }
+        return result;
     }
 
     /**
      * Calculates the defense ignore bonus for Lethal Strike based on target defense and player stats.
+     *
+     * Backwards-compatible wrapper that delegates to the snapshot-aware implementation.
      */
     public int calculateDefenseIgnoreBonus(
         int weaponId,
         int targetDefense,
+        Entity player
+    ) {
+        return calculateDefenseIgnoreBonus(
+            weaponId,
+            targetDefense,
+            null,
+            player
+        );
+    }
+
+    /**
+     * Calculates the defense ignore bonus for Lethal Strike.
+     * If statSnapshot is non-null, that value will be used as the player's stat for percentage scaling
+     * instead of reading the current value from the Entity. This ensures defense-ignore scales with the
+     * stat value present when the projectile was fired (useful when players hot-swap cloaks).
+     */
+    public int calculateDefenseIgnoreBonus(
+        int weaponId,
+        int targetDefense,
+        Integer statSnapshot,
         Entity player
     ) {
         AbilityScalingData data = getScalingData(weaponId);
@@ -775,13 +1081,34 @@ public class AbilityScalingManager {
             return 0;
         }
 
-        // Get the relevant stat from player for percentage scaling
-        Integer statValue = getPlayerStatValue(player, data.scalingStat);
+        // Get the relevant stat: prefer statSnapshot if provided
+        Integer statValue = (statSnapshot != null)
+            ? statSnapshot
+            : getPlayerStatValue(player, data.scalingStat);
+
         if (statValue == null || statValue <= data.scalingMin) {
             // Use base ignorePerc if player doesn't meet stat requirements
             int defenseIgnore = (int) (data.ignoreFlat +
                 (targetDefense * data.ignorePerc));
-            return Math.max(0, defenseIgnore);
+            int result = Math.max(0, defenseIgnore);
+            if (result > 0) {
+                System.out.println(
+                    "AbilityScalingManager: calculateDefenseIgnoreBonus (base) weaponId=" +
+                        weaponId +
+                        " targetDef=" +
+                        targetDefense +
+                        " ignoreFlat=" +
+                        data.ignoreFlat +
+                        " ignorePerc=" +
+                        data.ignorePerc +
+                        " result=" +
+                        result +
+                        (statSnapshot != null
+                            ? " (using snapshot)"
+                            : " (using current)")
+                );
+            }
+            return result;
         }
 
         // Calculate scaled ignore percentage: base ignorePerc + (statBonus * statModPerc)
@@ -792,7 +1119,25 @@ public class AbilityScalingManager {
         // Calculate defense ignore: ignoreFlat + (targetDefense * scaledIgnorePerc)
         int defenseIgnore = (int) (data.ignoreFlat +
             (targetDefense * scaledIgnorePerc));
-        return Math.max(0, defenseIgnore);
+        int result = Math.max(0, defenseIgnore);
+        if (result > 0) {
+            System.out.println(
+                "AbilityScalingManager: calculateDefenseIgnoreBonus (scaled) weaponId=" +
+                    weaponId +
+                    " targetDef=" +
+                    targetDefense +
+                    " scaledIgnorePerc=" +
+                    scaledIgnorePerc +
+                    " ignoreFlat=" +
+                    data.ignoreFlat +
+                    " result=" +
+                    result +
+                    (statSnapshot != null
+                        ? " (using snapshot)"
+                        : " (using current)")
+            );
+        }
+        return result;
     }
 
     /**

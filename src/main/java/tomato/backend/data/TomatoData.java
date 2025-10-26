@@ -48,6 +48,9 @@ public class TomatoData {
     protected final HashMap<Integer, Entity> playerList = new HashMap<>();
     public final HashMap<Integer, Entity> playerListUpdated = new HashMap<>();
     protected final Projectile[] projectiles = new Projectile[512];
+    // Map keyed by (ownerId << 32) | (bulletId & 0xffffffffL) for reliable lookup of player/server-created projectiles
+    protected final HashMap<Long, Projectile> playerProjectiles =
+        new HashMap<>();
     protected RNG rng;
     protected HashSet<Integer> crystalTracker = new HashSet<>();
     private HashMap<Integer, Entity> entityHitList = new HashMap<>();
@@ -437,12 +440,21 @@ public class TomatoData {
      * @param p Projectile info.
      */
     public void playerShoot(PlayerShootPacket p) {
-        projectiles[p.bulletId] = new Projectile(
+        Projectile proj = new Projectile(
             rng,
             player,
             p.weaponId,
             p.projectileId
         );
+        // Store in the fixed-size array for quick access (legacy)
+        if (p.bulletId >= 0 && p.bulletId < projectiles.length) {
+            projectiles[p.bulletId] = proj;
+        }
+        // Also store in a keyed map using the shooter (owner) + bulletId so lookups are unambiguous
+        if (player != null) {
+            long key = (((long) player.id) << 32) | (p.bulletId & 0xffffffffL);
+            playerProjectiles.put(key, proj);
+        }
     }
 
     /**
@@ -459,7 +471,14 @@ public class TomatoData {
                 p.summonerId
             );
             for (int j = p.bulletId; j < p.bulletId + p.bulletCount; j++) {
-                projectiles[(j % 256) + 256] = projectile;
+                int arrIndex = (j % 256) + 256;
+                if (arrIndex >= 0 && arrIndex < projectiles.length) {
+                    projectiles[arrIndex] = projectile;
+                }
+                // Map by ownerId + bullet index so we can reliably resolve this projectile later
+                long key =
+                    (((long) p.ownerId) << 32) | (arrIndex & 0xffffffffL);
+                playerProjectiles.put(key, projectile);
             }
         } else if (p.bulletId > 255 && p.bulletId < 512) {
             Projectile projectile = new Projectile(
@@ -468,7 +487,85 @@ public class TomatoData {
                 p.bulletType,
                 p.summonerId
             );
+            // Snapshot origin info for this server-created projectile (ability item + scaling stat)
+            try {
+                Entity ownerEntity = playerList.get(p.ownerId);
+                if (
+                    ownerEntity != null &&
+                    ownerEntity.stat != null &&
+                    ownerEntity.stat.get(StatType.INVENTORY_1_STAT) != null
+                ) {
+                    try {
+                        int abilityId = ownerEntity.stat.get(
+                            StatType.INVENTORY_1_STAT
+                        ).statValue;
+                        projectile.setOriginAbilityItem(abilityId);
+                    } catch (Exception ignored) {}
+                    try {
+                        AbilityScalingManager asm =
+                            AbilityScalingManager.getInstance();
+                        AbilityScalingManager.AbilityScalingData sd =
+                            asm.getScalingData(p.containerType);
+                        if (sd != null && sd.scalingStat != null) {
+                            if (ownerEntity.stat.get(sd.scalingStat) != null) {
+                                projectile.setOriginScalingStat(
+                                    ownerEntity.stat.get(
+                                        sd.scalingStat
+                                    ).statValue
+                                );
+                            }
+                        }
+                    } catch (Exception ignored) {}
+                }
+            } catch (Exception ignored) {}
             projectiles[p.bulletId] = projectile;
+            long key = (((long) p.ownerId) << 32) | (p.bulletId & 0xffffffffL);
+            playerProjectiles.put(key, projectile);
+        } else {
+            // Best-effort: still add to map for wrapped variants
+            Projectile projectile = new Projectile(
+                p.damage,
+                p.containerType,
+                p.bulletType,
+                p.summonerId
+            );
+            int arrIndex = (p.bulletId % 256) + 256;
+            if (arrIndex >= 0 && arrIndex < projectiles.length) {
+                projectiles[arrIndex] = projectile;
+            }
+            // Snapshot origin info for wrapped/server variant projectile
+            try {
+                Entity ownerEntity = playerList.get(p.ownerId);
+                if (
+                    ownerEntity != null &&
+                    ownerEntity.stat != null &&
+                    ownerEntity.stat.get(StatType.INVENTORY_1_STAT) != null
+                ) {
+                    try {
+                        int abilityId = ownerEntity.stat.get(
+                            StatType.INVENTORY_1_STAT
+                        ).statValue;
+                        projectile.setOriginAbilityItem(abilityId);
+                    } catch (Exception ignored) {}
+                    try {
+                        AbilityScalingManager asm =
+                            AbilityScalingManager.getInstance();
+                        AbilityScalingManager.AbilityScalingData sd =
+                            asm.getScalingData(p.containerType);
+                        if (sd != null && sd.scalingStat != null) {
+                            if (ownerEntity.stat.get(sd.scalingStat) != null) {
+                                projectile.setOriginScalingStat(
+                                    ownerEntity.stat.get(
+                                        sd.scalingStat
+                                    ).statValue
+                                );
+                            }
+                        }
+                    } catch (Exception ignored) {}
+                }
+            } catch (Exception ignored) {}
+            long key = (((long) p.ownerId) << 32) | (arrIndex & 0xffffffffL);
+            playerProjectiles.put(key, projectile);
         }
     }
 
@@ -478,11 +575,60 @@ public class TomatoData {
      * @param p Info about what entity was hit by what projectile.
      */
     public void enemtyHit(EnemyHitPacket p) {
-        Projectile projectile = projectiles[p.bulletId];
+        // Attempt a reliable map lookup first using shooter (owner) + bulletId.
+        Projectile projectile = null;
+        int shooterIdCandidate = p.shooterID;
+        long key =
+            (((long) shooterIdCandidate) << 32) | (p.bulletId & 0xffffffffL);
+        projectile = playerProjectiles.get(key);
+
+        // If not found, try a few fallbacks: wrapped server index and direct array index
+        if (projectile == null) {
+            int wrappedIndex = (p.bulletId % 256) + 256;
+            if (wrappedIndex >= 0 && wrappedIndex < projectiles.length) {
+                projectile = projectiles[wrappedIndex];
+                if (projectile != null) {
+                    System.out.println(
+                        "[TomatoData] enemtyHit: resolved projectile via wrapped array index=" +
+                            wrappedIndex +
+                            " for bulletId=" +
+                            p.bulletId +
+                            " owner=" +
+                            p.shooterID
+                    );
+                }
+            }
+        }
+
+        if (projectile == null) {
+            if (p.bulletId >= 0 && p.bulletId < projectiles.length) {
+                projectile = projectiles[p.bulletId];
+                if (projectile != null) {
+                    System.out.println(
+                        "[TomatoData] enemtyHit: resolved projectile via direct array index=" +
+                            p.bulletId +
+                            " owner=" +
+                            p.shooterID
+                    );
+                }
+            }
+        }
+
+        // If still not found, we log for debugging.
+        if (projectile == null) {
+            System.out.println(
+                "[TomatoData] enemtyHit: projectile not resolved for bulletId=" +
+                    p.bulletId +
+                    " owner=" +
+                    p.shooterID
+            );
+        }
+
         int id = p.targetId;
         Entity target = entityList.computeIfAbsent(id, idd ->
             new Entity(this, idd, timePc)
         );
+
         int shooterId = p.shooterID;
         if (projectile != null && projectile.getSummonerId() != 0) {
             shooterId = projectile.getSummonerId();
