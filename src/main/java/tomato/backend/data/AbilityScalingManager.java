@@ -103,16 +103,16 @@ public class AbilityScalingManager {
     public void initialize() {
         try {
             File equipFile = new File("assets/xml/equip.xml");
-            // System.out.println(
-            //     "Looking for equip.xml at: " + equipFile.getAbsolutePath()
-            // );
+            System.out.println(
+                "Looking for equip.xml at: " + equipFile.getAbsolutePath()
+            );
             if (!equipFile.exists()) {
                 // System.err.println(
                 //     "equip.xml not found at: " + equipFile.getAbsolutePath()
                 // );
                 return;
             }
-            // System.out.println("Found equip.xml, starting parsing...");
+            System.out.println("Found equip.xml, starting parsing...");
 
             DocumentBuilderFactory factory =
                 DocumentBuilderFactory.newInstance();
@@ -125,32 +125,29 @@ public class AbilityScalingManager {
             // Add automatic Lethal Strike projectile scaling
             addLethalStrikeProjectileScaling(document);
 
-            // System.out.println(
-            //     "AbilityScalingManager initialized with " +
-            //         scalingData.size() +
-            //         " abilities"
-            // );
+            System.out.println(
+                "AbilityScalingManager initialized with " +
+                    scalingData.size() +
+                    " abilities"
+            );
 
-            // Debug: Print first few abilities found
-            // int count = 0;
-            // for (Map.Entry<
-            //     Integer,
-            //     AbilityScalingData
-            // > entry : scalingData.entrySet()) {
-            //     if (count++ < 5) {
-            //         AbilityScalingData data = entry.getValue();
-            //         System.out.println(
-            //             "Found ability: ID=" +
-            //                 data.weaponId +
-            //                 ", stat=" +
-            //                 data.scalingStat +
-            //                 ", min=" +
-            //                 data.scalingMin +
-            //                 ", dmgPerStat=" +
-            //                 data.damagePerStat
-            //         );
-            //     }
-            // }
+            // Debug: Print all abilities found
+            for (Map.Entry<
+                Integer,
+                AbilityScalingData
+            > entry : scalingData.entrySet()) {
+                AbilityScalingData data = entry.getValue();
+                System.out.println(
+                    "Found ability: ID=" +
+                        data.weaponId +
+                        ", stat=" +
+                        data.scalingStat +
+                        ", min=" +
+                        data.scalingMin +
+                        ", dmgPerStat=" +
+                        data.damagePerStat
+                );
+            }
         } catch (Exception e) {
             System.err.println(
                 "Failed to initialize AbilityScalingManager: " + e.getMessage()
@@ -951,23 +948,20 @@ public class AbilityScalingManager {
     public boolean hasScaling(int weaponId) {
         boolean hasScaling = scalingData.containsKey(weaponId);
 
-        // Debug: Log scaling check for specific container types
-        // if (weaponId == 17966) {
-        //     System.out.println(
-        //         "DEBUG: hasScaling check for containerType 17966: " + hasScaling
-        //     );
-        //     if (hasScaling) {
-        //         AbilityScalingData data = scalingData.get(weaponId);
-        //         System.out.println(
-        //             "DEBUG: Scaling data for 17966 - stat: " +
-        //                 data.scalingStat +
-        //                 ", min: " +
-        //                 data.scalingMin +
-        //                 ", dmgPerStat: " +
-        //                 data.damagePerStat
-        //         );
-        //     }
-        // }
+        // Debug: Log scaling check for all items
+        if (hasScaling) {
+            AbilityScalingData data = scalingData.get(weaponId);
+            System.out.println(
+                "DEBUG: hasScaling found for weaponId=" +
+                    weaponId +
+                    " - stat: " +
+                    data.scalingStat +
+                    ", min: " +
+                    data.scalingMin +
+                    ", dmgPerStat: " +
+                    data.damagePerStat
+            );
+        }
 
         if (hasScaling) {
             return true;
@@ -1025,7 +1019,7 @@ public class AbilityScalingManager {
         int result = (int) (statBonus * data.damagePerStat);
         if (result > 0) {
             System.out.println(
-                "AbilityScalingManager: calculateStatBonus weaponId=" +
+                "DEBUG: calculateStatBonus weaponId=" +
                     weaponId +
                     " stat=" +
                     data.scalingStat +
@@ -1036,6 +1030,18 @@ public class AbilityScalingManager {
                     (statSnapshot != null
                         ? " (using snapshot)"
                         : " (using current)")
+            );
+        } else if (data.hasScaling()) {
+            System.out.println(
+                "DEBUG: calculateStatBonus weaponId=" +
+                    weaponId +
+                    " stat=" +
+                    data.scalingStat +
+                    " statValue=" +
+                    statValue +
+                    " min=" +
+                    data.scalingMin +
+                    " - no bonus (stat <= min)"
             );
         }
         return result;

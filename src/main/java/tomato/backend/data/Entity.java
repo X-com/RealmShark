@@ -21,6 +21,11 @@ import tomato.realmshark.enums.CharacterClass;
 
 public class Entity implements Serializable {
 
+    // Track players with SlotType 18 abilities for DamagePacket invulnerability bypass
+    private static final HashMap<Integer, Long> slotType18AbilityUsers =
+        new HashMap<>();
+    private static final long ABILITY_TRACKING_WINDOW_MS = 5000; // 5 second window
+
     private boolean isUser;
     public final Stat stat;
     private final transient TomatoData tomatoData;
@@ -234,16 +239,50 @@ public class Entity implements Serializable {
             AbilityScalingManager.getInstance();
 
         if (isAbilityProjectile && !hasContainerType) {
-            // Ability projectile without containerType: server has already calculated final damage
-            // Use damage as-is without additional defense calculations
-            dmg = projectile.getDamage();
-            // Only log server-calculated-ability details for local-user projectiles
-            if (attacker != null && attacker.isUser()) {
-                System.out.println(
-                    "[Entity] userProjectileHit: using server-calculated damage=" +
-                        dmg +
-                        " (ability projectile without containerType)"
+            // Ability projectile without containerType: apply defense calculations unless armor piercing
+            int baseDamage = projectile.getDamage();
+            if (projectile.isArmorPiercing()) {
+                // Armor piercing abilities ignore defense - use damage as-is
+                dmg = baseDamage;
+                if (attacker != null && attacker.isUser()) {
+                    System.out.println(
+                        "[Entity] userProjectileHit: using armor-piercing ability damage=" +
+                            dmg +
+                            " (ignores defense)"
+                    );
+                }
+            } else {
+                // Non-armor piercing abilities should consider target defense
+                int[] conditions = new int[2];
+                conditions[0] = stat.get(StatType.CONDITION_STAT) == null
+                    ? 0
+                    : stat.get(StatType.CONDITION_STAT).statValue;
+                conditions[1] = stat.get(StatType.NEW_CON_STAT) == null
+                    ? 0
+                    : stat.get(StatType.NEW_CON_STAT).statValue;
+                int defence = stat.get(StatType.DEFENSE_STAT) == null
+                    ? 0
+                    : stat.get(StatType.DEFENSE_STAT).statValue;
+
+                dmg = Projectile.damageWithDefense(
+                    baseDamage,
+                    false, // armorPiercing is false since we're applying defense
+                    defence,
+                    conditions,
+                    -1, // weaponId not available for ability projectiles without containerType
+                    attacker
                 );
+                if (attacker != null && attacker.isUser()) {
+                    System.out.println(
+                        "[Entity] userProjectileHit: applied defense to ability damage=" +
+                            dmg +
+                            " (base=" +
+                            baseDamage +
+                            ", defense=" +
+                            defence +
+                            ")"
+                    );
+                }
             }
         } else {
             // Check if this is a proc projectile with stat scaling
@@ -479,7 +518,44 @@ public class Entity implements Serializable {
         //             this.id
         //     );
         // }
-        Damage damage = new Damage(attacker, projectile, time);
+
+        int damageAmount = projectile.getDamage();
+
+        // Check if entity is invulnerable
+        int condition = stat.get(StatType.CONDITION_STAT).statValue;
+        boolean invulnerable =
+            (condition & ConditionBits.INVULNERABLE.value()) != 0;
+
+        if (invulnerable) {
+            // Check if attacker has recently used a SlotType 18 ability
+            boolean hasSlotType18Ability = false;
+            if (attacker != null) {
+                Long lastAbilityUseTime = slotType18AbilityUsers.get(
+                    attacker.id
+                );
+                if (
+                    lastAbilityUseTime != null &&
+                    (time - lastAbilityUseTime) <= ABILITY_TRACKING_WINDOW_MS
+                ) {
+                    hasSlotType18Ability = true;
+                    if (attacker.isUser()) {
+                        System.out.println(
+                            "[Entity] genericDamageHit: SlotType 18 ability damage bypassing invulnerability - damage=" +
+                                damageAmount +
+                                " target=" +
+                                this.id
+                        );
+                    }
+                }
+            }
+
+            if (!hasSlotType18Ability) {
+                // Not from SlotType 18 ability - respect invulnerability
+                damageAmount = 0;
+            }
+        }
+
+        Damage damage = new Damage(attacker, projectile, time, damageAmount);
         bossPhaseDamage(damage);
         addPlayerDmg(damage);
         // Commented out noisy diagnostic logs (preserved original lines as comments)
@@ -495,8 +571,37 @@ public class Entity implements Serializable {
         // }
     }
 
+    // Track when players use SlotType 18 abilities for DamagePacket invulnerability bypass
+    public static void trackSlotType18AbilityUse(Entity player, long time) {
+        if (player != null && player.stat != null) {
+            try {
+                StatData abilitySlot = player.stat.get(
+                    StatType.INVENTORY_1_STAT
+                );
+                if (abilitySlot != null) {
+                    int abilityId = abilitySlot.statValue;
+                    int slotType = IdToAsset.getIdProjectileSlotType(abilityId);
+                    if (slotType == 18) {
+                        slotType18AbilityUsers.put(player.id, time);
+                        if (player.isUser()) {
+                            System.out.println(
+                                "[Entity] trackSlotType18AbilityUse: tracking SlotType 18 ability - item=" +
+                                    abilityId +
+                                    " player=" +
+                                    player.id
+                            );
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                // Ignore errors - we'll just skip tracking for this ability
+            }
+        }
+    }
+
     private void addPlayerDmg(Damage damage) {
         damageList.add(damage);
+
         if (damage.owner != null) {
             int id = damage.owner.id;
             Damage dmg = damagePlayer.computeIfAbsent(id, a ->

@@ -454,6 +454,9 @@ public class TomatoData {
         if (player != null) {
             long key = (((long) player.id) << 32) | (p.bulletId & 0xffffffffL);
             playerProjectiles.put(key, proj);
+
+            // Track SlotType 18 ability usage for DamagePacket invulnerability bypass
+            Entity.trackSlotType18AbilityUse(player, timePc);
         }
     }
 
@@ -463,6 +466,12 @@ public class TomatoData {
      * @param p Projectile info
      */
     public void serverPlayerShoot(ServerPlayerShootPacket p) {
+        // Track SlotType 18 ability usage for DamagePacket invulnerability bypass
+        Entity ownerEntity = playerList.get(p.ownerId);
+        if (ownerEntity != null) {
+            Entity.trackSlotType18AbilityUse(ownerEntity, timePc);
+        }
+
         if (p.bulletCount > 1) {
             Projectile projectile = new Projectile(
                 p.damage,
@@ -489,7 +498,7 @@ public class TomatoData {
             );
             // Snapshot origin info for this server-created projectile (ability item + scaling stat)
             try {
-                Entity ownerEntity = playerList.get(p.ownerId);
+                ownerEntity = playerList.get(p.ownerId);
                 if (
                     ownerEntity != null &&
                     ownerEntity.stat != null &&
@@ -535,7 +544,7 @@ public class TomatoData {
             }
             // Snapshot origin info for wrapped/server variant projectile
             try {
-                Entity ownerEntity = playerList.get(p.ownerId);
+                ownerEntity = playerList.get(p.ownerId);
                 if (
                     ownerEntity != null &&
                     ownerEntity.stat != null &&

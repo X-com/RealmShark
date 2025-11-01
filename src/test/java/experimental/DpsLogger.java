@@ -649,8 +649,8 @@ public class DpsLogger {
                 bullet.totalDmg,
                 bullet.armorPiercing,
                 defence,
-                conditions,
-                bullet.weaponId
+                conditions
+                //bullet.weaponId
             );
             b.armorPiercing = bullet.armorPiercing;
 
