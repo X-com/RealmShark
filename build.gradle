@@ -6,7 +6,7 @@ plugins {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-project.version = 'v1.8.3'
+project.version = 'v1.8.4'
 applicationName = 'Tomato'
 
 project.ext.lwjglVersion = "3.3.1"
@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
-    implementation files("libs/RealmShark-v1.2.jar")
+    implementation files("libs/RealmShark-v1.2.1.jar")
     implementation 'com.github.weisj:darklaf-core:3.0.2'
     implementation 'org.java-websocket:Java-WebSocket:1.5.3'
     runtimeOnly 'org.slf4j:slf4j-nop:2.0.17'
