@@ -57,7 +57,7 @@ public class AssetExtractor {
                 "RealmOfTheMadGod/Production/RotMGExalt.app/Contents/Resources/Data/resources.assets";
         } else {
             REALM_RES_PATH =
-                "Documents/RealmOfTheMadGod/Production/RotMG Exalt_Data/resources.assets";
+                "RealmOfTheMadGod/Production/RotMG Exalt_Data/resources.assets";
         }
     }
 
@@ -283,7 +283,8 @@ public class AssetExtractor {
             if (Paths.get(REALM_RES_PATH).isAbsolute()) {
                 defaultFile = new File(REALM_RES_PATH);
             } else {
-                String homeDir = System.getProperty("user.home");
+//                String homeDir = System.getProperty("user.home");
+                String homeDir = FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath();
                 Path defaultPath = Paths.get(homeDir, REALM_RES_PATH);
                 defaultFile = defaultPath.toFile();
             }
