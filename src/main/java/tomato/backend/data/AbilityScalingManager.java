@@ -11,6 +11,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import packets.data.enums.StatType;
 import tomato.backend.data.Entity;
+import tomato.realmshark.ParseEnchants;
 
 /**
  * Manages ability scaling data parsed from equip.xml.
@@ -1016,7 +1017,37 @@ public class AbilityScalingManager {
 
         // Calculate bonus: (stat - min) × damage per stat
         int statBonus = statValue - data.scalingMin;
-        int result = (int) (statBonus * data.damagePerStat);
+        float baseDamage = statBonus * data.damagePerStat;
+
+        // Apply Stat Mod Multiplier enchantments if the projectile item is from Ability slot
+        // Example: If an ability does 20 damage per 1 Wisdom over 55, and has Stat Mod Multiplier IV (15%),
+        // the effective damage becomes 23 per 1 Wisdom over 55 (20 * 1.15 = 23)
+        float statDamageMultiplier = 1.0f;
+
+        // Get the ability item currently equipped in slot 1
+        Integer abilitySlot1ItemId = getPlayerStatValue(
+            player,
+            StatType.INVENTORY_1_STAT
+        );
+
+        // Only apply Stat Mod Multiplier if the weaponId matches the ability in slot 1
+        if (abilitySlot1ItemId != null && abilitySlot1ItemId == weaponId) {
+            String[] enchantStrings = ParseEnchants.getEnchantStrings(player);
+            if (enchantStrings != null && enchantStrings.length > 1) {
+                String abilityEnchantString = enchantStrings[1]; // Inventory_Slot_1
+                if (
+                    abilityEnchantString != null &&
+                    !abilityEnchantString.isEmpty()
+                ) {
+                    statDamageMultiplier =
+                        ParseEnchants.getStatDamageMultiplier(
+                            abilityEnchantString
+                        );
+                }
+            }
+        }
+
+        int result = (int) (baseDamage * statDamageMultiplier);
         if (result > 0) {
             System.out.println(
                 "DEBUG: calculateStatBonus weaponId=" +
@@ -1025,6 +1056,14 @@ public class AbilityScalingManager {
                     data.scalingStat +
                     " statValue=" +
                     statValue +
+                    " baseDmgPerStat=" +
+                    data.damagePerStat +
+                    " effectiveDmgPerStat=" +
+                    (data.damagePerStat * statDamageMultiplier) +
+                    " baseDamage=" +
+                    (int) baseDamage +
+                    " multiplier=" +
+                    statDamageMultiplier +
                     " bonus=" +
                     result +
                     (statSnapshot != null

@@ -597,14 +597,14 @@ public class TomatoData {
             if (wrappedIndex >= 0 && wrappedIndex < projectiles.length) {
                 projectile = projectiles[wrappedIndex];
                 if (projectile != null) {
-                    System.out.println(
+                    /*System.out.println(
                         "[TomatoData] enemtyHit: resolved projectile via wrapped array index=" +
                             wrappedIndex +
                             " for bulletId=" +
                             p.bulletId +
                             " owner=" +
                             p.shooterID
-                    );
+                    );*/
                 }
             }
         }
@@ -613,24 +613,24 @@ public class TomatoData {
             if (p.bulletId >= 0 && p.bulletId < projectiles.length) {
                 projectile = projectiles[p.bulletId];
                 if (projectile != null) {
-                    System.out.println(
+                    /*System.out.println(
                         "[TomatoData] enemtyHit: resolved projectile via direct array index=" +
                             p.bulletId +
                             " owner=" +
                             p.shooterID
-                    );
+                    );*/
                 }
             }
         }
 
         // If still not found, we log for debugging.
         if (projectile == null) {
-            System.out.println(
+            /*System.out.println(
                 "[TomatoData] enemtyHit: projectile not resolved for bulletId=" +
                     p.bulletId +
                     " owner=" +
                     p.shooterID
-            );
+            );*/
         }
 
         int id = p.targetId;

@@ -55,24 +55,24 @@ public class TomatoPacketCapture implements Controller {
             PlayerShootPacket p = (PlayerShootPacket) packet;
             data.playerShoot(p);
             data.logPacket(packet);
-            System.out.println(packet);
+            //System.out.println(packet);
         } else if (packet instanceof ServerPlayerShootPacket) {
             ServerPlayerShootPacket p = (ServerPlayerShootPacket) packet;
 
             data.serverPlayerShoot(p);
             data.logPacket(packet);
-            System.out.println(packet);
+            //System.out.println(packet);
         } else if (packet instanceof EnemyHitPacket) {
             EnemyHitPacket p = (EnemyHitPacket) packet;
 
             data.enemtyHit(p);
             data.logPacket(packet);
-            System.out.println(packet);
+            //System.out.println(packet);
         } else if (packet instanceof DamagePacket) {
             DamagePacket p = (DamagePacket) packet;
             data.damage(p);
             data.logPacket(packet);
-            System.out.println(packet);
+            //System.out.println(packet);
         } else if (packet instanceof PlayerHitPacket) {
             PlayerHitPacket p = (PlayerHitPacket) packet;
             data.userDamage(p);

@@ -99,6 +99,7 @@ public class ParseEnchants {
                                 Float amountVal = null;
                                 String kindVal = null; // "Flat" or "Percent"
                                 boolean isLootBonus = false;
+                                boolean isStatModMult = false;
                                 for (StringXML mchild : mut) {
                                     if (Objects.equals(mchild.name, "stat")) {
                                         statVal = mchild.value;
@@ -122,6 +123,10 @@ public class ParseEnchants {
                                             Objects.equals(v, "LootBonus")
                                         ) {
                                             isLootBonus = true;
+                                        } else if (
+                                            Objects.equals(v, "StatModMult")
+                                        ) {
+                                            isStatModMult = true;
                                         }
                                     }
                                 }
@@ -150,6 +155,10 @@ public class ParseEnchants {
                                 // Loot bonus (any ActivateOnEquip ... >LootBonus</ActivateOnEquip>)
                                 if (isLootBonus && amountVal != null) {
                                     lootBonus += amountVal;
+                                }
+                                // Stat Mod Multiplier (any ActivateOnEquip ... >StatModMult</ActivateOnEquip>)
+                                if (isStatModMult && amountVal != null) {
+                                    effect.statDamageMult *= amountVal;
                                 }
                             }
                         }
@@ -299,6 +308,7 @@ public class ParseEnchants {
         public float minDamage = 1f;
         public float maxDamage = 1f;
         public float rateOfFire = 1f;
+        public float statDamage = 1f;
 
         @Override
         public String toString() {
@@ -309,6 +319,8 @@ public class ParseEnchants {
                 maxDamage +
                 ", rateOfFire=" +
                 rateOfFire +
+                ", statDamage=" +
+                statDamage +
                 "}"
             );
         }
@@ -549,6 +561,7 @@ public class ParseEnchants {
                 totals.minDamage *= eff.minDamageMult;
                 totals.maxDamage *= eff.maxDamageMult;
                 totals.rateOfFire *= eff.rateOfFireMult;
+                totals.statDamage *= eff.statDamageMult;
             }
         }
 
@@ -565,6 +578,10 @@ public class ParseEnchants {
 
     public static float getRateOfFireMultiplier(String code) {
         return computeWeaponMultipliers(code).rateOfFire;
+    }
+
+    public static float getStatDamageMultiplier(String code) {
+        return computeWeaponMultipliers(code).statDamage;
     }
 
     /**
@@ -687,6 +704,7 @@ public class ParseEnchants {
         float minDamageMult = 1f;
         float maxDamageMult = 1f;
         float rateOfFireMult = 1f;
+        float statDamageMult = 1f;
     }
 
     private static class RegenEffect {
