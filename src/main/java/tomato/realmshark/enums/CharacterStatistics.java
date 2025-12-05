@@ -57,7 +57,7 @@ public enum CharacterStatistics {
     HEROIC_UNDEAD_LAIR(39, 9323, "Heroic Undead Lair"), // TODO verify
     HIDDEN_INTERREGNUM(68, 49768, "Hidden Interregnum"), // TODO verify
     HIGH_TECH_TERROR(88, 15730, "High Tech Terror"),
-    ICE_CAVE(58, 29835, "Ice Cave"), // IceCavesCompleted
+    ICE_CITADEL(58, 40189, "Ice Citadel"), // IceCitadelsCompleted
     ICE_TOMB(89, 32696, "Ice Tomb"),
     KATALUND(90, 45774, "Katalund"), // KatalundsCompleted
     KOGBOLD_STEAMWORKS(70, 49433, "Kogbold Steamworks"),
