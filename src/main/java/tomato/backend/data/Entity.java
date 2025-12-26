@@ -522,7 +522,8 @@ public class Entity implements Serializable {
         int damageAmount = projectile.getDamage();
 
         // Check if entity is invulnerable
-        int condition = stat.get(StatType.CONDITION_STAT).statValue;
+        StatData conditionStat = stat.get(StatType.CONDITION_STAT);
+        int condition = (conditionStat != null) ? conditionStat.statValue : 0;
         boolean invulnerable =
             (condition & ConditionBits.INVULNERABLE.value()) != 0;
 
