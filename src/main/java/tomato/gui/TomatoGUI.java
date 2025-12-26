@@ -2,32 +2,33 @@ package tomato.gui;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.*;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import packets.data.QuestData;
 import tomato.Tomato;
+import tomato.backend.data.TomatoData;
+import tomato.gui.character.CharacterPanelGUI;
 import tomato.gui.chat.ChatGUI;
 import tomato.gui.chat.ChatPingGUI;
 import tomato.gui.dps.DpsDisplayOptions;
 import tomato.gui.dps.DpsGUI;
-import tomato.gui.character.CharacterPanelGUI;
-import tomato.gui.maingui.*;
-import tomato.gui.stats.DungeonStats;
-import tomato.gui.stats.StatisticsGUI;
 import tomato.gui.keypop.KeypopGUI;
+import tomato.gui.maingui.*;
 import tomato.gui.myinfo.MyInfoGUI;
 import tomato.gui.quest.QuestGUI;
 import tomato.gui.security.ParsePanelGUI;
 import tomato.gui.security.SecurityGUI;
-import tomato.backend.data.TomatoData;
+import tomato.gui.stats.DungeonStats;
+import tomato.gui.stats.StatisticsGUI;
+import tomato.version.Version;
 import util.PropertiesManager;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
 
 /**
  * Example GUI for Tomato mod.
  */
 public class TomatoGUI {
+
     private static final int windowWidth = 500;
     private static final int windowHeight = 500;
     private static int fontSize = 12;
@@ -81,7 +82,8 @@ public class TomatoGUI {
         dpsPanel = new DpsGUI(data);
         tabbedPane.addTab("DPS Logger", dpsPanel);
 
-        center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
+        center =
+            GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
         menuBar = new TomatoMenuBar();
 
         statusLabel = new JLabel(" Network Monitor: OFF");
@@ -109,13 +111,18 @@ public class TomatoGUI {
      * @param textArea Text area object.
      * @return Scroll pane object to add to a parent object.
      */
-    public static JScrollPane createTextArea(JTextArea textArea, boolean stayAtTop) {
+    public static JScrollPane createTextArea(
+        JTextArea textArea,
+        boolean stayAtTop
+    ) {
         textArea.setEnabled(true);
         textArea.setEditable(false);
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         JScrollPane scrollChat = new JScrollPane(textArea);
-        scrollChat.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollChat.setVerticalScrollBarPolicy(
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED
+        );
         scrollChat.setAutoscrolls(true);
         if (stayAtTop) {
             new SmartScroller(scrollChat, 0);
@@ -167,8 +174,7 @@ public class TomatoGUI {
         if (fontSize != null) {
             try {
                 fs = Integer.parseInt(fontSize);
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
         }
 
         fontSizeTextAreas(fs);
@@ -189,8 +195,7 @@ public class TomatoGUI {
         if (fontStyle != null) {
             try {
                 fontStyleNum = Integer.parseInt(fontStyle);
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
         }
         fontNameTextAreas(fontName, fontStyleNum);
     }
@@ -199,7 +204,7 @@ public class TomatoGUI {
      * Creates the frame with icon.
      */
     public void makeFrame() {
-        frame = new JFrame("    Tomato    ");
+        frame = new JFrame("    Tomato " + Version.VERSION + "    ");
         frame.setIconImage(icon);
         frame.setSize(windowWidth, windowHeight);
         frame.setLocationRelativeTo(null);
@@ -253,7 +258,9 @@ public class TomatoGUI {
      * @param running Set the label to running or off.
      */
     public static void setStateOfSniffer(boolean running) {
-        statusLabel.setText(" Network Monitor: " + (running ? "RUNNING" : "OFF"));
+        statusLabel.setText(
+            " Network Monitor: " + (running ? "RUNNING" : "OFF")
+        );
     }
 
     /**
@@ -268,22 +275,28 @@ public class TomatoGUI {
     /**
      * Opens chat message ping window.
      */
-    public static void openChatPingMessage(){ new ChatPingGUI(data, chatPanel).open(); }
+    public static void openChatPingMessage() {
+        new ChatPingGUI(data, chatPanel).open();
+    }
 
     /**
      * Opens entity ID ping window.
      */
-    public static void openEntityIdPing(){ new EntityPingGUI(data).open(); }
+    public static void openEntityIdPing() {
+        new EntityPingGUI(data).open();
+    }
 
     /**
      * Opens entity ID ping window.
      */
-    public static void openItemPing(){ new ItemPingGUI(data).open(); }
+    public static void openItemPing() {
+        new ItemPingGUI(data).open();
+    }
 
     /**
      * Opens enchantment ping window.
      */
-    public static void openEnchantPing(){
+    public static void openEnchantPing() {
         EnchantPingGUI.open();
     }
 }

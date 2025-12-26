@@ -1,26 +1,25 @@
 package experimental;
 
-import tomato.gui.dps.StringDpsGUI;
-import util.PropertiesManager;
+import static java.util.Map.Entry.comparingByValue;
+
+import assets.IdToAsset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import packets.Packet;
 import packets.data.StatData;
 import packets.incoming.*;
 import packets.outgoing.EnemyHitPacket;
 import packets.outgoing.PlayerShootPacket;
-import assets.IdToAsset;
+import tomato.gui.dps.StringDpsGUI;
 import util.Pair;
+import util.PropertiesManager;
 import util.Util;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static java.util.Map.Entry.comparingByValue;
 
 /**
  * Damage calculator class made to compute dps of all players in
@@ -37,7 +36,7 @@ public class DpsLogger {
     private final HashMap<Integer, Entity> entityHitList = new HashMap<>();
     private MapInfoPacket mapInfo;
     private Entity player;
-//    private RNG rng;
+    //    private RNG rng;
     private static boolean dammahCountered = false;
     private static HashMap<Integer, Integer> crystalList = new HashMap<>();
     private Filter filter;
@@ -61,7 +60,7 @@ public class DpsLogger {
             mapInfo = (MapInfoPacket) packet;
             entityList.clear();
             entityHitList.clear();
-//            rng = new RNG(mapInfo.seed);
+            //            rng = new RNG(mapInfo.seed);
             dammahCountered = false;
             if (filteredInstances(mapInfo.displayName)) {
                 mapInfo = null;
@@ -78,16 +77,31 @@ public class DpsLogger {
         } else if (packet instanceof PlayerShootPacket) {
             PlayerShootPacket p = (PlayerShootPacket) packet;
             Bullet bullet = new Bullet(p);
-//            try {
-//                calculateBulletDamage(bullet, rng, player, p.weaponId, p.projectileId);
-//            } catch (AssetMissingException e) {
-//                e.printStackTrace();
-//            }
+
+            // Detect ability projectiles using meaningful criteria:
+            // 1. ProjectileId == -1 (indicates ability)
+            // 2. Specific weaponIds that are known abilities
+            boolean isAbilityProjectile =
+                p.projectileId == -1 || isAbilityWeapon(p.weaponId);
+
+            bullet.summonerId = isAbilityProjectile ? 1 : 0; // Non-zero for abilities
+
+            if (isAbilityProjectile) {
+                // Calculate ability damage using asset data
+                calculateBulletDamage(
+                    bullet,
+                    player,
+                    p.weaponId,
+                    p.projectileId
+                );
+            }
             player.setBullet(p.bulletId, bullet);
         } else if (packet instanceof ServerPlayerShootPacket) {
             ServerPlayerShootPacket p = (ServerPlayerShootPacket) packet;
             Bullet bullet = new Bullet(p);
             bullet.totalDmg = p.damage;
+            bullet.summonerId = p.summonerId;
+
             if (p.bulletCount > 1) {
                 for (int j = p.bulletId; j < p.bulletId + p.bulletCount; j++) {
                     player.setBullet(p.bulletId, bullet);
@@ -98,7 +112,10 @@ public class DpsLogger {
             Bullet bullet = player.getBullet(p.bulletId);
             Entity entity = getEntity(p.targetId);
             hit(entity, bullet, p);
-            if (!entityHitList.containsKey(entity.id)) entityHitList.put(entity.id, entity);
+            if (!entityHitList.containsKey(entity.id)) entityHitList.put(
+                entity.id,
+                entity
+            );
         } else if (packet instanceof DamagePacket) {
             DamagePacket p = (DamagePacket) packet;
             if (p.damageAmount > 0) {
@@ -106,7 +123,10 @@ public class DpsLogger {
                 bullet.totalDmg = p.damageAmount;
                 Entity entity = getEntity(p.targetId);
                 hit(entity, bullet, p);
-                if (!entityHitList.containsKey(entity.id)) entityHitList.put(entity.id, entity);
+                if (!entityHitList.containsKey(entity.id)) entityHitList.put(
+                    entity.id,
+                    entity
+                );
             }
         } else if (packet instanceof NewTickPacket) {
             NewTickPacket p = (NewTickPacket) packet;
@@ -138,7 +158,11 @@ public class DpsLogger {
             }
         } else if (packet instanceof TextPacket) {
             TextPacket p = (TextPacket) packet;
-            if (p.text.equals("I SAID DO NOT INTERRUPT ME! For this I shall hasten your end!")) dammahCountered = true;
+            if (
+                p.text.equals(
+                    "I SAID DO NOT INTERRUPT ME! For this I shall hasten your end!"
+                )
+            ) dammahCountered = true;
         }
     }
 
@@ -148,7 +172,8 @@ public class DpsLogger {
      * @param id   id of the entity.
      * @param type type of the entity.
      */
-    private static void crystalTracker(int id, int type) { // blue, yellow, red, green crystal IDs in that order.
+    private static void crystalTracker(int id, int type) {
+        // blue, yellow, red, green crystal IDs in that order.
         if (type == 46721 || type == 46771 || type == 29501 || type == 33656) {
             crystalList.put(id, type);
         } else {
@@ -212,7 +237,7 @@ public class DpsLogger {
      */
     private static boolean filteredInstances(String dungName) {
         switch (dungName) {
-            case "{s.vault}":  // vault
+            case "{s.vault}": // vault
             case "Daily Quest Room": // quest room
             case "Pet Yard": // pet yard
             case "{s.guildhall}": // guild hall
@@ -251,7 +276,11 @@ public class DpsLogger {
         ArrayList<Entity> list = new ArrayList<>();
         HashMap<Integer, Entity> damagerList = new HashMap<>();
 
-        List<Entity> sortedList = Arrays.stream(entityHitList.values().toArray(new Entity[0])).sorted(Comparator.comparingInt(Entity::maxHp).reversed()).collect(Collectors.toList());
+        List<Entity> sortedList = Arrays.stream(
+            entityHitList.values().toArray(new Entity[0])
+        )
+            .sorted(Comparator.comparingInt(Entity::maxHp).reversed())
+            .collect(Collectors.toList());
 
         for (Entity entity : sortedList) {
             if (entity.bulletDamageList.isEmpty()) continue;
@@ -271,10 +300,15 @@ public class DpsLogger {
                 }
             }
 
-            Stream<Map.Entry<Integer, Damage>> sortedDmgList = dmgList.entrySet().stream().sorted(comparingByValue());
+            Stream<Map.Entry<Integer, Damage>> sortedDmgList = dmgList
+                .entrySet()
+                .stream()
+                .sorted(comparingByValue());
             int score = 0;
             ArrayList<Damage> dList = new ArrayList<>();
-            for (Map.Entry<Integer, Damage> m : sortedDmgList.collect(Collectors.toList())) {
+            for (Map.Entry<Integer, Damage> m : sortedDmgList.collect(
+                Collectors.toList()
+            )) {
                 score++;
                 m.getValue().score = score;
                 dList.add(m.getValue());
@@ -296,7 +330,12 @@ public class DpsLogger {
      * @param damageAmount Amount of damage the bullet did.
      * @param owner        Owner of the bullet hitting the target.
      */
-    private void addDamage(HashMap<Integer, Damage> dmgList, Bullet bullet, int damageAmount, Entity owner) {
+    private void addDamage(
+        HashMap<Integer, Damage> dmgList,
+        Bullet bullet,
+        int damageAmount,
+        Entity owner
+    ) {
         Damage dmg;
         if (!dmgList.containsKey(owner.id)) {
             dmg = new Damage(owner);
@@ -305,7 +344,11 @@ public class DpsLogger {
             dmg = dmgList.get(owner.id);
         }
 
-        if (bullet.oryx3GuardDmg || bullet.walledGardenReflectors || bullet.chancellorDammahDmg) {
+        if (
+            bullet.oryx3GuardDmg ||
+            bullet.walledGardenReflectors ||
+            bullet.chancellorDammahDmg
+        ) {
             dmg.counterDmg += damageAmount;
             dmg.counterHits++;
             dmg.oryx3GuardDmg = bullet.oryx3GuardDmg;
@@ -349,26 +392,110 @@ public class DpsLogger {
      * @param weaponId     Weapon ID used (retrieved from packet being sent).
      * @param projectileId Projectile ID used (retrieved from packet being sent).
      */
-//    private static void calculateBulletDamage(Bullet bullet, RNG rng, Entity player, int weaponId, int projectileId) throws AssetMissingException {
-//        if (player == null || rng == null) return;
-//
-//        if (projectileId == -1) {
-//            projectileId = 0;
-//        }
-//        int min = IdToAsset.getIdProjectileMinDmg(weaponId, projectileId);
-//        int max = IdToAsset.getIdProjectileMaxDmg(weaponId, projectileId);
-//        boolean ap = IdToAsset.getIdProjectileArmorPierces(weaponId, projectileId);
-//        int dmg;
-//        if (min != max) {
-//            long r = rng.next();
-//            dmg = (int) (min + r % (max - min));
-//        } else {
-//            dmg = min;
-//        }
-//        float f = playerStatsMultiplier(player);
-//        bullet.totalDmg = (int) (dmg * f);
-//        bullet.armorPiercing = ap;
-//    }
+    //    private static void calculateBulletDamage(Bullet bullet, RNG rng, Entity player, int weaponId, int projectileId) throws AssetMissingException {
+    //        if (player == null || rng == null) return;
+    //
+    private static void calculateBulletDamage(
+        Bullet bullet,
+        Entity player,
+        int weaponId,
+        int projectileId
+    ) {
+        if (player == null) return;
+
+        if (projectileId == -1) {
+            projectileId = 0;
+        }
+        try {
+            int min = IdToAsset.getIdProjectileMinDmg(weaponId, projectileId);
+            int max = IdToAsset.getIdProjectileMaxDmg(weaponId, projectileId);
+            boolean ap = IdToAsset.getIdProjectileArmorPierces(
+                weaponId,
+                projectileId
+            );
+            int dmg;
+            if (min != max) {
+                // Use simple random for now - in complete implementation use proper RNG
+                dmg = min + (int) (Math.random() * (max - min));
+            } else {
+                dmg = min;
+            }
+
+            // Add stat modifier bonus for abilities
+            if (bullet.summonerId != 0) {
+                int statBonus = calculateStatModifierBonus(player, weaponId);
+                dmg += statBonus;
+            }
+
+            float f = playerStatsMultiplier(player);
+            bullet.totalDmg = (int) (dmg * f);
+            bullet.armorPiercing = ap;
+        } catch (Exception e) {
+            // If asset lookup fails, set reasonable default for abilities
+            if (bullet.summonerId != 0) {
+                bullet.totalDmg = 1000; // Fallback for ability damage
+            }
+        }
+    }
+
+    // Placeholder method for bullet damage calculation
+    // In a complete implementation, this would calculate damage based on weapon/projectile stats
+    // For now, we rely on EnemyHitPacket to provide the actual damage values
+
+    /**
+     * Detects if a weapon ID corresponds to an ability weapon.
+     * This is a simplified implementation - in a complete system, this would check
+     * against a comprehensive list of ability weapon IDs.
+     */
+    private static boolean isAbilityWeapon(int weaponId) {
+        // Common ability weapon IDs - this list should be expanded based on actual game data
+        // These are placeholder examples - replace with actual ability weapon IDs
+        switch (weaponId) {
+            case 8290: // Example ability weapon ID from your logs
+            case 1234: // Placeholder - add actual ability weapon IDs here
+            case 5678: // Placeholder - add actual ability weapon IDs here
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Calculates stat modifier bonus for abilities.
+     * For abilities that scale with stats (like +20 damage per WIS over 50),
+     * this calculates the additional damage from stat scaling.
+     *
+     * TODO: This should read scaling data from XML assets dynamically
+     * Currently uses hardcoded values - needs proper XML parsing implementation
+     */
+    private static int calculateStatModifierBonus(Entity player, int weaponId) {
+        int bonus = 0;
+
+        // TODO: Replace with dynamic XML parsing to get:
+        // - scalingStat (WIS, DEX, ATT, etc.)
+        // - statModScalingMin (minimum stat for scaling)
+        // - statModDamage (damage per stat point)
+
+        // Temporary hardcoded examples - remove when XML parsing is implemented
+        switch (weaponId) {
+            case 8290: // Dynastic Star: +20 damage per WIS over 50
+                StatData wisStat = player.getStat(27); // WIS stat ID
+                if (wisStat != null && wisStat.statValue > 50) {
+                    bonus = (wisStat.statValue - 50) * 20;
+                }
+                break;
+            // Add more weapon-specific stat scaling here
+            // Example for different weapons with different scaling:
+            // case 1234: // Some other ability: +15 damage per DEX over 40
+            //     StatData dexStat = player.getStat(26); // DEX stat ID
+            //     if (dexStat != null && dexStat.statValue > 40) {
+            //         bonus = (dexStat.statValue - 40) * 15;
+            //     }
+            //     break;
+        }
+
+        return bonus;
+    }
 
     /**
      * Player entity stats multiplier such as attack, exalts and other buffs.
@@ -389,6 +516,12 @@ public class DpsLogger {
         if (damaging) {
             number *= 1.25;
         }
+
+        // Apply crucible damage bonus if active
+        double crucibleMultiplier =
+            tomato.backend.data.CrucibleBonusManager.getPlayerDamageMultiplier();
+        number *= crucibleMultiplier;
+
         return number * exaltDmgBonus;
     }
 
@@ -401,7 +534,28 @@ public class DpsLogger {
      * @param conditions    condition effects the entity being shot can have.
      * @return final damage applied to the entity.
      */
-    private static int damageWithDefense(int damage, boolean armorPiercing, int defence, int[] conditions) {
+    private static int damageWithDefense(
+        int damage,
+        boolean armorPiercing,
+        int defence,
+        int[] conditions
+    ) {
+        return damageWithDefense(
+            damage,
+            armorPiercing,
+            defence,
+            conditions,
+            -1
+        );
+    }
+
+    private static int damageWithDefense(
+        int damage,
+        boolean armorPiercing,
+        int defence,
+        int[] conditions,
+        int weaponId
+    ) {
         if (damage == 0) return 0;
 
         if (armorPiercing || (conditions[0] & 0x4000000) != 0) {
@@ -412,7 +566,7 @@ public class DpsLogger {
         if ((conditions[1] & 0x20000) != 0) {
             defence = defence - 20;
         }
-        int minDmg = damage * 2 / 20;
+        int minDmg = (damage * 2) / 20;
         int dmg = Math.max(minDmg, damage - defence);
 
         if ((conditions[0] & 0x1000000) != 0) {
@@ -424,6 +578,7 @@ public class DpsLogger {
         if ((conditions[1] & 0x40) != 0) {
             dmg = (int) (dmg * 1.25);
         }
+
         return dmg;
     }
 
@@ -437,30 +592,75 @@ public class DpsLogger {
     private static void hit(Entity entity, Bullet bullet, Packet packet) {
         if (bullet == null || bullet.totalDmg == 0) return;
 
-        bullet.oryx3GuardDmg = entity.objectType == 45363 && entity.getStat(125) != null && (entity.getStat(125).statValue == -935464302 || entity.getStat(125).statValue == -918686683);
-        bullet.walledGardenReflectors = entity.objectType == 29039 && entity.getStat(125) != null && (entity.getStat(125).statValue == -123818367 && floorPlanCrystals() == 12);
-//        bullet.chancellorDammahDmg = entity.objectType == 9635 && entity.getStat(125) != null && (entity.getStat(125).statValue == -851576207 || entity.getStat(125).statValue == -901909064 || entity.getStat(125).statValue == -834798588 || entity.getStat(125).statValue == -818020969);
+        bullet.oryx3GuardDmg =
+            entity.objectType == 45363 &&
+            entity.getStat(125) != null &&
+            (entity.getStat(125).statValue == -935464302 ||
+                entity.getStat(125).statValue == -918686683);
+        bullet.walledGardenReflectors =
+            entity.objectType == 29039 &&
+            entity.getStat(125) != null &&
+            (entity.getStat(125).statValue == -123818367 &&
+                floorPlanCrystals() == 12);
+        //        bullet.chancellorDammahDmg = entity.objectType == 9635 && entity.getStat(125) != null && (entity.getStat(125).statValue == -851576207 || entity.getStat(125).statValue == -901909064 || entity.getStat(125).statValue == -834798588 || entity.getStat(125).statValue == -818020969);
 
         if (packet instanceof DamagePacket) {
-            bullet.chancellorDammahDmg = entity.objectType == 9635 && !dammahCountered;
+            bullet.chancellorDammahDmg =
+                entity.objectType == 9635 && !dammahCountered;
             entity.bulletDamageList.add(bullet);
             return;
         }
 
-        int[] conditions = new int[2];
+        // Check if this is an ability projectile (created by ServerPlayerShootPacket)
+        // Ability projectiles have non-zero summonerId and use pre-calculated damage from server
+        // Weapon projectiles have summonerId = 0 and need client-side defense calculations
+        boolean isAbilityProjectile = bullet.summonerId != 0;
 
-        conditions[0] = entity.getStat(29) == null ? 0 : entity.getStat(29).statValue;
-        conditions[1] = entity.getStat(96) == null ? 0 : entity.getStat(96).statValue;
-        int defence = entity.getStat(21) == null ? 0 : entity.getStat(21).statValue;
+        if (isAbilityProjectile) {
+            // Ability projectile: server has already calculated final damage including defense
+            // Use damage as-is without additional defense calculations
+            Bullet b = new Bullet(packet);
+            b.totalDmg = bullet.totalDmg;
+            b.armorPiercing = bullet.armorPiercing;
 
-        Bullet b = new Bullet(packet);
-        b.totalDmg = damageWithDefense(bullet.totalDmg, bullet.armorPiercing, defence, conditions);
+            if (b.totalDmg > 0) {
+                bullet.chancellorDammahDmg =
+                    entity.objectType == 9635 && !dammahCountered;
+                b.oryx3GuardDmg = bullet.oryx3GuardDmg;
+                b.walledGardenReflectors = bullet.walledGardenReflectors;
+                entity.bulletDamageList.add(b);
+            }
+        } else {
+            // Weapon projectile: calculate damage client-side with defense
+            int[] conditions = new int[2];
 
-        if (b.totalDmg > 0) {
-            bullet.chancellorDammahDmg = entity.objectType == 9635 && !dammahCountered;
-            b.oryx3GuardDmg = bullet.oryx3GuardDmg;
-            b.walledGardenReflectors = bullet.walledGardenReflectors;
-            entity.bulletDamageList.add(b);
+            conditions[0] = entity.getStat(29) == null
+                ? 0
+                : entity.getStat(29).statValue;
+            conditions[1] = entity.getStat(96) == null
+                ? 0
+                : entity.getStat(96).statValue;
+            int defence = entity.getStat(21) == null
+                ? 0
+                : entity.getStat(21).statValue;
+
+            Bullet b = new Bullet(packet);
+            b.totalDmg = damageWithDefense(
+                bullet.totalDmg,
+                bullet.armorPiercing,
+                defence,
+                conditions
+                //bullet.weaponId
+            );
+            b.armorPiercing = bullet.armorPiercing;
+
+            if (b.totalDmg > 0) {
+                bullet.chancellorDammahDmg =
+                    entity.objectType == 9635 && !dammahCountered;
+                b.oryx3GuardDmg = bullet.oryx3GuardDmg;
+                b.walledGardenReflectors = bullet.walledGardenReflectors;
+                entity.bulletDamageList.add(b);
+            }
         }
     }
 
@@ -471,7 +671,7 @@ public class DpsLogger {
         entityList.clear();
         mapInfo = null;
         player = null;
-//        rng = null;
+        //        rng = null;
     }
 
     /**
@@ -480,7 +680,7 @@ public class DpsLogger {
     public void clearTextLogs() {
         entityLogs.clear();
         displayIndex = 1;
-//        StringDpsGUI.setTextAreaAndLabelDPS("", "1/1", false);
+        //        StringDpsGUI.setTextAreaAndLabelDPS("", "1/1", false);
     }
 
     /**
@@ -492,11 +692,11 @@ public class DpsLogger {
             Entity[] e = entityLogs.get(displayIndex);
             String s = stringDmg(e, filter);
             String l = (displayIndex + 1) + "/" + (entityLogs.size() + 1);
-//            StringDpsGUI.setTextAreaAndLabelDPS(s, l, true);
+            //            StringDpsGUI.setTextAreaAndLabelDPS(s, l, true);
         } else if (displayIndex < entityLogs.size()) {
             displayIndex++;
             String l = (displayIndex + 1) + "/" + (entityLogs.size() + 1);
-//            StringDpsGUI.setTextAreaAndLabelDPS(stringDmg(firstPage, filter), l, false);
+            //            StringDpsGUI.setTextAreaAndLabelDPS(stringDmg(firstPage, filter), l, false);
         }
     }
 
@@ -509,7 +709,7 @@ public class DpsLogger {
             Entity[] e = entityLogs.get(displayIndex);
             String s = stringDmg(e, filter);
             String l = (displayIndex + 1) + "/" + (entityLogs.size() + 1);
-//            StringDpsGUI.setTextAreaAndLabelDPS(s, l, true);
+            //            StringDpsGUI.setTextAreaAndLabelDPS(s, l, true);
         }
     }
 
@@ -524,7 +724,7 @@ public class DpsLogger {
         firstPage = new Entity[0];
         entityLogs.add(displayList());
         String labelText = (displayIndex + 1) + "/" + (entityLogs.size() + 1);
-//        StringDpsGUI.setTextAreaAndLabelDPS(text, labelText, selectable);
+        //        StringDpsGUI.setTextAreaAndLabelDPS(text, labelText, selectable);
     }
 
     /**
@@ -533,15 +733,16 @@ public class DpsLogger {
     private void updateLogs() {
         if (displayIndex != entityLogs.size()) return;
         String firstPage = stringDmg(displayList(), filter);
-//        StringDpsGUI.setTextAreaAndLabelDPS(firstPage, null, displayIndex != entityLogs.size());
+        //        StringDpsGUI.setTextAreaAndLabelDPS(firstPage, null, displayIndex != entityLogs.size());
     }
 
     public void updateFilter() {
         setProfileFilter();
         Entity[] list;
-        if (entityLogs.size() > 0 && displayIndex < entityLogs.size()) list = entityLogs.get(displayIndex);
+        if (entityLogs.size() > 0 && displayIndex < entityLogs.size()) list =
+            entityLogs.get(displayIndex);
         else list = firstPage;
-//        StringDpsGUI.setTextAreaAndLabelDPS(stringDmg(list, filter), null, displayIndex != entityLogs.size());
+        //        StringDpsGUI.setTextAreaAndLabelDPS(stringDmg(list, filter), null, displayIndex != entityLogs.size());
     }
 
     private void setProfileFilter() {
@@ -577,6 +778,7 @@ public class DpsLogger {
      * Class used to store damage and counter info.
      */
     private static class Damage implements Comparable {
+
         public Entity owner;
         public int dmg;
         public int score;
@@ -601,12 +803,14 @@ public class DpsLogger {
      * Class used for storing bullet data.
      */
     private static class Bullet {
+
         public boolean oryx3GuardDmg = false;
         public boolean walledGardenReflectors = false;
         public boolean chancellorDammahDmg = false;
         Packet packet;
         int totalDmg;
         boolean armorPiercing;
+        int summonerId;
 
         public Bullet(Packet p) {
             packet = p;
@@ -617,6 +821,7 @@ public class DpsLogger {
      * Class used to display player Equipment
      */
     private static class Equipment implements Comparable {
+
         int id;
         long time;
         int swaps;
@@ -706,7 +911,14 @@ public class DpsLogger {
                 if (inv[inventory].size() == 0) {
                     s.append("  ");
                 } else if (inv[inventory].size() == 1) {
-                    s.append(String.format("%s %.1fsec %s\n", getName(inv[inventory].get(0).left().statValue), (float) (entityTime - entityStartTime) / 1000, "100% Equipped:1 "));
+                    s.append(
+                        String.format(
+                            "%s %.1fsec %s\n",
+                            getName(inv[inventory].get(0).left().statValue),
+                            (float) (entityTime - entityStartTime) / 1000,
+                            "100% Equipped:1 "
+                        )
+                    );
                 } else {
                     HashMap<Integer, Equipment> gear = new HashMap<>();
                     Pair<StatData, Long> pair2 = null;
@@ -717,14 +929,39 @@ public class DpsLogger {
                         long time1 = pair1.right();
                         if (time1 == 0) time1 = entityStartTime;
                         if (firstTime == 0) firstTime = time1;
-                        addGear(gear, time1, pair2.right(), pair1.left().statValue, pair1.left().statValue == pair2.left().statValue);
+                        addGear(
+                            gear,
+                            time1,
+                            pair2.right(),
+                            pair1.left().statValue,
+                            pair1.left().statValue == pair2.left().statValue
+                        );
                     }
                     long totalTime = entityTime - firstTime;
-                    addGear(gear, pair2.right(), entityTime, pair2.left().statValue, false);
+                    addGear(
+                        gear,
+                        pair2.right(),
+                        entityTime,
+                        pair2.left().statValue,
+                        false
+                    );
 
-                    Stream<Map.Entry<Integer, Equipment>> sorted2 = gear.entrySet().stream().sorted(comparingByValue());
-                    for (Map.Entry<Integer, Equipment> m : sorted2.collect(Collectors.toList())) {
-                        s.append(String.format("%s %.1fsec %.2f%% Equipped:%d / ", getName(m.getKey()), ((float) m.getValue().time / 1000), ((float) m.getValue().time * 100 / totalTime), m.getValue().swaps));
+                    Stream<Map.Entry<Integer, Equipment>> sorted2 = gear
+                        .entrySet()
+                        .stream()
+                        .sorted(comparingByValue());
+                    for (Map.Entry<Integer, Equipment> m : sorted2.collect(
+                        Collectors.toList()
+                    )) {
+                        s.append(
+                            String.format(
+                                "%s %.1fsec %.2f%% Equipped:%d / ",
+                                getName(m.getKey()),
+                                ((float) m.getValue().time / 1000),
+                                (((float) m.getValue().time * 100) / totalTime),
+                                m.getValue().swaps
+                            )
+                        );
                     }
                 }
                 s = new StringBuilder(s.substring(0, s.length() - 3));
@@ -734,9 +971,19 @@ public class DpsLogger {
             return s.substring(0, s.length() - 1);
         }
 
-        private void addGear(HashMap<Integer, Equipment> gear, long time1, long time2, int itemID, boolean sameItem) {
+        private void addGear(
+            HashMap<Integer, Equipment> gear,
+            long time1,
+            long time2,
+            int itemID,
+            boolean sameItem
+        ) {
             if (!gear.containsKey(itemID)) {
-                Equipment e = new Equipment(itemID, time2 - time1, sameItem ? 0 : 1);
+                Equipment e = new Equipment(
+                    itemID,
+                    time2 - time1,
+                    sameItem ? 0 : 1
+                );
                 gear.put(itemID, e);
             } else {
                 Equipment e = gear.get(itemID);
@@ -788,7 +1035,11 @@ public class DpsLogger {
 
         public String display(Filter filter) {
             StringBuilder sb = new StringBuilder();
-            sb.append(getName(objectType)).append(" HP: ").append(maxHp()).append("\n");
+            sb
+                .append(getName(objectType))
+                .append(" HP: ")
+                .append(maxHp())
+                .append("\n");
             for (Damage dmg : damageList) {
                 String name = dmg.owner.getStat(31).stringStatValue;
                 if (filter.nameFilter && filter.filteredStrings.length > 0) {
@@ -805,16 +1056,42 @@ public class DpsLogger {
                 String isMe = dmg.owner.isMe ? "->" : "  ";
                 int index = name.indexOf(',');
                 if (index != -1) name = name.substring(0, index);
-                float pers = ((float) dmg.dmg * 100 / (float) maxHp());
+                float pers = (((float) dmg.dmg * 100) / (float) maxHp());
                 if (dmg.oryx3GuardDmg) {
-                    extra = String.format("[Guarded Hits:%d Dmg:%d]", dmg.counterHits, dmg.counterDmg);
+                    extra = String.format(
+                        "[Guarded Hits:%d Dmg:%d]",
+                        dmg.counterHits,
+                        dmg.counterDmg
+                    );
                 } else if (dammahCountered && dmg.chancellorDammahDmg) {
-                    extra = String.format("[Dammah Counter Hits:%d Dmg:%d]", dmg.counterHits, dmg.counterDmg);
+                    extra = String.format(
+                        "[Dammah Counter Hits:%d Dmg:%d]",
+                        dmg.counterHits,
+                        dmg.counterDmg
+                    );
                 } else if (dmg.walledGardenReflectors) {
-                    extra = String.format("[Garden Counter Hits:%d Dmg:%d]", dmg.counterHits, dmg.counterDmg);
+                    extra = String.format(
+                        "[Garden Counter Hits:%d Dmg:%d]",
+                        dmg.counterHits,
+                        dmg.counterDmg
+                    );
                 }
-                String inv = dmg.owner.showInv(filter.equipmentFilter, dmg.owner);
-                sb.append(String.format("%s %3d %10s DMG: %7d %6.3f%% %s %s\n", isMe, dmg.score, name, dmg.dmg, pers, extra, inv));
+                String inv = dmg.owner.showInv(
+                    filter.equipmentFilter,
+                    dmg.owner
+                );
+                sb.append(
+                    String.format(
+                        "%s %3d %10s DMG: %7d %6.3f%% %s %s\n",
+                        isMe,
+                        dmg.score,
+                        name,
+                        dmg.dmg,
+                        pers,
+                        extra,
+                        inv
+                    )
+                );
             }
             sb.append("\n");
             return sb.toString();
@@ -830,6 +1107,7 @@ public class DpsLogger {
      * Filter options class
      */
     private class Filter {
+
         int equipmentFilter;
         String[] filteredStrings;
         boolean nameFilter;

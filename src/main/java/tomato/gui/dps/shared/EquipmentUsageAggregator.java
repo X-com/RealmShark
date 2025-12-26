@@ -38,6 +38,7 @@ public final class EquipmentUsageAggregator {
      * total: total damage across all items for this slot (AtomicInteger to match Equipment.totalDmg contract)
      */
     public static final class SlotUsage {
+
         public final Map<Integer, Equipment> items = new HashMap<>();
         public final AtomicInteger total = new AtomicInteger(0);
     }
@@ -46,8 +47,12 @@ public final class EquipmentUsageAggregator {
      * Aggregated usage data for a single owner (player), across all 4 equipment slots.
      */
     public static final class OwnerUsage {
+
         public final SlotUsage[] slots = new SlotUsage[] {
-            new SlotUsage(), new SlotUsage(), new SlotUsage(), new SlotUsage()
+            new SlotUsage(),
+            new SlotUsage(),
+            new SlotUsage(),
+            new SlotUsage(),
         };
     }
 
@@ -82,7 +87,10 @@ public final class EquipmentUsageAggregator {
         if (ou == null || !isValidSlot(slotIndex)) return null;
         Collection<Equipment> values = ou.slots[slotIndex].items.values();
         if (values.isEmpty()) return null;
-        return values.stream().max(Comparator.comparingInt(e -> e.dmg)).orElse(null);
+        return values
+            .stream()
+            .max(Comparator.comparingInt(e -> e.dmg))
+            .orElse(null);
     }
 
     /**
@@ -90,8 +98,12 @@ public final class EquipmentUsageAggregator {
      */
     public Collection<Equipment> getSlotBreakdown(int ownerId, int slotIndex) {
         OwnerUsage ou = byOwner.get(ownerId);
-        if (ou == null || !isValidSlot(slotIndex)) return Collections.emptyList();
-        return Collections.unmodifiableCollection(ou.slots[slotIndex].items.values());
+        if (
+            ou == null || !isValidSlot(slotIndex)
+        ) return Collections.emptyList();
+        return Collections.unmodifiableCollection(
+            ou.slots[slotIndex].items.values()
+        );
     }
 
     /**
@@ -122,19 +134,38 @@ public final class EquipmentUsageAggregator {
 
         // Process all damage entries once to build per-owner, per-slot usage.
         for (Damage d : entity.getDamageList()) {
-            if (d == null || d.owner == null || d.ownerInvntory == null) continue;
+            if (
+                d == null || d.owner == null || d.ownerInvntory == null
+            ) continue;
 
             final int ownerId = d.owner.id;
-            OwnerUsage ou = byOwner.computeIfAbsent(ownerId, k -> new OwnerUsage());
+            OwnerUsage ou = byOwner.computeIfAbsent(ownerId, k ->
+                new OwnerUsage()
+            );
 
             for (int i = 0; i < SLOT_COUNT; i++) {
                 final int fi = i;
                 SlotUsage su = ou.slots[fi];
 
-                int itemId = d.ownerInvntory[fi];
+                // Prefer damage-time ability item for slot 1 attribution.
+                // If Damage.ownerAbilityItem is set (not -1), use it for slot index 1.
+                // Otherwise, fall back to the inventory snapshot stored on the Damage.
+                int itemId;
+                if (fi == 1) {
+                    itemId = (d.ownerAbilityItem != -1)
+                        ? d.ownerAbilityItem
+                        : d.ownerInvntory[fi];
+                } else {
+                    itemId = d.ownerInvntory[fi];
+                }
+
                 // Ensure Equipment.totalDmg points to the slot total accumulator.
-                Equipment eq = su.items.computeIfAbsent(itemId,
-                    id -> new Equipment(id, String.valueOf(d.ownerEnchants[fi]), su.total)
+                Equipment eq = su.items.computeIfAbsent(itemId, id ->
+                    new Equipment(
+                        id,
+                        String.valueOf(d.ownerEnchants[fi]),
+                        su.total
+                    )
                 );
                 eq.add(d.damage);
             }

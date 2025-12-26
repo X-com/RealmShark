@@ -66,7 +66,7 @@ public final class GuardsHandler {
             );
         } else if (dmg.walledGardenReflectors) {
             return (
-                "[Garden Hits:" +
+                "[Reflector Hits:" +
                 safeInt(dmg.counterHits) +
                 " Dmg:" +
                 safeInt(dmg.counterDmg) +

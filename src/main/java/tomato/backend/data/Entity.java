@@ -21,6 +21,11 @@ import tomato.realmshark.enums.CharacterClass;
 
 public class Entity implements Serializable {
 
+    // Track players with SlotType 18 abilities for DamagePacket invulnerability bypass
+    private static final HashMap<Integer, Long> slotType18AbilityUsers =
+        new HashMap<>();
+    private static final long ABILITY_TRACKING_WINDOW_MS = 5000; // 5 second window
+
     private boolean isUser;
     public final Stat stat;
     private final transient TomatoData tomatoData;
@@ -183,6 +188,14 @@ public class Entity implements Serializable {
         if (damaging) {
             number *= 1.25;
         }
+
+        // Apply crucible damage bonus if active
+        if (this == tomatoData.player) {
+            double crucibleMultiplier =
+                CrucibleBonusManager.getPlayerDamageMultiplier();
+            number *= crucibleMultiplier;
+        }
+
         return number * exaltDmgBonus;
     }
 
@@ -193,29 +206,298 @@ public class Entity implements Serializable {
     ) {
         if (projectile == null || projectile.getDamage() == 0) return;
 
-        int[] conditions = new int[2];
+        int dmg = 0;
+        // Header logging moved to the scaling branch so we only log lethal-strike (scaling) client-side calculations
+        // for shots originating from the local user. Original header (commented for reference):
+        // System.out.println(
+        //     "[Entity] userProjectileHit: projectile.containerType=" +
+        //         projectile.getContainerType() +
+        //         " summonerId=" +
+        //         projectile.getSummonerId() +
+        //         " baseDamage=" +
+        //         projectile.getDamage() +
+        //         " attacker=" +
+        //         (attacker != null ? attacker.id : -1)
+        // );
 
-        conditions[0] = stat.get(StatType.CONDITION_STAT) == null
-            ? 0
-            : stat.get(StatType.CONDITION_STAT).statValue;
-        conditions[1] = stat.get(StatType.NEW_CON_STAT) == null
-            ? 0
-            : stat.get(StatType.NEW_CON_STAT).statValue;
-        int defence = stat.get(StatType.DEFENSE_STAT) == null
-            ? 0
-            : stat.get(StatType.DEFENSE_STAT).statValue;
+        // Check if this is an ability projectile (created by ServerPlayerShootPacket)
+        // Ability projectiles have non-zero summonerId and use pre-calculated damage from server
+        // Weapon projectiles have summonerId = 0 and need client-side defense calculations
+        // Proc projectiles have summonerId = 0 but may have stat scaling that needs to be applied
+        boolean isAbilityProjectile = projectile.getSummonerId() != 0;
+        boolean isProcProjectile = false;
 
-        int dmg = Projectile.damageWithDefense(
-            projectile.getDamage(),
-            projectile.isArmorPiercing(),
-            defence,
-            conditions
-        );
+        // Only perform client-side calculations for projectiles with containerType (weapon ID)
+        // when they originate from the local user. The server sends final damage for other players'
+        // shots, so we must not re-calculate those on the client.
+        int containerType = projectile.getContainerType();
+        boolean isLocalAttacker = attacker != null && attacker.isUser();
+        // Only treat containerType as client-calculable when the attacker is the local user.
+        boolean hasContainerType = isLocalAttacker && containerType != -1;
+        // Initialize scaling manager here so it's available to the entire hit/defense flow.
+        AbilityScalingManager scalingManager =
+            AbilityScalingManager.getInstance();
+
+        if (isAbilityProjectile && !hasContainerType) {
+            // Ability projectile without containerType: apply defense calculations unless armor piercing
+            int baseDamage = projectile.getDamage();
+            if (projectile.isArmorPiercing()) {
+                // Armor piercing abilities ignore defense - use damage as-is
+                dmg = baseDamage;
+                if (attacker != null && attacker.isUser()) {
+                    System.out.println(
+                        "[Entity] userProjectileHit: using armor-piercing ability damage=" +
+                            dmg +
+                            " (ignores defense)"
+                    );
+                }
+            } else {
+                // Non-armor piercing abilities should consider target defense
+                int[] conditions = new int[2];
+                conditions[0] = stat.get(StatType.CONDITION_STAT) == null
+                    ? 0
+                    : stat.get(StatType.CONDITION_STAT).statValue;
+                conditions[1] = stat.get(StatType.NEW_CON_STAT) == null
+                    ? 0
+                    : stat.get(StatType.NEW_CON_STAT).statValue;
+                int defence = stat.get(StatType.DEFENSE_STAT) == null
+                    ? 0
+                    : stat.get(StatType.DEFENSE_STAT).statValue;
+
+                dmg = Projectile.damageWithDefense(
+                    baseDamage,
+                    false, // armorPiercing is false since we're applying defense
+                    defence,
+                    conditions,
+                    -1, // weaponId not available for ability projectiles without containerType
+                    attacker
+                );
+                if (attacker != null && attacker.isUser()) {
+                    System.out.println(
+                        "[Entity] userProjectileHit: applied defense to ability damage=" +
+                            dmg +
+                            " (base=" +
+                            baseDamage +
+                            ", defense=" +
+                            defence +
+                            ")"
+                    );
+                }
+            }
+        } else {
+            // Check if this is a proc projectile with stat scaling
+            // Proc projectiles come from ServerPlayerShootPacket with containerType as projectile ID
+            if (containerType != -1) {
+                boolean hasScaling = scalingManager.hasScaling(containerType);
+                // Only emit container/scaling discovery logs if the attacker is the local user AND this ability has scaling.
+                // This ensures we only debug lethal-strike / scaling client-side calculations for our own shots.
+                if (attacker != null && attacker.isUser() && hasScaling) {
+                    System.out.println(
+                        "[Entity] userProjectileHit: containerType=" +
+                            containerType +
+                            " hasScaling=" +
+                            hasScaling
+                    );
+                }
+                if (hasScaling) {
+                    // This is a proc projectile with scaling - attempt to use a stat snapshot
+                    Integer statSnapshot = null;
+                    try {
+                        // Prefer damage-time / current attacker stat for scaling if available.
+                        AbilityScalingManager.AbilityScalingData sd =
+                            scalingManager.getScalingData(containerType);
+                        if (
+                            attacker != null &&
+                            sd != null &&
+                            sd.scalingStat != null &&
+                            attacker.stat.get(sd.scalingStat) != null
+                        ) {
+                            statSnapshot = Integer.valueOf(
+                                attacker.stat.get(sd.scalingStat).statValue
+                            );
+                        } else if (projectile != null) {
+                            int s = projectile.getOriginScalingStat();
+                            if (s != Integer.MIN_VALUE) {
+                                statSnapshot = Integer.valueOf(s);
+                            }
+                        }
+                    } catch (Exception ignored) {}
+                    // Use snapshot-aware calculation (falls back to current player stats when snapshot is null)
+                    int statBonus = scalingManager.calculateStatBonus(
+                        containerType,
+                        statSnapshot,
+                        attacker
+                    );
+                    int baseDamage = projectile.getDamage();
+                    dmg = baseDamage + statBonus;
+                    // Only log the detailed proc scaling message for the local user
+                    if (attacker != null && attacker.isUser()) {
+                        System.out.println(
+                            "[Entity] userProjectileHit: proc scaling applied containerType=" +
+                                containerType +
+                                " baseDamage=" +
+                                baseDamage +
+                                " statBonus=" +
+                                statBonus +
+                                " total=" +
+                                dmg +
+                                (statSnapshot != null
+                                    ? " (used snapshot)"
+                                    : " (used current)")
+                        );
+                    }
+                    isProcProjectile = true;
+                }
+            }
+
+            // Apply defense calculations to all projectiles with containerType
+            // This ensures Lethal Strike defense ignore and proper scaling are applied
+            if (containerType != -1 || !isProcProjectile) {
+                // Calculate damage client-side with defense for all projectiles with containerType
+                int[] conditions = new int[2];
+
+                conditions[0] = stat.get(StatType.CONDITION_STAT) == null
+                    ? 0
+                    : stat.get(StatType.CONDITION_STAT).statValue;
+                conditions[1] = stat.get(StatType.NEW_CON_STAT) == null
+                    ? 0
+                    : stat.get(StatType.NEW_CON_STAT).statValue;
+                int defence = stat.get(StatType.DEFENSE_STAT) == null
+                    ? 0
+                    : stat.get(StatType.DEFENSE_STAT).statValue;
+
+                // For proc projectiles with scaling, use the stat-scaled damage as base
+                int baseDamage = isProcProjectile
+                    ? dmg
+                    : projectile.getDamage();
+
+                // Only log defense-application details for local-user projectiles (we don't need to debug other players' client-side defense calc)
+                if (attacker != null && attacker.isUser()) {
+                    // Only log defense-application details for lethal-strike/scaling projectiles that originate from the local user.
+                    // We don't need client-side defense debug info for other players' shots.
+                    if (
+                        attacker != null &&
+                        attacker.isUser() &&
+                        AbilityScalingManager.getInstance().hasScaling(
+                            containerType
+                        )
+                    ) {
+                        System.out.println(
+                            "[Entity] userProjectileHit: applying defense. baseDamage=" +
+                                baseDamage +
+                                " ap=" +
+                                projectile.isArmorPiercing() +
+                                " defence=" +
+                                defence +
+                                " conditions=[" +
+                                conditions[0] +
+                                "," +
+                                conditions[1] +
+                                "] containerType=" +
+                                projectile.getContainerType()
+                        );
+                    }
+                }
+
+                // If we have a containerType (ability projectile), compute defense-ignore using a stat snapshot if available.
+                if (projectile != null && projectile.getContainerType() != -1) {
+                    Integer statSnapshot = null;
+                    try {
+                        // Prefer damage-time / current attacker stat for defense-ignore calculation.
+                        AbilityScalingManager.AbilityScalingData sd =
+                            scalingManager.getScalingData(
+                                projectile.getContainerType()
+                            );
+                        if (
+                            attacker != null &&
+                            sd != null &&
+                            sd.scalingStat != null &&
+                            attacker.stat.get(sd.scalingStat) != null
+                        ) {
+                            statSnapshot = Integer.valueOf(
+                                attacker.stat.get(sd.scalingStat).statValue
+                            );
+                        } else if (projectile != null) {
+                            int s = projectile.getOriginScalingStat();
+                            if (s != Integer.MIN_VALUE) {
+                                statSnapshot = Integer.valueOf(s);
+                            }
+                        }
+                    } catch (Exception ignored) {}
+                    int defenseIgnoreBonus =
+                        scalingManager.calculateDefenseIgnoreBonus(
+                            projectile.getContainerType(),
+                            defence,
+                            statSnapshot,
+                            attacker
+                        );
+                    if (defenseIgnoreBonus > 0) {
+                        defence = Math.max(0, defence - defenseIgnoreBonus);
+                        // Only log defense-ignore details when the attacker is the local user AND the ability is a scaling (lethal-strike) ability.
+                        if (
+                            attacker != null &&
+                            attacker.isUser() &&
+                            AbilityScalingManager.getInstance().hasScaling(
+                                projectile.getContainerType()
+                            )
+                        ) {
+                            System.out.println(
+                                "[Entity] userProjectileHit: applied defense ignore=" +
+                                    defenseIgnoreBonus +
+                                    " newDefence=" +
+                                    defence +
+                                    (statSnapshot != null
+                                        ? " (used snapshot)"
+                                        : " (used current)")
+                            );
+                        }
+                    }
+                }
+
+                // Now apply the standard defense calculation with the (possibly adjusted) defence value.
+                dmg = Projectile.damageWithDefense(
+                    baseDamage,
+                    projectile.isArmorPiercing(),
+                    defence,
+                    conditions
+                );
+                // Only print final-damage when this was a local-user scaling (lethal-strike) calculation.
+                if (
+                    attacker != null &&
+                    attacker.isUser() &&
+                    AbilityScalingManager.getInstance().hasScaling(
+                        containerType
+                    )
+                ) {
+                    System.out.println(
+                        "[Entity] userProjectileHit: final damage after defense=" +
+                            dmg
+                    );
+                }
+            }
+        }
 
         if (dmg > 0) {
             Damage damage = new Damage(attacker, projectile, timePc, dmg);
             bossPhaseDamage(damage);
             addPlayerDmg(damage);
+            // Only record the detailed recorded-damage log for local-user lethal-strike (scaling) hits.
+            if (
+                attacker != null &&
+                attacker.isUser() &&
+                AbilityScalingManager.getInstance().hasScaling(
+                    projectile.getContainerType()
+                )
+            ) {
+                System.out.println(
+                    "[Entity] userProjectileHit: recorded damage owner=" +
+                        attacker.id +
+                        " dmg=" +
+                        dmg +
+                        " target=" +
+                        this.id
+                );
+            }
         }
     }
 
@@ -225,13 +507,102 @@ public class Entity implements Serializable {
         long time
     ) {
         if (projectile == null || projectile.getDamage() == 0) return;
-        Damage damage = new Damage(attacker, projectile, time);
+        // Commented out noisy diagnostic logs (preserved original lines as comments)
+        // if (attacker != null) {
+        //     System.out.println(
+        //         "[Entity] genericDamageHit: attacker=" +
+        //             attacker.id +
+        //             " projectileBaseDamage=" +
+        //             projectile.getDamage() +
+        //             " target=" +
+        //             this.id
+        //     );
+        // }
+
+        int damageAmount = projectile.getDamage();
+
+        // Check if entity is invulnerable
+        StatData conditionStat = stat.get(StatType.CONDITION_STAT);
+        int condition = (conditionStat != null) ? conditionStat.statValue : 0;
+        boolean invulnerable =
+            (condition & ConditionBits.INVULNERABLE.value()) != 0;
+
+        if (invulnerable) {
+            // Check if attacker has recently used a SlotType 18 ability
+            boolean hasSlotType18Ability = false;
+            if (attacker != null) {
+                Long lastAbilityUseTime = slotType18AbilityUsers.get(
+                    attacker.id
+                );
+                if (
+                    lastAbilityUseTime != null &&
+                    (time - lastAbilityUseTime) <= ABILITY_TRACKING_WINDOW_MS
+                ) {
+                    hasSlotType18Ability = true;
+                    if (attacker.isUser()) {
+                        System.out.println(
+                            "[Entity] genericDamageHit: SlotType 18 ability damage bypassing invulnerability - damage=" +
+                                damageAmount +
+                                " target=" +
+                                this.id
+                        );
+                    }
+                }
+            }
+
+            if (!hasSlotType18Ability) {
+                // Not from SlotType 18 ability - respect invulnerability
+                damageAmount = 0;
+            }
+        }
+
+        Damage damage = new Damage(attacker, projectile, time, damageAmount);
         bossPhaseDamage(damage);
         addPlayerDmg(damage);
+        // Commented out noisy diagnostic logs (preserved original lines as comments)
+        // if (attacker != null) {
+        //     System.out.println(
+        //         "[Entity] genericDamageHit: recorded generic damage owner=" +
+        //             attacker.id +
+        //             " dmg=" +
+        //             damage.damage +
+        //             " target=" +
+        //             this.id
+        //     );
+        // }
+    }
+
+    // Track when players use SlotType 18 abilities for DamagePacket invulnerability bypass
+    public static void trackSlotType18AbilityUse(Entity player, long time) {
+        if (player != null && player.stat != null) {
+            try {
+                StatData abilitySlot = player.stat.get(
+                    StatType.INVENTORY_1_STAT
+                );
+                if (abilitySlot != null) {
+                    int abilityId = abilitySlot.statValue;
+                    int slotType = IdToAsset.getIdProjectileSlotType(abilityId);
+                    if (slotType == 18) {
+                        slotType18AbilityUsers.put(player.id, time);
+                        if (player.isUser()) {
+                            System.out.println(
+                                "[Entity] trackSlotType18AbilityUse: tracking SlotType 18 ability - item=" +
+                                    abilityId +
+                                    " player=" +
+                                    player.id
+                            );
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                // Ignore errors - we'll just skip tracking for this ability
+            }
+        }
     }
 
     private void addPlayerDmg(Damage damage) {
         damageList.add(damage);
+
         if (damage.owner != null) {
             int id = damage.owner.id;
             Damage dmg = damagePlayer.computeIfAbsent(id, a ->
@@ -298,9 +669,9 @@ public class Entity implements Serializable {
         damage.walledGardenReflectors =
             objectType == FORGOTTEN_KING &&
             stat.get(StatType.ANIMATION_STAT) != null &&
-            (stat.get(StatType.ANIMATION_STAT).statValue ==
-                    FORGOTTEN_KING_REFLECTOR_ANIMATION &&
-                tomatoData.floorPlanCrystals() == 12);
+            stat.get(StatType.ANIMATION_STAT).statValue ==
+            FORGOTTEN_KING_REFLECTOR_ANIMATION &&
+            tomatoData.hasGuardedPhaseEntity();
         damage.chancellorDammahDmg =
             objectType == CHANCELLOR_DAMMAH && !dammahCountered;
     }

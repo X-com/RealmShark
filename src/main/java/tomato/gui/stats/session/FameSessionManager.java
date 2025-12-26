@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -17,7 +18,8 @@ import tomato.gui.stats.Fame;
 import tomato.gui.stats.data.MapFameData;
 
 /**
- * Manages saving and loading of fame tracking sessions
+ * Manages saving and loading of fame tracking sessions.
+ * Handles file I/O and data format conversion for session persistence.
  */
 public class FameSessionManager {
 
@@ -28,126 +30,88 @@ public class FameSessionManager {
         .create();
 
     static {
-        // Create sessions directory if it doesn't exist
+        ensureDirectoryExists();
+    }
+
+    private static void ensureDirectoryExists() {
         File dir = new File(SESSIONS_DIRECTORY);
         if (!dir.exists()) {
             dir.mkdirs();
         }
     }
 
+    // --- Save Operations ---
+
     /**
-     * Save a fame session to a file
+     * Save a fame session to its default file location.
      */
     public static boolean saveSession(FameSession session) {
-        try {
-            String filename =
-                session.getSessionName().replaceAll("[^a-zA-Z0-9_\\- ]", "_") +
-                FILE_EXTENSION;
-            File file = new File(SESSIONS_DIRECTORY, filename);
-
-            try (FileWriter writer = new FileWriter(file)) {
-                GSON.toJson(session, writer);
-            }
-
-            return true;
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(
-                null,
-                "Error saving session: " + e.getMessage(),
-                "Save Error",
-                JOptionPane.ERROR_MESSAGE
-            );
-            return false;
-        }
+        String filename =
+            sanitizeFilename(session.getSessionName()) + FILE_EXTENSION;
+        File file = new File(SESSIONS_DIRECTORY, filename);
+        return writeSession(session, file);
     }
 
     /**
-     * Save a fame session with a custom filename
+     * Save a fame session with a file chooser dialog.
      */
     public static boolean saveSessionAs(FameSession session) {
-        JFileChooser fileChooser = new JFileChooser(SESSIONS_DIRECTORY);
-        fileChooser.setDialogTitle("Save Fame Session");
-        fileChooser.setFileFilter(
-            new FileNameExtensionFilter(
-                "Fame Session Files (*" + FILE_EXTENSION + ")",
-                FILE_EXTENSION.substring(1)
-            )
-        );
+        JFileChooser fileChooser = createFileChooser("Save Fame Session");
 
         if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             if (!file.getName().endsWith(FILE_EXTENSION)) {
                 file = new File(file.getAbsolutePath() + FILE_EXTENSION);
             }
-
-            try (FileWriter writer = new FileWriter(file)) {
-                GSON.toJson(session, writer);
-                return true;
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(
-                    null,
-                    "Error saving session: " + e.getMessage(),
-                    "Save Error",
-                    JOptionPane.ERROR_MESSAGE
-                );
-            }
+            return writeSession(session, file);
         }
         return false;
     }
 
+    private static boolean writeSession(FameSession session, File file) {
+        try (FileWriter writer = new FileWriter(file)) {
+            GSON.toJson(session, writer);
+            return true;
+        } catch (IOException e) {
+            showError("Error saving session: " + e.getMessage(), "Save Error");
+            return false;
+        }
+    }
+
+    // --- Load Operations ---
+
     /**
-     * Load a fame session from a file
+     * Load a fame session with a file chooser dialog.
      */
     public static FameSession loadSession() {
-        JFileChooser fileChooser = new JFileChooser(SESSIONS_DIRECTORY);
-        fileChooser.setDialogTitle("Load Fame Session (Read-Only)");
-        fileChooser.setFileFilter(
-            new FileNameExtensionFilter(
-                "Fame Session Files (*" + FILE_EXTENSION + ")",
-                FILE_EXTENSION.substring(1)
-            )
+        JFileChooser fileChooser = createFileChooser(
+            "Load Fame Session (Read-Only)"
         );
 
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            try (FileReader reader = new FileReader(file)) {
-                FameSession session = GSON.fromJson(reader, FameSession.class);
-                if (session != null) {
-                    // Mark session as read-only
-                    session.setReadOnly(true);
-                }
-                return session;
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(
-                    null,
-                    "Error loading session: " + e.getMessage(),
-                    "Load Error",
-                    JOptionPane.ERROR_MESSAGE
-                );
+            FameSession session = loadSession(fileChooser.getSelectedFile());
+            if (session != null) {
+                session.setReadOnly(true);
             }
+            return session;
         }
         return null;
     }
 
     /**
-     * Load a session from a specific file
+     * Load a session from a specific file.
      */
     public static FameSession loadSession(File file) {
         try (FileReader reader = new FileReader(file)) {
             return GSON.fromJson(reader, FameSession.class);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(
-                null,
-                "Error loading session: " + e.getMessage(),
-                "Load Error",
-                JOptionPane.ERROR_MESSAGE
-            );
+            showError("Error loading session: " + e.getMessage(), "Load Error");
             return null;
         }
     }
 
     /**
-     * Get list of all saved sessions
+     * Get list of all saved session files.
      */
     public static List<File> getSavedSessions() {
         List<File> sessions = new ArrayList<>();
@@ -163,22 +127,20 @@ public class FameSessionManager {
                 }
             }
         }
-
         return sessions;
     }
 
     /**
-     * Delete a saved session
+     * Delete a saved session file.
      */
     public static boolean deleteSession(File sessionFile) {
-        if (sessionFile.exists()) {
-            return sessionFile.delete();
-        }
-        return false;
+        return sessionFile.exists() && sessionFile.delete();
     }
 
+    // --- Session Creation ---
+
     /**
-     * Create a session from raw fame data
+     * Create a session from raw fame and map data.
      */
     public static FameSession createSessionFromData(
         HashMap<Integer, ArrayList<Fame>> fameData,
@@ -193,21 +155,51 @@ public class FameSessionManager {
         return session;
     }
 
+    // --- Data Conversion (Generic) ---
+
     /**
-     * Convert fame data from FameTrackerGUI format to session format
+     * Generic conversion from HashMap<Integer, ArrayList<T>> to HashMap<Integer, List<T>>.
+     * Used for converting between runtime and session storage formats.
+     */
+    private static <T> HashMap<Integer, List<T>> convertMapToList(
+        HashMap<Integer, ArrayList<T>> source
+    ) {
+        HashMap<Integer, List<T>> result = new HashMap<>();
+        if (source != null) {
+            for (Map.Entry<Integer, ArrayList<T>> entry : source.entrySet()) {
+                result.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Generic conversion from HashMap<Integer, List<T>> to HashMap<Integer, ArrayList<T>>.
+     * Used for extracting data from sessions back to runtime format.
+     */
+    private static <T> HashMap<Integer, ArrayList<T>> convertListToMap(
+        HashMap<Integer, List<T>> source
+    ) {
+        HashMap<Integer, ArrayList<T>> result = new HashMap<>();
+        if (source != null) {
+            for (Map.Entry<Integer, List<T>> entry : source.entrySet()) {
+                result.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Convert fame data from runtime format to session format.
      */
     public static HashMap<Integer, List<Fame>> convertToSessionFormat(
         HashMap<Integer, ArrayList<Fame>> fameData
     ) {
-        HashMap<Integer, List<Fame>> convertedData = new HashMap<>();
-        for (Integer charId : fameData.keySet()) {
-            convertedData.put(charId, new ArrayList<>(fameData.get(charId)));
-        }
-        return convertedData;
+        return convertMapToList(fameData);
     }
 
     /**
-     * Convert map fame data to session format
+     * Convert map fame data from runtime format to session format.
      */
     public static HashMap<
         Integer,
@@ -215,66 +207,46 @@ public class FameSessionManager {
     > convertMapDataToSessionFormat(
         HashMap<Integer, ArrayList<MapFameData>> mapFameData
     ) {
-        HashMap<Integer, List<MapFameData>> convertedData = new HashMap<>();
-        for (Integer charId : mapFameData.keySet()) {
-            convertedData.put(charId, new ArrayList<>(mapFameData.get(charId)));
-        }
-        return convertedData;
+        return convertMapToList(mapFameData);
     }
 
     /**
-     * Extract fame data from a session back to the format used by FameTrackerGUI
+     * Extract fame data from a session to runtime format.
      */
     public static HashMap<Integer, ArrayList<Fame>> extractFameData(
         FameSession session
     ) {
-        HashMap<Integer, ArrayList<Fame>> fameData = new HashMap<>();
-
-        for (Integer charId : session.getCharacterFameData().keySet()) {
-            fameData.put(
-                charId,
-                new ArrayList<>(session.getCharacterFameData().get(charId))
-            );
-        }
-
-        return fameData;
+        return convertListToMap(session.getCharacterFameData());
     }
 
     /**
-     * Extract map fame data from a session back to the format used by FameTablePanel
+     * Extract map fame data from a session to runtime format.
      */
     public static HashMap<Integer, ArrayList<MapFameData>> extractMapFameData(
         FameSession session
     ) {
-        HashMap<Integer, ArrayList<MapFameData>> mapFameData = new HashMap<>();
-
-        for (Integer charId : session.getCharacterMapFameData().keySet()) {
-            mapFameData.put(
-                charId,
-                new ArrayList<>(session.getCharacterMapFameData().get(charId))
-            );
-        }
-
-        return mapFameData;
+        return convertListToMap(session.getCharacterMapFameData());
     }
 
+    // --- Export ---
+
     /**
-     * Export session data to a different format (CSV for example)
+     * Export session data to CSV format.
      */
     public static boolean exportSessionToCsv(
         FameSession session,
         File outputFile
     ) {
         try {
-            StringBuilder csvContent = new StringBuilder();
-            csvContent.append("CharacterID,Timestamp,Fame\n");
+            StringBuilder csv = new StringBuilder();
+            csv.append("CharacterID,Timestamp,Fame\n");
 
-            for (Integer charId : session.getCharacterFameData().keySet()) {
-                List<Fame> fameList = session
-                    .getCharacterFameData()
-                    .get(charId);
-                for (Fame fame : fameList) {
-                    csvContent
+            for (Map.Entry<Integer, List<Fame>> entry : session
+                .getCharacterFameData()
+                .entrySet()) {
+                int charId = entry.getKey();
+                for (Fame fame : entry.getValue()) {
+                    csv
                         .append(charId)
                         .append(",")
                         .append(fame.getTime())
@@ -284,16 +256,41 @@ public class FameSessionManager {
                 }
             }
 
-            Files.write(outputFile.toPath(), csvContent.toString().getBytes());
+            Files.write(outputFile.toPath(), csv.toString().getBytes());
             return true;
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(
-                null,
+            showError(
                 "Error exporting session: " + e.getMessage(),
-                "Export Error",
-                JOptionPane.ERROR_MESSAGE
+                "Export Error"
             );
             return false;
         }
+    }
+
+    // --- Utilities ---
+
+    private static JFileChooser createFileChooser(String title) {
+        JFileChooser fileChooser = new JFileChooser(SESSIONS_DIRECTORY);
+        fileChooser.setDialogTitle(title);
+        fileChooser.setFileFilter(
+            new FileNameExtensionFilter(
+                "Fame Session Files (*" + FILE_EXTENSION + ")",
+                FILE_EXTENSION.substring(1)
+            )
+        );
+        return fileChooser;
+    }
+
+    private static String sanitizeFilename(String name) {
+        return name.replaceAll("[^a-zA-Z0-9_\\- ]", "_");
+    }
+
+    private static void showError(String message, String title) {
+        JOptionPane.showMessageDialog(
+            null,
+            message,
+            title,
+            JOptionPane.ERROR_MESSAGE
+        );
     }
 }

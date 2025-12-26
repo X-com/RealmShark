@@ -19,10 +19,11 @@ public class SecurityAbilityUseCheck {
     private static final int DECOY_BRAIN_ID = 45313;
     private static final int DECOY_BRAIN_PUMPKIN_ID = 25736;
     private static final int[] PRISMS = {
-            DECOY_ID,
-            DECOY_FOOLSPRISM_ID,
-            DECOY_BRAIN_ID,
-            DECOY_BRAIN_PUMPKIN_ID,
+        DECOY_ID,
+        DECOY_FOOLSPRISM_ID,
+        DECOY_COIN_ID,
+        DECOY_BRAIN_ID,
+        DECOY_BRAIN_PUMPKIN_ID,
     };
 
     /**
@@ -55,11 +56,20 @@ public class SecurityAbilityUseCheck {
             entity.stasisCounter--;
             for (StatData sd : stats) {
                 if (sd.statType == StatType.MP_STAT) {
-                    if (entity.stat.get(StatType.MP_STAT).statValue <= sd.statValue) {
+                    if (
+                        entity.stat.get(StatType.MP_STAT).statValue <=
+                        sd.statValue
+                    ) {
                         StringBuilder sb = new StringBuilder();
                         sb.append("[").append(Util.getHourTime()).append("] ");
                         sb.append(entity.name()).append(": ");
-                        sb.append(IdToAsset.objectName(entity.stat.get(StatType.INVENTORY_1_STAT).statValue));
+                        sb.append(
+                            IdToAsset.objectName(
+                                entity.stat.get(
+                                    StatType.INVENTORY_1_STAT
+                                ).statValue
+                            )
+                        );
                         SecurityGUI.updateAbilityUsage(sb.toString());
                     }
                 }
@@ -77,22 +87,30 @@ public class SecurityAbilityUseCheck {
     }
 
     public static void checkManaFromDecoyUsed(Entity entity, StatData[] stats) {
-        if (entity.objectType != 820) return; // check if trickster using ID 820
+        if (entity.objectType != CharacterClass.Trickster.getId()) return; // check if trickster
         if (decoyCounter == 0) {
             for (StatData sd : stats) {
                 if (sd.statType == StatType.MP_STAT) {
-                    if (entity.stat.get(StatType.MP_STAT).statValue <= sd.statValue) {
+                    if (
+                        entity.stat.get(StatType.MP_STAT).statValue <=
+                        sd.statValue
+                    ) {
                         StringBuilder sb = new StringBuilder();
                         sb.append("[").append(Util.getHourTime()).append("] ");
                         sb.append(entity.name()).append(": ");
-                        sb.append(IdToAsset.objectName(entity.stat.get(StatType.INVENTORY_1_STAT).statValue));
+                        sb.append(
+                            IdToAsset.objectName(
+                                entity.stat.get(
+                                    StatType.INVENTORY_1_STAT
+                                ).statValue
+                            )
+                        );
                         SecurityGUI.updateAbilityUsage(sb.toString());
                     }
                 }
             }
         }
     }
-
 
     public static void decreaseDecoyCounter() {
         decoyCounter--;
