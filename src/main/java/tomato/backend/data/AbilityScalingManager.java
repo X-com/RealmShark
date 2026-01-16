@@ -37,9 +37,6 @@ public class AbilityScalingManager {
         public final int scalingMin;
         public final float damagePerStat;
         public final int numShots;
-        public final float ignoreFlat;
-        public final float ignorePerc;
-        public final float statModPerc;
 
         public AbilityScalingData(
             int weaponId,
@@ -48,44 +45,15 @@ public class AbilityScalingManager {
             float damagePerStat,
             int numShots
         ) {
-            this(
-                weaponId,
-                scalingStat,
-                scalingMin,
-                damagePerStat,
-                numShots,
-                0,
-                0,
-                0
-            );
-        }
-
-        public AbilityScalingData(
-            int weaponId,
-            StatType scalingStat,
-            int scalingMin,
-            float damagePerStat,
-            int numShots,
-            float ignoreFlat,
-            float ignorePerc,
-            float statModPerc
-        ) {
             this.weaponId = weaponId;
             this.scalingStat = scalingStat;
             this.scalingMin = scalingMin;
             this.damagePerStat = damagePerStat;
             this.numShots = numShots;
-            this.ignoreFlat = ignoreFlat;
-            this.ignorePerc = ignorePerc;
-            this.statModPerc = statModPerc;
         }
 
         public boolean hasScaling() {
             return scalingStat != null && damagePerStat > 0;
-        }
-
-        public boolean hasDefenseIgnore() {
-            return ignoreFlat > 0 || ignorePerc > 0;
         }
     }
 
@@ -116,7 +84,6 @@ public class AbilityScalingManager {
             document.getDocumentElement().normalize();
 
             parseEquipXml(document);
-            addLethalStrikeProjectileScaling(document);
 
             System.out.println(
                 "AbilityScalingManager initialized with " +
@@ -390,214 +357,6 @@ public class AbilityScalingManager {
         return (end > idx + 2) ? candidate.substring(idx, end) : null;
     }
 
-    private void addLethalStrikeProjectileScaling(Document document) {
-        NodeList objectNodes = document.getElementsByTagName("Object");
-
-        for (int i = 0; i < objectNodes.getLength(); i++) {
-            Node objectNode = objectNodes.item(i);
-            if (objectNode.getNodeType() != Node.ELEMENT_NODE) continue;
-
-            Element objectElement = (Element) objectNode;
-            NodeList lethalStrikeNodes = objectElement.getElementsByTagName(
-                "OnConditionEndActivate"
-            );
-
-            for (int j = 0; j < lethalStrikeNodes.getLength(); j++) {
-                Element lethalStrikeElement = (Element) lethalStrikeNodes.item(
-                    j
-                );
-                if (isLethalStrikeElement(lethalStrikeElement)) {
-                    processLethalStrikeElement(
-                        objectElement,
-                        lethalStrikeElement
-                    );
-                }
-            }
-        }
-    }
-
-    private boolean isLethalStrikeElement(Element element) {
-        if (element == null) return false;
-
-        String text = getElementText(element);
-        String attr = element.getAttribute("type");
-        String combined =
-            (text != null ? text : "") + " " + (attr != null ? attr : "");
-        return combined.toLowerCase().contains("lethalstrike");
-    }
-
-    private String getElementText(Element element) {
-        try {
-            return element.getTextContent() != null
-                ? element.getTextContent()
-                : "";
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
-    private void processLethalStrikeElement(
-        Element objectElement,
-        Element lethalStrikeElement
-    ) {
-        String scalingStatAttr = lethalStrikeElement.getAttribute(
-            "scalingStat"
-        );
-        String statModFlatAttr = lethalStrikeElement.getAttribute(
-            "statModFlat"
-        );
-
-        if (scalingStatAttr.isEmpty() || statModFlatAttr.isEmpty()) return;
-
-        StatType scalingStat = parseStatType(scalingStatAttr);
-        if (scalingStat == null) return;
-
-        int scalingMin = parseScalingMin(lethalStrikeElement);
-        float flatBonus = Float.parseFloat(statModFlatAttr);
-        float percBonus = parseFloatAttr(lethalStrikeElement, "statModPerc");
-        float ignoreFlat = parseFloatAttr(lethalStrikeElement, "ignoreFlat");
-        float ignorePerc = parseFloatAttr(lethalStrikeElement, "ignorePerc");
-        float damagePerStat = flatBonus + (percBonus * 50);
-
-        findAndAddLethalStrikeProjectiles(
-            objectElement,
-            scalingStat,
-            scalingMin,
-            damagePerStat,
-            ignoreFlat,
-            ignorePerc,
-            percBonus
-        );
-    }
-
-    private float parseFloatAttr(Element element, String attrName) {
-        String attr = element.getAttribute(attrName);
-        return !attr.isEmpty() ? Float.parseFloat(attr) : 0;
-    }
-
-    private void findAndAddLethalStrikeProjectiles(
-        Element weaponElement,
-        StatType scalingStat,
-        int scalingMin,
-        float damagePerStat,
-        float ignoreFlat,
-        float ignorePerc,
-        float statModPerc
-    ) {
-        String weaponId = weaponElement.getAttribute("type");
-        if (weaponId.isEmpty()) return;
-
-        Set<Integer> added = new HashSet<>();
-        String[] tagNames = { "OnPlayerShootActivate", "Activate" };
-
-        for (String tagName : tagNames) {
-            NodeList nodes = weaponElement.getElementsByTagName(tagName);
-            for (int i = 0; i < nodes.getLength(); i++) {
-                Element el = (Element) nodes.item(i);
-                extractAndAddProjectiles(
-                    el,
-                    added,
-                    scalingStat,
-                    scalingMin,
-                    damagePerStat,
-                    ignoreFlat,
-                    ignorePerc,
-                    statModPerc
-                );
-            }
-        }
-
-        // Also check Projectile elements
-        NodeList projNodes = weaponElement.getElementsByTagName("Projectile");
-        for (int i = 0; i < projNodes.getLength(); i++) {
-            Element pEl = (Element) projNodes.item(i);
-            extractAndAddProjectiles(
-                pEl,
-                added,
-                scalingStat,
-                scalingMin,
-                damagePerStat,
-                ignoreFlat,
-                ignorePerc,
-                statModPerc
-            );
-        }
-    }
-
-    private void extractAndAddProjectiles(
-        Element element,
-        Set<Integer> added,
-        StatType scalingStat,
-        int scalingMin,
-        float damagePerStat,
-        float ignoreFlat,
-        float ignorePerc,
-        float statModPerc
-    ) {
-        if (element == null || added == null) return;
-
-        String candidate = getCandidate(element);
-        if (candidate == null || candidate.isEmpty()) return;
-
-        candidate = candidate.replaceAll("[^0-9A-Fa-fxX]", "");
-        int idx = candidate.indexOf("0x");
-
-        while (idx != -1 && idx < candidate.length()) {
-            int end = idx + 2;
-            while (
-                end < candidate.length() &&
-                Character.digit(candidate.charAt(end), 16) != -1
-            ) {
-                end++;
-            }
-
-            if (end > idx + 2) {
-                try {
-                    int projectileId = Integer.parseInt(
-                        candidate.substring(idx + 2, end),
-                        16
-                    );
-                    if (!added.contains(projectileId)) {
-                        AbilityScalingData projectileScaling =
-                            new AbilityScalingData(
-                                projectileId,
-                                scalingStat,
-                                scalingMin,
-                                damagePerStat,
-                                1,
-                                ignoreFlat,
-                                ignorePerc,
-                                statModPerc
-                            );
-                        projectileScalingData.put(
-                            projectileId,
-                            projectileScaling
-                        );
-                        added.add(projectileId);
-                    }
-                } catch (NumberFormatException e) {
-                    // Skip invalid hex
-                }
-            }
-            idx = candidate.indexOf("0x", idx + 1);
-        }
-    }
-
-    private String getCandidate(Element element) {
-        if (element == null) return "";
-
-        String typeAttr = element.getAttribute("type");
-        if (typeAttr != null && !typeAttr.isEmpty()) {
-            return typeAttr.trim();
-        }
-        String idAttr = element.getAttribute("id");
-        if (idAttr != null && !idAttr.isEmpty()) {
-            return idAttr.trim();
-        }
-        String text = element.getTextContent();
-        return text != null ? text.trim() : "";
-    }
-
     /**
      * Gets scaling data for a specific weapon ID.
      */
@@ -683,61 +442,6 @@ public class AbilityScalingManager {
             }
         }
         return 1.0f;
-    }
-
-    /**
-     * Calculates the defense ignore bonus for Lethal Strike.
-     */
-    public int calculateDefenseIgnoreBonus(
-        int weaponId,
-        int targetDefense,
-        Entity player
-    ) {
-        return calculateDefenseIgnoreBonus(
-            weaponId,
-            targetDefense,
-            null,
-            player
-        );
-    }
-
-    /**
-     * Calculates the defense ignore bonus for Lethal Strike.
-     * If statSnapshot is non-null, that value will be used for percentage scaling.
-     */
-    public int calculateDefenseIgnoreBonus(
-        int weaponId,
-        int targetDefense,
-        Integer statSnapshot,
-        Entity player
-    ) {
-        AbilityScalingData data = getScalingData(weaponId);
-        if (
-            data == null ||
-            !data.hasDefenseIgnore() ||
-            targetDefense <= 0 ||
-            player == null
-        ) {
-            return 0;
-        }
-
-        Integer statValue = (statSnapshot != null)
-            ? statSnapshot
-            : getPlayerStatValue(player, data.scalingStat);
-
-        if (statValue == null || statValue <= data.scalingMin) {
-            int defenseIgnore = (int) (data.ignoreFlat +
-                (targetDefense * data.ignorePerc));
-            return Math.max(0, defenseIgnore);
-        }
-
-        int statBonus = statValue - data.scalingMin;
-        float scaledIgnorePerc =
-            data.ignorePerc + (statBonus * data.statModPerc);
-        int defenseIgnore = (int) (data.ignoreFlat +
-            (targetDefense * scaledIgnorePerc));
-
-        return Math.max(0, defenseIgnore);
     }
 
     private Integer getPlayerStatValue(Entity player, StatType statType) {
