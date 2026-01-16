@@ -83,6 +83,10 @@ public class TomatoData {
     private final HashMap<String, ArrayList<String>> propLists =
         new HashMap<>();
 
+    // Track minion/summon to owner mapping for damage attribution
+    // Key: minion/summon objectId, Value: owner/player objectId
+    private final HashMap<Integer, Integer> minionOwnerMap = new HashMap<>();
+
     /**
      * Sets the current realm.
      *
@@ -199,6 +203,9 @@ public class TomatoData {
             crystalTracker.remove(dropId);
             Entity e = entityList.get(dropId);
             dropList.put(dropId, e);
+
+            // Clean up minion ownership mapping when minion despawns
+            minionOwnerMap.remove(dropId);
             if (e != null) {
                 //                e.entityDropped(timePc);
                 if (isPlayerEntity(e.objectType)) {
@@ -461,7 +468,7 @@ public class TomatoData {
     }
 
     /**
-     * Handles special projectile creations from the outgoing packet.
+     * Projectile info of other players.
      *
      * @param p Projectile info
      */
@@ -470,6 +477,28 @@ public class TomatoData {
         Entity ownerEntity = playerList.get(p.ownerId);
         if (ownerEntity != null) {
             Entity.trackSlotType18AbilityUse(ownerEntity, timePc);
+        }
+
+        /*
+         * MINION/SUMMON DAMAGE ATTRIBUTION:
+         * When pets, minions, traps, or other summons shoot projectiles, the game sends
+         * ServerPlayerShootPacket with:
+         *   - ownerId = the minion/summon entity's objectId (e.g., objectType=5805 for traps)
+         *   - summonerId = the player owner's objectId (e.g., objectType=801 for players)
+         *
+         * We track this relationship in minionOwnerMap so that when DamagePacket arrives
+         * with the minion's objectId as the attacker, we can attribute the damage to the
+         * player owner instead of showing "NO_NAME" in DPS logs.
+         *
+         * Example flow:
+         * 1. ServerPlayerShootPacket: ownerId=218776 (minion), summonerId=202734 (player "BinaryGhost")
+         *    → We store: minionOwnerMap[218776] = 202734
+         * 2. DamagePacket: objectId=218776 (minion did damage)
+         *    → We lookup: minionOwnerMap.get(218776) → 202734
+         *    → Damage attributed to "BinaryGhost" instead of "NO_NAME"
+         */
+        if (p.summonerId != 0 && p.ownerId != 0) {
+            minionOwnerMap.put(p.ownerId, p.summonerId);
         }
 
         if (p.bulletCount > 1) {
@@ -663,7 +692,38 @@ public class TomatoData {
         Entity target = entityList.computeIfAbsent(id, idd ->
             new Entity(this, idd, timePc)
         );
+
+        /*
+         * ATTACKER RESOLUTION & MINION DAMAGE ATTRIBUTION:
+         * DamagePacket.objectId contains the entity ID of whoever/whatever dealt the damage.
+         * This could be:
+         *   1. A player (found in playerList)
+         *   2. A pet/minion/summon/trap (found in entityList, not playerList)
+         *
+         * For minions/summons, we check minionOwnerMap (populated by ServerPlayerShootPacket)
+         * to find the player owner and attribute damage to them instead of showing "NO_NAME".
+         *
+         * This ensures all player-owned entities' damage appears under the player's name in DPS logs.
+         */
         Entity attacker = playerList.get(p.objectId);
+
+        // Fallback to entityList if not found in playerList (handles pets, minions, summons, etc.)
+        if (attacker == null) {
+            attacker = entityList.get(p.objectId);
+
+            if (attacker != null) {
+                // Check if this entity is a minion/summon with a known owner
+                Integer ownerId = minionOwnerMap.get(p.objectId);
+                if (ownerId != null) {
+                    Entity owner = playerList.get(ownerId);
+                    if (owner != null) {
+                        // Replace attacker with the owner for damage attribution
+                        attacker = owner;
+                    }
+                }
+            }
+        }
+
         if (p.damageAmount > 0) {
             Projectile projectile = new Projectile(p.damageAmount);
             target.genericDamageHit(attacker, projectile, timePc);
@@ -674,6 +734,7 @@ public class TomatoData {
                 }
             }
         }
+
         target.updateDamageTaken(timePc);
     }
 
@@ -800,6 +861,8 @@ public class TomatoData {
         lootBags.clear();
 
         enemyProjectiles.clear();
+
+        minionOwnerMap.clear();
 
         deathNotifications = new ArrayList<>();
 

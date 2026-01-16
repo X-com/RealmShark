@@ -254,15 +254,18 @@ public class Entity implements Serializable {
             } else {
                 // Non-armor piercing abilities should consider target defense
                 int[] conditions = new int[2];
-                conditions[0] = stat.get(StatType.CONDITION_STAT) == null
-                    ? 0
-                    : stat.get(StatType.CONDITION_STAT).statValue;
-                conditions[1] = stat.get(StatType.NEW_CON_STAT) == null
-                    ? 0
-                    : stat.get(StatType.NEW_CON_STAT).statValue;
-                int defence = stat.get(StatType.DEFENSE_STAT) == null
-                    ? 0
-                    : stat.get(StatType.DEFENSE_STAT).statValue;
+                conditions[0] =
+                    stat.get(StatType.CONDITION_STAT) == null
+                        ? 0
+                        : stat.get(StatType.CONDITION_STAT).statValue;
+                conditions[1] =
+                    stat.get(StatType.NEW_CON_STAT) == null
+                        ? 0
+                        : stat.get(StatType.NEW_CON_STAT).statValue;
+                int defence =
+                    stat.get(StatType.DEFENSE_STAT) == null
+                        ? 0
+                        : stat.get(StatType.DEFENSE_STAT).statValue;
 
                 dmg = Projectile.damageWithDefense(
                     baseDamage,
@@ -351,129 +354,36 @@ public class Entity implements Serializable {
             }
 
             // Apply defense calculations to all projectiles with containerType
-            // This ensures Lethal Strike defense ignore and proper scaling are applied
+            // This ensures proper scaling is applied
             if (containerType != -1 || !isProcProjectile) {
                 // Calculate damage client-side with defense for all projectiles with containerType
                 int[] conditions = new int[2];
 
-                conditions[0] = stat.get(StatType.CONDITION_STAT) == null
-                    ? 0
-                    : stat.get(StatType.CONDITION_STAT).statValue;
-                conditions[1] = stat.get(StatType.NEW_CON_STAT) == null
-                    ? 0
-                    : stat.get(StatType.NEW_CON_STAT).statValue;
-                int defence = stat.get(StatType.DEFENSE_STAT) == null
-                    ? 0
-                    : stat.get(StatType.DEFENSE_STAT).statValue;
+                conditions[0] =
+                    stat.get(StatType.CONDITION_STAT) == null
+                        ? 0
+                        : stat.get(StatType.CONDITION_STAT).statValue;
+                conditions[1] =
+                    stat.get(StatType.NEW_CON_STAT) == null
+                        ? 0
+                        : stat.get(StatType.NEW_CON_STAT).statValue;
+                int defence =
+                    stat.get(StatType.DEFENSE_STAT) == null
+                        ? 0
+                        : stat.get(StatType.DEFENSE_STAT).statValue;
 
                 // For proc projectiles with scaling, use the stat-scaled damage as base
                 int baseDamage = isProcProjectile
                     ? dmg
                     : projectile.getDamage();
 
-                // Only log defense-application details for local-user projectiles (we don't need to debug other players' client-side defense calc)
-                if (attacker != null && attacker.isUser()) {
-                    // Only log defense-application details for lethal-strike/scaling projectiles that originate from the local user.
-                    // We don't need client-side defense debug info for other players' shots.
-                    if (
-                        attacker != null &&
-                        attacker.isUser() &&
-                        AbilityScalingManager.getInstance().hasScaling(
-                            containerType
-                        )
-                    ) {
-                        System.out.println(
-                            "[Entity] userProjectileHit: applying defense. baseDamage=" +
-                                baseDamage +
-                                " ap=" +
-                                projectile.isArmorPiercing() +
-                                " defence=" +
-                                defence +
-                                " conditions=[" +
-                                conditions[0] +
-                                "," +
-                                conditions[1] +
-                                "] containerType=" +
-                                projectile.getContainerType()
-                        );
-                    }
-                }
-
-                // If we have a containerType (ability projectile), compute defense-ignore using a stat snapshot if available.
-                if (projectile != null && projectile.getContainerType() != -1) {
-                    Integer statSnapshot = null;
-                    try {
-                        // Prefer damage-time / current attacker stat for defense-ignore calculation.
-                        AbilityScalingManager.AbilityScalingData sd =
-                            scalingManager.getScalingData(
-                                projectile.getContainerType()
-                            );
-                        if (
-                            attacker != null &&
-                            sd != null &&
-                            sd.scalingStat != null &&
-                            attacker.stat.get(sd.scalingStat) != null
-                        ) {
-                            statSnapshot = Integer.valueOf(
-                                attacker.stat.get(sd.scalingStat).statValue
-                            );
-                        } else if (projectile != null) {
-                            int s = projectile.getOriginScalingStat();
-                            if (s != Integer.MIN_VALUE) {
-                                statSnapshot = Integer.valueOf(s);
-                            }
-                        }
-                    } catch (Exception ignored) {}
-                    int defenseIgnoreBonus =
-                        scalingManager.calculateDefenseIgnoreBonus(
-                            projectile.getContainerType(),
-                            defence,
-                            statSnapshot,
-                            attacker
-                        );
-                    if (defenseIgnoreBonus > 0) {
-                        defence = Math.max(0, defence - defenseIgnoreBonus);
-                        // Only log defense-ignore details when the attacker is the local user AND the ability is a scaling (lethal-strike) ability.
-                        if (
-                            attacker != null &&
-                            attacker.isUser() &&
-                            AbilityScalingManager.getInstance().hasScaling(
-                                projectile.getContainerType()
-                            )
-                        ) {
-                            System.out.println(
-                                "[Entity] userProjectileHit: applied defense ignore=" +
-                                    defenseIgnoreBonus +
-                                    " newDefence=" +
-                                    defence +
-                                    (statSnapshot != null
-                                        ? " (used snapshot)"
-                                        : " (used current)")
-                            );
-                        }
-                    }
-                }
-
-                // Now apply the standard defense calculation with the (possibly adjusted) defence value.
+                // Apply the standard defense calculation
                 dmg = Projectile.damageWithDefense(
                     baseDamage,
                     projectile.isArmorPiercing(),
                     defence,
                     conditions
                 );
-                // Only print final-damage when this was a local-user scaling (lethal-strike) calculation.
-                if (
-                    attacker != null &&
-                    attacker.isUser() &&
-                    AbilityScalingManager.getInstance().hasScaling(
-                        containerType
-                    )
-                ) {
-                    System.out.println(
-                        "[Entity] userProjectileHit: final damage after defense=" +
-                            dmg
-                    );
-                }
             }
         }
 
@@ -557,6 +467,10 @@ public class Entity implements Serializable {
         }
 
         Damage damage = new Damage(attacker, projectile, time, damageAmount);
+
+        // Log damage object creation
+        // Damage object created - attacker info available in Damage.owner field
+
         bossPhaseDamage(damage);
         addPlayerDmg(damage);
         // Commented out noisy diagnostic logs (preserved original lines as comments)
@@ -786,9 +700,8 @@ public class Entity implements Serializable {
             if (r != null) {
                 r.fame = fame;
                 // Pass character class name to fame table
-                String className = r.classString != null
-                    ? r.classString
-                    : "Char " + charId;
+                String className =
+                    r.classString != null ? r.classString : "Char " + charId;
                 FameTableBridge.updateFame(charId, fame, time, className);
             } else {
                 // Try to get class name from ObjectType if character not in charMap

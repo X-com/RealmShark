@@ -151,6 +151,7 @@ public class CharacterListGUI extends JPanel {
      * Method for receiving realm character list info.
      */
     public static void updateRealmChars() {
+        if (INSTANCE == null) return; // Tab is disabled
         INSTANCE.updateCharPanel();
     }
 

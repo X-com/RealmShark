@@ -147,17 +147,8 @@ public final class EquipmentUsageAggregator {
                 final int fi = i;
                 SlotUsage su = ou.slots[fi];
 
-                // Prefer damage-time ability item for slot 1 attribution.
-                // If Damage.ownerAbilityItem is set (not -1), use it for slot index 1.
-                // Otherwise, fall back to the inventory snapshot stored on the Damage.
-                int itemId;
-                if (fi == 1) {
-                    itemId = (d.ownerAbilityItem != -1)
-                        ? d.ownerAbilityItem
-                        : d.ownerInvntory[fi];
-                } else {
-                    itemId = d.ownerInvntory[fi];
-                }
+                // Use inventory snapshot stored on the Damage
+                int itemId = d.ownerInvntory[fi];
 
                 // Ensure Equipment.totalDmg points to the slot total accumulator.
                 Equipment eq = su.items.computeIfAbsent(itemId, id ->

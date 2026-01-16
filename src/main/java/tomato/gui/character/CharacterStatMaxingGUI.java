@@ -1,19 +1,19 @@
 package tomato.gui.character;
 
 import assets.ImageBuffer;
-import tomato.backend.data.VaultData;
-import tomato.realmshark.RealmCharacter;
-import tomato.backend.data.TomatoData;
-import tomato.realmshark.enums.CharacterClass;
-import tomato.realmshark.enums.StatPotion;
-
-import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import javax.swing.*;
+import tomato.backend.data.TomatoData;
+import tomato.backend.data.VaultData;
+import tomato.realmshark.RealmCharacter;
+import tomato.realmshark.enums.CharacterClass;
+import tomato.realmshark.enums.StatPotion;
 
 public class CharacterStatMaxingGUI extends JPanel {
+
     private static CharacterStatMaxingGUI INSTANCE;
 
     private final JLabel[] potStatLabels = new JLabel[8];
@@ -54,6 +54,7 @@ public class CharacterStatMaxingGUI extends JPanel {
      * Method for receiving realm character list info.
      */
     public static void updateRealmChars() {
+        if (INSTANCE == null) return; // Tab is disabled
         INSTANCE.updateSelection();
         INSTANCE.updateMaxingPanel();
     }
@@ -78,6 +79,7 @@ public class CharacterStatMaxingGUI extends JPanel {
      * Vault update method called when receiving vault packets.
      */
     public static void vaultDataUpdate() {
+        if (INSTANCE == null) return; // Tab is disabled
         INSTANCE.updateMissingPotsPanel();
         INSTANCE.updateSelection();
     }
@@ -92,10 +94,16 @@ public class CharacterStatMaxingGUI extends JPanel {
 
         maxingPanel.add(Box.createVerticalGlue());
         for (RealmCharacter c : data.chars) {
-            if ((c.seasonal && seasonalRadio.isSelected()) || (!c.seasonal && regularRadio.isSelected())) {
+            if (
+                (c.seasonal && seasonalRadio.isSelected()) ||
+                (!c.seasonal && regularRadio.isSelected())
+            ) {
                 int maxedStats = statsMaxed(c);
                 if (maxedStats != 8) {
-                    JPanel boxChars = createPanelCharWithMissingStats(c, maxedStats);
+                    JPanel boxChars = createPanelCharWithMissingStats(
+                        c,
+                        maxedStats
+                    );
                     maxingPanel.add(boxChars);
                 }
             }
@@ -108,8 +116,12 @@ public class CharacterStatMaxingGUI extends JPanel {
      * Computes the missing pots needed to max the character.
      */
     public static void statMissing(RealmCharacter c, int[] missing) {
-        missing[0] += (int) Math.ceil((CharacterClass.getLife(c.classNum) - c.hp) / 5.0);
-        missing[1] += (int) Math.ceil((CharacterClass.getMana(c.classNum) - c.mp) / 5.0);
+        missing[0] += (int) Math.ceil(
+            (CharacterClass.getLife(c.classNum) - c.hp) / 5.0
+        );
+        missing[1] += (int) Math.ceil(
+            (CharacterClass.getMana(c.classNum) - c.mp) / 5.0
+        );
         missing[2] += CharacterClass.getAtk(c.classNum) - c.atk;
         missing[3] += CharacterClass.getDef(c.classNum) - c.def;
         missing[4] += CharacterClass.getSpd(c.classNum) - c.spd;
@@ -140,7 +152,9 @@ public class CharacterStatMaxingGUI extends JPanel {
      */
     private JPanel missingPotsPanel() {
         JPanel boxPots = CharacterPanelGUI.createMainBox();
-        boxPots.setPreferredSize(new Dimension(390, CharacterPanelGUI.CHAR_PANEL_SIZE));
+        boxPots.setPreferredSize(
+            new Dimension(390, CharacterPanelGUI.CHAR_PANEL_SIZE)
+        );
         boxPots.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         JPanel panelLeft = CharacterPanelGUI.createLeftBox();
         panelLeft.add(Box.createVerticalGlue());
@@ -162,15 +176,51 @@ public class CharacterStatMaxingGUI extends JPanel {
         JPanel panelTop = new JPanel();
         JPanel panelMid = new JPanel();
         JPanel panelBot = new JPanel();
-        JPanel rightPotDisplay = CharacterPanelGUI.createMidRightBox(panelTop, panelMid, panelBot);
-        potStatLabels[0] = new JLabel("0", getImageIcon(StatPotion.Life), JLabel.CENTER);
-        potStatLabels[1] = new JLabel("0", getImageIcon(StatPotion.Mana), JLabel.CENTER);
-        potStatLabels[2] = new JLabel("0", getImageIcon(StatPotion.Attack), JLabel.CENTER);
-        potStatLabels[3] = new JLabel("0", getImageIcon(StatPotion.Defense), JLabel.CENTER);
-        potStatLabels[4] = new JLabel("0", getImageIcon(StatPotion.Speed), JLabel.CENTER);
-        potStatLabels[5] = new JLabel("0", getImageIcon(StatPotion.Dexterity), JLabel.CENTER);
-        potStatLabels[6] = new JLabel("0", getImageIcon(StatPotion.Vitality), JLabel.CENTER);
-        potStatLabels[7] = new JLabel("0", getImageIcon(StatPotion.Wisdom), JLabel.CENTER);
+        JPanel rightPotDisplay = CharacterPanelGUI.createMidRightBox(
+            panelTop,
+            panelMid,
+            panelBot
+        );
+        potStatLabels[0] = new JLabel(
+            "0",
+            getImageIcon(StatPotion.Life),
+            JLabel.CENTER
+        );
+        potStatLabels[1] = new JLabel(
+            "0",
+            getImageIcon(StatPotion.Mana),
+            JLabel.CENTER
+        );
+        potStatLabels[2] = new JLabel(
+            "0",
+            getImageIcon(StatPotion.Attack),
+            JLabel.CENTER
+        );
+        potStatLabels[3] = new JLabel(
+            "0",
+            getImageIcon(StatPotion.Defense),
+            JLabel.CENTER
+        );
+        potStatLabels[4] = new JLabel(
+            "0",
+            getImageIcon(StatPotion.Speed),
+            JLabel.CENTER
+        );
+        potStatLabels[5] = new JLabel(
+            "0",
+            getImageIcon(StatPotion.Dexterity),
+            JLabel.CENTER
+        );
+        potStatLabels[6] = new JLabel(
+            "0",
+            getImageIcon(StatPotion.Vitality),
+            JLabel.CENTER
+        );
+        potStatLabels[7] = new JLabel(
+            "0",
+            getImageIcon(StatPotion.Wisdom),
+            JLabel.CENTER
+        );
         panelTop.add(Box.createHorizontalGlue());
         panelTop.add(potStatLabels[0]);
         panelTop.add(Box.createHorizontalGlue());
@@ -232,7 +282,9 @@ public class CharacterStatMaxingGUI extends JPanel {
     private void updateMissingPotsPanel() {
         int[] totalPots = new int[8];
         boolean seasonalSelected = seasonalRadio.isSelected();
-        VaultData vaultData = seasonalSelected ? data.seasonalVault : data.regularVault;
+        VaultData vaultData = seasonalSelected
+            ? data.seasonalVault
+            : data.regularVault;
         if (vaultData != null) {
             if (charInvs.isSelected()) {
                 vaultData.getPlayerInvPots(totalPots);
@@ -265,7 +317,10 @@ public class CharacterStatMaxingGUI extends JPanel {
     /**
      * Individual characters in the max stat character list with their stats and what is missing.
      */
-    private JPanel createPanelCharWithMissingStats(RealmCharacter c, int maxedStats) {
+    private JPanel createPanelCharWithMissingStats(
+        RealmCharacter c,
+        int maxedStats
+    ) {
         JPanel boxChars = CharacterPanelGUI.createMainBox();
         JPanel panelLeft = CharacterPanelGUI.createLeftBox();
         boxChars.add(statMaxingChar(panelLeft, c, maxedStats));
@@ -273,7 +328,9 @@ public class CharacterStatMaxingGUI extends JPanel {
         JPanel panelTop = new JPanel();
         JPanel panelMid = new JPanel();
         JPanel panelBot = new JPanel();
-        boxChars.add(CharacterPanelGUI.createMidRightBox(panelTop, panelMid, panelBot));
+        boxChars.add(
+            CharacterPanelGUI.createMidRightBox(panelTop, panelMid, panelBot)
+        );
         statMaxingStats(c, panelTop, panelMid, panelBot);
         return boxChars;
     }
@@ -282,7 +339,11 @@ public class CharacterStatMaxingGUI extends JPanel {
      * Individual characters in the max stat character list
      * with icons and basic info with a selection checkbox.
      */
-    private JPanel statMaxingChar(JPanel panel, RealmCharacter character, int maxedStats) {
+    private JPanel statMaxingChar(
+        JPanel panel,
+        RealmCharacter character,
+        int maxedStats
+    ) {
         panel.add(Box.createVerticalGlue());
         JLabel seasonalLabel = new JLabel(character.seasonal ? "Seasonal" : "");
         seasonalLabel.setForeground(Color.cyan);
@@ -290,14 +351,19 @@ public class CharacterStatMaxingGUI extends JPanel {
         panel.add(seasonalLabel);
         int eq = character.skin;
         if (eq == 0) eq = character.classNum;
-        JLabel characterLabel = new JLabel(ImageBuffer.getOutlinedIcon(eq, 30), JLabel.CENTER);
+        JLabel characterLabel = new JLabel(
+            ImageBuffer.getOutlinedIcon(eq, 30),
+            JLabel.CENTER
+        );
         characterLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
         panel.add(characterLabel);
-//        JCheckBox checkBox = checkBoxMissingStats(c.classString + " " + c.level);
-        JCheckBox checkBox = new JCheckBox(character.classString + " " + character.level);
+        //        JCheckBox checkBox = checkBoxMissingStats(c.classString + " " + c.level);
+        JCheckBox checkBox = new JCheckBox(
+            character.classString + " " + character.level
+        );
         checkBox.addActionListener(e -> {
             JCheckBox j = (JCheckBox) e.getSource();
-//            Store.INSTANCE.dispatch(new SetCharacter(character.charId, j.isSelected()));
+            //            Store.INSTANCE.dispatch(new SetCharacter(character.charId, j.isSelected()));
             characters.put(character.charId, j.isSelected());
             updateMissingPotsPanel();
         });
@@ -322,13 +388,22 @@ public class CharacterStatMaxingGUI extends JPanel {
      * Checks if character should be computed for maxing if selected.
      */
     private boolean charSelected(RealmCharacter character) {
-        return characters != null && characters.get(character.charId) != null && characters.get(character.charId);
+        return (
+            characters != null &&
+            characters.get(character.charId) != null &&
+            characters.get(character.charId)
+        );
     }
 
     /**
      * Stat maxing character stats to be added on the mid right panel.
      */
-    private void statMaxingStats(RealmCharacter c, JPanel panelTop, JPanel panelMid, JPanel panelBot) {
+    private void statMaxingStats(
+        RealmCharacter c,
+        JPanel panelTop,
+        JPanel panelMid,
+        JPanel panelBot
+    ) {
         int[] missing = new int[8];
         statMissing(c, missing);
 
@@ -360,7 +435,7 @@ public class CharacterStatMaxingGUI extends JPanel {
      */
     private void statLabel(JPanel panel, String name, int stat, int missing) {
         JLabel l = new JLabel();
-//        new JLabel("<html>Text color: <font color='red'>red</font></html>");
+        //        new JLabel("<html>Text color: <font color='red'>red</font></html>");
         String s;
         if (missing != 0) {
             s = String.format(name + ": %d (%d)", stat, missing);

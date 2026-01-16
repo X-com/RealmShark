@@ -118,15 +118,27 @@ public class DpsLogger {
             );
         } else if (packet instanceof DamagePacket) {
             DamagePacket p = (DamagePacket) packet;
+
+            /*
+             * DAMAGEPACKET HANDLING:
+             * DamagePacket contains direct damage information without needing to resolve
+             * projectiles from bulletId. The attacker entity (p.objectId) is ensured to
+             * exist via getEntity() which will create it if not already in entityList.
+             * This ensures proper damage attribution even for non-player entities.
+             */
             if (p.damageAmount > 0) {
                 Bullet bullet = new Bullet(packet);
                 bullet.totalDmg = p.damageAmount;
+
                 Entity entity = getEntity(p.targetId);
+
+                // Ensure attacker entity exists in entityList for proper damage attribution
+                Entity attacker = getEntity(p.objectId);
+
                 hit(entity, bullet, p);
-                if (!entityHitList.containsKey(entity.id)) entityHitList.put(
-                    entity.id,
-                    entity
-                );
+                if (!entityHitList.containsKey(entity.id)) {
+                    entityHitList.put(entity.id, entity);
+                }
             }
         } else if (packet instanceof NewTickPacket) {
             NewTickPacket p = (NewTickPacket) packet;
@@ -291,8 +303,20 @@ public class DpsLogger {
                     DamagePacket p = (DamagePacket) b.packet;
                     int ownerId = p.objectId;
                     Entity owner = entityList.get(ownerId);
-                    if (owner == null) continue;
-                    if (owner.stats[31] == null) continue;
+
+                    if (owner == null) {
+                        continue;
+                    }
+
+                    String ownerName =
+                        owner.stats[31] != null
+                            ? owner.stats[31].stringStatValue
+                            : null;
+
+                    if (owner.stats[31] == null) {
+                        continue;
+                    }
+
                     damagerList.put(ownerId, owner);
                     addDamage(dmgList, b, p.damageAmount, owner);
                 } else if (b.packet instanceof EnemyHitPacket) {
@@ -634,15 +658,12 @@ public class DpsLogger {
             // Weapon projectile: calculate damage client-side with defense
             int[] conditions = new int[2];
 
-            conditions[0] = entity.getStat(29) == null
-                ? 0
-                : entity.getStat(29).statValue;
-            conditions[1] = entity.getStat(96) == null
-                ? 0
-                : entity.getStat(96).statValue;
-            int defence = entity.getStat(21) == null
-                ? 0
-                : entity.getStat(21).statValue;
+            conditions[0] =
+                entity.getStat(29) == null ? 0 : entity.getStat(29).statValue;
+            conditions[1] =
+                entity.getStat(96) == null ? 0 : entity.getStat(96).statValue;
+            int defence =
+                entity.getStat(21) == null ? 0 : entity.getStat(21).statValue;
 
             Bullet b = new Bullet(packet);
             b.totalDmg = damageWithDefense(

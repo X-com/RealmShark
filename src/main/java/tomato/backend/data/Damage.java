@@ -1,6 +1,7 @@
 package tomato.backend.data;
 
 import java.io.Serializable;
+import packets.data.StatData;
 import packets.data.enums.StatType;
 import tomato.realmshark.ParseEnchants;
 
@@ -10,10 +11,10 @@ import tomato.realmshark.ParseEnchants;
 public class Damage implements Serializable {
 
     public Entity owner;
+    public int ownerObjectType;
+    public String ownerObjectName;
     public int[] ownerInvntory;
     public String[] ownerEnchants;
-    // Inventory slot 1 is the ability/item slot for Lethal Strike procs.
-    public int ownerAbilityItem;
     // Generic snapshot of the relevant scaling stat captured at damage-creation time.
     // If ownerScalingStatType == null, no snapshot was captured. ownerScalingStatValue may be null
     // when the stat type is known but the specific stat value wasn't available.
@@ -40,8 +41,6 @@ public class Damage implements Serializable {
         //             (ownerInvntory != null
         //                 ? java.util.Arrays.toString(ownerInvntory)
         //                 : "null") +
-        //             " abilityItem=" +
-        //             ownerAbilityItem +
         //             " enchants=" +
         //             (ownerEnchants != null
         //                 ? java.util.Arrays.toString(ownerEnchants)
@@ -97,8 +96,6 @@ public class Damage implements Serializable {
         //             (ownerInvntory != null
         //                 ? java.util.Arrays.toString(ownerInvntory)
         //                 : "null") +
-        //             " abilityItem=" +
-        //             ownerAbilityItem +
         //             " enchants=" +
         //             (ownerEnchants != null
         //                 ? java.util.Arrays.toString(ownerEnchants)
@@ -160,8 +157,6 @@ public class Damage implements Serializable {
         //             (ownerInvntory != null
         //                 ? java.util.Arrays.toString(ownerInvntory)
         //                 : "null") +
-        //             " abilityItem=" +
-        //             ownerAbilityItem +
         //             " enchants=" +
         //             (ownerEnchants != null
         //                 ? java.util.Arrays.toString(ownerEnchants)
@@ -207,29 +202,36 @@ public class Damage implements Serializable {
 
     private void setInv(Entity o) {
         if (o != null && o.stat != null) {
-            ownerInvntory = new int[] {
-                o.stat.get(StatType.INVENTORY_0_STAT).statValue,
-                o.stat.get(StatType.INVENTORY_1_STAT).statValue,
-                o.stat.get(StatType.INVENTORY_2_STAT).statValue,
-                o.stat.get(StatType.INVENTORY_3_STAT).statValue,
-            };
-            ownerEnchants = ParseEnchants.getEnchantStrings(o);
-            // Record the ability slot (inventory index 1) used for Lethal Strike attribution.
-            try {
-                ownerAbilityItem = ownerInvntory.length > 1
-                    ? ownerInvntory[1]
-                    : -1;
-            } catch (Exception e) {
-                ownerAbilityItem = -1;
+            ownerObjectType = o.objectType;
+            ownerObjectName = o.name();
+
+            // Check if entity has inventory stats (players have them, pets/minions don't)
+            StatData inv0 = o.stat.get(StatType.INVENTORY_0_STAT);
+            StatData inv1 = o.stat.get(StatType.INVENTORY_1_STAT);
+            StatData inv2 = o.stat.get(StatType.INVENTORY_2_STAT);
+            StatData inv3 = o.stat.get(StatType.INVENTORY_3_STAT);
+
+            if (inv0 != null && inv1 != null && inv2 != null && inv3 != null) {
+                ownerInvntory = new int[] {
+                    inv0.statValue,
+                    inv1.statValue,
+                    inv2.statValue,
+                    inv3.statValue,
+                };
+            } else {
+                // Entity doesn't have inventory (pet, minion, etc.)
+                ownerInvntory = new int[] { -1, -1, -1, -1 };
             }
+            ownerEnchants = ParseEnchants.getEnchantStrings(o);
 
             // Generic: clear any scaling stat snapshot here. Specific constructors that know the projectile
             // will populate ownerScalingStatType and ownerScalingStatValue after this call.
             ownerScalingStatType = null;
             ownerScalingStatValue = null;
         } else {
+            ownerObjectType = -1;
+            ownerObjectName = null;
             ownerInvntory = null;
-            ownerAbilityItem = -1;
             ownerScalingStatType = null;
             ownerScalingStatValue = null;
         }

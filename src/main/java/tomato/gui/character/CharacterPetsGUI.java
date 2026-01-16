@@ -86,6 +86,7 @@ public class CharacterPetsGUI extends JPanel {
     }
 
     public static void addPet(ObjectData object) {
+        if (INSTANCE == null) return; // Tab is disabled
         INSTANCE.add(object);
     }
 
@@ -156,11 +157,13 @@ public class CharacterPetsGUI extends JPanel {
     }
 
     public static void clearPets() {
+        if (INSTANCE == null) return; // Tab is disabled
         INSTANCE.petList.clear();
         INSTANCE.petPanel.removeAll();
     }
 
     public static void updateEquipedPet() {
+        if (INSTANCE == null) return; // Tab is disabled
         INSTANCE.addPacketPet();
     }
 

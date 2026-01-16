@@ -10,6 +10,9 @@ import tomato.backend.data.TomatoData;
  */
 public class CharacterPanelGUI extends JPanel {
 
+    // Flag to enable/disable the Characters tab functionality
+    private static final boolean ENABLED = false; // Set to true to re-enable
+
     static final int CHAR_PANEL_SIZE = 120;
 
     public CharacterPanelGUI(TomatoData data) {
@@ -119,6 +122,7 @@ public class CharacterPanelGUI extends JPanel {
      * Vault update method called when receiving vault packets.
      */
     public static void vaultDataUpdate() {
+        if (!ENABLED) return; // Tab is disabled
         CharacterStatMaxingGUI.vaultDataUpdate();
     }
 
@@ -126,6 +130,7 @@ public class CharacterPanelGUI extends JPanel {
      * Method for receiving realm character list info.
      */
     public static void updateRealmChars() {
+        if (!ENABLED) return; // Tab is disabled
         CharacterListGUI.updateRealmChars();
         CharacterStatsGUI.updateRealmChars();
         CharacterExaltGUI.updateRealmChars();

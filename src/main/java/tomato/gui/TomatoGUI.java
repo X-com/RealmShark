@@ -67,8 +67,9 @@ public class TomatoGUI {
         securityPanel = new SecurityGUI();
         tabbedPane.addTab("Security", securityPanel);
 
-        characterPanel = new CharacterPanelGUI(data);
-        tabbedPane.addTab("Characters", characterPanel);
+        // Temporarily disabled - non-functional
+        // characterPanel = new CharacterPanelGUI(data);
+        // tabbedPane.addTab("Characters", characterPanel);
 
         statistics = new StatisticsGUI(data);
         tabbedPane.addTab("Statistics", statistics);

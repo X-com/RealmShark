@@ -72,7 +72,6 @@ public class TomatoPacketCapture implements Controller {
             DamagePacket p = (DamagePacket) packet;
             data.damage(p);
             data.logPacket(packet);
-            //System.out.println(packet);
         } else if (packet instanceof PlayerHitPacket) {
             PlayerHitPacket p = (PlayerHitPacket) packet;
             data.userDamage(p);

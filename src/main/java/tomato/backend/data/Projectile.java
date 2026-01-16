@@ -172,13 +172,12 @@ public class Projectile implements Serializable {
 
     /**
      * Used when an entity takes damage taking defence and other effects into account for final damage to entity.
-     * This version includes weaponId for Lethal Strike defense ignore calculations.
      *
      * @param damage        the base damage the bullet can do.
      * @param armorPiercing if the bullet ignores defence.
      * @param defence       defence of the entity being hit.
      * @param conditions    condition effects the entity being shot can have.
-     * @param weaponId      the weapon ID for Lethal Strike defense ignore calculations.
+     * @param weaponId      the weapon ID (kept for compatibility but no longer used for defense calculations).
      * @return final damage applied to the entity.
      */
     public static int damageWithDefense(
@@ -190,20 +189,6 @@ public class Projectile implements Serializable {
         Entity player
     ) {
         if (damage == 0) return 0;
-
-        // Apply Lethal Strike defense ignore if weapon has it
-        if (weaponId != -1 && player != null) {
-            AbilityScalingManager scalingManager =
-                AbilityScalingManager.getInstance();
-            int defenseIgnoreBonus = scalingManager.calculateDefenseIgnoreBonus(
-                weaponId,
-                defence,
-                player
-            );
-            if (defenseIgnoreBonus > 0) {
-                defence = Math.max(0, defence - defenseIgnoreBonus);
-            }
-        }
 
         if (armorPiercing || (conditions[0] & 0x4000000) != 0) {
             defence = 0;
