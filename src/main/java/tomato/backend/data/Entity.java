@@ -411,79 +411,16 @@ public class Entity implements Serializable {
         }
     }
 
-    public void genericDamageHit(
+    
+public void genericDamageHit(
         Entity attacker,
         Projectile projectile,
         long time
     ) {
         if (projectile == null || projectile.getDamage() == 0) return;
-        // Commented out noisy diagnostic logs (preserved original lines as comments)
-        // if (attacker != null) {
-        //     System.out.println(
-        //         "[Entity] genericDamageHit: attacker=" +
-        //             attacker.id +
-        //             " projectileBaseDamage=" +
-        //             projectile.getDamage() +
-        //             " target=" +
-        //             this.id
-        //     );
-        // }
-
-        int damageAmount = projectile.getDamage();
-
-        // Check if entity is invulnerable
-        StatData conditionStat = stat.get(StatType.CONDITION_STAT);
-        int condition = (conditionStat != null) ? conditionStat.statValue : 0;
-        boolean invulnerable =
-            (condition & ConditionBits.INVULNERABLE.value()) != 0;
-
-        if (invulnerable) {
-            // Check if attacker has recently used a SlotType 18 ability
-            boolean hasSlotType18Ability = false;
-            if (attacker != null) {
-                Long lastAbilityUseTime = slotType18AbilityUsers.get(
-                    attacker.id
-                );
-                if (
-                    lastAbilityUseTime != null &&
-                    (time - lastAbilityUseTime) <= ABILITY_TRACKING_WINDOW_MS
-                ) {
-                    hasSlotType18Ability = true;
-                    if (attacker.isUser()) {
-                        System.out.println(
-                            "[Entity] genericDamageHit: SlotType 18 ability damage bypassing invulnerability - damage=" +
-                                damageAmount +
-                                " target=" +
-                                this.id
-                        );
-                    }
-                }
-            }
-
-            if (!hasSlotType18Ability) {
-                // Not from SlotType 18 ability - respect invulnerability
-                damageAmount = 0;
-            }
-        }
-
-        Damage damage = new Damage(attacker, projectile, time, damageAmount);
-
-        // Log damage object creation
-        // Damage object created - attacker info available in Damage.owner field
-
+        Damage damage = new Damage(attacker, projectile, time);
         bossPhaseDamage(damage);
         addPlayerDmg(damage);
-        // Commented out noisy diagnostic logs (preserved original lines as comments)
-        // if (attacker != null) {
-        //     System.out.println(
-        //         "[Entity] genericDamageHit: recorded generic damage owner=" +
-        //             attacker.id +
-        //             " dmg=" +
-        //             damage.damage +
-        //             " target=" +
-        //             this.id
-        //     );
-        // }
     }
 
     // Track when players use SlotType 18 abilities for DamagePacket invulnerability bypass
