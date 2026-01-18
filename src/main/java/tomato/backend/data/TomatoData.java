@@ -719,7 +719,13 @@ public class TomatoData {
                     if (owner != null) {
                         // Replace attacker with the owner for damage attribution
                         attacker = owner;
+                    } else {
+                        // Owner not found in playerList, ignore this damage
+                        attacker = null;
                     }
+                } else {
+                    // Minion/summon has no owner mapping, ignore this damage
+                    attacker = null;
                 }
             }
         }
