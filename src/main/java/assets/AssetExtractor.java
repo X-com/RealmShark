@@ -57,7 +57,8 @@ public class AssetExtractor {
                 "RealmOfTheMadGod/Production/RotMGExalt.app/Contents/Resources/Data/resources.assets";
         } else {
             REALM_RES_PATH =
-                "RealmOfTheMadGod/Production/RotMG Exalt_Data/resources.assets";
+                System.getenv("LOCALAPPDATA") +
+                "/RealmOfTheMadGod/Production/RotMG Exalt_Data/resources.assets";
         }
     }
 
