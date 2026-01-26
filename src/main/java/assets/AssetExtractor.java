@@ -52,13 +52,24 @@ public class AssetExtractor {
     private static JOptionPane pane;
 
     static {
-        if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("mac")) {
             REALM_RES_PATH =
-                "RealmOfTheMadGod/Production/RotMGExalt.app/Contents/Resources/Data/resources.assets";
+                    System.getProperty("user.home") +
+                            "/.local/share/RealmOfTheMadGod/Production/RotMGExalt.app/Contents/Resources/Data/resources.assets";
+        } else if (os.contains("win")) {
+            String localAppData = System.getenv("LOCALAPPDATA");
+            if (localAppData != null && !localAppData.isEmpty()) {
+                REALM_RES_PATH =
+                        localAppData +
+                                "/RealmOfTheMadGod/Production/RotMG Exalt_Data/resources.assets";
+            } else {
+                REALM_RES_PATH =
+                        "/RealmOfTheMadGod/Production/RotMG Exalt_Data/resources.assets";
+            }
         } else {
             REALM_RES_PATH =
-                System.getenv("LOCALAPPDATA") +
-                "/RealmOfTheMadGod/Production/RotMG Exalt_Data/resources.assets";
+                    "/RealmOfTheMadGod/Production/RotMG Exalt_Data/resources.assets";
         }
     }
 
