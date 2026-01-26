@@ -97,7 +97,7 @@ public class Projectile implements Serializable {
                     weaponId,
                     player
                 );
-                System.out.println(
+                /*System.out.println(
                     "Projectile scaling - weaponId: " +
                         weaponId +
                         ", baseDmg: " +
@@ -110,16 +110,16 @@ public class Projectile implements Serializable {
                         (scalingManager.getScalingData(weaponId) != null
                             ? scalingManager.getScalingData(weaponId).numShots
                             : 1)
-                );
+                );*/
                 dmg += statBonus;
             } else {
-                System.out.println(
+                /*System.out.println(
                     "Projectile no scaling - weaponId: " +
                         weaponId +
                         ", baseDmg: " +
                         dmg +
                         " (ability but no scaling data)"
-                );
+                );*/
             }
         } else {
             // System.out.println("Projectile no scaling - weaponId: " + weaponId +", baseDmg: " +

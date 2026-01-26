@@ -245,11 +245,11 @@ public class Entity implements Serializable {
                 // Armor piercing abilities ignore defense - use damage as-is
                 dmg = baseDamage;
                 if (attacker != null && attacker.isUser()) {
-                    System.out.println(
+                    /*System.out.println(
                         "[Entity] userProjectileHit: using armor-piercing ability damage=" +
                             dmg +
                             " (ignores defense)"
-                    );
+                    );*/
                 }
             } else {
                 // Non-armor piercing abilities should consider target defense
@@ -276,7 +276,7 @@ public class Entity implements Serializable {
                     attacker
                 );
                 if (attacker != null && attacker.isUser()) {
-                    System.out.println(
+                    /*"System.out.println(
                         "[Entity] userProjectileHit: applied defense to ability damage=" +
                             dmg +
                             " (base=" +
@@ -284,7 +284,7 @@ public class Entity implements Serializable {
                             ", defense=" +
                             defence +
                             ")"
-                    );
+                    );*/
                 }
             }
         } else {
@@ -295,12 +295,12 @@ public class Entity implements Serializable {
                 // Only emit container/scaling discovery logs if the attacker is the local user AND this ability has scaling.
                 // This ensures we only debug lethal-strike / scaling client-side calculations for our own shots.
                 if (attacker != null && attacker.isUser() && hasScaling) {
-                    System.out.println(
+                    /*System.out.println(
                         "[Entity] userProjectileHit: containerType=" +
                             containerType +
                             " hasScaling=" +
                             hasScaling
-                    );
+                    );*/
                 }
                 if (hasScaling) {
                     // This is a proc projectile with scaling - attempt to use a stat snapshot
@@ -411,7 +411,7 @@ public class Entity implements Serializable {
         }
     }
 
-    
+
 public void genericDamageHit(
         Entity attacker,
         Projectile projectile,
@@ -436,12 +436,12 @@ public void genericDamageHit(
                     if (slotType == 18) {
                         slotType18AbilityUsers.put(player.id, time);
                         if (player.isUser()) {
-                            System.out.println(
+                            /*System.out.println(
                                 "[Entity] trackSlotType18AbilityUse: tracking SlotType 18 ability - item=" +
                                     abilityId +
                                     " player=" +
                                     player.id
-                            );
+                            );*/
                         }
                     }
                 }
