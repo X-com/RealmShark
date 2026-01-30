@@ -125,6 +125,7 @@ public enum CharacterStatistics {
     WHITE_SNAKE_INVASION_I(98, 59886, "White Snake Invasion I"),
     WHITE_SNAKE_INVASION_II(99, 59887, "White Snake Invasion II"),
     WHITE_SNAKE_INVASION_III(100, 59888, "White Snake Invasion III"),
+    MGM2(101, 13100, "The Trials of Cronus"),
     WINE_CELLAR(84, 578, "Wine Cellar"),
     WOODLAND_LABYRINTH(61, 1884, "Woodland Labyrinth");
 
