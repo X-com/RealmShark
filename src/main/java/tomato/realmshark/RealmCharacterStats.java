@@ -42,6 +42,26 @@ public class RealmCharacterStats {
     public int minutes_active;
     public int dungeon_types_completed;
     public int stat_potion_consumed;
+    public int ruins_enemy_kills;
+    public int beach_enemy_kills;
+    public int undead_forest_enemy_kills;
+    public int forest_enemy_kills;
+    public int plains_enemy_kills;
+    public int wither_enemy_kills;
+    public int dark_forest_enemy_kills;
+    public int desert_enemy_kills;
+    public int coral_reefs_enemy_kills;
+    public int sprite_forest_enemy_kills;
+    public int haunted_hallows_enemy_kills;
+    public int shipwreck_cove_enemy_kills;
+    public int dead_church_enemy_kills;
+    public int risen_hells_enemy_kills;
+    public int abandoned_city_enemy_kills;
+    public int sea_abyss_enemy_kills;
+    public int carboniferous_enemy_kills;
+    public int floral_escape_enemy_kills;
+    public int sanguine_forest_enemy_kills;
+    public int runic_tundra_kills;
 
     /**
      * Dungeon completes
@@ -66,16 +86,18 @@ public class RealmCharacterStats {
     public int forest_maze;
     public int fungal_cavern;
     public int haunted_cemetery;
-    public int heroic_abyss_of_demones;
     public int heroic_undead_lair;
     public int hidden_interregnum;
     public int high_tech_terror;
-    public int ice_cave;
+    public int ice_citadel;
     public int ice_tomb;
+    public int infernal_abyss_of_demons;
     public int katalund;
     public int kogbold_steamworks;
     public int lair_of_draconis;
     public int lair_of_shaitan;
+    public int legacy_heroic_abyss_of_demons;
+    public int legacy_heroic_undead_lair;
     public int lost_halls;
     public int mad_lab;
     public int magic_woods;
@@ -113,6 +135,9 @@ public class RealmCharacterStats {
     public int toxic_sewers;
     public int undead_lair;
     public int untaris;
+    public int white_snake_invasion_i;
+    public int white_snake_invasion_ii;
+    public int white_snake_invasion_iii;
     public int wine_cellar;
     public int woodland_labyrinth;
 
@@ -191,6 +216,26 @@ public class RealmCharacterStats {
                 minutes_active,
                 dungeon_types_completed,
                 stat_potion_consumed,
+                ruins_enemy_kills,
+                beach_enemy_kills,
+                undead_forest_enemy_kills,
+                forest_enemy_kills,
+                plains_enemy_kills,
+                wither_enemy_kills,
+                dark_forest_enemy_kills,
+                desert_enemy_kills,
+                coral_reefs_enemy_kills,
+                sprite_forest_enemy_kills,
+                haunted_hallows_enemy_kills,
+                shipwreck_cove_enemy_kills,
+                dead_church_enemy_kills,
+                risen_hells_enemy_kills,
+                abandoned_city_enemy_kills,
+                sea_abyss_enemy_kills,
+                carboniferous_enemy_kills,
+                floral_escape_enemy_kills,
+                sanguine_forest_enemy_kills,
+                runic_tundra_kills,
         };
 
         dungeonStats = new int[]{
@@ -214,16 +259,18 @@ public class RealmCharacterStats {
                 forest_maze,
                 fungal_cavern,
                 haunted_cemetery,
-                heroic_abyss_of_demones,
                 heroic_undead_lair,
                 hidden_interregnum,
                 high_tech_terror,
-                ice_cave,
+                ice_citadel,
                 ice_tomb,
+                infernal_abyss_of_demons,
                 katalund,
                 kogbold_steamworks,
                 lair_of_draconis,
                 lair_of_shaitan,
+                legacy_heroic_abyss_of_demons,
+                legacy_heroic_undead_lair,
                 lost_halls,
                 mad_lab,
                 magic_woods,
@@ -261,6 +308,9 @@ public class RealmCharacterStats {
                 toxic_sewers,
                 undead_lair,
                 untaris,
+                white_snake_invasion_i,
+                white_snake_invasion_ii,
+                white_snake_invasion_iii,
                 wine_cellar,
                 woodland_labyrinth,
         };
@@ -377,8 +427,8 @@ public class RealmCharacterStats {
         if (readStat(bitArray, CharacterStatistics.DAVY_JONES_LOCKER.getPcStatId())) {
             davy_jones_locker = reader.readCompressedInt();
         }
-        if (readStat(bitArray, CharacterStatistics.ICE_CAVE.getPcStatId())) {
-            ice_cave = reader.readCompressedInt();
+        if (readStat(bitArray, CharacterStatistics.ICE_CITADEL.getPcStatId())) {
+            ice_citadel = reader.readCompressedInt();
         }
         if (readStat(bitArray, CharacterStatistics.DEADWATER_DOCKS.getPcStatId())) {
             deadwater_docks = reader.readCompressedInt();
@@ -458,11 +508,11 @@ public class RealmCharacterStats {
         if (readStat(bitArray, CharacterStatistics.FORAX.getPcStatId())) {
             forax = reader.readCompressedInt();
         }
-        if (readStat(bitArray, CharacterStatistics.HEROIC_ABYSS_OF_DEMONES.getPcStatId())) {
-            heroic_abyss_of_demones = reader.readCompressedInt();
+        if (readStat(bitArray, CharacterStatistics.LEGACY_HEROIC_ABYSS_OF_DEMONS.getPcStatId())) {
+            legacy_heroic_abyss_of_demons = reader.readCompressedInt();
         }
-        if (readStat(bitArray, CharacterStatistics.HEROIC_UNDEAD_LAIR.getPcStatId())) {
-            heroic_undead_lair = reader.readCompressedInt();
+        if (readStat(bitArray, CharacterStatistics.LEGACY_HEROIC_UNDEAD_LAIR.getPcStatId())) {
+            legacy_heroic_undead_lair = reader.readCompressedInt();
         }
         if (readStat(bitArray, CharacterStatistics.HIGH_TECH_TERROR.getPcStatId())) {
             high_tech_terror = reader.readCompressedInt();
@@ -575,6 +625,81 @@ public class RealmCharacterStats {
         if (readStat(bitArray, CharacterStatistics.SPECTRAL_PENITENTIARY.getPcStatId())) {
             spectral_penitentiary = reader.readCompressedInt();
         }
+        if (readStat(bitArray, CharacterStatistics.RUINS_ENEMY_KILLS.getPcStatId())) {
+            ruins_enemy_kills = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.BEACH_ENEMY_KILLS.getPcStatId())) {
+            beach_enemy_kills = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.UNDEAD_FOREST_ENEMY_KILLS.getPcStatId())) {
+            undead_forest_enemy_kills = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.FOREST_ENEMY_KILLS.getPcStatId())) {
+            forest_enemy_kills = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.PLAINS_ENEMY_KILLS.getPcStatId())) {
+            plains_enemy_kills = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.WITHER_ENEMY_KILLS.getPcStatId())) {
+            wither_enemy_kills = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.DARK_FOREST_ENEMY_KILLS.getPcStatId())) {
+            dark_forest_enemy_kills = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.DESERT_ENEMY_KILLS.getPcStatId())) {
+            desert_enemy_kills = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.CORAL_REEFS_ENEMY_KILLS.getPcStatId())) {
+            coral_reefs_enemy_kills = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.SPRITE_FOREST_ENEMY_KILLS.getPcStatId())) {
+            sprite_forest_enemy_kills = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.HAUNTED_HALLOWS_ENEMY_KILLS.getPcStatId())) {
+            haunted_hallows_enemy_kills = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.SHIPWRECK_COVE_ENEMY_KILLS.getPcStatId())) {
+            shipwreck_cove_enemy_kills = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.DEAD_CHURCH_ENEMY_KILLS.getPcStatId())) {
+            dead_church_enemy_kills = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.RISEN_HELLS_ENEMY_KILLS.getPcStatId())) {
+            risen_hells_enemy_kills = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.ABANDONED_CITY_ENEMY_KILLS.getPcStatId())) {
+            abandoned_city_enemy_kills = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.SEA_ABYSS_ENEMY_KILLS.getPcStatId())) {
+            sea_abyss_enemy_kills = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.CARBONIFEROUS_ENEMY_KILLS.getPcStatId())) {
+            carboniferous_enemy_kills = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.FLORAL_ESCAPE_ENEMY_KILLS.getPcStatId())) {
+            floral_escape_enemy_kills = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.SANGUINE_FOREST_ENEMY_KILLS.getPcStatId())) {
+            sanguine_forest_enemy_kills = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.RUNIC_TUNDRA_KILLS.getPcStatId())) {
+            runic_tundra_kills = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.WHITE_SNAKE_INVASION_I.getPcStatId())) {
+            white_snake_invasion_i = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.WHITE_SNAKE_INVASION_II.getPcStatId())) {
+            white_snake_invasion_ii = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.WHITE_SNAKE_INVASION_III.getPcStatId())) {
+            white_snake_invasion_iii = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.HEROIC_UNDEAD_LAIR.getPcStatId())) {
+            heroic_undead_lair = reader.readCompressedInt();
+        }
+        if (readStat(bitArray, CharacterStatistics.INFERNAL_ABYSS_OF_DEMONS.getPcStatId())) {
+            infernal_abyss_of_demons = reader.readCompressedInt();
+        }
     }
 
     public int getDungeonInfoByName(String dungeonName) {
@@ -619,6 +744,26 @@ public class RealmCharacterStats {
                 "\n   minutes_active=" + minutes_active +
                 "\n   dungeon_types_completed=" + dungeon_types_completed +
                 "\n   stat_potion_consumed=" + stat_potion_consumed +
+                "\n   ruins_enemy_kills=" + ruins_enemy_kills +
+                "\n   beach_enemy_kills=" + beach_enemy_kills +
+                "\n   undead_forest_enemy_kills=" + undead_forest_enemy_kills +
+                "\n   forest_enemy_kills=" + forest_enemy_kills +
+                "\n   plains_enemy_kills=" + plains_enemy_kills +
+                "\n   wither_enemy_kills=" + wither_enemy_kills +
+                "\n   dark_forest_enemy_kills=" + dark_forest_enemy_kills +
+                "\n   desert_enemy_kills=" + desert_enemy_kills +
+                "\n   coral_reefs_enemy_kills=" + coral_reefs_enemy_kills +
+                "\n   sprite_forest_enemy_kills=" + sprite_forest_enemy_kills +
+                "\n   haunted_hallows_enemy_kills=" + haunted_hallows_enemy_kills +
+                "\n   shipwreck_cove_enemy_kills=" + shipwreck_cove_enemy_kills +
+                "\n   dead_church_enemy_kills=" + dead_church_enemy_kills +
+                "\n   risen_hells_enemy_kills=" + risen_hells_enemy_kills +
+                "\n   abandoned_city_enemy_kills=" + abandoned_city_enemy_kills +
+                "\n   sea_abyss_enemy_kills=" + sea_abyss_enemy_kills +
+                "\n   carboniferous_enemy_kills=" + carboniferous_enemy_kills +
+                "\n   floral_escape_enemy_kills=" + floral_escape_enemy_kills +
+                "\n   sanguine_forest_enemy_kills=" + sanguine_forest_enemy_kills +
+                "\n   runic_tundra_kills=" + runic_tundra_kills +
                 "\n   abyss_of_demons=" + abyss_of_demons +
                 "\n   advanced_kogbold_steamworks=" + advanced_kogbold_steamworks +
                 "\n   advanced_nest=" + advanced_nest +
@@ -639,16 +784,18 @@ public class RealmCharacterStats {
                 "\n   forest_maze=" + forest_maze +
                 "\n   fungal_cavern=" + fungal_cavern +
                 "\n   haunted_cemetery=" + haunted_cemetery +
-                "\n   heroic_abyss_of_demones=" + heroic_abyss_of_demones +
                 "\n   heroic_undead_lair=" + heroic_undead_lair +
                 "\n   hidden_interregnum=" + hidden_interregnum +
                 "\n   high_tech_terror=" + high_tech_terror +
-                "\n   ice_cave=" + ice_cave +
+                "\n   ice_citadel=" + ice_citadel +
                 "\n   ice_tomb=" + ice_tomb +
+                "\n   infernal_abyss_of_demons=" + infernal_abyss_of_demons +
                 "\n   katalund=" + katalund +
                 "\n   kogbold_steamworks=" + kogbold_steamworks +
                 "\n   lair_of_draconis=" + lair_of_draconis +
                 "\n   lair_of_shaitan=" + lair_of_shaitan +
+                "\n   legacy_heroic_abyss_of_demons=" + legacy_heroic_abyss_of_demons +
+                "\n   legacy_heroic_undead_lair=" + legacy_heroic_undead_lair +
                 "\n   lost_halls=" + lost_halls +
                 "\n   mad_lab=" + mad_lab +
                 "\n   magic_woods=" + magic_woods +
@@ -686,6 +833,9 @@ public class RealmCharacterStats {
                 "\n   toxic_sewers=" + toxic_sewers +
                 "\n   undead_lair=" + undead_lair +
                 "\n   untaris=" + untaris +
+                "\n   white_snake_invasion_i=" + white_snake_invasion_i +
+                "\n   white_snake_invasion_ii=" + white_snake_invasion_ii +
+                "\n   white_snake_invasion_iii=" + white_snake_invasion_iii +
                 "\n   wine_cellar=" + wine_cellar +
                 "\n   woodland_labyrinth=" + woodland_labyrinth;
     }

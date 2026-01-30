@@ -90,7 +90,7 @@ public class DungeonCollection {
         if (c.davy_jones_locker == 0) list.add("Davy Jones' Locker");
         if (c.deadwater_docks == 0) list.add("Deadwater Docks");
         if (c.haunted_cemetery == 0) list.add("Haunted Cemetery");
-        if (c.ice_cave == 0) list.add("Ice Cave");
+        if (c.ice_citadel == 0) list.add("Ice Citadel");
         if (c.lair_of_draconis == 0) list.add("Lair of Draconis");
         if (c.lair_of_shaitan == 0) list.add("Lair of Shaitan");
         if (c.mad_lab == 0) list.add("Mad Lab");
@@ -165,7 +165,7 @@ public class DungeonCollection {
         if (c.crystal_cavern == 0) list.add("Crystal Cavern");
         if (c.davy_jones_locker == 0) list.add("Davy Jones' Locker");
         if (c.fungal_cavern == 0) list.add("Fungal Cavern");
-        if (c.ice_cave == 0) list.add("Ice Cave");
+        if (c.ice_citadel == 0) list.add("Ice Citadel");
         if (c.kogbold_steamworks == 0) list.add("Kogbold Steamworks");
         if (c.lair_of_draconis == 0) list.add("Lair of Draconis");
         if (c.lost_halls == 0) list.add("Lost Halls");
@@ -232,7 +232,7 @@ public class DungeonCollection {
         if (c.fungal_cavern == 0) list.add("Fungal Cavern");
         if (c.haunted_cemetery == 0) list.add("Haunted Cemetery");
         if (c.high_tech_terror == 0) list.add("High Tech Terror");
-        if (c.ice_cave == 0) list.add("Ice Cave");
+        if (c.ice_citadel == 0) list.add("Ice Citadel");
         if (c.kogbold_steamworks == 0) list.add("Kogbold Steamworks");
         if (c.lair_of_draconis == 0) list.add("Lair of Draconis");
         if (c.lair_of_shaitan == 0) list.add("Lair of Shaitan");
@@ -311,7 +311,7 @@ public class DungeonCollection {
         if (c.fungal_cavern == 0) list.add("Fungal Cavern");
         if (c.haunted_cemetery == 0) list.add("Haunted Cemetery");
         if (c.high_tech_terror == 0) list.add("High Tech Terror");
-        if (c.ice_cave == 0) list.add("Ice Cave");
+        if (c.ice_citadel == 0) list.add("Ice Citadel");
         if (c.ice_tomb == 0) list.add("Ice Tomb");
         if (c.katalund == 0) list.add("Katalund");
         if (c.kogbold_steamworks == 0) list.add("Kogbold Steamworks");
