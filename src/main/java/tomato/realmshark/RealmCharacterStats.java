@@ -612,8 +612,8 @@ public class RealmCharacterStats {
         if (readStat(bitArray, CharacterStatistics.ADVANCED_KOGBOLD_STEAMWORKS.getPcStatId())) {
             advanced_kogbold_steamworks = reader.readCompressedInt();
         }
-        if (readStat(bitArray, CharacterStatistics.ADVANCED_NEST.getPcStatId())) {
-            advanced_nest = reader.readCompressedInt();
+        if (readStat(bitArray, CharacterStatistics.PLAGUED_NEST.getPcStatId())) {
+            plagued_nest = reader.readCompressedInt();
         }
         if (readStat(bitArray, CharacterStatistics.THE_TAVERN.getPcStatId())) {
             the_tavern = reader.readCompressedInt();
@@ -771,7 +771,6 @@ public class RealmCharacterStats {
                 "\n   runic_tundra_kills=" + runic_tundra_kills +
                 "\n   abyss_of_demons=" + abyss_of_demons +
                 "\n   advanced_kogbold_steamworks=" + advanced_kogbold_steamworks +
-                "\n   advanced_nest=" + advanced_nest +
                 "\n   ancient_ruins=" + ancient_ruins +
                 "\n   battle_for_the_nexus=" + battle_for_the_nexus +
                 "\n   beachzone=" + beachzone +
@@ -802,6 +801,7 @@ public class RealmCharacterStats {
                 "\n   legacy_heroic_abyss_of_demons=" + legacy_heroic_abyss_of_demons +
                 "\n   legacy_heroic_undead_lair=" + legacy_heroic_undead_lair +
                 "\n   lost_halls=" + lost_halls +
+                "\n   mad_god_mayhem=" + mad_god_mayhem +
                 "\n   mad_lab=" + mad_lab +
                 "\n   magic_woods=" + magic_woods +
                 "\n   malogia=" + malogia +
@@ -810,12 +810,12 @@ public class RealmCharacterStats {
                 "\n   moonlight_village=" + moonlight_village +
                 "\n   mountain_temple=" + mountain_temple +
                 "\n   ocean_trench=" + ocean_trench +
-                "\n   mad_god_mayhem=" + mad_god_mayhem +
                 "\n   oryxs_castle=" + oryxs_castle +
                 "\n   oryxs_chamber=" + oryxs_chamber +
                 "\n   oryxs_sanctuary=" + oryxs_sanctuary +
                 "\n   parasite_chambers=" + parasite_chambers +
                 "\n   pirate_cave=" + pirate_cave +
+                "\n   plagued_nest=" + plagued_nest +
                 "\n   puppet_masters_encore=" + puppet_masters_encore +
                 "\n   puppet_masters_theatre=" + puppet_masters_theatre +
                 "\n   queen_bunny_chamber=" + queen_bunny_chamber +

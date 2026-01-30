@@ -55,7 +55,6 @@ public enum CharacterStatistics {
 
     ABYSS_OF_DEMONS(23, 1819, "Abyss of Demons"),
     ADVANCED_KOGBOLD_STEAMWORKS(120, 28822, "Advanced Kogbold Steamworks"),
-    ADVANCED_NEST(121, 17570, "Advanced Nest"),
     ANCIENT_RUINS(35, 9657, "Ancient Ruins"), // AncientRuinsCompleted
     BATTLE_FOR_THE_NEXUS(62, 1886, "Battle for the Nexus"),
     BEACHZONE(67, 1858, "Beachzone"),
@@ -93,6 +92,7 @@ public enum CharacterStatistics {
     MOONLIGHT_VILLAGE(71, 20447, "Moonlight Village"),
     MOUNTAIN_TEMPLE(52, 311, "Mountain Temple"), // MountainTemplesCompleted
     OCEAN_TRENCH(14, 1840, "Ocean Trench"),
+    PLAGUED_NEST(121, 17570, "Plagued Nest"),
     MAD_GOD_MAYHEM(91, 3873, "Mad God Mayhem"), // MadGodMayhemsCompleted
     ORYXS_CASTLE(93, 3465, "Oryx's Castle"),
     ORYXS_CHAMBER(94, 3451, "Oryx's Chamber"),
