@@ -68,7 +68,6 @@ public class RealmCharacterStats {
      */
     public int abyss_of_demons;
     public int advanced_kogbold_steamworks;
-    public int advanced_nest;
     public int ancient_ruins;
     public int battle_for_the_nexus;
     public int beachzone;
@@ -103,6 +102,7 @@ public class RealmCharacterStats {
     public int magic_woods;
     public int malogia;
     public int manor_of_the_immortals;
+    public int mgm2;
     public int moonlight_village;
     public int mountain_temple;
     public int ocean_trench;
@@ -112,6 +112,7 @@ public class RealmCharacterStats {
     public int oryxs_sanctuary;
     public int parasite_chambers;
     public int pirate_cave;
+    public int plagued_nest;
     public int puppet_masters_encore;
     public int puppet_masters_theatre;
     public int queen_bunny_chamber;
@@ -119,8 +120,8 @@ public class RealmCharacterStats {
     public int santas_workshop;
     public int secluded_thicket;
     public int snake_pit;
-    public int spider_den;
     public int spectral_penitentiary;
+    public int spider_den;
     public int sprite_world;
     public int sulfurous_wetlands;
     public int the_crawling_depths;
@@ -241,7 +242,6 @@ public class RealmCharacterStats {
         dungeonStats = new int[]{
                 abyss_of_demons,
                 advanced_kogbold_steamworks,
-                advanced_nest,
                 ancient_ruins,
                 battle_for_the_nexus,
                 beachzone,
@@ -276,6 +276,7 @@ public class RealmCharacterStats {
                 magic_woods,
                 malogia,
                 manor_of_the_immortals,
+                mgm2,
                 moonlight_village,
                 mountain_temple,
                 ocean_trench,
@@ -285,6 +286,7 @@ public class RealmCharacterStats {
                 oryxs_sanctuary,
                 parasite_chambers,
                 pirate_cave,
+                plagued_nest,
                 puppet_masters_encore,
                 puppet_masters_theatre,
                 queen_bunny_chamber,
@@ -292,8 +294,8 @@ public class RealmCharacterStats {
                 santas_workshop,
                 secluded_thicket,
                 snake_pit,
-                spider_den,
                 spectral_penitentiary,
+                spider_den,
                 sprite_world,
                 sulfurous_wetlands,
                 the_crawling_depths,
@@ -700,6 +702,9 @@ public class RealmCharacterStats {
         if (readStat(bitArray, CharacterStatistics.INFERNAL_ABYSS_OF_DEMONS.getPcStatId())) {
             infernal_abyss_of_demons = reader.readCompressedInt();
         }
+        if (readStat(bitArray, CharacterStatistics.MGM2.getPcStatId())) {
+            mgm2 = reader.readCompressedInt();
+        }
     }
 
     public int getDungeonInfoByName(String dungeonName) {
@@ -801,6 +806,7 @@ public class RealmCharacterStats {
                 "\n   magic_woods=" + magic_woods +
                 "\n   malogia=" + malogia +
                 "\n   manor_of_the_immortals=" + manor_of_the_immortals +
+                "\n   mgm2=" + mgm2 +
                 "\n   moonlight_village=" + moonlight_village +
                 "\n   mountain_temple=" + mountain_temple +
                 "\n   ocean_trench=" + ocean_trench +
@@ -817,8 +823,8 @@ public class RealmCharacterStats {
                 "\n   santas_workshop=" + santas_workshop +
                 "\n   secluded_thicket=" + secluded_thicket +
                 "\n   snake_pit=" + snake_pit +
-                "\n   spider_den=" + spider_den +
                 "\n   spectral_penitentiary=" + spectral_penitentiary +
+                "\n   spider_den=" + spider_den +
                 "\n   sprite_world=" + sprite_world +
                 "\n   sulfurous_wetlands=" + sulfurous_wetlands +
                 "\n   the_crawling_depths=" + the_crawling_depths +
