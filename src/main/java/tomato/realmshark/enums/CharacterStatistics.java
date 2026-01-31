@@ -85,20 +85,21 @@ public enum CharacterStatistics {
     LEGACY_HEROIC_ABYSS_OF_DEMONS(38, 9324, "Legacy Heroic Abyss of Demons"),
     LEGACY_HEROIC_UNDEAD_LAIR(39, 9323, "Legacy Heroic Undead Lair"),
     LOST_HALLS(55, 45092, "Lost Halls"), // LostHallsCompleted
+    MAD_GOD_MAYHEM(91, 3873, "Mad God Mayhem"), // MadGodMayhemsCompleted
     MAD_LAB(6, 2192, "Mad Lab"), // MadLabsCompleted
     MAGIC_WOODS(45, 2172, "Magic Woods"),
     MALOGIA(92, 45752, "Malogia"), // MalogiasCompleted
     MANOR_OF_THE_IMMORTALS(0, 1849, "Manor of the Immortals"),
+    MGM2(101, 13100, "The Trials of Cronus"),
     MOONLIGHT_VILLAGE(71, 20447, "Moonlight Village"),
     MOUNTAIN_TEMPLE(52, 311, "Mountain Temple"), // MountainTemplesCompleted
     OCEAN_TRENCH(14, 1840, "Ocean Trench"),
-    PLAGUED_NEST(121, 17570, "Plagued Nest"),
-    MAD_GOD_MAYHEM(91, 3873, "Mad God Mayhem"), // MadGodMayhemsCompleted
     ORYXS_CASTLE(93, 3465, "Oryx's Castle"),
     ORYXS_CHAMBER(94, 3451, "Oryx's Chamber"),
     ORYXS_SANCTUARY(95, 6218, "Oryx's Sanctuary"),
     PARASITE_CHAMBERS(44, 1944, "Parasite Chambers"),
     PIRATE_CAVE(21, 1815, "Pirate Cave"),
+    PLAGUED_NEST(121, 17570, "Plagued Nest"),
     PUPPET_MASTERS_ENCORE(42, 29798, "Puppet Master's Encore"),
     PUPPET_MASTERS_THEATRE(49, 9043, "Puppet Master's Theatre"),
     QUEEN_BUNNY_CHAMBER(123, 1430, "Queen Bunny Chamber"),
@@ -125,7 +126,6 @@ public enum CharacterStatistics {
     WHITE_SNAKE_INVASION_I(98, 59886, "White Snake Invasion I"),
     WHITE_SNAKE_INVASION_II(99, 59887, "White Snake Invasion II"),
     WHITE_SNAKE_INVASION_III(100, 59888, "White Snake Invasion III"),
-    MGM2(101, 13100, "The Trials of Cronus"),
     WINE_CELLAR(84, 578, "Wine Cellar"),
     WOODLAND_LABYRINTH(61, 1884, "Woodland Labyrinth");
 

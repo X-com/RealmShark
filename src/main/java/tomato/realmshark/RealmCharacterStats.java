@@ -272,6 +272,7 @@ public class RealmCharacterStats {
                 legacy_heroic_abyss_of_demons,
                 legacy_heroic_undead_lair,
                 lost_halls,
+                mad_god_mayhem,
                 mad_lab,
                 magic_woods,
                 malogia,
@@ -280,7 +281,6 @@ public class RealmCharacterStats {
                 moonlight_village,
                 mountain_temple,
                 ocean_trench,
-                mad_god_mayhem,
                 oryxs_castle,
                 oryxs_chamber,
                 oryxs_sanctuary,
@@ -696,14 +696,14 @@ public class RealmCharacterStats {
         if (readStat(bitArray, CharacterStatistics.WHITE_SNAKE_INVASION_III.getPcStatId())) {
             white_snake_invasion_iii = reader.readCompressedInt();
         }
+        if (readStat(bitArray, CharacterStatistics.MGM2.getPcStatId())) {
+            mgm2 = reader.readCompressedInt();
+        }
         if (readStat(bitArray, CharacterStatistics.HEROIC_UNDEAD_LAIR.getPcStatId())) {
             heroic_undead_lair = reader.readCompressedInt();
         }
         if (readStat(bitArray, CharacterStatistics.INFERNAL_ABYSS_OF_DEMONS.getPcStatId())) {
             infernal_abyss_of_demons = reader.readCompressedInt();
-        }
-        if (readStat(bitArray, CharacterStatistics.MGM2.getPcStatId())) {
-            mgm2 = reader.readCompressedInt();
         }
     }
 
