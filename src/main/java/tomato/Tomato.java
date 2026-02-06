@@ -48,6 +48,8 @@ public class Tomato {
                 System.getProperty("sun.arch.data.model") +
                 " - bit)"
         );
+        parseArgs(args);
+
         parseCustomAssetPath(args);
 
         parseCustomAssetPath(args);
@@ -63,6 +65,26 @@ public class Tomato {
         initializeCrucibleData();
 
         load();
+    }
+
+    private static void parseArgs(String[] args) {
+        for (String arg : args) {
+            if (arg.equals("--help") || arg.equals("-h")) {
+                usage();
+                System.exit(0);
+            }
+        }
+
+        parseCustomAssetPath(args);
+    }
+
+    private static void usage() {
+        System.out.println("Usage: java -jar Tomato.jar [options]");
+        System.out.println("Options:");
+        System.out.println("  --help, -h          Show this help message");
+        System.out.println(
+            "  --path <file_path>  Specify custom resources.assets file path"
+        );
     }
 
     /**
