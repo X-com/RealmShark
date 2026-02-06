@@ -24,7 +24,7 @@ public class CheckVersion {
         conn.setRequestProperty("Accept", "application/vnd.github.v3+json");
 
         if (conn.getResponseCode() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+            throw new IOException("Failed : HTTP error code : " + conn.getResponseCode());
         }
 
         BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
@@ -70,6 +70,7 @@ public class CheckVersion {
         try {
             return getLatestVersion().equals(Version.VERSION);
         } catch (IOException ignored) {
+            // If we can't check the version, assume it's the latest to avoid bothering the user
         }
         return true;
     }
