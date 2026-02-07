@@ -40,3 +40,4 @@ hs_err_pid*
 # Misc files
 realmShark.properties
 .DS_Store
+/FameSessions/

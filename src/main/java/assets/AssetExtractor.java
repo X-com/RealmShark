@@ -52,9 +52,25 @@ public class AssetExtractor {
     private static JOptionPane pane;
 
     static {
-        if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("mac")) {
             REALM_RES_PATH =
-                "RealmOfTheMadGod/Production/RotMGExalt.app/Contents/Resources/Data/resources.assets";
+                System.getProperty("user.home") +
+                    "/.local/share/RealmOfTheMadGod/Production/RotMGExalt.app/Contents/Resources/Data/resources.assets";
+        } else if (os.contains("win")) {
+            String localAppData = System.getenv("LOCALAPPDATA");
+            if (localAppData != null) {
+                REALM_RES_PATH =
+                        localAppData +
+                                "/RealmOfTheMadGod/Production/RotMG Exalt_Data/resources.assets";
+
+                // Fallback for older installations
+                File testFile = new File(REALM_RES_PATH);
+                if (!testFile.exists()) {
+                    REALM_RES_PATH =
+                            "RealmOfTheMadGod/Production/RotMG Exalt_Data/resources.assets";
+                }
+            }
         } else {
             REALM_RES_PATH =
                 System.getenv("LOCALAPPDATA") +
@@ -284,7 +300,6 @@ public class AssetExtractor {
             if (Paths.get(REALM_RES_PATH).isAbsolute()) {
                 defaultFile = new File(REALM_RES_PATH);
             } else {
-//                String homeDir = System.getProperty("user.home");
                 String homeDir = FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath();
                 Path defaultPath = Paths.get(homeDir, REALM_RES_PATH);
                 defaultFile = defaultPath.toFile();
