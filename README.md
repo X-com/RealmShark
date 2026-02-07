@@ -19,9 +19,9 @@ In the future, OS specific functionality will be added to support multiple insta
 
 ## Install guide
 
-MAC support is not available right now. It will be added in a future version.
+If there are errors running the program described below, please check the [Discord](https://discord.gg/msKrWSD4Mf), the troubleshooting section below, or [open an issue here,](https://github.com/X-com/RealmShark/issues) so it can be resolved.
 
-For Windows:
+### For Windows:
 
 1. Java and Npcap is required for running the program. Java can be downloaded from [here](https://www.java.com/en/download/) and Npcap from [here](https://npcap.com/#download). Open the files one at a time and follow the install instructions for both.
 
@@ -35,7 +35,15 @@ For Windows:
 
 4. The RealmShark GUI should open. Start it by clicking File -> Start Sniffer. All chat in the game should appear in the Chat tab.
 
-If there are errors running the program described above, please look under Trouble shooting guide or [open an issue here,](https://github.com/X-com/RealmShark/issues) so it can be resolved.
+### For Mac:
+All the steps are the same, but in order to enable packet capture for the non-root user, you may need to run:
+`sudo chown $(whoami):admin /dev/bpf*`
+
+### For Linux:
+Linux is not officially supported, but many users have had success. Steam is the standardized client for Linux; other installations may not work as expected. If you run into issues, try:
+
+- Run from command line using the `--path <custom-path>` argument.
+- Ask for help in the Discord.
 
 ## Troubleshooting guide
 
