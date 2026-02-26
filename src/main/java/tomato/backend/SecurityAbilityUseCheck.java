@@ -87,7 +87,8 @@ public class SecurityAbilityUseCheck {
     }
 
     public static void checkManaFromDecoyUsed(Entity entity, StatData[] stats) {
-        if (entity.objectType != CharacterClass.Trickster.getId()) return; // check if trickster
+        if (CharacterClass.isPlayerCharacter(entity.objectType)
+                && !CharacterClass.getName(entity.objectType).equals("Trickster")) return;
         if (decoyCounter == 0) {
             for (StatData sd : stats) {
                 if (sd.statType == StatType.MP_STAT) {
