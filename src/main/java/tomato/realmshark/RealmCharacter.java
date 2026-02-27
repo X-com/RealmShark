@@ -106,7 +106,7 @@ public class RealmCharacter {
      * @return True if account is fully exalted.
      */
     private static boolean fullyExalted() {
-        if (exalts.size() < 18) return false;
+        if (exalts.size() < 19) return false;
 
         for (int[] e : exalts.values()) {
             for (int i : e) {
