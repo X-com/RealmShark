@@ -27,9 +27,10 @@ public class UseItemPacket extends Packet {
      */
     public UseItemType useItemType;
     /**
-     * Unknown
+     * Additional item-use flag appended after use item type.
+     * For multi-ability items, this appears to match the selected Ability attackIndex.
      */
-    public byte unknownByte;
+    public int useItemFlag;
 
     @Override
     public void deserialize(BufferReader buffer) throws Exception {
@@ -37,6 +38,7 @@ public class UseItemPacket extends Packet {
         slotObject = new SlotObjectData().deserialize(buffer);
         useItemPosition = new WorldPosData().deserialize(buffer);
         useItemType = UseItemType.fromCode(buffer.readByte());
+        useItemFlag = buffer.readInt();
     }
 
     @Override
@@ -45,6 +47,7 @@ public class UseItemPacket extends Packet {
                 "\n   time=" + time +
                 "\n   slotObject=" + slotObject +
                 "\n   useItemPosition=" + useItemPosition +
-                "\n   useItemType=" + useItemType;
+                "\n   useItemType=" + useItemType +
+                "\n   useItemFlag=" + useItemFlag;
     }
 }
