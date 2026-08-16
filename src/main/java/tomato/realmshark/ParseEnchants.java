@@ -33,8 +33,15 @@ public class ParseEnchants {
     private static final String ENCHANT_XML_PATH =
         "assets/xml/enchantments.xml";
 
-    // Maps enchant type ID -> display name
+    // Maps enchant type ID -> human readable name (<DisplayId> from the XML,
+    // e.g. "Attack Bonus I"). Falls back to the internal id if absent.
     public static final HashMap<Short, String> ENCHANTS = new HashMap<>();
+
+    // Maps enchant type ID -> internal id (the "id" attribute, e.g.
+    // "Attack_Bonus_1" / "LUCKY_STREAK"). Kept because the all-uppercase ones
+    // mark unique/ST enchants, which the ping list groups separately.
+    public static final HashMap<Short, String> ENCHANT_INTERNAL_IDS =
+        new HashMap<>();
 
     // Maps enchant type ID -> parsed effect multipliers
     private static final HashMap<Short, EnchantEffect> ENCHANT_EFFECTS =
@@ -66,6 +73,7 @@ public class ParseEnchants {
 
                 Short enchantType = null;
                 String enchantName = null;
+                String displayName = null;
                 EnchantEffect effect = new EnchantEffect();
                 RegenEffect regen = new RegenEffect();
                 float lootBonus = 0f;
@@ -73,6 +81,8 @@ public class ParseEnchants {
                 for (StringXML node : xml) {
                     if (Objects.equals(node.name, "id")) {
                         enchantName = node.value;
+                    } else if (Objects.equals(node.name, "DisplayId")) {
+                        displayName = readTextContent(node);
                     } else if (Objects.equals(node.name, "type")) {
                         try {
                             enchantType = Short.decode(node.value);
@@ -166,8 +176,17 @@ public class ParseEnchants {
                 }
 
                 if (enchantType != null) {
+                    // Prefer the readable <DisplayId>; fall back to the internal
+                    // id so an entry is never nameless.
+                    String shown = (displayName != null &&
+                            !displayName.trim().isEmpty())
+                        ? displayName.trim()
+                        : enchantName;
+                    if (shown != null) {
+                        ENCHANTS.put(enchantType, shown);
+                    }
                     if (enchantName != null) {
-                        ENCHANTS.put(enchantType, enchantName);
+                        ENCHANT_INTERNAL_IDS.put(enchantType, enchantName);
                     }
                     ENCHANT_EFFECTS.put(enchantType, effect);
                     ENCHANT_REGEN.put(enchantType, regen);
@@ -646,6 +665,19 @@ public class ParseEnchants {
     }
 
     // ===== Helpers =====
+
+    /**
+     * Reads an element's text content. util.StringXML keeps text as the first
+     * child rather than on the node itself, so check there before node.value.
+     */
+    private static String readTextContent(StringXML node) {
+        if (node == null) return null;
+        if (node.children != null && !node.children.isEmpty()) {
+            String v = node.children.get(0).value;
+            if (v != null) return v;
+        }
+        return node.value;
+    }
 
     private static String getEnchantmentString(short enchantID) {
         String name = ENCHANTS.get(enchantID);

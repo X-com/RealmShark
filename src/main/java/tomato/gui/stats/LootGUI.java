@@ -32,6 +32,11 @@ public class LootGUI extends JPanel {
     private static Font mainFont;
 
     private static int lootDrops;
+
+    // Marks loot that triggered a ping. Deliberately outside the enchant-count
+    // glow palette (green/blue/purple/gold) so the two never read as the same
+    // signal.
+    private static final Color PING_COLOR = new Color(255, 64, 64);
     private boolean disableLootSharing = false;
     public static boolean filterWhiteBag = false;
     public static boolean filterOrangeBag = false;
@@ -61,6 +66,8 @@ public class LootGUI extends JPanel {
         scroll.setVerticalScrollBarPolicy(
             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS
         );
+        // JPanel is not Scrollable, so the viewport defaults to 1px per tick.
+        scroll.getVerticalScrollBar().setUnitIncrement(40);
         new SmartScroller(scroll, 0);
         add(scroll, BorderLayout.CENTER);
     }
@@ -259,7 +266,20 @@ public class LootGUI extends JPanel {
             lootTime
         );
         mainPanel.add(Box.createHorizontalStrut(30));
-        width = displayBagLootIcons(bag, mainPanel, width);
+        java.util.List<String> bagPings = new java.util.ArrayList<>();
+        width = displayBagLootIcons(bag, mainPanel, width, bagPings);
+
+        // A pinged bag gets a coloured stripe down its left edge so it can be
+        // picked out while scrolling, without hovering every row. The left
+        // inset is reduced by the stripe width so nothing shifts alignment.
+        if (!bagPings.isEmpty()) {
+            mainPanel.setBorder(
+                BorderFactory.createCompoundBorder(
+                    BorderFactory.createMatteBorder(0, 4, 1, 0, PING_COLOR),
+                    BorderFactory.createEmptyBorder(0, 16, 0, 20)
+                )
+            );
+        }
 
         mainPanel.add(Box.createHorizontalGlue());
 
@@ -385,7 +405,8 @@ public class LootGUI extends JPanel {
     private static int displayBagLootIcons(
         Entity entity,
         JPanel mainPanel,
-        int width
+        int width,
+        java.util.List<String> bagPingsOut
     ) {
         JPanel panel = new JPanel();
         width += 200;
@@ -414,16 +435,11 @@ public class LootGUI extends JPanel {
             int enchantCount = 0;
 
             // Check for ping items and ping if found
-            if (
+            boolean itemPinged =
                 data.isItemPing(String.valueOf(statValue)) ||
-                data.isItemPing(itemName)
-            ) {
-                Sound.custom.play();
-            }
-
-            // Check for enchant pings
-            if (data.isEnchantPing(enchantText)) {
-                Sound.custom.play();
+                data.isItemPing(itemName);
+            if (itemPinged) {
+                PingSounds.play(PingSounds.Type.ITEM);
             }
 
             if (
@@ -437,6 +453,15 @@ public class LootGUI extends JPanel {
                     String[] enchantNames = enchantText.split("\n");
                     enchantCount = enchantNames.length;
                 }
+            }
+
+            // Check for enchant pings. Must run AFTER enchantText is parsed
+            // above - checking it earlier passes an empty string, which
+            // isEnchantPing() rejects outright, so the ping never fires.
+            java.util.ArrayList<String> matchedEnchants =
+                data.getMatchedEnchantPings(enchantText);
+            if (!matchedEnchants.isEmpty()) {
+                PingSounds.play(PingSounds.Type.ENCHANT);
             }
 
             JLabel icon;
@@ -474,12 +499,89 @@ public class LootGUI extends JPanel {
             if (!enchantText.isEmpty()) {
                 itemName += "<br>" + enchantText;
             }
+
+            // Mark the item that actually caused a ping, so a bag full of
+            // enchanted loot does not have to be hovered slot by slot to find
+            // out which one fired.
+            if (!matchedEnchants.isEmpty() || itemPinged) {
+                icon.setText(pingBadge(matchedEnchants, itemPinged));
+                // Draw the badge ON the sprite - the cell is only 24px wide, so
+                // there is no room to place it beside the icon.
+                icon.setHorizontalTextPosition(SwingConstants.CENTER);
+                icon.setVerticalTextPosition(SwingConstants.CENTER);
+                icon.setFont(icon.getFont().deriveFont(Font.BOLD, 11f));
+                icon.setForeground(PING_COLOR);
+                icon.setBorder(BorderFactory.createLineBorder(PING_COLOR, 1));
+
+                StringBuilder why = new StringBuilder("<br><b>PING: ");
+                if (itemPinged) why.append("item match");
+                for (int m = 0; m < matchedEnchants.size(); m++) {
+                    if (itemPinged || m > 0) why.append(", ");
+                    why.append(matchedEnchants.get(m));
+                }
+                itemName += why.append("</b>").toString();
+
+                bagPingsOut.addAll(matchedEnchants);
+                if (itemPinged) bagPingsOut.add(itemName);
+            }
+
             icon.setToolTipText("<html>" + itemName + "</html>");
             panel.add(icon);
         }
 
         mainPanel.add(panel);
         return width;
+    }
+
+    /**
+     * Set false for strictly one letter per enchant.
+     *
+     * Two initials is the default because the single-letter form cannot
+     * separate the cases this feature exists for: "Lucky Streak" and "Loot
+     * Bonus IV" are both "L", so a lone letter does not answer "is this the
+     * ring I want or the off-class armour I can skip". "LS" vs "LB" does.
+     */
+    private static final boolean PING_BADGE_INITIALS = true;
+
+    /**
+     * Builds the short overlay label for a pinged item. A single matching
+     * enchant gets its initials (Lucky Streak -> "LS"); several matches fall
+     * back to one letter each so the badge cannot swamp a 24px cell. An
+     * item-list match is marked with a leading star.
+     */
+    private static String pingBadge(
+        java.util.List<String> matchedEnchants,
+        boolean itemPinged
+    ) {
+        StringBuilder sb = new StringBuilder();
+        if (itemPinged) sb.append('*');
+
+        boolean useInitials =
+            PING_BADGE_INITIALS && matchedEnchants.size() == 1 && !itemPinged;
+
+        for (String name : matchedEnchants) {
+            if (name == null || name.isEmpty()) continue;
+            if (useInitials) {
+                sb.append(initials(name, 2));
+            } else {
+                sb.append(Character.toUpperCase(name.charAt(0)));
+            }
+            if (sb.length() >= 3) break; // keep the sprite readable
+        }
+        return sb.toString();
+    }
+
+    /**
+     * First letter of up to {@code max} words: "Lucky Streak" -> "LS".
+     */
+    private static String initials(String name, int max) {
+        StringBuilder sb = new StringBuilder();
+        for (String word : name.trim().split("\\s+")) {
+            if (word.isEmpty()) continue;
+            sb.append(Character.toUpperCase(word.charAt(0)));
+            if (sb.length() >= max) break;
+        }
+        return sb.toString();
     }
 
     private static void displayBagIcon(

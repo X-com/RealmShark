@@ -184,12 +184,11 @@ public class SendLoot {
 
                     if (!enchantText.isEmpty()) {
                         sl = Math.min(4, enchantText.split("\n").length);
-
-                        // Check for enchant pings
-                        if (data.isEnchantPing(enchantText)) {
-                            Sound.custom.play();
-                        }
                     }
+                    // NOTE: the enchant ping is deliberately NOT fired here.
+                    // This method is the loot-sharing uploader and only runs
+                    // when sharing is enabled, which made a local sound alert
+                    // depend on opting into telemetry. LootGUI owns the ping.
                 }
 
                 item.addProperty("sl", sl);
