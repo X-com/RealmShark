@@ -55,6 +55,8 @@ public class EnchantPingGUI extends JPanel {
         scrollPane.setVerticalScrollBarPolicy(
             ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS
         );
+        // Without this the viewport scrolls 1px per wheel tick.
+        scrollPane.getVerticalScrollBar().setUnitIncrement(40);
         this.add(scrollPane, BorderLayout.CENTER);
 
         // Bottom: save button + global controls
@@ -134,8 +136,18 @@ public class EnchantPingGUI extends JPanel {
             .sorted(Comparator.comparing(e -> e.getValue().toLowerCase()))
             .forEach(entry -> {
                 String name = entry.getValue();
-                if (name.equals(name.toUpperCase())) {
-                    // All uppercase names go to "Unique" group
+                // Display names are now proper-case, so "is it uppercase" no
+                // longer identifies uniques. The INTERNAL id still does:
+                // unique/ST enchants are ALL_CAPS there (e.g. LUCKY_STREAK)
+                // while rollable ones are mixed (e.g. Attack_Bonus_1).
+                String internalId = ParseEnchants.ENCHANT_INTERNAL_IDS.get(
+                    entry.getKey()
+                );
+                if (
+                    internalId != null &&
+                    !internalId.isEmpty() &&
+                    internalId.equals(internalId.toUpperCase())
+                ) {
                     groups
                         .computeIfAbsent("Unique", k -> new ArrayList<>())
                         .add(entry);
@@ -193,6 +205,12 @@ public class EnchantPingGUI extends JPanel {
                 String label = String.format("%s", cleanedName);
                 JCheckBox cb = new JCheckBox(label);
                 cb.setAlignmentX(Component.LEFT_ALIGNMENT);
+                // Numeric id matches what the console debug log prints, so the
+                // two can be cross-referenced while hunting a specific enchant.
+                String internal = ParseEnchants.ENCHANT_INTERNAL_IDS.get(id);
+                cb.setToolTipText(
+                    "id " + id + (internal == null ? "" : "  ·  " + internal)
+                );
                 // pre-select if stored
                 if (savedSelected.contains(id)) cb.setSelected(true);
                 checkBoxMap.put(id, cb);

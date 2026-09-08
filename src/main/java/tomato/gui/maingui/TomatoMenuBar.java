@@ -22,7 +22,7 @@ import java.awt.event.ActionListener;
  * Menu bar builder class
  */
 public class TomatoMenuBar implements ActionListener {
-    private JMenuItem about, borders, clearChat, bandwidth, javav, clearDpsLogs, theme, fontMenu, dpsOptions, chat, sound, chatPingMessage, entityIdPingMessage, itemPingMessage, enchantPingMessage;
+    private JMenuItem about, borders, clearChat, bandwidth, javav, clearDpsLogs, theme, fontMenu, dpsOptions, chat, sound, chatPingMessage, entityIdPingMessage, itemPingMessage, enchantPingMessage, dungeonPingMessage, pingSoundMenu;
     private JRadioButtonMenuItem fontSize8, fontSize12, fontSize16, fontSize24, fontSize48, fontSizeCustom;
     private JRadioButtonMenuItem themeDarcula, themeighContrastDark, themeHighContrastLight, themeIntelliJ, themeSolarizedDark, themeSolarizedLight;
     private JRadioButtonMenuItem fontNameMonospaced, fontNameDialog, fontNameDialogInput, fontNameSerif, fontNameSansSerif, fontNameSegoe;
@@ -119,12 +119,20 @@ public class TomatoMenuBar implements ActionListener {
         enchantPingMessage = new JMenuItem("Enchant Pings");
         enchantPingMessage.addActionListener(this);
 
+        dungeonPingMessage = new JMenuItem("Dungeon Pings");
+        dungeonPingMessage.addActionListener(this);
+
+        pingSoundMenu = new JMenuItem("Ping Sounds...");
+        pingSoundMenu.addActionListener(this);
+
         sound.add(new JLabel("Volume:"));
         sound.add(soundSlider);
         sound.add(new JSeparator(SwingConstants.HORIZONTAL));
         sound.add(entityIdPingMessage);
         sound.add(itemPingMessage);
         sound.add(enchantPingMessage);
+        sound.add(dungeonPingMessage);
+        sound.add(pingSoundMenu);
         sound.add(new JSeparator(SwingConstants.HORIZONTAL));
         sound.add(chatPing);
         sound.add(chatPingParty);
@@ -746,6 +754,10 @@ public class TomatoMenuBar implements ActionListener {
             TomatoGUI.openItemPing();
         } else if (e.getSource() == enchantPingMessage) { // enchant ping message
             TomatoGUI.openEnchantPing();
+        } else if (e.getSource() == dungeonPingMessage) { // dungeon ping message
+            TomatoGUI.openDungeonPing();
+        } else if (e.getSource() == pingSoundMenu) { // per-category ping sounds
+            tomato.gui.maingui.PingSoundGUI.open();
         } else if (e.getSource() == saveChat) { // chat save logs
             boolean b = saveChat.isSelected();
             PropertiesManager.setProperties("saveChat", b ? "true" : "false");

@@ -5,8 +5,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
@@ -20,11 +24,17 @@ public class ParseDungeon {
         "assets/xml/mods2.xml",
     };
     private static final String PORTAL_XML_PATH = "assets/xml/portals.xml";
+    private static final String XML_DIR_PATH = "assets/xml";
     private static final HashMap<Integer, String> ID_TO_NAME_MODS =
         new HashMap<>();
     private static final HashMap<String, Integer> NAME_TO_ID_MODS =
         new HashMap<>();
     private static final HashMap<String, Integer> NAME_TO_ID_PORTAL =
+        new HashMap<>();
+
+    // Reverse of NAME_TO_ID_PORTAL: portal objectType -> dungeon name. Lets a
+    // portal entity seen in the world be identified as a specific dungeon.
+    private static final HashMap<Integer, String> ID_TO_NAME_PORTAL =
         new HashMap<>();
 
     /**
@@ -54,6 +64,11 @@ public class ParseDungeon {
             parseDungeonPortalId();
         } catch (Throwable t) {
             System.out.println("[ParseDungeon] portal parse failed: " + t);
+        }
+        try {
+            parseAllPortalObjects();
+        } catch (Throwable t) {
+            System.out.println("[ParseDungeon] portal scan failed: " + t);
         }
     }
 
@@ -142,6 +157,7 @@ public class ParseDungeon {
                     }
                     if (name != null && id != 0) {
                         NAME_TO_ID_PORTAL.put(name, id);
+                        ID_TO_NAME_PORTAL.put(id, name);
                     }
                 }
             }
@@ -149,6 +165,85 @@ public class ParseDungeon {
         } catch (ParserConfigurationException | IOException | SAXException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * portals.xml only defines the classic dungeons - every modern one (Lost
+     * Halls, Cultist Hideout, The Void, Moonlight Village, The Nest, ...) lives
+     * in its own per-dungeon objects file. Reading only portals.xml finds 82 of
+     * the ~160 dungeon portals in the game, so this sweeps every extracted XML
+     * for objects carrying a DungeonName.
+     *
+     * A light regex pass rather than a DOM parse of 230+ files.
+     */
+    private static void parseAllPortalObjects() {
+        File dir = new File(XML_DIR_PATH);
+        File[] files = dir.listFiles((d, n) -> n.toLowerCase().endsWith(".xml"));
+        if (files == null) return;
+
+        Pattern objectBlock = Pattern.compile(
+            "<Object\\s[^>]*type=\"([^\"]+)\"[^>]*>(.*?)</Object>",
+            Pattern.DOTALL
+        );
+        Pattern dungeonName = Pattern.compile(
+            "<DungeonName>(.*?)</DungeonName>",
+            Pattern.DOTALL
+        );
+
+        for (File f : files) {
+            String content;
+            try {
+                content = new String(
+                    Files.readAllBytes(f.toPath()),
+                    StandardCharsets.UTF_8
+                );
+            } catch (IOException e) {
+                continue; // skip unreadable file, keep going
+            }
+            if (!content.contains("<DungeonName>")) continue;
+
+            Matcher m = objectBlock.matcher(content);
+            while (m.find()) {
+                Matcher dn = dungeonName.matcher(m.group(2));
+                if (!dn.find()) continue;
+                String name = dn.group(1).trim();
+                if (name.isEmpty()) continue;
+                try {
+                    int type = Integer.decode(m.group(1).trim());
+                    ID_TO_NAME_PORTAL.put(type, name);
+                    // Do not clobber portals.xml, which stays authoritative for
+                    // the loot-tab dungeon icons.
+                    NAME_TO_ID_PORTAL.putIfAbsent(name, type);
+                } catch (NumberFormatException ignored) {}
+            }
+        }
+    }
+
+    /**
+     * Resolves a world entity's objectType to a dungeon name, if that entity is
+     * a dungeon portal.
+     *
+     * @param objectType Entity objectType seen in the world.
+     * @return The dungeon name, or null if this objectType is not a portal.
+     */
+    public static String getDungeonNameByPortalType(int objectType) {
+        return ID_TO_NAME_PORTAL.get(objectType);
+    }
+
+    /**
+     * Every known dungeon name, sorted, for populating selection UIs.
+     *
+     * Fewer entries than there are portal objectTypes: some dungeons ship
+     * several portal variants (Cultist Hideout has a normal and a temp portal),
+     * which is why selections are keyed by NAME - picking the name covers every
+     * variant of that dungeon.
+     */
+    public static java.util.List<String> allDungeonNames() {
+        java.util.TreeSet<String> names = new java.util.TreeSet<>(
+            String.CASE_INSENSITIVE_ORDER
+        );
+        names.addAll(ID_TO_NAME_PORTAL.values());
+        return new java.util.ArrayList<>(names);
     }
 
     public static int[] getModIds(String dungeonString) {
