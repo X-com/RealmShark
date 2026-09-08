@@ -1,6 +1,7 @@
 package tomato.realmshark;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,12 +31,43 @@ public class ParseDungeon {
      * Load Dungeon modifiers XML data to get names from file.
      */
     static {
-        parseDungeonModifier();
-        parseDungeonPortalId();
+        loadAssets();
+    }
+
+    /**
+     * Parses the XML assets this class needs.
+     *
+     * Nothing in here may propagate an exception. This runs from a static
+     * initializer, so a throw leaves the class permanently unusable for the
+     * rest of the JVM's life - every later reference fails with
+     * NoClassDefFoundError, which is how a single missing asset file took out
+     * the whole loot display. Assets are legitimately absent before extraction,
+     * so empty maps are a valid state: names simply resolve to nothing.
+     */
+    private static void loadAssets() {
+        try {
+            parseDungeonModifier();
+        } catch (Throwable t) {
+            System.out.println("[ParseDungeon] modifier parse failed: " + t);
+        }
+        try {
+            parseDungeonPortalId();
+        } catch (Throwable t) {
+            System.out.println("[ParseDungeon] portal parse failed: " + t);
+        }
     }
 
     private static void parseDungeonModifier() {
         for (String path : MODS_XML_PATHS) {
+            // The client does not ship every mods file in every build -
+            // mods2.xml is absent as of the current release. A missing
+            // supplementary file must not be fatal.
+            if (!new File(path).isFile()) {
+                System.out.println(
+                    "[ParseDungeon] " + path + " not present, skipping"
+                );
+                continue;
+            }
             try {
                 FileInputStream file = new FileInputStream(path);
                 String result = new BufferedReader(new InputStreamReader(file))
@@ -79,6 +111,14 @@ public class ParseDungeon {
     }
 
     private static void parseDungeonPortalId() {
+        // Absent on a fresh install until assets are extracted. Same treatment
+        // as the mods files: skip rather than throw.
+        if (!new File(PORTAL_XML_PATH).isFile()) {
+            System.out.println(
+                "[ParseDungeon] " + PORTAL_XML_PATH + " not present, skipping"
+            );
+            return;
+        }
         try {
             FileInputStream file = new FileInputStream(PORTAL_XML_PATH);
             String result = new BufferedReader(new InputStreamReader(file))
