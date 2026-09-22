@@ -20,6 +20,9 @@ import tomato.gui.myinfo.MyInfoGUI;
 import tomato.gui.security.ParsePanelGUI;
 import tomato.gui.stats.LootGUI;
 import tomato.realmshark.HttpCharListRequest;
+import tomato.realmshark.ParseDungeon;
+import tomato.realmshark.ParseEnchants;
+import tomato.realmshark.PingSounds;
 import tomato.realmshark.RealmCharacter;
 import tomato.realmshark.RealmCharacterStats;
 import tomato.realmshark.Sound;
@@ -248,6 +251,7 @@ public class TomatoData {
             moonLightFlameCounter(idType);
             SecurityAbilityUseCheck.decoy(entity);
             customSoundAlert(idType);
+            dungeonPingAlert(idType);
         }
         if (petyard) {
             addPet(object);
@@ -280,7 +284,7 @@ public class TomatoData {
         if (idEntityPing != null) {
             for (String id : idEntityPing) {
                 if (String.valueOf(idType).equals(id)) {
-                    Sound.custom.play();
+                    PingSounds.play(PingSounds.Type.ENTITY);
                     break;
                 }
             }
@@ -297,11 +301,8 @@ public class TomatoData {
 
         if (!lootTickContainer[lootTickToggle].isEmpty()) {
             try {
-                // First pass: determine mob associations and collect results (do not send yet)
+                // First pass: determine mob associations and collect results
                 lootAttribution.beginLootTick(map != null ? map.seed : -1);
-                tomato.realmshark.SendLoot.beginLootTick(
-                    map != null ? map.seed : -1
-                );
 
                 ArrayList<Entity> processedBags = new ArrayList<>();
 
@@ -322,7 +323,7 @@ public class TomatoData {
                 // Apply any per-tick overrides (e.g., HM/TR variants) after all fabricated attributions are known
                 lootAttribution.applyPerTickOverrides();
 
-                // Second pass: update stats + GUI + SendLoot (SendLoot invoked inside LootGUI)
+                // Second pass: update stats + GUI
 
                 for (int i = 0; i < processedBags.size(); i++) {
                     Entity bag = processedBags.get(i);
@@ -1177,17 +1178,63 @@ public class TomatoData {
     }
 
     /**
-     * Checks if any enchant in the enchant text matches selected enchant pings
+     * Checks whether a dungeon is in the user's dungeon-ping selection.
+     *
+     * Selections are stored as dungeon NAMES rather than portal objectTypes,
+     * because several dungeons ship more than one portal variant and the user
+     * means "tell me when this dungeon drops", not "when this exact portal id
+     * appears".
+     *
+     * @param dungeonName Dungeon name resolved from a portal entity.
+     * @return True if the user wants a ping for this dungeon.
      */
-    public boolean isEnchantPing(String enchantText) {
-        if (enchantText == null || enchantText.isEmpty()) {
-            return false;
+    public boolean isDungeonPing(String dungeonName) {
+        if (dungeonName == null || dungeonName.isEmpty()) return false;
+
+        String saved = PropertiesManager.getProperty("dungeonPing.selected");
+        if (saved == null || saved.trim().isEmpty()) return false;
+
+        for (String s : saved.split(",")) {
+            if (dungeonName.equalsIgnoreCase(s.trim())) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Plays the alert sound when a portal for a ping-selected dungeon appears.
+     *
+     * @param objectType objectType of a newly seen entity.
+     */
+    private void dungeonPingAlert(int objectType) {
+        String dungeonName = ParseDungeon.getDungeonNameByPortalType(objectType);
+        if (dungeonName == null) return; // not a portal
+        if (isDungeonPing(dungeonName)) {
+            PingSounds.play(PingSounds.Type.DUNGEON);
+        }
+    }
+
+    /**
+     * Returns the NAMES of every enchant on an item that matches the user's
+     * enchant-ping selection.
+     *
+     * Exists so the loot GUI can show which enchant actually triggered a ping,
+     * rather than only knowing that something did. Matching runs on the enchant
+     * type ids decoded from the item's raw enchant code - the selection is
+     * stored as ids too, so no display-string round trip is involved.
+     *
+     * @param enchantCode Raw encoded enchant string of one inventory slot.
+     * @return Matching enchant display names; empty if none match.
+     */
+    public ArrayList<String> getMatchedEnchantPings(String enchantCode) {
+        ArrayList<String> matched = new ArrayList<>();
+        if (enchantCode == null || enchantCode.isEmpty()) {
+            return matched;
         }
 
         // Load saved enchant ping selections
         String saved = PropertiesManager.getProperty("enchantPing.selected");
         if (saved == null || saved.trim().isEmpty()) {
-            return false;
+            return matched;
         }
 
         Set<Short> selectedEnchants = new HashSet<>();
@@ -1199,28 +1246,21 @@ public class TomatoData {
             } catch (NumberFormatException ignored) {}
         }
 
-        // Check each enchant line against selected enchants
-        // Format is "EnchantName(ID)" per line
-        String[] enchantLines = enchantText.split("\n");
-        for (String enchantLine : enchantLines) {
-            // Parse enchant ID from the line (format: "EnchantName(ID)")
-            if (enchantLine.contains("(") && enchantLine.contains(")")) {
-                try {
-                    int start = enchantLine.lastIndexOf("(") + 1;
-                    int end = enchantLine.lastIndexOf(")");
-                    String idStr = enchantLine.substring(start, end);
-                    short enchantId = Short.parseShort(idStr);
-                    if (selectedEnchants.contains(enchantId)) {
-                        return true;
-                    }
-                } catch (
-                    NumberFormatException
-                    | IndexOutOfBoundsException ignored
-                ) {}
+        for (Short enchantId : ParseEnchants.extractEnchantIds(enchantCode)) {
+            if (selectedEnchants.contains(enchantId)) {
+                String name = ParseEnchants.ENCHANTS.get(enchantId);
+                if (name != null && !name.isEmpty()) matched.add(name);
             }
         }
 
-        return false;
+        return matched;
+    }
+
+    /**
+     * Checks if any enchant in the enchant code matches selected enchant pings
+     */
+    public boolean isEnchantPing(String enchantCode) {
+        return !getMatchedEnchantPings(enchantCode).isEmpty();
     }
 
     /**

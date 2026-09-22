@@ -51,25 +51,27 @@ public class SecurityAbilityUseCheck {
      * @param entity Players that used stasis orbs.
      * @param stats  Stats of the player to check their mana use.
      */
-    public static void checkManaFromStasis(Entity entity, StatData[] stats) {
+    public static void checkManaFromStasis(
+        Entity entity,
+        StatData[] stats,
+        boolean hasPreviousMana,
+        int previousMana,
+        boolean hasPreviousInventory,
+        int previousInventory
+    ) {
         if (entity.stasisCounter > 0) {
             entity.stasisCounter--;
+            if (!hasPreviousMana) return;
             for (StatData sd : stats) {
                 if (sd.statType == StatType.MP_STAT) {
                     if (
-                        entity.stat.get(StatType.MP_STAT).statValue <=
-                        sd.statValue
+                        previousMana <= sd.statValue
                     ) {
+                        if (!hasPreviousInventory) continue;
                         StringBuilder sb = new StringBuilder();
                         sb.append("[").append(Util.getHourTime()).append("] ");
                         sb.append(entity.name()).append(": ");
-                        sb.append(
-                            IdToAsset.objectName(
-                                entity.stat.get(
-                                    StatType.INVENTORY_1_STAT
-                                ).statValue
-                            )
-                        );
+                        sb.append(IdToAsset.objectName(previousInventory));
                         SecurityGUI.updateAbilityUsage(sb.toString());
                     }
                 }
@@ -86,26 +88,28 @@ public class SecurityAbilityUseCheck {
         }
     }
 
-    public static void checkManaFromDecoyUsed(Entity entity, StatData[] stats) {
+    public static void checkManaFromDecoyUsed(
+        Entity entity,
+        StatData[] stats,
+        boolean hasPreviousMana,
+        int previousMana,
+        boolean hasPreviousInventory,
+        int previousInventory
+    ) {
         if (CharacterClass.isPlayerCharacter(entity.objectType)
                 && !CharacterClass.getName(entity.objectType).equals("Trickster")) return;
         if (decoyCounter == 0) {
+            if (!hasPreviousMana) return;
             for (StatData sd : stats) {
                 if (sd.statType == StatType.MP_STAT) {
                     if (
-                        entity.stat.get(StatType.MP_STAT).statValue <=
-                        sd.statValue
+                        previousMana <= sd.statValue
                     ) {
+                        if (!hasPreviousInventory) continue;
                         StringBuilder sb = new StringBuilder();
                         sb.append("[").append(Util.getHourTime()).append("] ");
                         sb.append(entity.name()).append(": ");
-                        sb.append(
-                            IdToAsset.objectName(
-                                entity.stat.get(
-                                    StatType.INVENTORY_1_STAT
-                                ).statValue
-                            )
-                        );
+                        sb.append(IdToAsset.objectName(previousInventory));
                         SecurityGUI.updateAbilityUsage(sb.toString());
                     }
                 }

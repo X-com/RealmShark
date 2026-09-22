@@ -137,7 +137,7 @@ public class DamageSimulator {
                 if (entity.objectType == 29039) { // Shat king
                     if (markerTime == 0) markerTime = serverTime;
                     for (StatData sd : stats) {
-                        if (sd.statTypeNum == 0 || sd.statTypeNum == 1 || sd.statTypeNum == 126 || sd.statTypeNum == 96)
+                        if (sd.statTypeNum == 0 || sd.statTypeNum == 1 || sd.statTypeNum == 126 || sd.statTypeNum == 69)
                             continue;
                         if (sd.statTypeNum == 29) {
                             System.out.printf("%s  %.2f min", sd, (float) (serverTime - markerTime) / 60000);
@@ -234,7 +234,7 @@ public class DamageSimulator {
     private void o3phases(StatData[] stats, Entity entity) {
         if (entity.objectType == 453630) {
             for (StatData sd : stats) {
-                if (sd.statTypeNum == 0 || sd.statTypeNum == 1 || sd.statTypeNum == 29 || sd.statTypeNum == 96)
+                if (sd.statTypeNum == 0 || sd.statTypeNum == 1 || sd.statTypeNum == 29 || sd.statTypeNum == 69)
                     continue;
                 if (sd.statTypeNum == 125) {
                     System.out.print(sd);

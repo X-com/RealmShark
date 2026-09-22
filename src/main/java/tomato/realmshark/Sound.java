@@ -42,6 +42,14 @@ public class Sound {
     }
 
     /**
+     * @return True if the clip loaded. Lets callers fall back to another file
+     *         when a user-selected sound is missing or an unsupported format.
+     */
+    public boolean isLoaded() {
+        return soundClip != null;
+    }
+
+    /**
      * Loads auto clip to be played later
      */
     static {

@@ -661,7 +661,7 @@ public class DpsLogger {
             conditions[0] =
                 entity.getStat(29) == null ? 0 : entity.getStat(29).statValue;
             conditions[1] =
-                entity.getStat(96) == null ? 0 : entity.getStat(96).statValue;
+                entity.getStat(69) == null ? 0 : entity.getStat(69).statValue;
             int defence =
                 entity.getStat(21) == null ? 0 : entity.getStat(21).statValue;
 

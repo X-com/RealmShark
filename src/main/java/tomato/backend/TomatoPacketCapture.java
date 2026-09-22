@@ -126,7 +126,6 @@ public class TomatoPacketCapture implements Controller {
             }
         } else if (isCrucibleResponsePacket(packet)) {
             // Handle CrucibleResponsePacket to extract damage multipliers
-            System.out.println("CRUCIBLE_RESPONSE_PACKET: " + packet);
             CrucibleBonusManager.processCrucibleResponse(packet);
         }
     }

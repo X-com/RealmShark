@@ -299,4 +299,11 @@ public class TomatoGUI {
     public static void openEnchantPing() {
         EnchantPingGUI.open();
     }
+
+    /**
+     * Opens dungeon ping window.
+     */
+    public static void openDungeonPing() {
+        DungeonPingGUI.open();
+    }
 }

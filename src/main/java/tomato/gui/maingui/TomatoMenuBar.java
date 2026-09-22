@@ -22,13 +22,13 @@ import java.awt.event.ActionListener;
  * Menu bar builder class
  */
 public class TomatoMenuBar implements ActionListener {
-    private JMenuItem about, borders, clearChat, bandwidth, javav, clearDpsLogs, theme, fontMenu, dpsOptions, chat, sound, chatPingMessage, entityIdPingMessage, itemPingMessage, enchantPingMessage;
+    private JMenuItem about, borders, clearChat, bandwidth, javav, clearDpsLogs, theme, fontMenu, dpsOptions, chat, sound, chatPingMessage, entityIdPingMessage, itemPingMessage, enchantPingMessage, dungeonPingMessage, pingSoundMenu;
     private JRadioButtonMenuItem fontSize8, fontSize12, fontSize16, fontSize24, fontSize48, fontSizeCustom;
     private JRadioButtonMenuItem themeDarcula, themeighContrastDark, themeHighContrastLight, themeIntelliJ, themeSolarizedDark, themeSolarizedLight;
     private JRadioButtonMenuItem fontNameMonospaced, fontNameDialog, fontNameDialogInput, fontNameSerif, fontNameSansSerif, fontNameSegoe;
     private JRadioButtonMenuItem dpsEquipmentNone, dpsEquipmentSimple, dpsEquipmentFull, dpsIcon;
     private JRadioButtonMenuItem dpsSortLastHit, dpsSortFirstHit, dpsSortMaxHp, dpsSortFightTimer, dpsSortBossOnly;
-    private JCheckBoxMenuItem fontStyleBold, fontStyleItalic, dpsShowMe, saveChat, chatPing, chatPingGuild, whiteBagSound, chatPingParty, orangeBagSound, redBagSound, goldBagSound, eggBagSound, blueBagSound, tradePing, disableDataSending;
+    private JCheckBoxMenuItem fontStyleBold, fontStyleItalic, dpsShowMe, saveChat, chatPing, chatPingGuild, whiteBagSound, chatPingParty, orangeBagSound, redBagSound, goldBagSound, eggBagSound, blueBagSound, tradePing;
     private JCheckBoxMenuItem filterWhiteBag, filterOrangeBag, filterRedBag, filterGoldBag, filterEggBag, filterBlueBag, filterTealBag, filterPurpleBag, filterPinkBag, filterBrownBag;
     private JSlider soundSlider;
     private JMenu file, edit, info;
@@ -67,11 +67,6 @@ public class TomatoMenuBar implements ActionListener {
         sniffer.addActionListener(this);
         file.add(sniffer);
         file.add(new JSeparator(SwingConstants.HORIZONTAL));
-        disableDataSending = new JCheckBoxMenuItem("Opt-out Loot Sharing");
-        disableDataSending.setToolTipText("Disables sending loot to server");
-        disableDataSending.addActionListener(this);
-        file.add(disableDataSending);
-        setFileCheckbox();
 
         chatPingMessage = new JMenuItem("Chat Message Pings");
         chatPingMessage.addActionListener(this);
@@ -119,12 +114,20 @@ public class TomatoMenuBar implements ActionListener {
         enchantPingMessage = new JMenuItem("Enchant Pings");
         enchantPingMessage.addActionListener(this);
 
+        dungeonPingMessage = new JMenuItem("Dungeon Pings");
+        dungeonPingMessage.addActionListener(this);
+
+        pingSoundMenu = new JMenuItem("Ping Sounds...");
+        pingSoundMenu.addActionListener(this);
+
         sound.add(new JLabel("Volume:"));
         sound.add(soundSlider);
         sound.add(new JSeparator(SwingConstants.HORIZONTAL));
         sound.add(entityIdPingMessage);
         sound.add(itemPingMessage);
         sound.add(enchantPingMessage);
+        sound.add(dungeonPingMessage);
+        sound.add(pingSoundMenu);
         sound.add(new JSeparator(SwingConstants.HORIZONTAL));
         sound.add(chatPing);
         sound.add(chatPingParty);
@@ -447,15 +450,6 @@ public class TomatoMenuBar implements ActionListener {
         }
     }
 
-    private void setFileCheckbox() {
-        String dataSending = PropertiesManager.getProperty("disableDataSending");
-        if (dataSending != null) {
-            boolean b = dataSending.equals("true");
-            disableDataSending.setSelected(b);
-            LootGUI.lootSharing(b);
-        }
-    }
-
     private void setChatCheckbox() {
         String save = PropertiesManager.getProperty("saveChat");
         if (save != null) {
@@ -734,10 +728,6 @@ public class TomatoMenuBar implements ActionListener {
                 stopPacketSniffer();
                 PropertiesManager.setProperties("sniffer", "F");
             }
-        } else if (e.getSource() == disableDataSending) { // disables data sharing
-            boolean b = disableDataSending.isSelected();
-            PropertiesManager.setProperties("disableDataSending", b ? "true" : "false");
-            LootGUI.lootSharing(b);
         } else if (e.getSource() == chatPingMessage) { // chat ping message
             TomatoGUI.openChatPingMessage();
         } else if (e.getSource() == entityIdPingMessage) { // entity id ping message
@@ -746,6 +736,10 @@ public class TomatoMenuBar implements ActionListener {
             TomatoGUI.openItemPing();
         } else if (e.getSource() == enchantPingMessage) { // enchant ping message
             TomatoGUI.openEnchantPing();
+        } else if (e.getSource() == dungeonPingMessage) { // dungeon ping message
+            TomatoGUI.openDungeonPing();
+        } else if (e.getSource() == pingSoundMenu) { // per-category ping sounds
+            tomato.gui.maingui.PingSoundGUI.open();
         } else if (e.getSource() == saveChat) { // chat save logs
             boolean b = saveChat.isSelected();
             PropertiesManager.setProperties("saveChat", b ? "true" : "false");

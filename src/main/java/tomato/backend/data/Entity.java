@@ -47,9 +47,8 @@ public class Entity implements Serializable {
     public long stasisCounter;
     public boolean dammahCountered;
 
-    // Optional override mob id string for SendLoot (e.g., "20493HM" / "20451HM")
-
-    // When non-null, SendLoot should use this instead of objectType for the "mob" field.
+    // Variant-suffixed mob id (e.g., "20493HM" / "20451HM"). Retained for the
+    // attribution logic; no longer consumed since the loot uploader was removed.
 
     public String lootMobIdOverride;
 
@@ -93,9 +92,32 @@ public class Entity implements Serializable {
     public void updateStats(ObjectStatusData status, long timePC) {
         statUpdates.add(status);
 
-        SecurityAbilityUseCheck.checkManaFromStasis(this, status.stats);
+        StatData previousMana = stat.get(StatType.MP_STAT);
+        StatData previousInventory = stat.get(StatType.INVENTORY_1_STAT);
+        boolean hasPreviousMana = previousMana != null;
+        boolean hasPreviousInventory = previousInventory != null;
+        int previousManaValue = hasPreviousMana ? previousMana.statValue : 0;
+        int previousInventoryValue = hasPreviousInventory
+            ? previousInventory.statValue
+            : 0;
 
-        SecurityAbilityUseCheck.checkManaFromDecoyUsed(this, status.stats);
+        SecurityAbilityUseCheck.checkManaFromStasis(
+            this,
+            status.stats,
+            hasPreviousMana,
+            previousManaValue,
+            hasPreviousInventory,
+            previousInventoryValue
+        );
+
+        SecurityAbilityUseCheck.checkManaFromDecoyUsed(
+            this,
+            status.stats,
+            hasPreviousMana,
+            previousManaValue,
+            hasPreviousInventory,
+            previousInventoryValue
+        );
 
         stat.setStats(status.stats);
 
@@ -295,12 +317,12 @@ public class Entity implements Serializable {
                 // Only emit container/scaling discovery logs if the attacker is the local user AND this ability has scaling.
                 // This ensures we only debug lethal-strike / scaling client-side calculations for our own shots.
                 if (attacker != null && attacker.isUser() && hasScaling) {
-                    System.out.println(
-                        "[Entity] userProjectileHit: containerType=" +
-                            containerType +
-                            " hasScaling=" +
-                            hasScaling
-                    );
+                    //System.out.println(
+                    //    "[Entity] userProjectileHit: containerType=" +
+                    //        containerType +
+                    //        " hasScaling=" +
+                    //        hasScaling
+                    //);
                 }
                 if (hasScaling) {
                     // This is a proc projectile with scaling - attempt to use a stat snapshot
@@ -335,19 +357,19 @@ public class Entity implements Serializable {
                     dmg = baseDamage + statBonus;
                     // Only log the detailed proc scaling message for the local user
                     if (attacker != null && attacker.isUser()) {
-                        System.out.println(
-                            "[Entity] userProjectileHit: proc scaling applied containerType=" +
-                                containerType +
-                                " baseDamage=" +
-                                baseDamage +
-                                " statBonus=" +
-                                statBonus +
-                                " total=" +
-                                dmg +
-                                (statSnapshot != null
-                                    ? " (used snapshot)"
-                                    : " (used current)")
-                        );
+                        //System.out.println(
+                        //    "[Entity] userProjectileHit: proc scaling applied containerType=" +
+                        //        containerType +
+                        //       " baseDamage=" +
+                        //       baseDamage +
+                        //      " statBonus=" +
+                        //      statBonus +
+                        //      " total=" +
+                        //     dmg +
+                        //     (statSnapshot != null
+                        //         ? " (used snapshot)"
+                        //         : " (used current)")
+                        // );
                     }
                     isProcProjectile = true;
                 }
