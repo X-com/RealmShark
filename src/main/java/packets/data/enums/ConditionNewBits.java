@@ -32,7 +32,11 @@ public enum ConditionNewBits implements Serializable {
     VITALITY_DEBUFF(0x1000000),
     WISDOM_DEBUFF(0x2000000),
     DEXTERITY_DEBUFF(0x4000000),
-    INSPIRED(0x8000000);
+    INSPIRED(0x8000000),
+    DRUID_TRANSFORMED(0x10000000),
+    DROUGHT(0x20000000),
+    LETHAL_STRIKE(0x40000000),
+    UNKNOWN_31(0x80000000);
 
     private final int bitMask;
 

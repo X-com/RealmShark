@@ -130,7 +130,8 @@ public class PacketRead {
 //        if (packet instanceof CreateSuccessPacket) return;
 
         if (packet instanceof NewTickPacket) {
-//            newtick((NewTickPacket) packet);
+            //newtick((NewTickPacket) packet);
+            //System.out.println(packet);
             return;
         }
 

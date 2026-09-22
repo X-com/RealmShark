@@ -55,6 +55,7 @@ public class StatData implements Serializable {
                 || StatType.GUILD_NAME_STAT.get() == statTypeNum
                 || StatType.MATERIAL_STAT.get() == statTypeNum
                 || StatType.MATERIAL_CAP_STAT.get() == statTypeNum
+                || statTypeNum == 78
                 || StatType.UNIQUE_DATA_STRING.get() == statTypeNum
                 || StatType.GRAVE_ACCOUNT_ID.get() == statTypeNum
                 || StatType.MODIFIERS_STAT.get() == statTypeNum
@@ -76,7 +77,7 @@ public class StatData implements Serializable {
         String stringExtra = "";
         if (statTypeNum == 29) {
             stringExtra += " " + ConditionBits.effectsToString(statValue);
-        } else if (statTypeNum == 96) {
+        } else if (statTypeNum == StatType.NEW_CON_STAT.get()) {
             stringExtra += " " + ConditionNewBits.effectsToString(statValue);
         } else if (statTypeNum >= 8 && statTypeNum <= 19) {
             String name = IdToAsset.objectName(statValue);

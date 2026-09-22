@@ -34,7 +34,9 @@ public enum ConditionBits implements Serializable {
     ARMORBROKEN(0x4000000),
     HEXED(0x8000000),
     NINJASPEEDY(0x10000000),
-    UNSTABLE(0x20000000);
+    UNSTABLE(0x20000000),
+    DARKNESS(0x40000000),
+    UNKNOWN_31(0x80000000);
 
     private final int bitMask;
 
